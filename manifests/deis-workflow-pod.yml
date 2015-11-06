@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: deis-workflow
+  labels:
+    heritage: helm
+spec:
+  containers:
+  - name: deis-workflow
+    image: 192.168.99.100:5000/deis/workflow:git-3b9ce13
+    ports:
+      - containerPort: 8000
