@@ -1,1 +1,0 @@
-{{ getv "/deis/store/adminKeyring" }}

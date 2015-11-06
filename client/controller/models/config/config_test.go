@@ -9,9 +9,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deis/deis/client/controller/api"
-	"github.com/deis/deis/client/controller/client"
-	"github.com/deis/deis/version"
+	"github.com/deis/workflow/client/controller/api"
+	"github.com/deis/workflow/client/controller/client"
+	"github.com/deis/workflow/version"
 )
 
 const configFixture string = `

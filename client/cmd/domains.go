@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/deis/deis/client/controller/models/domains"
+	"github.com/deis/workflow/client/controller/models/domains"
 )
 
 // DomainsList lists domains registered with an app.

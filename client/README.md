@@ -2,13 +2,13 @@
 
 `deis` is a command line utility used to interact with the [Deis](http://deis.io) open source PaaS.
 
-Please add any [issues](https://github.com/deis/deis/issues) you find with this software to
-the [Deis Project](https://github.com/deis/deis).
+Please add any [issues](https://github.com/deis/workflow/issues) you find with this software to
+the [Deis Workflow v2 Project](https://github.com/deis/workflow).
 
 ## Installation
 
 Currently the only way to use the go version of the `deis` client is to build it yourself.
-To build the `deis` client, you need to have [go](https://golang.org/), [Godep](https://github.com/tools/godep),
+To build the `deis` client, you need to have [go](https://golang.org/), [glide](https://github.com/Masterminds/glide),
  and [make](https://www.gnu.org/software/make/) installed. Then run `make build`.
 
 ## Usage
@@ -19,7 +19,7 @@ To learn more about a command run `deis help <command>`.
 ## Windows Support
 
 `deis` has experimental support for Windows. To build deis for Windows, you need to install
-[go](https://golang.org/) and [Godep](https://github.com/tools/godep). Then run the `make.bat` script.
+[go](https://golang.org/) and [glide](https://github.com/Masterminds/glide). Then run the `make.bat` script.
 
 ## License
 

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/deis/deis/client/controller/client"
-	"github.com/deis/deis/client/controller/models/auth"
+	"github.com/deis/workflow/client/controller/client"
+	"github.com/deis/workflow/client/controller/models/auth"
 	"golang.org/x/crypto/ssh/terminal"
 )
 

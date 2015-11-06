@@ -1,4 +1,0 @@
-colorama==0.3.3
-requests==2.7.0
-paramiko==1.15.2
-pyyaml==3.11

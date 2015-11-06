@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-export ETCD=${ETCD:-$HOST:4001}
-
-while true
-do
-    etcdctl -C $ETCD watch --recursive /deis/services > /dev/null
-    /home/git/check-repos
-done

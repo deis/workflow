@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/deis/deis/client/controller/api"
-	"github.com/deis/deis/client/controller/models/ps"
+	"github.com/deis/workflow/client/controller/api"
+	"github.com/deis/workflow/client/controller/models/ps"
 )
 
 // PsList lists an app's processes.

@@ -1,3 +1,0 @@
-{{ range $user := lsdir "/deis/builder/users" }}{{ range gets (print "/deis/builder/users/" $user "/*") }}
-command="/usr/local/bin/gitreceive run {{ $user }} {{ base .Key }}",no-agent-forwarding,no-pty,no-user-rc,no-X11-forwarding,no-port-forwarding {{ .Value }}
-{{ end }}{{ end }}

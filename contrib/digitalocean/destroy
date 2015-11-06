@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-set -eo pipefail -o nounset
-
-export TF_VAR_token="${DO_TOKEN}"
-
-terraform destroy -force

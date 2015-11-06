@@ -5,10 +5,10 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/deis/deis/pkg/prettyprint"
+	"github.com/deis/pkg/prettyprint"
 
-	"github.com/deis/deis/client/controller/api"
-	"github.com/deis/deis/client/controller/models/config"
+	"github.com/deis/workflow/client/controller/api"
+	"github.com/deis/workflow/client/controller/models/config"
 )
 
 // LimitsList lists an app's limits.

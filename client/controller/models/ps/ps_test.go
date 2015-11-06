@@ -9,9 +9,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deis/deis/client/controller/api"
-	"github.com/deis/deis/client/controller/client"
-	"github.com/deis/deis/version"
+	"github.com/deis/workflow/client/controller/api"
+	"github.com/deis/workflow/client/controller/client"
+	"github.com/deis/workflow/version"
 )
 
 const processesFixture string = `
@@ -136,7 +136,7 @@ func TestProcessesList(t *testing.T) {
 	t.Parallel()
 
 	expected := []api.Process{
-		api.Process{
+		{
 			Owner:   "test",
 			App:     "example-go",
 			Release: "v2",
@@ -184,11 +184,11 @@ func TestAppsRestart(t *testing.T) {
 	t.Parallel()
 
 	tests := []testExpected{
-		testExpected{
+		{
 			Num:  -1,
 			Type: "",
 			Expected: []api.Process{
-				api.Process{
+				{
 					Owner:   "test",
 					App:     "example-go",
 					Release: "v2",
@@ -201,11 +201,11 @@ func TestAppsRestart(t *testing.T) {
 				},
 			},
 		},
-		testExpected{
+		{
 			Num:  -1,
 			Type: "worker",
 			Expected: []api.Process{
-				api.Process{
+				{
 					Owner:   "test",
 					App:     "example-go",
 					Release: "v2",
@@ -218,11 +218,11 @@ func TestAppsRestart(t *testing.T) {
 				},
 			},
 		},
-		testExpected{
+		{
 			Num:  2,
 			Type: "web",
 			Expected: []api.Process{
-				api.Process{
+				{
 					Owner:   "test",
 					App:     "example-go",
 					Release: "v2",

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/deis/deis/client/parser"
-	"github.com/deis/deis/version"
+	"github.com/deis/workflow/client/parser"
+	"github.com/deis/workflow/version"
 	docopt "github.com/docopt/docopt-go"
 )
 

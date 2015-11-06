@@ -7,7 +7,7 @@ This Docker image is based on the official
 [alpine:3.2](https://registry.hub.docker.com/_/alpine/) image.
 
 Please add any [issues](https://github.com/deis/deis/issues) you find with this software to
-the [Deis Project](https://github.com/deis/deis).
+the [Deis Workflow v2 Project](https://github.com/deis/workflow).
 
 ## Usage
 

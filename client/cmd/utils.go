@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/deis/deis/client/controller/client"
-	"github.com/deis/deis/client/pkg/git"
+	"github.com/deis/workflow/client/controller/client"
+	"github.com/deis/workflow/client/pkg/git"
 )
 
 var defaultLimit = -1

@@ -18,73 +18,22 @@ lib64
 controller/deis/local_settings.py
 controller/.secret_key
 
-# application logs
-logs/
-
 # local binaries, installers, and artifacts
-builder/rootfs/usr/bin
-cache/image/bin/
 client/deis
 client/deis.exe
 client/*.run
 client/makeself/
-contrib/azure/azure-user-data
-contrib/bumpver/bumpver
-deisctl/deisctl
-deisctl/dist/
-deisctl/package/
-deisctl/makeself/
 docs/_build/
 docs/docs.zip
 docs/dummy.sqlite3
-logger/image/bin/logger
-logspout/build/
-logspout/image/logspout
-logspout/Godeps/
-publisher/Godeps/
-publisher/image/bin/publisher
-swarm/image/bin/
-mesos/**/bin/
-mesos/**/bindata/
-mesos/Dockerfile
-mesos/marathon-assembly.jar
 
 # coverage reports
 .coverage
 coverage.out
 htmlcov/
 
-# integration test droppings
-tests/example-*
-tests/*.cert
-tests/*.key
-
-# extra .py droppings from building docs
-/__init__.py
-
 # python virtual environments for testing
-venv
+venv/
 
-# Local user-data generated from user-data.example
-contrib/coreos/user-data
-
-# Local controller settings file
-controller/deis/local_settings.py
-
-# AWS CloudFormation Setup
-contrib/aws/cloudformation.json
-
-# GCE generated user-data
-contrib/gce/gce-user-data
-
-# vagrant local config and droppings
-/config.rb
-.vagrant
-
-# bash infra
-/tests/bin/tmp
-!/tests/bin/accept/lib
-!/tests/bin/accept/commands
-
-# Terraform
-*.tfstate*
+# vendored go source code
+vendor/

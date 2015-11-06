@@ -8,9 +8,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deis/deis/client/controller/api"
-	"github.com/deis/deis/client/controller/client"
-	"github.com/deis/deis/version"
+	"github.com/deis/workflow/client/controller/api"
+	"github.com/deis/workflow/client/controller/client"
+	"github.com/deis/workflow/version"
 )
 
 const usersFixture string = `
@@ -55,7 +55,7 @@ func TestUsersList(t *testing.T) {
 	t.Parallel()
 
 	expected := []api.User{
-		api.User{
+		{
 			ID:          1,
 			LastLogin:   "2014-10-19T22:01:00.601Z",
 			IsSuperuser: true,

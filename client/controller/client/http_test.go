@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/deis/deis/version"
+	"github.com/deis/workflow/version"
 )
 
 type fakeHTTPServer struct{}
@@ -214,13 +214,13 @@ func TestCheckErrorsReturnsNil(t *testing.T) {
 	t.Parallel()
 
 	responses := []http.Response{
-		http.Response{
+		{
 			StatusCode: http.StatusOK,
 		},
-		http.Response{
+		{
 			StatusCode: http.StatusCreated,
 		},
-		http.Response{
+		{
 			StatusCode: http.StatusNoContent,
 		},
 	}

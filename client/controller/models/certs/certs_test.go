@@ -9,9 +9,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deis/deis/client/controller/api"
-	"github.com/deis/deis/client/controller/client"
-	"github.com/deis/deis/version"
+	"github.com/deis/workflow/client/controller/api"
+	"github.com/deis/workflow/client/controller/client"
+	"github.com/deis/workflow/version"
 )
 
 const certsFixture string = `
@@ -84,7 +84,7 @@ func TestCertsList(t *testing.T) {
 	t.Parallel()
 
 	expected := []api.Cert{
-		api.Cert{
+		{
 			Name:    "test.example.com",
 			Expires: "2014-01-01T00:00:00UTC",
 		},

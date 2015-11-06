@@ -5,10 +5,10 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/deis/deis/pkg/prettyprint"
+	"github.com/deis/pkg/prettyprint"
 
-	"github.com/deis/deis/client/controller/client"
-	"github.com/deis/deis/client/controller/models/certs"
+	"github.com/deis/workflow/client/controller/client"
+	"github.com/deis/workflow/client/controller/models/certs"
 )
 
 // CertsList lists certs registered with the controller.

@@ -1,6 +1,9 @@
 SHELL = /bin/bash
 
-GO = godep go
+VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null)+$(shell git rev-parse --short HEAD)
+export GO15VENDOREXPERIMENT=1
+
+GO = go
 GOFMT = gofmt -l
 GOLINT = golint
 GOTEST = $(GO) test --cover --race -v
@@ -23,14 +26,6 @@ ifndef S3_BUCKET
   S3_BUCKET = deis-updates
 endif
 
-ifndef DEIS_NUM_INSTANCES
-  DEIS_NUM_INSTANCES = 3
-endif
-
-ifneq ($(DEIS_STATELESS), True)
-  STORE_IF_STATEFUL = store
-endif
-
 define echo_cyan
   @echo "\033[0;36m$(subst ",,$(1))\033[0m"
 endef
@@ -49,11 +44,6 @@ check-registry:
 	@if [ -z "$$DEV_REGISTRY" ]; then \
 	  echo "DEV_REGISTRY is not exported, try:  make dev-registry"; \
 	exit 2; \
-	fi
-
-check-deisctl:
-	@if [ -z $$(which deisctl) ]; then \
-	  echo "Missing \`deisctl\` utility, please install from https://github.com/deis/deis"; \
 	fi
 
 define check-static-binary

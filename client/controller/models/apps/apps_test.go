@@ -9,9 +9,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deis/deis/client/controller/api"
-	"github.com/deis/deis/client/controller/client"
-	"github.com/deis/deis/version"
+	"github.com/deis/workflow/client/controller/api"
+	"github.com/deis/workflow/client/controller/client"
+	"github.com/deis/workflow/version"
 )
 
 const appFixture string = `
@@ -289,7 +289,7 @@ func TestAppsList(t *testing.T) {
 	t.Parallel()
 
 	expected := []api.App{
-		api.App{
+		{
 			ID:      "example-go",
 			Created: "2014-01-01T00:00:00UTC",
 			Owner:   "test",
@@ -333,11 +333,11 @@ func TestAppsLogs(t *testing.T) {
 	t.Parallel()
 
 	tests := []testExpected{
-		testExpected{
+		{
 			Input:    -1,
 			Expected: "test\nfoo\nbar\n",
 		},
-		testExpected{
+		{
 			Input:    1,
 			Expected: "test\n",
 		},

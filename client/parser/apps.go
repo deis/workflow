@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/deis/deis/client/cmd"
+	"github.com/deis/workflow/client/cmd"
 	docopt "github.com/docopt/docopt-go"
 )
 

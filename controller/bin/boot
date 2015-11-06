@@ -26,7 +26,7 @@ sleep $((ETCD_TTL+1))
 
 function etcd_set_default {
 	set +e
-	ERROR="$(etcdctl --no-sync -C "$ETCD" mk "$ETCD_PATH/$1" "$2" 2>&1 >/dev/null)"
+	ERROR="$(etcdctl --no-sync -C "$ETCD" mk "$ETCD_PATH/$1" "$2" >/dev/null 2>&1)"
 
 	if [[ $? -ne 0 ]] && echo "$ERROR" | grep -iqve "key already exists"; then
 		echo "etcd_set_default: an etcd error occurred ($ERROR)"
@@ -38,7 +38,7 @@ function etcd_set_default {
 
 function etcd_safe_mkdir {
 	set +e
-	ERROR="$(etcdctl --no-sync -C "$ETCD" mkdir "$1" 2>&1 >/dev/null)"
+	ERROR="$(etcdctl --no-sync -C "$ETCD" mkdir "$1" >/dev/null 2>&1)"
 
 	if [[ $? -ne 0 ]] && echo "$ERROR" | grep -iqve "key already exists"; then
 		echo "etcd_safe_mkdir: an etcd error occurred ($ERROR)"

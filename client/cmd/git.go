@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/deis/deis/client/pkg/git"
+	"github.com/deis/workflow/client/pkg/git"
 )
 
 // GitRemote creates a git remote for a deis app.

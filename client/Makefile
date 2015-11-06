@@ -1,17 +1,20 @@
 include ../includes.mk
 
 # the filepath to this repository, relative to $GOPATH/src
-repo_path = github.com/deis/deis/client
+repo_path = github.com/deis/workflow/client
 
 GO_FILES = $(wildcard *.go)
-GO_PACKAGES = parser cmd controller/api controller/client $(wildcard controller/models/*) $(wildcard pkg/*)
+GO_PACKAGES = cmd controller/api controller/client $(wildcard controller/models/*) parser $(wildcard pkg/*)
 GO_PACKAGES_REPO_PATH = $(addprefix $(repo_path)/,$(GO_PACKAGES))
 
 COMPONENT = $(notdir $(repo_path))
 IMAGE =  $(IMAGE_PREFIX)/$(COMPONENT):$(BUILD_TAG)
 
+bootstrap:
+	glide -y glide.yaml up
+
 build:
-	CGO_ENABLED=0 godep go build -a -installsuffix cgo -ldflags '-s' -o deis .
+	CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags '-s' -o deis .
 	@$(call check-static-binary,deis)
 
 install: build
@@ -28,11 +31,6 @@ installer: build
 		&& echo 'See http://docs.deis.io/ for documentation.' \
 		&& echo"
 
-setup-root-gotools:
-	sudo GOPATH=/tmp/tmpGOPATH go get -u -v golang.org/x/tools/cmd/cover
-	sudo GOPATH=/tmp/tmpGOPATH go get -u -v golang.org/x/tools/cmd/vet
-	sudo rm -rf /tmp/tmpGOPATH
-
 setup-gotools:
 	go get -u github.com/golang/lint/golint
 	go get -u golang.org/x/tools/cmd/cover
@@ -41,11 +39,13 @@ setup-gotools:
 test: test-style test-unit
 
 test-style:
-# display output, then check
-	$(GOFMT) $(GO_PACKAGES) $(GO_FILES)
-	@$(GOFMT) $(GO_PACKAGES) $(GO_FILES) | read; if [ $$? == 0 ]; then echo "gofmt check failed."; exit 1; fi
-	$(GOVET) $(repo_path) $(GO_PACKAGES_REPO_PATH)
-	$(GOLINT) ./...
+	@if [ $(shell gofmt -e -l -s $(GO_FILES) $(GO_PACKAGES)) ]; then \
+		echo "gofmt check failed:"; gofmt -e -l -s $(GO_FILES) $(GO_PACKAGES); exit 1; \
+	fi
+	@$(GOVET) $(repo_path) $(GO_PACKAGES_REPO_PATH)
+	@for i in $(addsuffix /...,$(GO_PACKAGES)); do \
+		$(GOLINT) $$i; \
+	done
 
 test-unit:
-	$(GOTEST) ./...
+	$(GOTEST) $(shell glide novendor)

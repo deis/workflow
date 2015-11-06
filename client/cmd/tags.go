@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/deis/deis/pkg/prettyprint"
+	"github.com/deis/pkg/prettyprint"
 
-	"github.com/deis/deis/client/controller/api"
-	"github.com/deis/deis/client/controller/models/config"
+	"github.com/deis/workflow/client/controller/api"
+	"github.com/deis/workflow/client/controller/models/config"
 )
 
 // TagsList lists an app's tags.

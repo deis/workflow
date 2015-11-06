@@ -1,0 +1,11 @@
+parent: null
+package: main
+import:
+- package: github.com/deis/pkg
+  subpackages:
+  - /prettyprint
+- package: github.com/docopt/docopt-go
+- package: golang.org/x/crypto
+  subpackages:
+  - /ssh/terminal
+- package: gopkg.in/yaml.v2

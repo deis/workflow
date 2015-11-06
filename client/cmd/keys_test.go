@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deis/deis/client/controller/api"
+	"github.com/deis/workflow/client/controller/api"
 )
 
 func TestGetKey(t *testing.T) {
@@ -93,12 +93,12 @@ func TestListKeys(t *testing.T) {
 	fileNames := []string{"test1.pub", "test2.pub"}
 
 	expected := []api.KeyCreateRequest{
-		api.KeyCreateRequest{
+		{
 			ID:     "test@example.com",
 			Public: string(toWrite),
 			Name:   path.Join(folder, fileNames[0]),
 		},
-		api.KeyCreateRequest{
+		{
 			ID:     "test@example.com",
 			Public: string(toWrite),
 			Name:   path.Join(folder, fileNames[1]),

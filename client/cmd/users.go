@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/deis/deis/client/controller/client"
-	"github.com/deis/deis/client/controller/models/users"
+	"github.com/deis/workflow/client/controller/client"
+	"github.com/deis/workflow/client/controller/models/users"
 )
 
 // UsersList lists users registered with the controller.

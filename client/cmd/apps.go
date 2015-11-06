@@ -7,14 +7,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/deis/deis/pkg/prettyprint"
+	"github.com/deis/pkg/prettyprint"
 
-	"github.com/deis/deis/client/controller/api"
-	"github.com/deis/deis/client/controller/client"
-	"github.com/deis/deis/client/controller/models/apps"
-	"github.com/deis/deis/client/controller/models/config"
-	"github.com/deis/deis/client/pkg/git"
-	"github.com/deis/deis/client/pkg/webbrowser"
+	"github.com/deis/workflow/client/controller/api"
+	"github.com/deis/workflow/client/controller/client"
+	"github.com/deis/workflow/client/controller/models/apps"
+	"github.com/deis/workflow/client/controller/models/config"
+	"github.com/deis/workflow/client/pkg/git"
+	"github.com/deis/workflow/client/pkg/webbrowser"
 )
 
 // AppCreate creates an app.

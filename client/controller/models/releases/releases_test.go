@@ -9,9 +9,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deis/deis/client/controller/api"
-	"github.com/deis/deis/client/controller/client"
-	"github.com/deis/deis/version"
+	"github.com/deis/workflow/client/controller/api"
+	"github.com/deis/workflow/client/controller/client"
+	"github.com/deis/workflow/version"
 )
 
 const releasesFixture string = `
@@ -124,7 +124,7 @@ func TestReleasesList(t *testing.T) {
 	t.Parallel()
 
 	expected := []api.Release{
-		api.Release{
+		{
 			App:     "example-go",
 			Build:   "",
 			Config:  "95bd6dea-1685-4f78-a03d-fd7270b058d1",

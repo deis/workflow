@@ -9,9 +9,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deis/deis/client/controller/api"
-	"github.com/deis/deis/client/controller/client"
-	"github.com/deis/deis/version"
+	"github.com/deis/workflow/client/controller/api"
+	"github.com/deis/workflow/client/controller/client"
+	"github.com/deis/workflow/version"
 )
 
 const buildsFixture string = `
@@ -93,7 +93,7 @@ func TestBuildsList(t *testing.T) {
 	t.Parallel()
 
 	expected := []api.Build{
-		api.Build{
+		{
 			App:        "example-go",
 			Created:    "2014-01-01T00:00:00UTC",
 			Dockerfile: "FROM deis/slugrunner RUN mkdir -p /app WORKDIR /app ENTRYPOINT [\"/runner/init\"] ADD slug.tgz /app ENV GIT_SHA 060da68f654e75fac06dbedd1995d5f8ad9084db",
