@@ -1,4 +1,4 @@
-include ../includes.mk
+export GO15VENDOREXPERIMENT=1
 
 # the filepath to this repository, relative to $GOPATH/src
 repo_path = github.com/deis/workflow/client
@@ -6,9 +6,17 @@ repo_path = github.com/deis/workflow/client
 GO_FILES = $(wildcard *.go)
 GO_PACKAGES = cmd controller/api controller/client $(wildcard controller/models/*) parser $(wildcard pkg/*)
 GO_PACKAGES_REPO_PATH = $(addprefix $(repo_path)/,$(GO_PACKAGES))
+GOFMT = gofmt -e -l -s
+GOTEST = go test --cover --race -v
 
-COMPONENT = $(notdir $(repo_path))
-IMAGE =  $(IMAGE_PREFIX)/$(COMPONENT):$(BUILD_TAG)
+define check-static-binary
+  if file $(1) | egrep -q "(statically linked|Mach-O)"; then \
+    echo -n ""; \
+  else \
+    echo "The binary file $(1) is not statically linked. Build canceled"; \
+    exit 1; \
+  fi
+endef
 
 bootstrap:
 	glide -y glide.yaml up
@@ -39,12 +47,12 @@ setup-gotools:
 test: test-style test-unit
 
 test-style:
-	@if [ $(shell gofmt -e -l -s $(GO_FILES) $(GO_PACKAGES)) ]; then \
-		echo "gofmt check failed:"; gofmt -e -l -s $(GO_FILES) $(GO_PACKAGES); exit 1; \
+	@if [ $(shell $(GOFMT) $(GO_FILES) $(GO_PACKAGES)) ]; then \
+		echo "gofmt check failed:"; $(GOFMT) $(GO_FILES) $(GO_PACKAGES); exit 1; \
 	fi
-	@$(GOVET) $(repo_path) $(GO_PACKAGES_REPO_PATH)
+	@go vet $(repo_path) $(GO_PACKAGES_REPO_PATH)
 	@for i in $(addsuffix /...,$(GO_PACKAGES)); do \
-		$(GOLINT) $$i; \
+		golint $$i; \
 	done
 
 test-unit:

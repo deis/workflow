@@ -27,9 +27,9 @@ before_install:
   - source $HOME/virtualenv/python2.7/bin/activate
   - createdb -U postgres deis
 install:
-  - pip install -r controller/requirements.txt
-  - pip install -r controller/dev_requirements.txt
+  - pip install -r rootfs/requirements.txt
+  - pip install -r rootfs/dev_requirements.txt
   - GLIDE_HOME=/home/travis/.glide make -C client bootstrap
 script:
-  - make -C controller test
-  - make -C client test
+  - make test
+  - make -C client/ test

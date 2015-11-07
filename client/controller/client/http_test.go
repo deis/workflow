@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/deis/workflow/version"
+	"github.com/deis/workflow/client/version"
 )
 
 type fakeHTTPServer struct{}

@@ -5,7 +5,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/deis/workflow/version"
+	"github.com/deis/workflow/client/version"
 )
 
 func locateSettingsFile() string {

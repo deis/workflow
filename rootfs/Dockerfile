@@ -22,11 +22,10 @@ ADD build.sh /app/tmp/build.sh
 
 ADD requirements.txt /app/requirements.txt
 
-RUN DOCKER_BUILD=true /app/tmp/build.sh
+RUN DOCKER_BUILD=true /app/tmp/build.sh && rm -rf /app/*
 
 ADD . /app
 
-# Create static resources
-RUN /app/manage.py collectstatic --settings=deis.settings --noinput
+RUN ./manage.py collectstatic --settings=deis.settings --noinput  # create static resources
 
 ENV DEIS_RELEASE 1.13.0-dev

@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/deis/workflow/client/controller/client"
-	"github.com/deis/workflow/version"
+	"github.com/deis/workflow/client/version"
 )
 
 const adminFixture string = `

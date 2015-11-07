@@ -1,0 +1,15 @@
+.coverage
+.coveragerc
+.dockerignore
+Dockerfile
+Makefile
+docs_requirements.txt
+logs
+venv
+*/tests*
+*/*/tests*
+*/fixtures
+*.pyc
+*/*.pyc
+*/*/*.pyc
+*/*/*/*.pyc

@@ -11,7 +11,7 @@ import (
 
 	"github.com/deis/workflow/client/controller/api"
 	"github.com/deis/workflow/client/controller/client"
-	"github.com/deis/workflow/version"
+	"github.com/deis/workflow/client/version"
 )
 
 const configFixture string = `
