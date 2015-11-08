@@ -1,3 +1,6 @@
+ifndef BUILD_TAG
+  BUILD_TAG = git-$(shell git rev-parse --short HEAD)
+endif
 
 COMPONENT = workflow
 IMAGE = $(IMAGE_PREFIX)$(COMPONENT):$(BUILD_TAG)
@@ -9,8 +12,13 @@ check-docker:
 	  exit 2; \
 	fi
 
-build: check-docker
+build: docker-build
+
+docker-build: check-docker
 	docker build --rm -t $(IMAGE) rootfs
+
+docker-push:
+	docker push ${IMAGE}
 
 clean: check-docker
 	docker rmi $(IMAGE)

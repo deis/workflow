@@ -1,15 +1,17 @@
 FROM alpine:3.2
 
 # install common packages
-RUN apk add --update-cache curl bash sudo && rm -rf /var/cache/apk/*
+RUN apk add --update-cache curl bash openssl sudo && rm -rf /var/cache/apk/*
 
-# install etcdctl
-RUN curl -sSL -o /usr/local/bin/etcdctl https://s3-us-west-2.amazonaws.com/get-deis/etcdctl-v0.4.9 \
-    && chmod +x /usr/local/bin/etcdctl
-
-# install confd
-RUN curl -sSL -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.10.0/confd-0.10.0-linux-amd64 \
-    && chmod +x /usr/local/bin/confd
+# install etcdctl and confd
+RUN apk add --update-cache curl tar \
+    && curl -sSL https://github.com/coreos/etcd/releases/download/v2.2.1/etcd-v2.2.1-linux-amd64.tar.gz \
+    | tar -vxz -C /usr/local/bin --strip=1 etcd-v2.2.1-linux-amd64/etcdctl \
+    && chown root:root /usr/local/bin/etcdctl \
+    && curl -sSL -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.10.0/confd-0.10.0-linux-amd64 \
+    && chmod +x /usr/local/bin/confd \
+    && apk del --purge curl tar \
+    && rm -rf /var/cache/apk/*
 
 # define execution environment
 CMD ["/app/bin/boot"]

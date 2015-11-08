@@ -32,9 +32,10 @@ REGISTRY_HOST = '{{ getv "/deis/registry/host" }}'
 REGISTRY_PORT = '{{ getv "/deis/registry/port" }}'
 
 # default to sqlite3, but allow postgresql config through envvars
+# 'ENGINE': 'django.db.backends.{{ getv "/deis/database/engine" }}',
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.{{ getv "/deis/database/engine" }}',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': '{{ getv "/deis/database/name" }}',
         'USER': '{{ getv "/deis/database/user" }}',
         'PASSWORD': '{{ getv "/deis/database/password" }}',

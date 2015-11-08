@@ -8,10 +8,12 @@ set -eo pipefail
 
 # set debug based on envvar
 [[ $DEBUG ]] && set -x
+set -x
 
 # configure etcd
-export ETCD_PORT=${ETCD_PORT:-4001}
-export ETCD="$HOST:$ETCD_PORT"
+export ETCD_PORT=${DEIS_ETCD_1_SERVICE_PORT_CLIENT:-4001}
+export ETCD_HOST=${DEIS_ETCD_1_SERVICE_HOST:-$HOST}
+export ETCD="$ETCD_HOST:$ETCD_PORT"
 export ETCD_PATH=${ETCD_PATH:-/deis/controller}
 export ETCD_TTL=${ETCD_TTL:-20}
 
@@ -26,8 +28,7 @@ sleep $((ETCD_TTL+1))
 
 function etcd_set_default {
 	set +e
-	ERROR="$(etcdctl --no-sync -C "$ETCD" mk "$ETCD_PATH/$1" "$2" >/dev/null 2>&1)"
-
+	ERROR="$(etcdctl --no-sync -C "$ETCD" mk "$ETCD_PATH/$1" "$2" 2>&1 >/dev/null)"
 	if [[ $? -ne 0 ]] && echo "$ERROR" | grep -iqve "key already exists"; then
 		echo "etcd_set_default: an etcd error occurred ($ERROR)"
 		echo "aborting..."
@@ -38,7 +39,7 @@ function etcd_set_default {
 
 function etcd_safe_mkdir {
 	set +e
-	ERROR="$(etcdctl --no-sync -C "$ETCD" mkdir "$1" >/dev/null 2>&1)"
+	ERROR="$(etcdctl --no-sync -C "$ETCD" mkdir "$1" 2>&1 >/dev/null)"
 
 	if [[ $? -ne 0 ]] && echo "$ERROR" | grep -iqve "key already exists"; then
 		echo "etcd_safe_mkdir: an etcd error occurred ($ERROR)"
@@ -60,6 +61,29 @@ etcd_safe_mkdir /deis/domains
 etcd_safe_mkdir /deis/platform
 etcd_safe_mkdir /deis/scheduler
 etcd_safe_mkdir /deis/services
+
+# HACK: set up keys for database
+etcd_safe_mkdir /deis/database
+ETCD_PATH=/deis/database etcd_set_default engine postgresql_psycopg2
+ETCD_PATH=/deis/database etcd_set_default name deis
+ETCD_PATH=/deis/database etcd_set_default user deis
+ETCD_PATH=/deis/database etcd_set_default password changeme123
+ETCD_PATH=/deis/database etcd_set_default host "${DEIS_DATABASE_SERVICE_HOST:-127.0.0.1}"
+ETCD_PATH=/deis/database etcd_set_default port "${DEIS_DATABASE_SERVICE_PORT:-5432}"
+
+# HACK: set up keys for logs
+etcd_safe_mkdir /deis/logs
+# ETCD_PATH=/deis/logs etcd_set_default host "${DEIS_LOGS_SERVICE_HOST:-127.0.0.1}"
+
+# HACK: set up keys for platform
+etcd_safe_mkdir /deis/platform
+ETCD_PATH=/deis/platform etcd_set_default domain localhost
+
+# HACK: set up keys for registry
+etcd_safe_mkdir /deis/registry
+# ETCD_PATH=/deis/registry etcd_set_default protocol "${DEIS_REGISTRY_SERVICE_PROTOCOL:-http}"
+# ETCD_PATH=/deis/registry etcd_set_default host "${DEIS_REGISTRY_SERVICE_HOST:-127.0.0.1}"
+# ETCD_PATH=/deis/registry etcd_set_default port "${DEIS_REGISTRY_SERVICE_PORT:-5000}"
 
 # run etcd data migrations
 echo "controller: running etcd data migrations..."

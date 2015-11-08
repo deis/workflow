@@ -284,7 +284,8 @@ LOGGING = {
 TEST_RUNNER = 'api.tests.SilentDjangoTestSuiteRunner'
 
 # etcd settings
-ETCD_HOST, ETCD_PORT = os.environ.get('ETCD', '127.0.0.1:4001').split(',')[0].split(':')
+ETCD_HOST = os.environ.get('DEIS_ETCD_1_SERVICE_HOST', '127.0.0.1')
+ETCD_PORT = os.environ.get('DEIS_ETCD_1_SERVICE_PORT_CLIENT', 4001)
 
 # default deis settings
 LOG_LINES = 1000
