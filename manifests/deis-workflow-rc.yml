@@ -15,6 +15,9 @@ spec:
     spec:
       containers:
       - name: deis-workflow
-        image: 192.168.99.100:5000/deis/workflow:git-3b9ce13
+        image: deis/workflow:latest
+        env:
+          - name: DEBUG
+            value: "true"
         ports:
           - containerPort: 8000

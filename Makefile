@@ -2,9 +2,10 @@ ifndef BUILD_TAG
   BUILD_TAG = git-$(shell git rev-parse --short HEAD)
 endif
 
-COMPONENT = workflow
-IMAGE = $(IMAGE_PREFIX)$(COMPONENT):$(BUILD_TAG)
-SHELL_SCRIPTS = $(wildcard rootfs/bin/*) $(shell find "rootfs" -name '*.sh')
+COMPONENT=workflow
+IMAGE_PREFIX ?= $(DEV_REGISTRY)/deis/
+IMAGE=$(IMAGE_PREFIX)$(COMPONENT):$(BUILD_TAG)
+SHELL_SCRIPTS=$(wildcard rootfs/bin/*) $(shell find "rootfs" -name '*.sh')
 
 check-docker:
 	@if [ -z $$(which docker) ]; then \
@@ -17,8 +18,32 @@ build: docker-build
 docker-build: check-docker
 	docker build --rm -t $(IMAGE) rootfs
 
-docker-push:
+docker-push: update-manifests
 	docker push ${IMAGE}
+
+kube-delete:
+	-kubectl delete service deis-workflow
+	-kubectl delete rc deis-workflow
+
+kube-delete-database:
+	-kubectl delete service deis-database
+	-kubectl delete rc deis-database
+
+kube-delete-all: kube-delete kube-delete-database
+
+kube-create:
+	kubectl create -f manifests/deis-workflow-rc.yml.tmp
+	kubectl create -f manifests/deis-workflow-service.yml
+
+kube-create-database:
+	kubectl create -f manifests/deis-database-rc.yml
+	kubectl create -f manifests/deis-database-service.yml
+
+kube-create-all: kube-create-database kube-create
+
+update-manifests:
+	sed 's#\(image:\) .*#\1 $(IMAGE)#' manifests/deis-workflow-rc.yml \
+		> manifests/deis-workflow-rc.yml.tmp
 
 clean: check-docker
 	docker rmi $(IMAGE)
@@ -41,15 +66,18 @@ setup-venv:
 	@if [ ! -d venv ]; then virtualenv venv; fi
 	venv/bin/pip install --disable-pip-version-check -q -r rootfs/requirements.txt -r rootfs/dev_requirements.txt
 
-test: test-style test-unit
+test: test-style test-unit test-functional
+
+test-style:
+	cd rootfs && flake8 --show-pep8 --show-source
+	shellcheck $(SHELL_SCRIPTS)
 
 test-unit:
 	cd rootfs \
 		&& coverage run manage.py test --noinput web registry api \
 		&& coverage report -m
 
-test-style:
-	cd rootfs && flake8 --show-pep8 --show-source
-	shellcheck $(SHELL_SCRIPTS)
+test-functional:
+	@echo "Implement functional tests in _tests directory"
 
-.PHONY: build clean commit-hook full-clean postgres setup-venv test test-unit test-style
+.PHONY: build clean commit-hook full-clean postgres setup-venv test test-style test-unit test-functional
