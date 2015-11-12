@@ -3,28 +3,14 @@ SECRET_KEY = '{{ getv "/deis/controller/secretKey" }}'
 BUILDER_KEY = '{{ getv "/deis/controller/builderKey" }}'
 
 # scheduler settings
-SCHEDULER_MODULE = 'scheduler.{{ if exists "/deis/controller/schedulerModule" }}{{ getv "/deis/controller/schedulerModule" }}{{ else }}fleet{{ end }}'
-SCHEDULER_TARGET = '{{ if exists "/deis/controller/schedulerTarget" }}{{ getv "/deis/controller/schedulerTarget" }}{{ else }}/var/run/fleet.sock{{ end }}'
-try:
-    SCHEDULER_OPTIONS = dict('{{ if exists "/deis/controller/schedulerOptions" }}{{ getv "/deis/controller/schedulerOptions" }}{{ else }}{}{{ end }}')
-except:
-    SCHEDULER_OPTIONS = {}
-
-# scheduler swarm manager host
-
-SWARM_HOST = '{{ if exists "/deis/scheduler/swarm/host" }}{{ getv "/deis/scheduler/swarm/host" }}{{ else }}127.0.0.1{{ end }}'
-
-MARATHON_HOST = '{{ if exists "/deis/scheduler/mesos/marathon" }}{{ getv "/deis/scheduler/mesos/marathon" }}{{ else }}127.0.0.1{{ end }}'
-
-K8S_MASTER = '{{ if exists "/deis/scheduler/k8s/master" }}{{ getv "/deis/scheduler/k8s/master" }}{{ else }}127.0.0.1{{ end }}'
+SCHEDULER_MODULE = 'scheduler.k8s'
+SCHEDULER_URL = 'kubernetes'
 
 # base64-encoded SSH private key to facilitate current version of "deis run"
 SSH_PRIVATE_KEY = """{{ if exists "/deis/platform/sshPrivateKey" }}{{ getv "/deis/platform/sshPrivateKey" }}{{ else }}""{{end}}"""
 
 # platform domain must be provided
 DEIS_DOMAIN = '{{ getv "/deis/platform/domain" }}'
-
-ENABLE_PLACEMENT_OPTIONS = """{{ if exists "/deis/platform/enablePlacementOptions" }}{{ getv "/deis/platform/enablePlacementOptions" }}{{ else }}false{{end}}"""
 
 # use the private registry module
 REGISTRY_URL = '{{ getv "/deis/registry/protocol" }}://{{ getv "/deis/registry/host" }}:{{ getv "/deis/registry/port" }}'  # noqa
@@ -53,7 +39,6 @@ REGISTRATION_MODE = '{{ getv "/deis/controller/registrationMode" }}'
 {{ if exists "/deis/controller/webEnabled" }}
 WEB_ENABLED = bool({{ getv "/deis/controller/webEnabled" }})
 {{ end }}
-UNIT_HOSTNAME = '{{ if exists "/deis/controller/unitHostname" }}{{ getv "/deis/controller/unitHostname" }}{{ else }}default{{ end }}'
 
 {{ if exists "/deis/controller/subdomain" }}
 DEIS_RESERVED_NAMES = ['{{ getv "/deis/controller/subdomain" }}']
