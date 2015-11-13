@@ -305,13 +305,13 @@ SECRET_KEY = os.environ.get('DEIS_SECRET_KEY', 'CHANGEME_sapm$s%upvsw5l_zuy_&29r
 BUILDER_KEY = os.environ.get('DEIS_BUILDER_KEY', 'CHANGEME_sapm$s%upvsw5l_zuy_&29rkywd^78ff(qi')
 
 # registry settings
-REGISTRY_URL = 'http://localhost:5000'
-REGISTRY_HOST = 'localhost'
-REGISTRY_PORT = 5000
+REGISTRY_HOST = os.environ.get('DEIS_REGISTRY_SERVICE_HOST', '127.0.0.1')
+REGISTRY_PORT = os.environ.get('DEIS_REGISTRY_SERVICE_PORT', 5000)
+REGISTRY_URL = '{}:{}'.format(REGISTRY_HOST, REGISTRY_PORT)
 
 # logger settings
-LOGGER_HOST = 'localhost'
-LOGGER_PORT = 8088
+LOGGER_HOST = os.environ.get('DEIS_LOGGER_SERVICE_HOST', '127.0.0.1')
+LOGGER_PORT = os.environ.get('DEIS_LOGGER_SERVICE_PORT', 8088)
 
 # check if we can register users with `deis register`
 REGISTRATION_ENABLED = True
@@ -319,11 +319,14 @@ REGISTRATION_ENABLED = True
 # check if we should enable the web UI module
 WEB_ENABLED = False
 
-# default to sqlite3, but allow postgresql config through envvars
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.' + os.environ.get('DATABASE_ENGINE', 'postgresql_psycopg2'),
-        'NAME': os.environ.get('DATABASE_NAME', 'deis'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DEIS_DATABASE_NAME', 'deis'),
+        'USER': os.environ.get('DEIS_DATABASE_USER', ''),
+        'PASSWORD': os.environ.get('DEIS_DATABASE_PASSWORD', ''),
+        'HOST': os.environ.get('DEIS_DATABASE_SERVICE_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('DEIS_DATABASE_SERVICE_PORT', 5432),
         # randomize test database name so we can run multiple unit tests simultaneously
         'TEST_NAME': "unittest-{}".format(''.join(
             random.choice(string.ascii_letters + string.digits) for _ in range(8)))

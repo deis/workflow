@@ -6,31 +6,8 @@ BUILDER_KEY = '{{ getv "/deis/controller/builderKey" }}'
 SCHEDULER_MODULE = 'scheduler.k8s'
 SCHEDULER_URL = 'kubernetes'
 
-# base64-encoded SSH private key to facilitate current version of "deis run"
-SSH_PRIVATE_KEY = """{{ if exists "/deis/platform/sshPrivateKey" }}{{ getv "/deis/platform/sshPrivateKey" }}{{ else }}""{{end}}"""
-
 # platform domain must be provided
 DEIS_DOMAIN = '{{ getv "/deis/platform/domain" }}'
-
-# use the private registry module
-REGISTRY_URL = '{{ getv "/deis/registry/protocol" }}://{{ getv "/deis/registry/host" }}:{{ getv "/deis/registry/port" }}'  # noqa
-REGISTRY_HOST = '{{ getv "/deis/registry/host" }}'
-REGISTRY_PORT = '{{ getv "/deis/registry/port" }}'
-
-# default to sqlite3, but allow postgresql config through envvars
-# 'ENGINE': 'django.db.backends.{{ getv "/deis/database/engine" }}',
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '{{ getv "/deis/database/name" }}',
-        'USER': '{{ getv "/deis/database/user" }}',
-        'PASSWORD': '{{ getv "/deis/database/password" }}',
-        'HOST': '{{ getv "/deis/database/host" }}',
-        'PORT': '{{ getv "/deis/database/port" }}',
-    }
-}
-
-LOGGER_HOST = '{{ getv "/deis/logs/host"}}'
 
 {{ if exists "/deis/controller/registrationMode" }}
 REGISTRATION_MODE = '{{ getv "/deis/controller/registrationMode" }}'
