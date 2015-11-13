@@ -245,25 +245,6 @@ class AppTest(TestCase):
         response = self.client.get(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.data['count'], 1)
 
-    def test_run_without_auth(self):
-        """If the administrator has not provided SSH private key for run commands,
-        make sure a friendly error message is provided on run"""
-        settings.SSH_PRIVATE_KEY = ''
-        url = '/v1/apps'
-        body = {'id': 'autotest'}
-        response = self.client.post(url, json.dumps(body), content_type='application/json',
-                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
-        self.assertEqual(response.status_code, 201)
-        app_id = response.data['id']  # noqa
-        # test run
-        url = '/v1/apps/{app_id}/run'.format(**locals())
-        body = {'command': 'ls -al'}
-        response = self.client.post(url, json.dumps(body), content_type='application/json',
-                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
-        self.assertEquals(response.status_code, 400)
-        self.assertEquals(response.data, {'detail': 'Support for admin commands '
-                                                    'is not configured'})
-
     def test_run_without_release_should_error(self):
         """
         A user should not be able to run a one-off command unless a release

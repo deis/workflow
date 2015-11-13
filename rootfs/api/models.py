@@ -179,10 +179,9 @@ class App(UuidAuditedModel):
     @property
     def _scheduler(self):
         mod = importlib.import_module(settings.SCHEDULER_MODULE)
-        return mod.SchedulerClient(settings.SCHEDULER_TARGET,
+        return mod.SchedulerClient(settings.SCHEDULER_URL,
                                    settings.SCHEDULER_AUTH,
-                                   settings.SCHEDULER_OPTIONS,
-                                   settings.SSH_PRIVATE_KEY)
+                                   settings.SCHEDULER_OPTIONS)
 
     def __str__(self):
         return self.id
@@ -542,10 +541,6 @@ class App(UuidAuditedModel):
 
     def run(self, user, command):
         """Run a one-off command in an ephemeral app container."""
-        # FIXME: remove the need for SSH private keys by using
-        # a scheduler that supports one-off admin tasks natively
-        if not settings.SSH_PRIVATE_KEY:
-            raise EnvironmentError('Support for admin commands is not configured')
         if self.release_set.latest().build is None:
             raise EnvironmentError('No build associated with this release to run this command')
         # TODO: add support for interactive shell

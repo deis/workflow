@@ -5,7 +5,6 @@ Django settings for the Deis project.
 from __future__ import unicode_literals
 import os.path
 import random
-import semantic_version as semver
 import string
 import sys
 import tempfile
@@ -86,9 +85,6 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = None  # @UnusedVariable
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -300,12 +296,11 @@ DEIS_RESERVED_NAMES = ['deis']
 
 # default scheduler settings
 SCHEDULER_MODULE = 'scheduler.mock'
-SCHEDULER_TARGET = ''  # path to scheduler endpoint (e.g. /var/run/fleet.sock)
-SCHEDULER_AUTH = ''
-SCHEDULER_OPTIONS = {}
+SCHEDULER_URL = 'localhost'
+SCHEDULER_AUTH = None
+SCHEDULER_OPTIONS = None
 
 # security keys and auth tokens
-SSH_PRIVATE_KEY = ''  # used for SSH connections to facilitate "deis run"
 SECRET_KEY = os.environ.get('DEIS_SECRET_KEY', 'CHANGEME_sapm$s%upvsw5l_zuy_&29rkywd^78ff(qi')
 BUILDER_KEY = os.environ.get('DEIS_BUILDER_KEY', 'CHANGEME_sapm$s%upvsw5l_zuy_&29rkywd^78ff(qi')
 
@@ -373,17 +368,6 @@ except ImportError:
 if os.path.exists('/templates/confd_settings.py'):
     sys.path.append('/templates')
     from confd_settings import *  # noqa
-
-# Disable swap when mem limits are set, unless Docker is too old
-DISABLE_SWAP = '--memory-swap=-1'
-try:
-    version = 'unknown'
-    from registry.dockerclient import DockerClient
-    version = DockerClient().client.version().get('Version')
-    if not semver.validate(version) or semver.Version(version) < semver.Version('1.5.0'):
-        DISABLE_SWAP = ''
-except:
-    print("Not disabling --memory-swap for Docker version {}".format(version))
 
 # LDAP Backend Configuration
 # Should be always after the confd_settings import.

@@ -100,8 +100,8 @@ MATCH = re.compile(
 
 class KubeHTTPClient(AbstractSchedulerClient):
 
-    def __init__(self, target, auth, options, pkey):
-        super(KubeHTTPClient, self).__init__(target, auth, options, pkey)
+    def __init__(self, target, auth, options):
+        super(KubeHTTPClient, self).__init__(target, auth, options)
         self.url = settings.SCHEDULER_URL
         self.registry = settings.REGISTRY_URL
         self.apiversion = "v1"
