@@ -14,10 +14,18 @@ spec:
         name: deis-workflow
     spec:
       containers:
-      - name: deis-workflow
-        image: deis/workflow:latest
-        env:
-          - name: DEBUG
-            value: "true"
-        ports:
-          - containerPort: 8000
+        - name: deis-workflow
+          image: deis/workflow:latest
+          env:
+            - name: DEBUG
+              value: "true"
+          ports:
+            - containerPort: 8000
+              name: http
+          volumeMounts:
+            - mountPath: /var/run/docker.sock
+              name: docker-socket
+      volumes:
+        - name: docker-socket
+          hostPath:
+            path: /var/run/docker.sock

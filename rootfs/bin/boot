@@ -104,9 +104,11 @@ cd /app
 mkdir -p /data/logs
 chmod 777 /data/logs
 
-# allow deis user permission to Docker
+# allow deis user group permission to Docker socket
 if addgroup -g "$(stat -c "%g" /var/run/docker.sock)" docker; then
 	addgroup deis docker
+else
+	addgroup deis "$(stat -c "%G" /var/run/docker.sock)"
 fi
 
 # run an idempotent database migration
