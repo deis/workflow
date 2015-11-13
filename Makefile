@@ -32,7 +32,7 @@ kube-delete-database:
 kube-delete-all: kube-delete kube-delete-database
 
 kube-create:
-	kubectl create -f manifests/deis-workflow-rc.yml.tmp
+	kubectl create -f manifests/deis-workflow-rc.tmp.yml
 	kubectl create -f manifests/deis-workflow-service.yml
 
 kube-create-database:
@@ -43,7 +43,7 @@ kube-create-all: kube-create-database kube-create
 
 update-manifests:
 	sed 's#\(image:\) .*#\1 $(IMAGE)#' manifests/deis-workflow-rc.yml \
-		> manifests/deis-workflow-rc.yml.tmp
+		> manifests/deis-workflow-rc.tmp.yml
 
 clean: check-docker
 	docker rmi $(IMAGE)

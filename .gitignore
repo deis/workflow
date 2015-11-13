@@ -26,7 +26,7 @@ client/makeself/
 docs/_build/
 docs/docs.zip
 docs/dummy.sqlite3
-manifests/*.tmp
+manifests/*.tmp.yml
 
 # coverage reports
 .coverage
