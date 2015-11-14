@@ -6,11 +6,6 @@ gid = 1000
 mode  = "0640"
 keys = [
   "/deis/controller",
-  "/deis/database",
-  "/deis/registry",
-  "/deis/domains",
   "/deis/platform",
-  "/deis/scheduler",
-  "/deis/logs",
 ]
 reload_cmd = "/app/bin/reload"
