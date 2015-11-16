@@ -4,7 +4,7 @@ BUILDER_KEY = '{{ getv "/deis/controller/builderKey" }}'
 
 # scheduler settings
 SCHEDULER_MODULE = 'scheduler.k8s'
-SCHEDULER_URL = 'kubernetes'
+SCHEDULER_URL = 'https://kubernetes.default.svc.cluster.local'
 
 # platform domain must be provided
 DEIS_DOMAIN = '{{ getv "/deis/platform/domain" }}'

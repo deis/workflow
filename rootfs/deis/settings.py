@@ -275,6 +275,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        'scheduler': {
+            'handlers': ['console', 'mail_admins', 'rsyslog'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     }
 }
 TEST_RUNNER = 'api.tests.SilentDjangoTestSuiteRunner'
