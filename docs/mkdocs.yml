@@ -1,0 +1,84 @@
+#
+# NOTE: titles need to be capitalized here to work around MkDocs automatically downcasing title
+# names
+#
+site_name: Deis Documentation
+pages:
+  - Welcome: index.md
+  - Understanding Deis:
+    - Architecture: understanding-deis/architecture.md
+    - Concepts: understanding-deis/concepts.md
+    - Components: understanding-deis/components.md
+    - Failover: understanding-deis/failover.md
+  - Installing Deis:
+    - Quick Start: installing-deis/quickstart.md
+    - System Requirements: installing-deis/system-requirements.md
+    - Bare Metal: installing-deis/bare-metal.md
+    - DigitalOcean: installing-deis/digitalocean.md
+    - Installing deisctl: installing-deis/installing-deisctl.md
+    - Installing the Deis Platform: installing-deis/installing-the-deis-platform.md
+  - Using Deis:
+    - Installing the Client: using-deis/installing-the-client.md
+    - Registering a User: using-deis/registering-a-user.md
+    - Deploying an Application: using-deis/deploying-an-application.md
+    - Process Types and the Procfile: using-deis/process-types-and-the-procfile.md
+    - Using Buildpacks: using-deis/using-buildpacks.md
+    - Using Dockerfiles: using-deis/using-dockerfiles.md
+    - Using Docker Images: using-deis/using-docker-images.md
+    - Configuring an Application: using-deis/configuring-an-application.md
+    - Managing an Application: using-deis/managing-an-application.md
+    - Application SSL Certificates: using-deis/application-ssl-certificates.md
+  - Managing Deis:
+    - Adding/Removing Hosts: managing-deis/adding-or-removing-hosts.md
+    - Backing up and Restoring Data: managing-deis/backing-up-and-restoring-data.md
+    - Configuring DNS: managing-deis/configuring-dns.md
+    - Configuring Load Balancers: managing-deis/configuring-load-balancers.md
+    - Managing Disk Usage: managing-deis/managing-disk-usage.md
+    - Operational Tasks: managing-deis/operational-tasks.md
+    - Platform Logging: managing-deis/platform-logging.md
+    - Platform Monitoring: managing-deis/platform-monitoring.md
+    - Production Deployments: managing-deis/production-deployments.md
+    - Isolating the Planes: managing-deis/isolating-the-planes.md
+    - Security Considerations: managing-deis/security-considerations.md
+    - Platform SSL: managing-deis/platform-ssl.md
+    - Upgrading Deis: managing-deis/upgrading-deis.md
+    - Using a Proxy Server: managing-deis/using-a-proxy-server.md
+  - Customizing Deis:
+    - CLI Plugins: customizing-deis/cli-plugins.md
+  - Troubleshooting:
+    - Troubleshooting with kubectl: troubleshooting/troubleshooting-with-kubectl.md
+  - Roadmap:
+    - Planning Process: roadmap/planning-process.md
+    - Roadmap: roadmap/roadmap.md
+    - Release Schedule: roadmap/release-schedule.md
+    - Release Checklist: roadmap/release-checklist.md
+    - Test Plan: roadmap/test-plan.md
+  - Contributing:
+    - Overview: contributing/overview.md
+    - Design Documents: contributing/design-documents.md
+    - Development Environment: contributing/development-environment.md
+    - Testing: contributing/testing.md
+    - Submitting a Pull Request: contributing/submitting-a-pull-request.md
+    - Community: contributing/community.md
+    - Triaging Issues: contributing/triaging-issues.md
+    - Conduct: contributing/conduct.md
+  - Reference Guide:
+    - Terms: reference-guide/terms.md
+    - Creating a Self-Signed SSL Certificate: reference-guide/creating-a-self-signed-ssl-certificate.md
+    # FIXME (bacongobbler): our custom deis theme only supports a toctree depth of 2 due to css issues
+    - Controller API v1.0: reference-guide/controller-api/v1.0.md
+    - Controller API v1.1: reference-guide/controller-api/v1.1.md
+    - Controller API v1.2: reference-guide/controller-api/v1.2.md
+    - Controller API v1.3: reference-guide/controller-api/v1.3.md
+    - Controller API v1.4: reference-guide/controller-api/v1.4.md
+    - Controller API v1.5: reference-guide/controller-api/v1.5.md
+    - Controller API v1.6: reference-guide/controller-api/v1.6.md
+    - Controller API v1.7: reference-guide/controller-api/v1.7.md
+  - FAQ: faq.md
+theme_dir: themes/deis
+docs_dir: src
+markdown_extensions:
+  - markdown_checklist.extension
+  - admonition
+  - codehilite
+google_analytics: ['UA-42867143-1', 'deis.io']
