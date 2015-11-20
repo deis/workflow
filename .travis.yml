@@ -10,7 +10,7 @@ cache:
   directories:
     - $HOME/.cache/pip
     - $GOPATH/src/github.com/deis/workflow/vendor
-    - $HOME/virtualenv/python2.7
+    - $HOME/venv
 services:
   - docker
   - postgresql
@@ -24,8 +24,8 @@ before_install:
   - wget "http://ftp.debian.org/debian/pool/main/s/shellcheck/shellcheck_0.3.7-4_amd64.deb"
   - sudo dpkg -i shellcheck_0.3.7-4_amd64.deb
   - sudo pip install virtualenv
-  - virtualenv $HOME/virtualenv/python2.7
-  - source $HOME/virtualenv/python2.7/bin/activate
+  - virtualenv $HOME/venv
+  - source $HOME/venv/bin/activate
   - createdb -U postgres deis
 install:
   - pip install -r rootfs/requirements.txt
