@@ -12,6 +12,7 @@ cache:
     - $GOPATH/src/github.com/deis/helm/vendor
     - $HOME/virtualenv/python2.7
 services:
+  - docker
   - postgresql
 sudo: required
 addons:
@@ -33,3 +34,11 @@ install:
 script:
   - make test
   - make -C client/ test
+before_deploy:
+  - BUILD_TAG=latest IMAGE_PREFIX=deis/ make build
+deploy:
+  provider: script
+  script: _scripts/ci/deploy.sh
+  on:
+    branch: master
+    condition: ${TRAVIS_PULL_REQUEST} == false
