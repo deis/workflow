@@ -9,7 +9,7 @@ branches:
 cache:
   directories:
     - $HOME/.cache/pip
-    - $GOPATH/src/github.com/deis/helm/vendor
+    - $GOPATH/src/github.com/deis/workflow/vendor
     - $HOME/virtualenv/python2.7
 services:
   - docker
