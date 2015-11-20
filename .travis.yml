@@ -16,7 +16,7 @@ services:
   - postgresql
 sudo: required
 addons:
-  - postgresql: "9.3"
+  postgresql: "9.3"
 before_install:
   - wget "https://github.com/Masterminds/glide/releases/download/0.7.2/glide-0.7.2-linux-amd64.tar.gz"
   - sudo tar -vxz -C /usr/local/bin --strip=1 -f glide-0.7.2-linux-amd64.tar.gz
