@@ -1,11 +1,10 @@
-ifndef BUILD_TAG
-  BUILD_TAG = git-$(shell git rev-parse --short HEAD)
-endif
 
-COMPONENT=workflow
-IMAGE_PREFIX ?= $(DEV_REGISTRY)/deis/
-IMAGE=$(IMAGE_PREFIX)$(COMPONENT):$(BUILD_TAG)
-SHELL_SCRIPTS=$(wildcard rootfs/bin/*) $(shell find "rootfs" -name '*.sh')
+REGISTRY ?= $(DEV_REGISTRY)
+IMAGE_PREFIX ?= deis
+COMPONENT ?= workflow
+BUILD_TAG ?= git-$(shell git rev-parse --short HEAD)
+IMAGE = $(REGISTRY)/$(IMAGE_PREFIX)/$(COMPONENT):$(BUILD_TAG)
+SHELL_SCRIPTS = $(wildcard rootfs/bin/*) $(shell find "rootfs" -name '*.sh') $(shell find "_scripts/ci" -name '*.sh')
 
 check-docker:
 	@if [ -z $$(which docker) ]; then \

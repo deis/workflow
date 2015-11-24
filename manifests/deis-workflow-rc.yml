@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: deis-workflow
-          image: deis/workflow:latest
+          image: quay.io/deisci/workflow:v2-alpha
           env:
             - name: DEBUG
               value: "true"

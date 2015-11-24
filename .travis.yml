@@ -34,11 +34,8 @@ install:
 script:
   - make test
   - make -C client/ test
-before_deploy:
-  - BUILD_TAG=latest IMAGE_PREFIX=deis/ make build
 deploy:
   provider: script
   script: _scripts/ci/deploy.sh
   on:
     branch: master
-    condition: ${TRAVIS_PULL_REQUEST} == false
