@@ -41,22 +41,25 @@ RC_TEMPLATE = """\
   "metadata": {
     "name": "$name",
     "labels": {
-      "name": "$id"
+      "app": "$id",
+      "heritage": "deis"
     }
   },
   "spec": {
     "replicas": $num,
     "selector": {
-      "name": "$id",
+      "app": "$id",
       "version": "$appversion",
-      "type": "$type"
+      "type": "$type",
+      "heritage": "deis"
     },
     "template": {
       "metadata": {
         "labels": {
-          "name": "$id",
+          "app": "$id",
           "version": "$appversion",
-          "type": "$type"
+          "type": "$type",
+          "heritage": "deis"
         }
       },
       "spec": {
@@ -79,7 +82,7 @@ SERVICE_TEMPLATE = """\
   "metadata": {
     "name": "$name",
     "labels": {
-      "name": "$label"
+      "app": "$label"
     }
   },
   "spec": {
@@ -91,8 +94,9 @@ SERVICE_TEMPLATE = """\
       }
     ],
     "selector": {
-      "name": "$label",
-      "type": "$type"
+      "app": "$label",
+      "type": "$type",
+      "heritage": "deis"
     }
   }
 }
