@@ -90,10 +90,8 @@ class DockerClient(object):
 def check_blacklist(repo):
     """Check a Docker repository name for collision with deis/* components."""
     blacklisted = [  # NOTE: keep this list up to date!
-        'builder', 'cache', 'controller', 'database', 'logger', 'logspout',
-        'publisher', 'registry', 'router', 'store-admin', 'store-daemon',
-        'store-gateway', 'store-metadata', 'store-monitor', 'swarm', 'mesos-master',
-        'mesos-marathon', 'mesos-slave', 'zookeeper',
+        'builder', 'database', 'dockerbuilder', 'etcd', 'minio', 'registry', 'router',
+        'slugbuilder', 'slugrunner', 'workflow',
     ]
     if any("deis/{}".format(c) in repo for c in blacklisted):
         raise PermissionDenied("Repository name {} is not allowed".format(repo))
