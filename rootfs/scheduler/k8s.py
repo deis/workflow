@@ -1,6 +1,5 @@
 import json
 import logging
-import random
 import re
 import string
 import time
@@ -82,7 +81,7 @@ SERVICE_TEMPLATE = """\
   "metadata": {
     "name": "$name",
     "labels": {
-      "app": "$label"
+      "app": "$name"
     }
   },
   "spec": {
@@ -94,7 +93,7 @@ SERVICE_TEMPLATE = """\
       }
     ],
     "selector": {
-      "app": "$label",
+      "app": "$name",
       "type": "$type",
       "heritage": "deis"
     }
@@ -405,9 +404,6 @@ class KubeHTTPClient(AbstractSchedulerClient):
         return resp.status_code, resp.text, resp.reason
 
     def _create_service(self, name, app_name, app_type):
-        random.seed(app_name)
-        app_id = random.randint(1, 100000)
-        appname = "app-" + str(app_id)
         actual_pod = {}
         for _ in xrange(300):
             status, data, reason = self._get_pods(app_name)
@@ -437,29 +433,28 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
         l = {
             "version": self.apiversion,
-            "label": app_name,
             "port": port,
             "type": app_type,
-            "name": appname,
+            "name": app_name,
         }
 
         template = string.Template(SERVICE_TEMPLATE).substitute(l)
         url = self._api("/namespaces/{}/services", app_name)
         resp = self.session.post(url, json=json.loads(template))
         if resp.status_code == 409:
-            status, data, reason = self._get_service(appname, app_name)
+            status, data, reason = self._get_service(app_name, app_name)
             srv = json.loads(data)
             if srv['spec']['selector']['type'] == 'web':
                 return
 
             srv['spec']['selector']['type'] = app_type
             srv['spec']['ports'][0]['targetPort'] = port
-            url = self._api("/namespaces/{}/services/{}", app_name, appname)
+            url = self._api("/namespaces/{}/services/{}", app_name, app_name)
             resp2 = self.session.put(url, json=srv)
             if unhealthy(resp2.status_code):
-                error(resp, 'update Service "{}" in Namespace "{}"', app_name, appname)
+                error(resp, 'update Service "{}" in Namespace "{}"', app_name, app_name)
         elif unhealthy(resp.status_code):
-            error(resp, 'create Service "{}" in Namespace "{}"', app_name, appname)
+            error(resp, 'create Service "{}" in Namespace "{}"', app_name, app_name)
 
     def start(self, name):
         """Start a container."""

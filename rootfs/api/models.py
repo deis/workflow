@@ -153,7 +153,7 @@ class App(UuidAuditedModel):
     """
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
-    id = models.SlugField(max_length=64, unique=True, default=select_app_name,
+    id = models.SlugField(max_length=24, unique=True, default=select_app_name,
                           validators=[validate_id_is_docker_compatible,
                                       validate_reserved_names])
     structure = JSONField(default={}, blank=True, validators=[validate_app_structure])
