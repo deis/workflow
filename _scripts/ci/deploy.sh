@@ -3,7 +3,7 @@
 # Build and push Docker images to Docker Hub and quay.io.
 #
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit 1
 
 docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" docker.io
 REGISTRY=docker.io IMAGE_PREFIX=deisci BUILD_TAG=v2-alpha make -C ../.. docker-build docker-push
