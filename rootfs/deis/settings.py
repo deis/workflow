@@ -330,7 +330,7 @@ DATABASES = {
         'NAME': os.environ.get('DEIS_DATABASE_NAME', 'deis'),
         'USER': os.environ.get('DEIS_DATABASE_USER', ''),
         'PASSWORD': os.environ.get('DEIS_DATABASE_PASSWORD', ''),
-        'HOST': os.environ.get('DEIS_DATABASE_SERVICE_HOST', '127.0.0.1'),
+        'HOST': os.environ.get('DEIS_DATABASE_SERVICE_HOST', ''),
         'PORT': os.environ.get('DEIS_DATABASE_SERVICE_PORT', 5432),
         # randomize test database name so we can run multiple unit tests simultaneously
         'TEST_NAME': "unittest-{}".format(''.join(
