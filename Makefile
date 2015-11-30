@@ -1,10 +1,10 @@
 # If DEIS_REGISTRY is not set, try to populate it from legacy DEV_REGISTRY
-DEIS_REGISTRY ?= $(DEV_REGISTRY)
+DEIS_REGISTRY ?= $(DEV_REGISTRY)/
 IMAGE_PREFIX ?= deis
 COMPONENT ?= workflow
-BUILD_TAG ?= git-$(shell git rev-parse --short HEAD)
-IMAGE = $(DEIS_REGISTRY)/$(IMAGE_PREFIX)/$(COMPONENT):$(BUILD_TAG)
-SHELL_SCRIPTS = $(wildcard rootfs/bin/*) $(shell find "rootfs" -name '*.sh') $(shell find "_scripts/ci" -name '*.sh')
+VERSION ?= git-$(shell git rev-parse --short HEAD)
+IMAGE = $(DEIS_REGISTRY)$(IMAGE_PREFIX)/$(COMPONENT):$(VERSION)
+SHELL_SCRIPTS = $(wildcard rootfs/bin/*) $(shell find "rootfs" -name '*.sh') $(wildcard _scripts/*.sh)
 
 check-docker:
 	@if [ -z $$(which docker) ]; then \
