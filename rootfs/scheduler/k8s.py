@@ -106,10 +106,17 @@ MATCH = re.compile(
     r'(?P<app>[a-z0-9-]+)_?(?P<version>v[0-9]+)?\.?(?P<c_type>[a-z-_]+)')
 
 
-def raise_err(resp, errmsg, *args):
+def error(resp, errmsg, *args):
     errmsg = errmsg.format(*args)
     errmsg = "failed to {}: {} {}\n{}".format(errmsg, resp.status_code, resp.reason, resp.json())
     raise RuntimeError(errmsg)
+
+
+def unhealthy(status_code):
+    if not 200 <= status_code <= 299:
+        return True
+
+    return False
 
 
 class KubeHTTPClient(AbstractSchedulerClient):
@@ -137,8 +144,9 @@ class KubeHTTPClient(AbstractSchedulerClient):
     def _get_old_rc(self, name, app_type):
         url = self._api("/namespaces/{}/replicationcontrollers", name)
         resp = self.session.get(url)
-        if not 200 <= resp.status_code <= 299:
-            raise_err(resp, 'get ReplicationControllers in Namespace "{}"', name)
+        if unhealthy(resp.status_code):
+            error(resp, 'get ReplicationControllers in Namespace "{}"', name)
+
         exists = False
         prev_rc = []
         for rc in resp.json()['items']:
@@ -149,8 +157,8 @@ class KubeHTTPClient(AbstractSchedulerClient):
                 break
         if exists:
             return prev_rc
-        else:
-            return 0
+
+        return 0
 
     def _get_rc_status(self, name, namespace):
         url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
@@ -160,9 +168,9 @@ class KubeHTTPClient(AbstractSchedulerClient):
     def _get_rc_(self, name, namespace):
         url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
         resp = self.session.get(url)
-        if not 200 <= resp.status_code <= 299:
-            raise_err(resp, 'get ReplicationController "{}" in Namespace "{}"',
-                      name, namespace)
+        if unhealthy(resp.status_code):
+            error(resp, 'get ReplicationController "{}" in Namespace "{}"', name, namespace)
+
         return resp.json()
 
     def deploy(self, name, image, command, **kwargs):
@@ -176,6 +184,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             old_rc_name = old_rc["metadata"]["name"]
         else:
             desired = 1
+
         new_rc_name = new_rc["metadata"]["name"]
         try:
             count = 1
@@ -189,16 +198,17 @@ class KubeHTTPClient(AbstractSchedulerClient):
             self._delete_rc(new_rc["metadata"]["name"], app_name)
             if old_rc:
                 self._scale_app(old_rc["metadata"]["name"], desired, app_name)
-            err = '{} (deploy): {}'.format(name, e)
-            raise RuntimeError(err)
+
+            raise RuntimeError('{} (deploy): {}'.format(name, e))
         if old_rc:
             self._delete_rc(old_rc_name, app_name)
 
     def _get_events(self, namespace):
         url = self._api("/namespaces/{}/events", namespace)
         resp = self.session.get(url)
-        if not 200 <= resp.status_code <= 299:
-            raise_err(resp, "get Events in Namespace {}", namespace)
+        if unhealthy(resp.status_code):
+            error(resp, "get Events in Namespace {}", namespace)
+
         return resp.status_code, resp.text, resp.reason
 
     def _get_schedule_status(self, name, num, namespace):
@@ -212,9 +222,12 @@ class KubeHTTPClient(AbstractSchedulerClient):
                 if pod['metadata']['generateName'] == name+'-':
                     count += 1
                     pods.append(pod['metadata']['name'])
+
             if count == num:
                 break
+
             time.sleep(1)
+
         for _ in xrange(120):
             count = 0
             status, data, reason = self._get_events(namespace)
@@ -226,8 +239,10 @@ class KubeHTTPClient(AbstractSchedulerClient):
                         count += 1
                     else:
                         raise RuntimeError(event['message'])
+
             if count == num:
                 break
+
             time.sleep(1)
 
     def _scale_rc(self, rc, namespace):
@@ -235,14 +250,17 @@ class KubeHTTPClient(AbstractSchedulerClient):
         num = rc["spec"]["replicas"]
         url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
         resp = self.session.put(url, json=rc)
-        if not 200 <= resp.status_code <= 299:
-            raise_err(resp, 'scale ReplicationController "{}"', name)
+        if unhealthy(resp.status_code):
+            error(resp, 'scale ReplicationController "{}"', name)
+
         resource_ver = rc['metadata']['resourceVersion']
         for _ in xrange(30):
             js_template = self._get_rc_(name, namespace)
             if js_template["metadata"]["resourceVersion"] != resource_ver:
                 break
+
             time.sleep(1)
+
         self._get_schedule_status(name, num, namespace)
         for _ in xrange(120):
             count = 0
@@ -252,8 +270,10 @@ class KubeHTTPClient(AbstractSchedulerClient):
                 if(pod['metadata']['generateName'] == name+'-' and
                    pod['status']['phase'] == 'Running'):
                     count += 1
+
             if count == num:
                 break
+
             time.sleep(1)
 
     def _scale_app(self, name, num, namespace):
@@ -264,13 +284,12 @@ class KubeHTTPClient(AbstractSchedulerClient):
     def scale(self, name, image, command, **kwargs):
         logger.debug('scale {}, img {}, params {}, cmd "{}"'.format(name, image, kwargs, command))
         app_name = kwargs.get('aname', {})
-        rc_name = name.replace(".", "-")
-        rc_name = rc_name.replace("_", "-")
-        if not 200 <= self._get_rc_status(rc_name, app_name) <= 299:
+        rc_name = name.replace('.', '-').replace('_', '-')
+        if unhealthy(self._get_rc_status(rc_name, app_name)):
             self.create(name, image, command, **kwargs)
             return
-        name = name.replace(".", "-")
-        name = name.replace("_", "-")
+
+        name = name.replace('.', '-').replace('_', '-')
         num = kwargs.get('num', {})
         js_template = self._get_rc_(name, app_name)
         old_replicas = js_template["spec"]["replicas"]
@@ -278,16 +297,14 @@ class KubeHTTPClient(AbstractSchedulerClient):
             self._scale_app(name, num, app_name)
         except Exception as e:
             self._scale_app(name, old_replicas, app_name)
-            err = '{} (Scale): {}'.format(name, e)
-            raise RuntimeError(err)
+            raise RuntimeError('{} (Scale): {}'.format(name, e))
 
     def _create_rc(self, name, image, command, **kwargs):
         container_fullname = name
         app_name = kwargs.get('aname', {})
-        app_type = name.split(".")[1]
-        container_name = app_name + "-" + app_type
-        name = name.replace(".", "-")
-        name = name.replace("_", "-")
+        app_type = name.split('.')[1]
+        container_name = app_name + '-' + app_type
+        name = name.replace('.', '-').replace('_', '-')
         args = command.split()
 
         # First ensure that the namespace was created
@@ -302,11 +319,13 @@ class KubeHTTPClient(AbstractSchedulerClient):
                     "name": app_name
                 }
             }
+
             resp = self.session.post(url, json=data)
             if not resp.status_code == 201:
-                raise_err(resp, "create Namespace {}".format(app_name))
+                error(resp, "create Namespace {}".format(app_name))
         elif resp.status_code != 200:
-            raise_err(resp, "locate Namespace {}".format(app_name))
+            error(resp, "locate Namespace {}".format(app_name))
+
         num = kwargs.get('num', {})
         l = {
             "name": name,
@@ -318,6 +337,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             "containername": container_name,
             "type": app_type,
         }
+
         template = string.Template(RC_TEMPLATE).substitute(l)
         js_template = json.loads(template)
         containers = js_template["spec"]["template"]["spec"]["containers"]
@@ -328,39 +348,46 @@ class KubeHTTPClient(AbstractSchedulerClient):
         cpu = kwargs.get('cpu', {}).get(loc['c_type'])
         if mem or cpu:
             containers[0]["resources"] = {"limits": {}}
+
         if mem:
             if mem[-2:-1].isalpha() and mem[-1].isalpha():
                 mem = mem[:-1]
+
             mem = mem+"i"
             containers[0]["resources"]["limits"]["memory"] = mem
+
         if cpu:
             cpu = float(cpu)/1024
             containers[0]["resources"]["limits"]["cpu"] = cpu
+
         url = self._api("/namespaces/{}/replicationcontrollers", app_name)
         resp = self.session.post(url, json=js_template)
-        if not 200 <= resp.status_code <= 299:
-            raise_err(resp, 'create ReplicationController "{}" in Namespace "{}"',
-                      name, app_name)
+        if unhealthy(resp.status_code):
+            error(resp, 'create ReplicationController "{}" in Namespace "{}"',
+                  name, app_name)
+
         create = False
         for _ in xrange(30):
             if not create and self._get_rc_status(name, app_name) == 404:
                 time.sleep(1)
                 continue
+
             create = True
             rc = self._get_rc_(name, app_name)
             if ("observedGeneration" in rc["status"]
                     and rc["metadata"]["generation"] == rc["status"]["observedGeneration"]):
                 break
+
             time.sleep(1)
+
         return resp.json()
 
     def create(self, name, image, command, **kwargs):
         """Create a container."""
         logger.debug('create {}, img {}, params {}, cmd "{}"'.format(name, image, kwargs, command))
         self._create_rc(name, image, command, **kwargs)
-        app_type = name.split(".")[1]
-        name = name.replace(".", "-")
-        name = name.replace("_", "-")
+        app_type = name.split('.')[1]
+        name = name.replace('.', '-').replace('_', '-')
         app_name = kwargs.get('aname', {})
         try:
             self._create_service(name, app_name, app_type)
@@ -372,8 +399,9 @@ class KubeHTTPClient(AbstractSchedulerClient):
     def _get_service(self, name, namespace):
         url = self._api("/namespaces/{}/services/{}", namespace, name)
         resp = self.session.get(url)
-        if not 200 <= resp.status_code <= 299:
-            raise_err(resp, 'get Service "{}" in Namespace "{}"', name, namespace)
+        if unhealthy(resp.status_code):
+            error(resp, 'get Service "{}" in Namespace "{}"', name, namespace)
+
         return resp.status_code, resp.text, resp.reason
 
     def _create_service(self, name, app_name, app_type):
@@ -389,9 +417,12 @@ class KubeHTTPClient(AbstractSchedulerClient):
                    pod['metadata']['generateName'] == name + '-'):
                     actual_pod = pod
                     break
+
             if actual_pod and actual_pod['status']['phase'] == 'Running':
                 break
+
             time.sleep(1)
+
         container_id = actual_pod['status']['containerStatuses'][0]['containerID'].split("//")[1]
         # ip = actual_pod['status']['hostIP']
         # TODO: more robust way of determining the first exposed port--this will only work on
@@ -403,6 +434,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             port = int(container['Config']['ExposedPorts'].keys()[0].split("/")[0])
         except:
             port = 5000
+
         l = {
             "version": self.apiversion,
             "label": app_name,
@@ -410,6 +442,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             "type": app_type,
             "name": appname,
         }
+
         template = string.Template(SERVICE_TEMPLATE).substitute(l)
         url = self._api("/namespaces/{}/services", app_name)
         resp = self.session.post(url, json=json.loads(template))
@@ -418,15 +451,15 @@ class KubeHTTPClient(AbstractSchedulerClient):
             srv = json.loads(data)
             if srv['spec']['selector']['type'] == 'web':
                 return
+
             srv['spec']['selector']['type'] = app_type
             srv['spec']['ports'][0]['targetPort'] = port
             url = self._api("/namespaces/{}/services/{}", app_name, appname)
             resp2 = self.session.put(url, json=srv)
-            if not 200 <= resp2.status_code <= 299:
-                raise_err(resp, 'update Service "{}" in Namespace "{}"',
-                          app_name, appname)
-        elif not 200 <= resp.status_code <= 299:
-            raise_err(resp, 'create Service "{}" in Namespace "{}"', app_name, appname)
+            if unhealthy(resp2.status_code):
+                error(resp, 'update Service "{}" in Namespace "{}"', app_name, appname)
+        elif unhealthy(resp.status_code):
+            error(resp, 'create Service "{}" in Namespace "{}"', app_name, appname)
 
     def start(self, name):
         """Start a container."""
@@ -439,9 +472,9 @@ class KubeHTTPClient(AbstractSchedulerClient):
     def _delete_rc(self, name, namespace):
         url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
         resp = self.session.delete(url)
-        if not 200 <= resp.status_code <= 299:
-            raise_err(resp, 'delete ReplicationController "{}" in Namespace "{}"',
-                      name, namespace)
+        if unhealthy(resp.status_code):
+            error(resp, 'delete ReplicationController "{}" in Namespace "{}"',
+                  name, namespace)
 
     def destroy(self, name):
         """Destroy a application by deleting its namespace."""
@@ -452,55 +485,62 @@ class KubeHTTPClient(AbstractSchedulerClient):
         if resp.status_code == 404:
             logger.warn('delete Namespace "{}": not found'.format(namespace))
         elif resp.status_code != 200:
-            raise_err(resp, 'delete Namespace "{}"', namespace)
+            error(resp, 'delete Namespace "{}"', namespace)
 
     def _get_pod(self, name, namespace):
         url = self._api("/namespaces/{}/pods/{}", namespace, name)
         resp = self.session.get(url)
-        if not 200 <= resp.status_code <= 299:
-            raise_err(resp, 'get Pod "{}" in Namespace "{}"', name, namespace)
+        if unhealthy(resp.status_code):
+            error(resp, 'get Pod "{}" in Namespace "{}"', name, namespace)
+
         return resp.status_code, resp.reason, resp.text
 
     def _get_pods(self, namespace):
         url = self._api("/namespaces/{}/pods", namespace)
         resp = self.session.get(url)
-        if not 200 <= resp.status_code <= 299:
-            raise_err(resp, 'get Pods in Namespace "{}"', namespace)
+        if unhealthy(resp.status_code):
+            error(resp, 'get Pods in Namespace "{}"', namespace)
+
         return resp.status_code, resp.text, resp.reason
 
     def _delete_pod(self, name, namespace):
         url = self._api("/namespaces/{}/pods/{}", namespace, name)
         resp = self.session.delete(url)
-        if not 200 <= resp.status_code <= 299:
-            raise_err(resp, 'delete Pod "{}" in Namespace "{}"', name, namespace)
+        if unhealthy(resp.status_code):
+            error(resp, 'delete Pod "{}" in Namespace "{}"', name, namespace)
+
+        # Verify the pod has been deleted. Give it 5 seconds.
         for _ in xrange(5):
             status, reason, data = self._get_pod(name, namespace)
-            if status != 404:
-                time.sleep(1)
-                continue
-            break
+            if status == 404:
+                break
+
+            time.sleep(1)
+
+        # Pod was not deleted within the grace period.
         if status != 404:
-            raise_err(resp, 'delete Pod "{}" in Namespace "{}"', name, namespace)
+            error(resp, 'delete Pod "{}" in Namespace "{}"', name, namespace)
 
     def _pod_log(self, name, namespace):
         url = self._api("/namespaces/{}/pods/{}/log", namespace, name)
         resp = self.session.get(url)
-        if not 200 <= resp.status_code <= 299:
-            raise_err(resp, 'get logs for Pod "{}" in Namespace "{}"', name, namespace)
+        if unhealthy(resp.status_code):
+            error(resp, 'get logs for Pod "{}" in Namespace "{}"', name, namespace)
+
         return resp.status_code, resp.text, resp.reason
 
     def logs(self, name):
         logger.debug("logs {}".format(name))
-        appname = name.split("_")[0]
-        name = name.replace(".", "-")
-        name = name.replace("_", "-")
-        status, data, reason = self._get_pods(appname)
+        app_name = name.split('_')[0]
+        name = name.replace('.', '-').replace('_', '-')
+        status, data, reason = self._get_pods(app_name)
         parsed_json = json.loads(data)
         log_data = ''
         for pod in parsed_json['items']:
             if name in pod['metadata']['generateName'] and pod['status']['phase'] == 'Running':
-                status, data, reason = self._pod_log(pod['metadata']['name'], appname)
+                status, data, reason = self._pod_log(pod['metadata']['name'], app_name)
                 log_data += data
+
         return log_data
 
     def run(self, name, image, entrypoint, command):
@@ -508,26 +548,28 @@ class KubeHTTPClient(AbstractSchedulerClient):
         logger.debug('run {}, img {}, entypoint {}, cmd "{}"'.format(
             name, image, entrypoint, command))
         appname = name.split('_')[0]
-        name = name.replace('.', '-')
-        name = name.replace('_', '-')
+        name = name.replace('.', '-').replace('_', '-')
         l = {
             'id': name,
             'version': self.apiversion,
             'image': self.registry + '/' + image,
         }
+
         template = string.Template(POD_TEMPLATE).substitute(l)
         if command.startswith('-c '):
             args = command.split(' ', 1)
             args[1] = args[1][1:-1]
         else:
             args = [command[1:-1]]
+
         js_template = json.loads(template)
         js_template['spec']['containers'][0]['command'] = [entrypoint]
         js_template['spec']['containers'][0]['args'] = args
         url = self._api("/namespaces/{}/pods", appname)
         resp = self.session.post(url, json=js_template)
-        if not 200 <= resp.status_code <= 299:
-            raise_err(resp, 'create Pod in Namespace "{}"', appname)
+        if unhealthy(resp.status_code):
+            error(resp, 'create Pod in Namespace "{}"', appname)
+
         while(1):
             parsed_json = {}
             status = 404
@@ -535,13 +577,16 @@ class KubeHTTPClient(AbstractSchedulerClient):
             data = ''
             for _ in xrange(5):
                 status, reason, data = self._get_pod(name, appname)
-                if not 200 <= status <= 299:
+                if unhealthy(status):
                     time.sleep(1)
                     continue
+
                 parsed_json = json.loads(data)
                 break
-            if not 200 <= status <= 299:
-                raise_err(resp, 'create Pod in Namespace "{}"', appname)
+
+            if unhealthy(status):
+                error(resp, 'create Pod in Namespace "{}"', appname)
+
             if parsed_json['status']['phase'] == 'Succeeded':
                 status, data, reason = self._pod_log(name, appname)
                 self._delete_pod(name, appname)
@@ -551,7 +596,9 @@ class KubeHTTPClient(AbstractSchedulerClient):
                 err_code = pod_state['terminated']['exitCode']
                 self._delete_pod(name, appname)
                 return err_code, data
+
             time.sleep(1)
+
         return 0, data
 
     def state(self, name):
@@ -564,17 +611,19 @@ class KubeHTTPClient(AbstractSchedulerClient):
             "Failed": JobState.crashed,
             "Unknown": JobState.error,
         }
+
         try:
-            appname = name.split("_")[0]
-            name = name.split(".")
-            name = name[0] + "-" + name[1]
-            name = name.replace("_", "-")
+            appname = name.split('_')[0]
+            name = name.split('.')
+            name = name[0] + '-' + name[1]
+            name = name.replace('_', '-')
             status, data, reason = self._get_pods(appname)
             parsed_json = json.loads(data)
             for pod in parsed_json["items"]:
                 if pod["metadata"]["generateName"] == name + "-":
                     phase = pod["status"]["phase"]
                     return phase_states[phase]
+
             return JobState.destroyed
         except Exception as err:
             logger.warn(err)
