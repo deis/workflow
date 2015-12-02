@@ -36,6 +36,6 @@ script:
   - make -C client/ test
 deploy:
   provider: script
-  script: _scripts/ci/deploy.sh
+  script: _scripts/deploy.sh
   on:
     branch: master
