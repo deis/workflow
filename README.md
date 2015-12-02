@@ -26,7 +26,7 @@ $ kubectl exec alpine -- curl -sS 10.247.187.217:4100/version
 {"etcdserver":"2.2.1","etcdcluster":"2.2.0"}
 ```
 
-Next build the deis/workflow image and push it to a Docker registry. The `$DEV_REGISTRY` environment variable must point to a registry accessible to your Kubernetes cluster. You may need to configure the Docker engines on your Kubernetes nodes to allow `--insecure-registry 192.168.0.0/16` (or the appropriate address range).
+Next build the deis/workflow image and push it to a Docker registry. The `$DEIS_REGISTRY` environment variable must point to a registry accessible to your Kubernetes cluster. You may need to configure the Docker engines on your Kubernetes nodes to allow `--insecure-registry 192.168.0.0/16` (or the appropriate address range).
 
 ```console
 $ make docker-build docker-push

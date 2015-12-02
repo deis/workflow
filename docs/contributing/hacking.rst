@@ -299,20 +299,20 @@ With a dev cluster now running, we are ready to set up a local Docker registry.
 Configure a Docker Registry
 ---------------------------
 
-The development workflow requires Docker Registry set at the ``DEV_REGISTRY``
+The development workflow requires Docker Registry set at the ``DEIS_REGISTRY``
 environment variable.  If you're developing locally you can use the ``dev-registry``
 target to spin up a quick, disposable registry inside a Docker container.
 The target ``dev-registry`` prints the registry's address and port when using ``docker-machine``;
-otherwise, use your host's IP address as returned by ``ifconfig`` with port 5000 for ``DEV_REGISTRY``.
+otherwise, use your host's IP address as returned by ``ifconfig`` with port 5000 for ``DEIS_REGISTRY``.
 
 .. code-block:: console
 
     $ make dev-registry
 
     To configure the registry for local Deis development:
-        export DEV_REGISTRY=192.168.59.103:5000
+        export DEIS_REGISTRY=192.168.59.103:5000
 
-It is important that you export the ``DEV_REGISTRY`` variable as instructed.
+It is important that you export the ``DEIS_REGISTRY`` variable as instructed.
 
 If you are developing elsewhere, you must set up a registry yourself.
 Make sure it meets the following requirements:

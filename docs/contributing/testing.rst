@@ -54,7 +54,7 @@ continuous deployment, start one locally.
     registry
 
     To use local registry for Deis development:
-        export DEV_REGISTRY=192.168.59.103:5000
+        export DEIS_REGISTRY=192.168.59.103:5000
 
 .. important::
 
