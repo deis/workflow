@@ -8,7 +8,7 @@ The Deis provision scripts default to a machine size which should be adequate to
 
 ## Choose a Provider
 
-Choose one of the following providers and deploy a new cluster:
+Choose one of the following providers and deploy a new kubernetes cluster:
 
 - [Amazon AWS](http://kubernetes.io/v1.1/docs/getting-started-guides/aws.html)
 - [Bare Metal](bare-metal.md)
