@@ -132,7 +132,10 @@ class KubeHTTPClient(AbstractSchedulerClient):
             'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json',
         }
-        session.verify = '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt'
+        # TODO: accessing the k8s api server by IP address rather than hostname avoids
+        # intermittent DNS errors, but at the price of disabling cert verification.
+        # session.verify = '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt'
+        session.verify = False
         self.session = session
 
     def _api(self, tmpl, *args):
