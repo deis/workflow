@@ -16,7 +16,7 @@ clean:
 	rm -rf $(BUILDDIR)/*
 
 deps:
-	pip install --disable-pip-version-check -r requirements.txt
+	pip install -r requirements.txt
 
 test: build
 	grep -q '<h1 id="welcome">Welcome</h1>' _build/html/index.html

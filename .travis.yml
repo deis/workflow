@@ -30,10 +30,12 @@ before_install:
 install:
   - pip install -r rootfs/requirements.txt
   - pip install -r rootfs/dev_requirements.txt
+  - make -C docs/ deps
   - GLIDE_HOME=/home/travis/.glide make -C client bootstrap
 script:
   - make test
   - make -C client/ test
+  - make -C docs/ test
 deploy:
   provider: script
   script: _scripts/deploy.sh
