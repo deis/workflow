@@ -21,8 +21,8 @@ before_install:
   - wget "https://github.com/Masterminds/glide/releases/download/0.7.2/glide-0.7.2-linux-amd64.tar.gz"
   - sudo tar -vxz -C /usr/local/bin --strip=1 -f glide-0.7.2-linux-amd64.tar.gz
   - go get github.com/golang/lint/golint
-  - wget "http://ftp.debian.org/debian/pool/main/s/shellcheck/shellcheck_0.3.7-4_amd64.deb"
-  - sudo dpkg -i shellcheck_0.3.7-4_amd64.deb
+  - wget "http://ftp.debian.org/debian/pool/main/s/shellcheck/shellcheck_0.3.7-5_amd64.deb"
+  - sudo dpkg -i shellcheck_0.3.7-5_amd64.deb
   - sudo pip install virtualenv
   - virtualenv $HOME/venv
   - source $HOME/venv/bin/activate
