@@ -94,21 +94,6 @@ def validate_reserved_names(value):
         raise ValidationError('{} is a reserved name.'.format(value))
 
 
-def validate_comma_separated(value):
-    """Error if the value doesn't look like a list of hostnames or IP addresses
-    separated by commas.
-    """
-    if not re.search(r'^[a-zA-Z0-9-,\.]+$', value):
-        raise ValidationError(
-            "{} should be a comma-separated list".format(value))
-
-
-def validate_domain(value):
-    """Error if the domain contains unexpected characters."""
-    if not re.search(r'^[a-zA-Z0-9-\.]+$', value):
-        raise ValidationError('"{}" contains unexpected characters'.format(value))
-
-
 def validate_certificate(value):
     try:
         crypto.load_certificate(crypto.FILETYPE_PEM, value)
