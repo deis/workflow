@@ -4,12 +4,12 @@ from rest_framework import permissions
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 
-from api import models
+from api.models.app import App
 
 
 def is_app_user(request, obj):
     if request.user.is_superuser or \
-            isinstance(obj, models.App) and obj.owner == request.user or \
+            isinstance(obj, App) and obj.owner == request.user or \
             hasattr(obj, 'app') and obj.app.owner == request.user:
         return True
     elif request.user.has_perm('use_app', obj) or \
@@ -130,6 +130,7 @@ class HasBuilderAuth(permissions.BasePermission):
         auth_header = request.environ.get('HTTP_X_DEIS_BUILDER_AUTH')
         if not auth_header:
             return False
+
         return auth_header == settings.BUILDER_KEY
 
 
@@ -144,5 +145,5 @@ class CanRegenerateToken(permissions.BasePermission):
         """
         if 'username' in request.data or 'all' in request.data:
             return request.user.is_superuser
-        else:
-            return True
+
+        return True

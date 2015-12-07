@@ -17,7 +17,7 @@ from rest_framework.authtoken.models import Token
 from scheduler import chaos
 
 
-@mock.patch('api.models.publish_release', lambda *args: None)
+@mock.patch('api.models.release.publish_release', lambda *args: None)
 class SchedulerTest(TransactionTestCase):
     """Tests creation of containers on nodes"""
 

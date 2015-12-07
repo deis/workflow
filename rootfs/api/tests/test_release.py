@@ -17,7 +17,7 @@ from api.models import Release
 from . import mock_status_ok
 
 
-@mock.patch('api.models.publish_release', lambda *args: None)
+@mock.patch('api.models.release.publish_release', lambda *args: None)
 class ReleaseTest(TransactionTestCase):
 
     """Tests push notification from build system"""
