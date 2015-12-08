@@ -64,15 +64,6 @@ etcd_safe_mkdir /deis/services
 etcd_safe_mkdir /deis/platform
 ETCD_PATH=/deis/platform etcd_set_default domain localhost
 
-# run etcd data migrations
-echo "controller: running etcd data migrations..."
-for script in /app/migrations/data/*.sh;
-do
-	# shellcheck disable=SC1090
-    . "$script";
-done
-echo "controller: done running etcd data migrations."
-
 # wait for confd to run once and install initial templates
 until confd -onetime -node "$ETCD" --confdir /app --log-level error; do
 	echo "controller: waiting for confd to write initial templates..."
