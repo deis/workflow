@@ -47,5 +47,4 @@ class APIVersionMiddleware(object):
         """
         # clients shouldn't care about the patch release
         response['DEIS_API_VERSION'] = __version__.rsplit('.', 1)[0]
-        response['X_DEIS_API_VERSION'] = response['DEIS_API_VERSION']  # DEPRECATED
         return response
