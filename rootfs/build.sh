@@ -13,6 +13,7 @@ fi
 # install required system packages
 apk add --update-cache \
   build-base \
+  curl \
   libffi-dev \
   libpq \
   openldap \
@@ -39,6 +40,7 @@ pip install --disable-pip-version-check --no-cache-dir -r /app/requirements.txt
 # cleanup.
 apk del --purge \
   build-base \
+  curl \
   libffi-dev \
   openldap-dev \
   postgresql-dev \
