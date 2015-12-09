@@ -49,6 +49,9 @@ def mock_status_ok(*args, **kwargs):
     return resp
 
 
+def mock_none(*args, **kwargs):
+    return None
+
 from .test_api_middleware import *  # noqa
 from .test_app import *  # noqa
 from .test_auth import *  # noqa

@@ -10,7 +10,7 @@ import (
 
 // List domains registered with an app.
 func List(c *client.Client, appID string, results int) ([]api.Domain, int, error) {
-	u := fmt.Sprintf("/v1/apps/%s/domains/", appID)
+	u := fmt.Sprintf("/v2/apps/%s/domains/", appID)
 	body, count, err := c.LimitedRequest(u, results)
 
 	if err != nil {
@@ -27,7 +27,7 @@ func List(c *client.Client, appID string, results int) ([]api.Domain, int, error
 
 // New adds a domain to an app.
 func New(c *client.Client, appID string, domain string) (api.Domain, error) {
-	u := fmt.Sprintf("/v1/apps/%s/domains/", appID)
+	u := fmt.Sprintf("/v2/apps/%s/domains/", appID)
 
 	req := api.DomainCreateRequest{Domain: domain}
 
@@ -53,7 +53,7 @@ func New(c *client.Client, appID string, domain string) (api.Domain, error) {
 
 // Delete removes a domain from an app.
 func Delete(c *client.Client, appID string, domain string) error {
-	u := fmt.Sprintf("/v1/apps/%s/domains/%s", appID, domain)
+	u := fmt.Sprintf("/v2/apps/%s/domains/%s", appID, domain)
 	_, err := c.BasicRequest("DELETE", u, nil)
 	return err
 }

@@ -17,7 +17,7 @@ from django.test import TestCase
 from rest_framework.authtoken.models import Token
 
 from api.models import App
-from . import mock_status_ok
+from . import mock_status_ok, mock_none
 
 
 class AppTest(TestCase):
@@ -39,16 +39,16 @@ class AppTest(TestCase):
         """
         Test that a user can create, read, update and delete an application
         """
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']  # noqa
         self.assertIn('id', response.data)
-        response = self.client.get('/v1/apps',
+        response = self.client.get('/v2/apps',
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['results']), 1)
-        url = '/v1/apps/{app_id}'.format(**locals())
+        url = '/v2/apps/{app_id}'.format(**locals())
         response = self.client.get(url,
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
@@ -63,7 +63,7 @@ class AppTest(TestCase):
     def test_response_data(self):
         """Test that the serialized response contains only relevant data."""
         body = {'id': 'test'}
-        response = self.client.post('/v1/apps', json.dumps(body),
+        response = self.client.post('/v2/apps', json.dumps(body),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         for key in response.data:
@@ -78,12 +78,12 @@ class AppTest(TestCase):
 
     def test_app_override_id(self):
         body = {'id': 'myid'}
-        response = self.client.post('/v1/apps', json.dumps(body),
+        response = self.client.post('/v2/apps', json.dumps(body),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         body = {'id': response.data['id']}
-        response = self.client.post('/v1/apps', json.dumps(body),
+        response = self.client.post('/v2/apps', json.dumps(body),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertContains(response, 'This field must be unique.', status_code=400)
@@ -91,7 +91,7 @@ class AppTest(TestCase):
 
     @mock.patch('requests.get')
     def test_app_actions(self, mock_get):
-        url = '/v1/apps'
+        url = '/v2/apps'
         body = {'id': 'autotest'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -102,7 +102,7 @@ class AppTest(TestCase):
         mock_response = mock.Mock()
         mock_response.status_code = 204
         mock_get.return_value = mock_response
-        url = "/v1/apps/{app_id}/logs".format(**locals())
+        url = "/v2/apps/{app_id}/logs".format(**locals())
         response = self.client.get(url, HTTP_AUTHORIZATION="token {}".format(self.token))
         self.assertEqual(response.status_code, 204)
         self.assertEqual(response.data, "No logs for {}".format(app_id))
@@ -137,7 +137,7 @@ class AppTest(TestCase):
     @mock.patch('api.models.logger')
     def test_app_release_notes_in_logs(self, mock_logger):
         """Verifies that an app's release summary is dumped into the logs."""
-        url = '/v1/apps'
+        url = '/v2/apps'
         body = {'id': 'autotest'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -149,30 +149,30 @@ class AppTest(TestCase):
 
     def test_app_errors(self):
         app_id = 'autotest-errors'
-        url = '/v1/apps'
+        url = '/v2/apps'
         body = {'id': 'camelCase'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertContains(response, 'App IDs can only contain [a-z0-9-]', status_code=400)
-        url = '/v1/apps'
+        url = '/v2/apps'
         body = {'id': app_id}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']  # noqa
-        url = '/v1/apps/{app_id}'.format(**locals())
+        url = '/v2/apps/{app_id}'.format(**locals())
         response = self.client.delete(url,
                                       HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEquals(response.status_code, 204)
         for endpoint in ('containers', 'config', 'releases', 'builds'):
-            url = '/v1/apps/{app_id}/{endpoint}'.format(**locals())
+            url = '/v2/apps/{app_id}/{endpoint}'.format(**locals())
             response = self.client.get(url,
                                        HTTP_AUTHORIZATION='token {}'.format(self.token))
             self.assertEquals(response.status_code, 404)
 
     def test_app_reserved_names(self):
         """Nobody should be able to create applications with names which are reserved."""
-        url = '/v1/apps'
+        url = '/v2/apps'
         reserved_names = ['foo', 'bar']
         with self.settings(DEIS_RESERVED_NAMES=reserved_names):
             for name in reserved_names:
@@ -186,7 +186,7 @@ class AppTest(TestCase):
 
     def test_app_structure_is_valid_json(self):
         """Application structures should be valid JSON objects."""
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
@@ -195,7 +195,7 @@ class AppTest(TestCase):
         app = App.objects.get(id=app_id)
         app.structure = {'web': 1}
         app.save()
-        url = '/v1/apps/{}'.format(app_id)
+        url = '/v2/apps/{}'.format(app_id)
         response = self.client.get(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertIn('structure', response.data)
         self.assertEqual(response.data['structure'], {"web": 1})
@@ -209,12 +209,12 @@ class AppTest(TestCase):
         user = User.objects.get(username='autotest2')
         token = Token.objects.get(user=user)
         app_id = 'autotest'
-        url = '/v1/apps'
+        url = '/v2/apps'
         body = {'id': app_id}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(token))
         # log in as admin, check to see if they have access
-        url = '/v1/apps/{}'.format(app_id)
+        url = '/v2/apps/{}'.format(app_id)
         response = self.client.get(url,
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
@@ -224,7 +224,7 @@ class AppTest(TestCase):
         mock_logger.log.has_calls(exp_log_call)
         # TODO: test run needs an initial build
         # delete the app
-        url = '/v1/apps/{}'.format(app_id)
+        url = '/v2/apps/{}'.format(app_id)
         response = self.client.delete(url,
                                       HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 204)
@@ -237,7 +237,7 @@ class AppTest(TestCase):
         user = User.objects.get(username='autotest2')
         token = Token.objects.get(user=user)
         app_id = 'autotest'
-        url = '/v1/apps'
+        url = '/v2/apps'
         body = {'id': app_id}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(token))
@@ -251,17 +251,49 @@ class AppTest(TestCase):
         is present.
         """
         app_id = 'autotest'
-        url = '/v1/apps'
+        url = '/v2/apps'
         body = {'id': app_id}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
-        url = '/v1/apps/{}/run'.format(app_id)
+        url = '/v2/apps/{}/run'.format(app_id)
         body = {'command': 'ls -al'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data, {'detail': 'No build associated with this '
                                                    'release to run this command'})
+
+    def _mock_run(*args, **kwargs):
+        return [0, 'mock']
+
+    @mock.patch('api.models.App.run', _mock_run)
+    @mock.patch('api.models.App.deploy', mock_none)
+    @mock.patch('api.models.Release.publish', mock_none)
+    def test_run(self):
+        """
+        A user should be able to run a one off command
+        """
+        app_id = 'autotest'
+        url = '/v2/apps'
+        body = {'id': app_id}
+        response = self.client.post(url, json.dumps(body), content_type='application/json',
+                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
+
+        # create build
+        body = {'image': 'autotest/example'}
+        url = '/v2/apps/{app_id}/builds'.format(**locals())
+        response = self.client.post(url, json.dumps(body), content_type='application/json',
+                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
+        self.assertEqual(response.status_code, 201)
+
+        # run command
+        url = '/v2/apps/{}/run'.format(app_id)
+        body = {'command': 'ls -al'}
+        response = self.client.post(url, json.dumps(body), content_type='application/json',
+                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['rc'], 0)
+        self.assertEqual(response.data['output'], 'mock')
 
     def test_unauthorized_user_cannot_see_app(self):
         """
@@ -271,7 +303,7 @@ class AppTest(TestCase):
         tests should return a 403, but currently return a 404. FIXME!
         """
         app_id = 'autotest'
-        base_url = '/v1/apps'
+        base_url = '/v2/apps'
         body = {'id': app_id}
         response = self.client.post(base_url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -294,7 +326,7 @@ class AppTest(TestCase):
 
     def test_app_info_not_showing_wrong_app(self):
         app_id = 'autotest'
-        base_url = '/v1/apps'
+        base_url = '/v2/apps'
         body = {'id': app_id}
         response = self.client.post(base_url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -306,7 +338,7 @@ class AppTest(TestCase):
         owner = User.objects.get(username='autotest2')
         owner_token = Token.objects.get(user=owner).key
         app_id = 'autotest'
-        base_url = '/v1/apps'
+        base_url = '/v2/apps'
         body = {'id': app_id}
         response = self.client.post(base_url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(owner_token))

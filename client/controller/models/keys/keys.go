@@ -10,7 +10,7 @@ import (
 
 // List keys on a controller.
 func List(c *client.Client, results int) ([]api.Key, int, error) {
-	body, count, err := c.LimitedRequest("/v1/keys/", results)
+	body, count, err := c.LimitedRequest("/v2/keys/", results)
 
 	if err != nil {
 		return []api.Key{}, -1, err
@@ -29,7 +29,7 @@ func New(c *client.Client, id string, pubKey string) (api.Key, error) {
 	req := api.KeyCreateRequest{ID: id, Public: pubKey}
 	body, err := json.Marshal(req)
 
-	resBody, err := c.BasicRequest("POST", "/v1/keys/", body)
+	resBody, err := c.BasicRequest("POST", "/v2/keys/", body)
 
 	if err != nil {
 		return api.Key{}, err
@@ -45,7 +45,7 @@ func New(c *client.Client, id string, pubKey string) (api.Key, error) {
 
 // Delete a key.
 func Delete(c *client.Client, keyID string) error {
-	u := fmt.Sprintf("/v1/keys/%s", keyID)
+	u := fmt.Sprintf("/v2/keys/%s", keyID)
 
 	_, err := c.BasicRequest("DELETE", u, nil)
 	return err

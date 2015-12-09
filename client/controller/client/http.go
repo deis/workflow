@@ -159,7 +159,7 @@ Make sure that the Controller URI is correct and the server is running.`
 
 	baseURL := controllerURL.String()
 
-	controllerURL.Path = "/v1/"
+	controllerURL.Path = "/v2/"
 
 	req, err := http.NewRequest("GET", controllerURL.String(), bytes.NewBuffer(nil))
 	addUserAgent(&req.Header)

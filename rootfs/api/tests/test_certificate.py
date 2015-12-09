@@ -20,7 +20,7 @@ class CertificateTest(TestCase):
         self.token = Token.objects.get(user=self.user).key
         self.user2 = User.objects.get(username='autotest2')
         self.token2 = Token.objects.get(user=self.user).key
-        self.url = '/v1/certs'
+        self.url = '/v2/certs'
         self.app = App.objects.create(owner=self.user, id='test-app')
         self.key = """-----BEGIN RSA PRIVATE KEY-----
 MIIEogIBAAKCAQEAwyLIwjpUQkAmh/z6JvQMAtvNu/dBuCt+R8cnQMEw4VglglMw
@@ -121,7 +121,7 @@ thejiQz0ThCMBw7QMpVOiSvYAlQG0ATsRYwdTDqENIWKlerOLCSuxmbqe8XeDKhq
         Certificate.objects.create(owner=self.user,
                                    common_name='autotest.example.com',
                                    certificate=self.autotest_example_com_cert)
-        url = '/v1/certs/autotest.example.com'
+        url = '/v2/certs/autotest.example.com'
         response = self.client.delete(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 204)
         # deleting a wildcard cert should work too (even though they're unsupported right now)
@@ -129,6 +129,6 @@ thejiQz0ThCMBw7QMpVOiSvYAlQG0ATsRYwdTDqENIWKlerOLCSuxmbqe8XeDKhq
         Certificate.objects.create(owner=self.user,
                                    common_name='*.example.com',
                                    certificate=self.autotest_example_com_cert)
-        url = '/v1/certs/*.example.com'
+        url = '/v2/certs/*.example.com'
         response = self.client.delete(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 204)

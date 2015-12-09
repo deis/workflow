@@ -59,7 +59,7 @@ type fakeHTTPServer struct{}
 func (f *fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	res.Header().Add("DEIS_API_VERSION", version.APIVersion)
 
-	if req.URL.Path == "/v1/apps/example-go/config/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/example-go/config/" && req.Method == "POST" {
 		body, err := ioutil.ReadAll(req.Body)
 
 		if err != nil {
@@ -80,7 +80,7 @@ func (f *fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/unset-test/config/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/unset-test/config/" && req.Method == "POST" {
 		body, err := ioutil.ReadAll(req.Body)
 
 		if err != nil {
@@ -101,7 +101,7 @@ func (f *fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/config/" && req.Method == "GET" {
+	if req.URL.Path == "/v2/apps/example-go/config/" && req.Method == "GET" {
 		res.Write([]byte(configFixture))
 		return
 	}

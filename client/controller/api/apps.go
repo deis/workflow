@@ -10,22 +10,22 @@ type App struct {
 	UUID    string `json:"uuid"`
 }
 
-// AppCreateRequest is the definition of POST /v1/apps/.
+// AppCreateRequest is the definition of POST /v2/apps/.
 type AppCreateRequest struct {
 	ID string `json:"id,omitempty"`
 }
 
-// AppUpdateRequest is the definition of POST /v1/apps/<app id>/.
+// AppUpdateRequest is the definition of POST /v2/apps/<app id>/.
 type AppUpdateRequest struct {
 	Owner string `json:"owner,omitempty"`
 }
 
-// AppRunRequest is the definition of POST /v1/apps/<app id>/run.
+// AppRunRequest is the definition of POST /v2/apps/<app id>/run.
 type AppRunRequest struct {
 	Command string `json:"command"`
 }
 
-// AppRunResponse is the definition of /v1/apps/<app id>/run.
+// AppRunResponse is the definition of /v2/apps/<app id>/run.
 type AppRunResponse struct {
 	Output     string `json:"output"`
 	ReturnCode int    `json:"rc"`

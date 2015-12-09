@@ -226,13 +226,12 @@ class AppViewSet(BaseDeisViewSet):
     def run(self, request, **kwargs):
         app = self.get_object()
         try:
-            output_and_rc = app.run(self.request.user, request.data['command'])
+            rc, output = app.run(self.request.user, request.data['command'])
         except EnvironmentError as e:
             return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except RuntimeError as e:
             return Response({'detail': str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
-        return Response(output_and_rc, status=status.HTTP_200_OK,
-                        content_type='text/plain')
+        return Response({'rc': rc, 'output': str(output)})
 
     def update(self, request, **kwargs):
         app = self.get_object()

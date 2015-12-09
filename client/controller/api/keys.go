@@ -10,7 +10,7 @@ type Key struct {
 	UUID    string `json:"uuid"`
 }
 
-// KeyCreateRequest is the definition of POST /v1/keys/.
+// KeyCreateRequest is the definition of POST /v2/keys/.
 type KeyCreateRequest struct {
 	ID     string `json:"id"`
 	Public string `json:"public"`

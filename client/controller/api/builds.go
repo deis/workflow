@@ -13,7 +13,7 @@ type Build struct {
 	UUID       string            `json:"uuid"`
 }
 
-// CreateBuildRequest is the structure of POST /v1/apps/<app id>/builds/.
+// CreateBuildRequest is the structure of POST /v2/apps/<app id>/builds/.
 type CreateBuildRequest struct {
 	Image    string            `json:"image"`
 	Procfile map[string]string `json:"procfile,omitempty"`

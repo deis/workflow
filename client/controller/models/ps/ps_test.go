@@ -86,27 +86,27 @@ type fakeHTTPServer struct{}
 func (fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	res.Header().Add("DEIS_API_VERSION", version.APIVersion)
 
-	if req.URL.Path == "/v1/apps/example-go/containers/" && req.Method == "GET" {
+	if req.URL.Path == "/v2/apps/example-go/containers/" && req.Method == "GET" {
 		res.Write([]byte(processesFixture))
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/containers/restart/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/example-go/containers/restart/" && req.Method == "POST" {
 		res.Write([]byte(restartAllFixture))
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/containers/worker/restart/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/example-go/containers/worker/restart/" && req.Method == "POST" {
 		res.Write([]byte(restartWorkerFixture))
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/containers/web/2/restart/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/example-go/containers/web/2/restart/" && req.Method == "POST" {
 		res.Write([]byte(restartWebTwoFixture))
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/scale/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/example-go/scale/" && req.Method == "POST" {
 		body, err := ioutil.ReadAll(req.Body)
 
 		if err != nil {

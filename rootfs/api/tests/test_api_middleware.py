@@ -27,7 +27,7 @@ class APIMiddlewareTest(TestCase):
         Test that when the version header is sent, the request is accepted.
         """
         response = self.client.get(
-            '/v1/apps',
+            '/v2/apps',
             HTTP_DEIS_VERSION=__version__.rsplit('.', 2)[0],
             HTTP_AUTHORIZATION='token {}'.format(self.token),
         )
@@ -40,7 +40,7 @@ class APIMiddlewareTest(TestCase):
         Test that when an improper version header is sent, the request is declined.
         """
         response = self.client.get(
-            '/v1/apps',
+            '/v2/apps',
             HTTP_DEIS_VERSION='1234.5678',
             HTTP_AUTHORIZATION='token {}'.format(self.token),
         )
@@ -50,6 +50,6 @@ class APIMiddlewareTest(TestCase):
         """
         Test that when the version header is not present, the request is accepted.
         """
-        response = self.client.get('/v1/apps',
+        response = self.client.get('/v2/apps',
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)

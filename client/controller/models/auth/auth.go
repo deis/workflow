@@ -16,7 +16,7 @@ func Register(c *client.Client, username, password, email string) error {
 		return err
 	}
 
-	_, err = c.BasicRequest("POST", "/v1/auth/register/", body)
+	_, err = c.BasicRequest("POST", "/v2/auth/register/", body)
 	return err
 }
 
@@ -29,7 +29,7 @@ func Login(c *client.Client, username, password string) (string, error) {
 		return "", err
 	}
 
-	body, err := c.BasicRequest("POST", "/v1/auth/login/", reqBody)
+	body, err := c.BasicRequest("POST", "/v2/auth/login/", reqBody)
 
 	if err != nil {
 		return "", err
@@ -57,7 +57,7 @@ func Delete(c *client.Client, username string) error {
 		}
 	}
 
-	_, err = c.BasicRequest("DELETE", "/v1/auth/cancel/", body)
+	_, err = c.BasicRequest("DELETE", "/v2/auth/cancel/", body)
 	return err
 }
 
@@ -76,7 +76,7 @@ func Regenerate(c *client.Client, username string, all bool) (string, error) {
 		return "", err
 	}
 
-	body, err := c.BasicRequest("POST", "/v1/auth/tokens/", reqBody)
+	body, err := c.BasicRequest("POST", "/v2/auth/tokens/", reqBody)
 
 	if err != nil {
 		return "", err
@@ -108,6 +108,6 @@ func Passwd(c *client.Client, username, password, newPassword string) error {
 		return err
 	}
 
-	_, err = c.BasicRequest("POST", "/v1/auth/passwd/", body)
+	_, err = c.BasicRequest("POST", "/v2/auth/passwd/", body)
 	return err
 }

@@ -12,7 +12,7 @@ type Cert struct {
 	ID      int    `json:"id,omitempty"`
 }
 
-// CertCreateRequest is the definition of POST /v1/certs/.
+// CertCreateRequest is the definition of POST /v2/certs/.
 type CertCreateRequest struct {
 	Certificate string `json:"certificate"`
 	Key         string `json:"key"`

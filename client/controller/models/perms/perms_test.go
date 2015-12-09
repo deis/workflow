@@ -46,12 +46,12 @@ type fakeHTTPServer struct{}
 func (fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	res.Header().Add("DEIS_API_VERSION", version.APIVersion)
 
-	if req.URL.Path == "/v1/admin/perms/" && req.Method == "GET" {
+	if req.URL.Path == "/v2/admin/perms/" && req.Method == "GET" {
 		res.Write([]byte(adminFixture))
 		return
 	}
 
-	if req.URL.Path == "/v1/admin/perms/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/admin/perms/" && req.Method == "POST" {
 		body, err := ioutil.ReadAll(req.Body)
 
 		if err != nil {
@@ -72,24 +72,24 @@ func (fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if req.URL.Path == "/v1/admin/perms/test" && req.Method == "DELETE" {
+	if req.URL.Path == "/v2/admin/perms/test" && req.Method == "DELETE" {
 		res.WriteHeader(http.StatusNoContent)
 		res.Write(nil)
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/perms/" && req.Method == "GET" {
+	if req.URL.Path == "/v2/apps/example-go/perms/" && req.Method == "GET" {
 		res.Write([]byte(appPermsFixture))
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/perms/foo" && req.Method == "DELETE" {
+	if req.URL.Path == "/v2/apps/example-go/perms/foo" && req.Method == "DELETE" {
 		res.WriteHeader(http.StatusNoContent)
 		res.Write(nil)
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/perms/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/example-go/perms/" && req.Method == "POST" {
 		body, err := ioutil.ReadAll(req.Body)
 
 		if err != nil {

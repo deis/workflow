@@ -12,7 +12,7 @@ import (
 
 // List lists apps on a Deis controller.
 func List(c *client.Client, results int) ([]api.App, int, error) {
-	body, count, err := c.LimitedRequest("/v1/apps/", results)
+	body, count, err := c.LimitedRequest("/v2/apps/", results)
 
 	if err != nil {
 		return []api.App{}, -1, err
@@ -40,7 +40,7 @@ func New(c *client.Client, id string) (api.App, error) {
 		}
 	}
 
-	resBody, err := c.BasicRequest("POST", "/v1/apps/", body)
+	resBody, err := c.BasicRequest("POST", "/v2/apps/", body)
 
 	if err != nil {
 		return api.App{}, err
@@ -56,7 +56,7 @@ func New(c *client.Client, id string) (api.App, error) {
 
 // Get app details from a Deis controller.
 func Get(c *client.Client, appID string) (api.App, error) {
-	u := fmt.Sprintf("/v1/apps/%s/", appID)
+	u := fmt.Sprintf("/v2/apps/%s/", appID)
 
 	body, err := c.BasicRequest("GET", u, nil)
 
@@ -75,7 +75,7 @@ func Get(c *client.Client, appID string) (api.App, error) {
 
 // Logs retrieves logs from an app.
 func Logs(c *client.Client, appID string, lines int) (string, error) {
-	u := fmt.Sprintf("/v1/apps/%s/logs", appID)
+	u := fmt.Sprintf("/v2/apps/%s/logs", appID)
 
 	if lines > 0 {
 		u += "?log_lines=" + strconv.Itoa(lines)
@@ -99,7 +99,7 @@ func Run(c *client.Client, appID string, command string) (api.AppRunResponse, er
 		return api.AppRunResponse{}, err
 	}
 
-	u := fmt.Sprintf("/v1/apps/%s/run", appID)
+	u := fmt.Sprintf("/v2/apps/%s/run", appID)
 
 	resBody, err := c.BasicRequest("POST", u, body)
 
@@ -107,18 +107,18 @@ func Run(c *client.Client, appID string, command string) (api.AppRunResponse, er
 		return api.AppRunResponse{}, err
 	}
 
-	out := make([]interface{}, 2)
+	res := api.AppRunResponse{}
 
-	if err = json.Unmarshal([]byte(resBody), &out); err != nil {
+	if err = json.Unmarshal([]byte(resBody), &res); err != nil {
 		return api.AppRunResponse{}, err
 	}
 
-	return api.AppRunResponse{Output: out[1].(string), ReturnCode: int(out[0].(float64))}, nil
+	return res, nil
 }
 
 // Delete an app.
 func Delete(c *client.Client, appID string) error {
-	u := fmt.Sprintf("/v1/apps/%s/", appID)
+	u := fmt.Sprintf("/v2/apps/%s/", appID)
 
 	_, err := c.BasicRequest("DELETE", u, nil)
 	return err
@@ -126,7 +126,7 @@ func Delete(c *client.Client, appID string) error {
 
 // Transfer an app to another user.
 func Transfer(c *client.Client, appID string, username string) error {
-	u := fmt.Sprintf("/v1/apps/%s/", appID)
+	u := fmt.Sprintf("/v2/apps/%s/", appID)
 
 	req := api.AppUpdateRequest{Owner: username}
 	body, err := json.Marshal(req)

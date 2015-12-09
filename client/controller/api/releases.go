@@ -13,7 +13,7 @@ type Release struct {
 	Version int    `json:"version"`
 }
 
-// ReleaseRollback is the defenition of POST /v1/apps/<app id>/releases/.
+// ReleaseRollback is the defenition of POST /v2/apps/<app id>/releases/.
 type ReleaseRollback struct {
 	Version int `json:"version"`
 }

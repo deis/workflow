@@ -9,7 +9,7 @@ import (
 
 // List users registered with the controller.
 func List(c *client.Client, results int) ([]api.User, int, error) {
-	body, count, err := c.LimitedRequest("/v1/users/", results)
+	body, count, err := c.LimitedRequest("/v2/users/", results)
 
 	if err != nil {
 		return []api.User{}, -1, err

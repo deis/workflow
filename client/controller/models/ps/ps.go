@@ -11,7 +11,7 @@ import (
 
 // List an app's processes.
 func List(c *client.Client, appID string, results int) ([]api.Process, int, error) {
-	u := fmt.Sprintf("/v1/apps/%s/containers/", appID)
+	u := fmt.Sprintf("/v2/apps/%s/containers/", appID)
 	body, count, err := c.LimitedRequest(u, results)
 
 	if err != nil {
@@ -28,7 +28,7 @@ func List(c *client.Client, appID string, results int) ([]api.Process, int, erro
 
 // Scale an app's processes.
 func Scale(c *client.Client, appID string, targets map[string]int) error {
-	u := fmt.Sprintf("/v1/apps/%s/scale/", appID)
+	u := fmt.Sprintf("/v2/apps/%s/scale/", appID)
 
 	body, err := json.Marshal(targets)
 
@@ -42,7 +42,7 @@ func Scale(c *client.Client, appID string, targets map[string]int) error {
 
 // Restart an app's processes.
 func Restart(c *client.Client, appID string, procType string, num int) ([]api.Process, error) {
-	u := fmt.Sprintf("/v1/apps/%s/containers/", appID)
+	u := fmt.Sprintf("/v2/apps/%s/containers/", appID)
 
 	if procType == "" {
 		u += "restart/"

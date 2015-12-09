@@ -33,12 +33,12 @@ class BuildTest(TransactionTestCase):
         """
         Test that a null build is created and that users can post new builds
         """
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
         # check to see that no initial build was created
-        url = "/v1/apps/{app_id}/builds".format(**locals())
+        url = "/v2/apps/{app_id}/builds".format(**locals())
         response = self.client.get(url,
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
@@ -52,14 +52,14 @@ class BuildTest(TransactionTestCase):
         build1 = response.data
         self.assertEqual(response.data['image'], body['image'])
         # read the build
-        url = "/v1/apps/{app_id}/builds/{build_id}".format(**locals())
+        url = "/v2/apps/{app_id}/builds/{build_id}".format(**locals())
         response = self.client.get(url,
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
         build2 = response.data
         self.assertEqual(build1, build2)
         # post a new build
-        url = "/v1/apps/{app_id}/builds".format(**locals())
+        url = "/v2/apps/{app_id}/builds".format(**locals())
         body = {'image': 'autotest/example'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -80,12 +80,12 @@ class BuildTest(TransactionTestCase):
     def test_response_data(self):
         """Test that the serialized response contains only relevant data."""
         body = {'id': 'test'}
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, json.dumps(body),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         # post an image as a build
-        url = "/v1/apps/test/builds".format(**locals())
+        url = "/v2/apps/test/builds".format(**locals())
         body = {'image': 'autotest/example'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -104,17 +104,17 @@ class BuildTest(TransactionTestCase):
 
     @mock.patch('requests.post', mock_status_ok)
     def test_build_default_containers(self):
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
         # post an image as a build
-        url = "/v1/apps/{app_id}/builds".format(**locals())
+        url = "/v2/apps/{app_id}/builds".format(**locals())
         body = {'image': 'autotest/example'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
-        url = "/v1/apps/{app_id}/containers/cmd".format(**locals())
+        url = "/v2/apps/{app_id}/containers/cmd".format(**locals())
         response = self.client.get(url,
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
@@ -123,19 +123,19 @@ class BuildTest(TransactionTestCase):
         self.assertEqual(container['type'], 'cmd')
         self.assertEqual(container['num'], 1)
         # start with a new app
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
         # post a new build with procfile
-        url = "/v1/apps/{app_id}/builds".format(**locals())
+        url = "/v2/apps/{app_id}/builds".format(**locals())
         body = {'image': 'autotest/example',
                 'sha': 'a'*40,
                 'dockerfile': "FROM scratch"}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
-        url = "/v1/apps/{app_id}/containers/cmd".format(**locals())
+        url = "/v2/apps/{app_id}/containers/cmd".format(**locals())
         response = self.client.get(url,
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
@@ -144,12 +144,12 @@ class BuildTest(TransactionTestCase):
         self.assertEqual(container['type'], 'cmd')
         self.assertEqual(container['num'], 1)
         # start with a new app
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
         # post a new build with procfile
-        url = "/v1/apps/{app_id}/builds".format(**locals())
+        url = "/v2/apps/{app_id}/builds".format(**locals())
         body = {'image': 'autotest/example',
                 'sha': 'a'*40,
                 'dockerfile': "FROM scratch",
@@ -157,7 +157,7 @@ class BuildTest(TransactionTestCase):
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
-        url = "/v1/apps/{app_id}/containers/cmd".format(**locals())
+        url = "/v2/apps/{app_id}/containers/cmd".format(**locals())
         response = self.client.get(url,
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
@@ -166,12 +166,12 @@ class BuildTest(TransactionTestCase):
         self.assertEqual(container['type'], 'cmd')
         self.assertEqual(container['num'], 1)
         # start with a new app
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
         # post a new build with procfile
-        url = "/v1/apps/{app_id}/builds".format(**locals())
+        url = "/v2/apps/{app_id}/builds".format(**locals())
         body = {'image': 'autotest/example',
                 'sha': 'a'*40,
                 'procfile': json.dumps({'web': 'node server.js',
@@ -179,7 +179,7 @@ class BuildTest(TransactionTestCase):
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
-        url = "/v1/apps/{app_id}/containers/web".format(**locals())
+        url = "/v2/apps/{app_id}/containers/web".format(**locals())
         response = self.client.get(url,
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
@@ -191,12 +191,12 @@ class BuildTest(TransactionTestCase):
     @mock.patch('requests.post', mock_status_ok)
     def test_build_str(self):
         """Test the text representation of a build."""
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
         # post a new build
-        url = "/v1/apps/{app_id}/builds".format(**locals())
+        url = "/v2/apps/{app_id}/builds".format(**locals())
         body = {'image': 'autotest/example'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -213,12 +213,12 @@ class BuildTest(TransactionTestCase):
         # create app as non-admin
         user = User.objects.get(username='autotest2')
         token = Token.objects.get(user=user).key
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
         # post a new build as admin
-        url = "/v1/apps/{app_id}/builds".format(**locals())
+        url = "/v2/apps/{app_id}/builds".format(**locals())
         body = {'image': 'autotest/example'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -236,7 +236,7 @@ class BuildTest(TransactionTestCase):
         requests should return a 403.
         """
         app_id = 'autotest'
-        url = '/v1/apps'
+        url = '/v2/apps'
         body = {'id': app_id}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -254,12 +254,12 @@ class BuildTest(TransactionTestCase):
         After the first initial deploy, if the containers are scaled down to zero,
         they should stay that way on a new release.
         """
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
         # post a new build
-        url = "/v1/apps/{app_id}/builds".format(**locals())
+        url = "/v2/apps/{app_id}/builds".format(**locals())
         body = {'image': 'autotest/example',
                 'sha': 'a'*40,
                 'procfile': json.dumps({'web': 'node server.js',
@@ -267,19 +267,19 @@ class BuildTest(TransactionTestCase):
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
-        url = "/v1/apps/{app_id}/containers/web".format(**locals())
+        url = "/v2/apps/{app_id}/containers/web".format(**locals())
         response = self.client.get(url,
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['results']), 1)
         # scale to zero
-        url = "/v1/apps/{app_id}/scale".format(**locals())
+        url = "/v2/apps/{app_id}/scale".format(**locals())
         body = {'web': 0}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 204)
         # post another build
-        url = "/v1/apps/{app_id}/builds".format(**locals())
+        url = "/v2/apps/{app_id}/builds".format(**locals())
         body = {'image': 'autotest/example',
                 'sha': 'a'*40,
                 'procfile': json.dumps({'web': 'node server.js',
@@ -287,7 +287,7 @@ class BuildTest(TransactionTestCase):
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
-        url = "/v1/apps/{app_id}/containers/web".format(**locals())
+        url = "/v2/apps/{app_id}/containers/web".format(**locals())
         response = self.client.get(url,
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)

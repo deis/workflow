@@ -41,7 +41,7 @@ func (fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if req.URL.Path == "/v1/" {
+	if req.URL.Path == "/v2/" {
 		res.WriteHeader(http.StatusUnauthorized)
 		res.Write(nil)
 		return

@@ -66,7 +66,7 @@ class KeyTest(TestCase):
         """
         Test that a user can add, remove and manage their SSH public keys
         """
-        url = '/v1/keys'
+        url = '/v2/keys'
         body = {'id': 'mykey@box.local', 'public': pubkey}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -75,7 +75,7 @@ class KeyTest(TestCase):
         response = self.client.get(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['results']), 1)
-        url = '/v1/keys/{key_id}'.format(**locals())
+        url = '/v2/keys/{key_id}'.format(**locals())
         response = self.client.get(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(body['id'], response.data['id'])
@@ -87,7 +87,7 @@ class KeyTest(TestCase):
         """
         Test that a user cannot add invalid SSH public keys
         """
-        url = '/v1/keys'
+        url = '/v2/keys'
         body = {'id': 'mykey@box.local', 'public': pubkey}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -108,7 +108,7 @@ class KeyTest(TestCase):
         """
         Test that a user cannot add a duplicate key
         """
-        url = '/v1/keys'
+        url = '/v2/keys'
         body = {'id': 'mykey@box.local', 'public': pubkey}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -134,7 +134,7 @@ class KeyTest(TestCase):
 
     def test_rsa_key_str(self):
         """Test the text representation of a key"""
-        url = '/v1/keys'
+        url = '/v2/keys'
         body = {'id': 'autotest', 'public':
                 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDzqPAwHN70xsB0LXG//KzO'
                 'gcPikyhdN/KRc4x3j/RA0pmFj63Ywv0PJ2b1LcMSqfR8F11WBlrW8c9xFua0'

@@ -47,7 +47,7 @@ class AuthTest(TestCase):
             'is_superuser': True,
             'is_staff': True,
         }
-        url = '/v1/auth/register'
+        url = '/v2/auth/register'
         response = self.client.post(url, json.dumps(submit), content_type='application/json')
         self.assertEqual(response.status_code, 201)
         for key in response.data:
@@ -65,7 +65,7 @@ class AuthTest(TestCase):
         }
         self.assertDictContainsSubset(expected, response.data)
         # test login
-        url = '/v1/auth/login/'
+        url = '/v2/auth/login/'
         payload = urllib.urlencode({'username': username, 'password': password})
         response = self.client.post(url, data=payload,
                                     content_type='application/x-www-form-urlencoded')
@@ -74,7 +74,7 @@ class AuthTest(TestCase):
     @override_settings(REGISTRATION_MODE="disabled")
     def test_auth_registration_disabled(self):
         """test that a new user cannot register when registration is disabled."""
-        url = '/v1/auth/register'
+        url = '/v2/auth/register'
         submit = {
             'username': 'testuser',
             'password': 'password',
@@ -90,7 +90,7 @@ class AuthTest(TestCase):
     @override_settings(REGISTRATION_MODE="admin_only")
     def test_auth_registration_admin_only_fails_if_not_admin(self):
         """test that a non superuser cannot register when registration is admin only."""
-        url = '/v1/auth/register'
+        url = '/v2/auth/register'
         submit = {
             'username': 'testuser',
             'password': 'password',
@@ -106,7 +106,7 @@ class AuthTest(TestCase):
     @override_settings(REGISTRATION_MODE="admin_only")
     def test_auth_registration_admin_only_works(self):
         """test that a superuser can register when registration is admin only."""
-        url = '/v1/auth/register'
+        url = '/v2/auth/register'
 
         username, password = 'newuser_by_admin', 'password'
         first_name, last_name = 'Otto', 'Test'
@@ -141,7 +141,7 @@ class AuthTest(TestCase):
         }
         self.assertDictContainsSubset(expected, response.data)
         # test login
-        url = '/v1/auth/login/'
+        url = '/v2/auth/login/'
         payload = urllib.urlencode({'username': username, 'password': password})
         response = self.client.post(url, data=payload,
                                     content_type='application/x-www-form-urlencoded')
@@ -150,7 +150,7 @@ class AuthTest(TestCase):
     @override_settings(REGISTRATION_MODE="not_a_mode")
     def test_auth_registration_fails_with_nonexistant_mode(self):
         """test that a registration should fail with a nonexistant mode"""
-        url = '/v1/auth/register'
+        url = '/v2/auth/register'
         submit = {
             'username': 'testuser',
             'password': 'password',
@@ -191,24 +191,24 @@ class AuthTest(TestCase):
             'is_superuser': False,
             'is_staff': False,
         }
-        url = '/v1/auth/register'
+        url = '/v2/auth/register'
         response = self.client.post(url, json.dumps(submit), content_type='application/json')
         self.assertEqual(response.status_code, 201)
 
         # cancel the account
-        url = '/v1/auth/cancel'
+        url = '/v2/auth/cancel'
         user = User.objects.get(username=username)
         token = Token.objects.get(user=user).key
         response = self.client.delete(url,
                                       HTTP_AUTHORIZATION='token {}'.format(token))
         self.assertEqual(response.status_code, 204)
 
-        url = '/v1/auth/register'
+        url = '/v2/auth/register'
         response = self.client.post(url, json.dumps(other_submit), content_type='application/json')
         self.assertEqual(response.status_code, 201)
 
         # normal user can't delete another user
-        url = '/v1/auth/cancel'
+        url = '/v2/auth/cancel'
         other_user = User.objects.get(username=other_username)
         other_token = Token.objects.get(user=other_user).key
         response = self.client.delete(url, json.dumps({'username': self.admin.username}),
@@ -235,11 +235,11 @@ class AuthTest(TestCase):
             'last_name': last_name,
             'email': email,
         }
-        url = '/v1/auth/register'
+        url = '/v2/auth/register'
         response = self.client.post(url, json.dumps(submit), content_type='application/json')
         self.assertEqual(response.status_code, 201)
         # change password
-        url = '/v1/auth/passwd'
+        url = '/v2/auth/passwd'
         user = User.objects.get(username=username)
         token = Token.objects.get(user=user).key
         submit = {
@@ -259,7 +259,7 @@ class AuthTest(TestCase):
                                     HTTP_AUTHORIZATION='token {}'.format(token))
         self.assertEqual(response.status_code, 200)
         # test login with old password
-        url = '/v1/auth/login/'
+        url = '/v2/auth/login/'
         payload = urllib.urlencode({'username': username, 'password': password})
         response = self.client.post(url, data=payload,
                                     content_type='application/x-www-form-urlencoded')
@@ -275,7 +275,7 @@ class AuthTest(TestCase):
         Test that an administrator can change a user's password, while a regular user cannot.
         """
         # change password
-        url = '/v1/auth/passwd'
+        url = '/v2/auth/passwd'
         old_password = self.user1.password
         new_password = 'password'
         submit = {
@@ -286,7 +286,7 @@ class AuthTest(TestCase):
                                     HTTP_AUTHORIZATION='token {}'.format(self.admin_token))
         self.assertEqual(response.status_code, 200)
         # test login with old password
-        url = '/v1/auth/login/'
+        url = '/v2/auth/login/'
         payload = urllib.urlencode({'username': self.user1.username, 'password': old_password})
         response = self.client.post(url, data=payload,
                                     content_type='application/x-www-form-urlencoded')
@@ -298,7 +298,7 @@ class AuthTest(TestCase):
         self.assertEqual(response.status_code, 200)
         # Non-admins can't change another user's password
         submit['password'], submit['new_password'] = submit['new_password'], old_password
-        url = '/v1/auth/passwd'
+        url = '/v2/auth/passwd'
         response = self.client.post(url, json.dumps(submit), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.user2_token))
         self.assertEqual(response.status_code, 403)
@@ -307,7 +307,7 @@ class AuthTest(TestCase):
                                     HTTP_AUTHORIZATION='token {}'.format(self.user1_token))
         self.assertEqual(response.status_code, 200)
         # test login with new password
-        url = '/v1/auth/login/'
+        url = '/v2/auth/login/'
         payload = urllib.urlencode({'username': self.user1.username, 'password': old_password})
         response = self.client.post(url, data=payload,
                                     content_type='application/x-www-form-urlencoded')
@@ -316,7 +316,7 @@ class AuthTest(TestCase):
     def test_regenerate(self):
         """ Test that token regeneration works"""
 
-        url = '/v1/auth/tokens/'
+        url = '/v2/auth/tokens/'
 
         response = self.client.post(url, '{}', content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.admin_token))

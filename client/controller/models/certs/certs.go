@@ -10,7 +10,7 @@ import (
 
 // List certs registered with the controller.
 func List(c *client.Client, results int) ([]api.Cert, int, error) {
-	body, count, err := c.LimitedRequest("/v1/certs/", results)
+	body, count, err := c.LimitedRequest("/v2/certs/", results)
 
 	if err != nil {
 		return []api.Cert{}, -1, err
@@ -33,7 +33,7 @@ func New(c *client.Client, cert string, key string, commonName string) (api.Cert
 		return api.Cert{}, err
 	}
 
-	resBody, err := c.BasicRequest("POST", "/v1/certs/", reqBody)
+	resBody, err := c.BasicRequest("POST", "/v2/certs/", reqBody)
 
 	if err != nil {
 		return api.Cert{}, err
@@ -49,7 +49,7 @@ func New(c *client.Client, cert string, key string, commonName string) (api.Cert
 
 // Delete removes a cert.
 func Delete(c *client.Client, commonName string) error {
-	u := fmt.Sprintf("/v1/certs/%s", commonName)
+	u := fmt.Sprintf("/v2/certs/%s", commonName)
 
 	_, err := c.BasicRequest("DELETE", u, nil)
 	return err

@@ -24,7 +24,7 @@ class DomainTest(TestCase):
     def setUp(self):
         self.user = User.objects.get(username='autotest')
         self.token = Token.objects.get(user=self.user).key
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         self.app_id = response.data['id']  # noqa
@@ -32,11 +32,11 @@ class DomainTest(TestCase):
     def test_response_data(self):
         """Test that the serialized response contains only relevant data."""
         body = {'id': 'test'}
-        response = self.client.post('/v1/apps', json.dumps(body),
+        response = self.client.post('/v2/apps', json.dumps(body),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         body = {'domain': 'test-domain.example.com'}
-        response = self.client.post('/v1/apps/test/domains', json.dumps(body),
+        response = self.client.post('/v2/apps/test/domains', json.dumps(body),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         for key in response.data:
@@ -49,7 +49,7 @@ class DomainTest(TestCase):
         self.assertDictContainsSubset(expected, response.data)
 
     def test_manage_domain(self):
-        url = '/v1/apps/{app_id}/domains'.format(app_id=self.app_id)
+        url = '/v2/apps/{app_id}/domains'.format(app_id=self.app_id)
         test_domains = [
             'test-domain.example.com',
             'django.paas-sandbox',
@@ -66,24 +66,24 @@ class DomainTest(TestCase):
             response = self.client.post(url, json.dumps(body), content_type='application/json',
                                         HTTP_AUTHORIZATION='token {}'.format(self.token))
             self.assertEqual(response.status_code, 201, msg)
-            url = '/v1/apps/{app_id}/domains'.format(app_id=self.app_id)
+            url = '/v2/apps/{app_id}/domains'.format(app_id=self.app_id)
             response = self.client.get(url, content_type='application/json',
                                        HTTP_AUTHORIZATION='token {}'.format(self.token))
             result = response.data['results'][0]
             self.assertEqual(domain, result['domain'], msg)
-            url = '/v1/apps/{app_id}/domains/{hostname}'.format(hostname=domain,
+            url = '/v2/apps/{app_id}/domains/{hostname}'.format(hostname=domain,
                                                                 app_id=self.app_id)
             response = self.client.delete(url, content_type='application/json',
                                           HTTP_AUTHORIZATION='token {}'.format(self.token))
             self.assertEqual(response.status_code, 204, msg)
-            url = '/v1/apps/{app_id}/domains'.format(app_id=self.app_id)
+            url = '/v2/apps/{app_id}/domains'.format(app_id=self.app_id)
             response = self.client.get(url, content_type='application/json',
                                        HTTP_AUTHORIZATION='token {}'.format(self.token))
             self.assertEqual(0, response.data['count'], msg)
 
     def test_delete_domain_does_not_remove_latest(self):
         """https://github.com/deis/deis/issues/3239"""
-        url = '/v1/apps/{app_id}/domains'.format(app_id=self.app_id)
+        url = '/v2/apps/{app_id}/domains'.format(app_id=self.app_id)
         test_domains = [
             'test-domain.example.com',
             'django.paas-sandbox',
@@ -93,7 +93,7 @@ class DomainTest(TestCase):
             response = self.client.post(url, json.dumps(body), content_type='application/json',
                                         HTTP_AUTHORIZATION='token {}'.format(self.token))
             self.assertEqual(response.status_code, 201)
-        url = '/v1/apps/{app_id}/domains/{domain}'.format(domain=test_domains[0],
+        url = '/v2/apps/{app_id}/domains/{domain}'.format(domain=test_domains[0],
                                                           app_id=self.app_id)
         response = self.client.delete(url, content_type='application/json',
                                       HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -107,18 +107,18 @@ class DomainTest(TestCase):
         self.assertEqual(Domain.objects.all().count(), 1)
 
     def test_manage_domain_invalid_app(self):
-        url = '/v1/apps/{app_id}/domains'.format(app_id="this-app-does-not-exist")
+        url = '/v2/apps/{app_id}/domains'.format(app_id="this-app-does-not-exist")
         body = {'domain': 'test-domain.example.com'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 404)
-        url = '/v1/apps/{app_id}/domains'.format(app_id='this-app-does-not-exist')
+        url = '/v2/apps/{app_id}/domains'.format(app_id='this-app-does-not-exist')
         response = self.client.get(url, content_type='application/json',
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 404)
 
     def test_manage_domain_invalid_domain(self):
-        url = '/v1/apps/{app_id}/domains'.format(app_id=self.app_id)
+        url = '/v2/apps/{app_id}/domains'.format(app_id=self.app_id)
         test_domains = [
             'this_is_an.invalid.domain',
             'this-is-an.invalid.1',
@@ -136,7 +136,7 @@ class DomainTest(TestCase):
 
     def test_manage_domain_wildcard(self):
         """Wildcards are not allowed for now."""
-        url = '/v1/apps/{app_id}/domains'.format(app_id=self.app_id)
+        url = '/v2/apps/{app_id}/domains'.format(app_id=self.app_id)
         body = {'domain': '*.deis.example.com'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -148,10 +148,10 @@ class DomainTest(TestCase):
         """
         user = User.objects.get(username='autotest2')
         token = Token.objects.get(user=user).key
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(token))
         self.assertEqual(response.status_code, 201)
-        url = '/v1/apps/{}/domains'.format(self.app_id)
+        url = '/v2/apps/{}/domains'.format(self.app_id)
         body = {'domain': 'example.deis.example.com'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -165,7 +165,7 @@ class DomainTest(TestCase):
         requests should return a 404.
         """
         app_id = 'autotest'
-        url = '/v1/apps'
+        url = '/v2/apps'
         body = {'id': app_id}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))

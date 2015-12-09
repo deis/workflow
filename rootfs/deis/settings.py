@@ -160,7 +160,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 ANONYMOUS_USER_ID = -1
-LOGIN_URL = '/v1/auth/login/'
+LOGIN_URL = '/v2/auth/login/'
 LOGIN_REDIRECT_URL = '/'
 
 SOUTH_TESTS_MIGRATE = False

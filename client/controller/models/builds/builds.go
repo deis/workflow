@@ -10,7 +10,7 @@ import (
 
 // List lists an app's builds.
 func List(c *client.Client, appID string, results int) ([]api.Build, int, error) {
-	u := fmt.Sprintf("/v1/apps/%s/builds/", appID)
+	u := fmt.Sprintf("/v2/apps/%s/builds/", appID)
 	body, count, err := c.LimitedRequest(u, results)
 
 	if err != nil {
@@ -29,7 +29,7 @@ func List(c *client.Client, appID string, results int) ([]api.Build, int, error)
 func New(c *client.Client, appID string, image string,
 	procfile map[string]string) (api.Build, error) {
 
-	u := fmt.Sprintf("/v1/apps/%s/builds/", appID)
+	u := fmt.Sprintf("/v2/apps/%s/builds/", appID)
 
 	req := api.CreateBuildRequest{Image: image, Procfile: procfile}
 

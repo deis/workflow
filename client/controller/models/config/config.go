@@ -10,7 +10,7 @@ import (
 
 // List lists an app's config.
 func List(c *client.Client, app string) (api.Config, error) {
-	u := fmt.Sprintf("/v1/apps/%s/config/", app)
+	u := fmt.Sprintf("/v2/apps/%s/config/", app)
 
 	body, err := c.BasicRequest("GET", u, nil)
 
@@ -34,7 +34,7 @@ func Set(c *client.Client, app string, config api.Config) (api.Config, error) {
 		return api.Config{}, err
 	}
 
-	u := fmt.Sprintf("/v1/apps/%s/config/", app)
+	u := fmt.Sprintf("/v2/apps/%s/config/", app)
 
 	resBody, err := c.BasicRequest("POST", u, body)
 

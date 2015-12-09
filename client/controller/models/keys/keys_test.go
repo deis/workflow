@@ -48,12 +48,12 @@ type fakeHTTPServer struct{}
 func (fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	res.Header().Add("DEIS_API_VERSION", version.APIVersion)
 
-	if req.URL.Path == "/v1/keys/" && req.Method == "GET" {
+	if req.URL.Path == "/v2/keys/" && req.Method == "GET" {
 		res.Write([]byte(keysListFixture))
 		return
 	}
 
-	if req.URL.Path == "/v1/keys/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/keys/" && req.Method == "POST" {
 		body, err := ioutil.ReadAll(req.Body)
 
 		if err != nil {
@@ -74,7 +74,7 @@ func (fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if req.URL.Path == "/v1/keys/test@example.com" && req.Method == "DELETE" {
+	if req.URL.Path == "/v2/keys/test@example.com" && req.Method == "DELETE" {
 		res.WriteHeader(http.StatusNoContent)
 		res.Write(nil)
 		return

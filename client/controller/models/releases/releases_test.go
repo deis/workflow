@@ -63,17 +63,17 @@ type fakeHTTPServer struct{}
 func (fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	res.Header().Add("DEIS_API_VERSION", version.APIVersion)
 
-	if req.URL.Path == "/v1/apps/example-go/releases/" && req.Method == "GET" {
+	if req.URL.Path == "/v2/apps/example-go/releases/" && req.Method == "GET" {
 		res.Write([]byte(releasesFixture))
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/releases/v1/" && req.Method == "GET" {
+	if req.URL.Path == "/v2/apps/example-go/releases/v1/" && req.Method == "GET" {
 		res.Write([]byte(releaseFixture))
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/releases/rollback/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/example-go/releases/rollback/" && req.Method == "POST" {
 		body, err := ioutil.ReadAll(req.Body)
 
 		if err != nil {
@@ -94,7 +94,7 @@ func (fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/rollbacker/releases/rollback/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/rollbacker/releases/rollback/" && req.Method == "POST" {
 		body, err := ioutil.ReadAll(req.Body)
 
 		if err != nil {

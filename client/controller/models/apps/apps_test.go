@@ -55,7 +55,7 @@ type fakeHTTPServer struct {
 func (f *fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	res.Header().Add("DEIS_API_VERSION", version.APIVersion)
 
-	if req.URL.Path == "/v1/apps/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/" && req.Method == "POST" {
 		body, err := ioutil.ReadAll(req.Body)
 
 		if err != nil {
@@ -82,33 +82,33 @@ func (f *fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/" && req.Method == "GET" {
+	if req.URL.Path == "/v2/apps/" && req.Method == "GET" {
 		res.Write([]byte(appsFixture))
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/" && req.Method == "GET" {
+	if req.URL.Path == "/v2/apps/example-go/" && req.Method == "GET" {
 		res.Write([]byte(appFixture))
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/" && req.Method == "DELETE" {
+	if req.URL.Path == "/v2/apps/example-go/" && req.Method == "DELETE" {
 		res.WriteHeader(http.StatusNoContent)
 		res.Write(nil)
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/logs" && req.URL.RawQuery == "" && req.Method == "GET" {
+	if req.URL.Path == "/v2/apps/example-go/logs" && req.URL.RawQuery == "" && req.Method == "GET" {
 		res.Write([]byte("test\nfoo\nbar\n"))
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/logs" && req.URL.RawQuery == "log_lines=1" && req.Method == "GET" {
+	if req.URL.Path == "/v2/apps/example-go/logs" && req.URL.RawQuery == "log_lines=1" && req.Method == "GET" {
 		res.Write([]byte("test\n"))
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/run" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/example-go/run" && req.Method == "POST" {
 		body, err := ioutil.ReadAll(req.Body)
 
 		if err != nil {
@@ -124,11 +124,11 @@ func (f *fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		res.Write([]byte(`[0,"hi\n"]`))
+		res.Write([]byte(`{"rc":0,"output":"hi\n"}`))
 		return
 	}
 
-	if req.URL.Path == "/v1/apps/example-go/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/example-go/" && req.Method == "POST" {
 		body, err := ioutil.ReadAll(req.Body)
 
 		if err != nil {

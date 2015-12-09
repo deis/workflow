@@ -56,7 +56,7 @@ class ConfigTest(TransactionTestCase):
     def setUp(self):
         self.user = User.objects.get(username='autotest')
         self.token = Token.objects.get(user=self.user).key
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         self.app = App.objects.all()[0]
@@ -67,12 +67,12 @@ class ConfigTest(TransactionTestCase):
         Test that config is auto-created for a new app and that
         config can be updated using a PATCH
         """
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
         # check to see that an initial/empty config was created
-        url = "/v1/apps/{app_id}/config".format(**locals())
+        url = "/v2/apps/{app_id}/config".format(**locals())
         response = self.client.get(url,
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
@@ -137,10 +137,10 @@ class ConfigTest(TransactionTestCase):
     def test_response_data(self):
         """Test that the serialized response contains only relevant data."""
         body = {'id': 'test'}
-        response = self.client.post('/v1/apps', json.dumps(body),
+        response = self.client.post('/v2/apps', json.dumps(body),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
-        url = "/v1/apps/test/config"
+        url = "/v2/apps/test/config"
         # set an initial config value
         body = {'values': json.dumps({'PORT': '5000'})}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
@@ -162,10 +162,10 @@ class ConfigTest(TransactionTestCase):
     def test_response_data_types_converted(self):
         """Test that config data is converted into the correct type."""
         body = {'id': 'test'}
-        response = self.client.post('/v1/apps', json.dumps(body),
+        response = self.client.post('/v2/apps', json.dumps(body),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
-        url = "/v1/apps/test/config"
+        url = "/v2/apps/test/config"
 
         body = {'values': json.dumps({'PORT': 5000}), 'cpu': json.dumps({'web': '1024'})}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
@@ -195,11 +195,11 @@ class ConfigTest(TransactionTestCase):
         """
         Test that config sets on the same key function properly
         """
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
-        url = "/v1/apps/{app_id}/config".format(**locals())
+        url = "/v2/apps/{app_id}/config".format(**locals())
         # set an initial config value
         body = {'values': json.dumps({'PORT': '5000'})}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
@@ -219,11 +219,11 @@ class ConfigTest(TransactionTestCase):
         """
         Test that config sets with unicode values are accepted.
         """
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
-        url = "/v1/apps/{app_id}/config".format(**locals())
+        url = "/v2/apps/{app_id}/config".format(**locals())
         # set an initial config value
         body = {'values': json.dumps({'POWERED_BY': 'Деис'})}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
@@ -257,11 +257,11 @@ class ConfigTest(TransactionTestCase):
         """Test that valid config keys are accepted.
         """
         keys = ("FOO", "_foo", "f001", "FOO_BAR_BAZ_")
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
-        url = '/v1/apps/{app_id}/config'.format(**locals())
+        url = '/v2/apps/{app_id}/config'.format(**locals())
         for k in keys:
             body = {'values': json.dumps({k: "testvalue"})}
             resp = self.client.post(
@@ -275,11 +275,11 @@ class ConfigTest(TransactionTestCase):
         """Test that invalid config keys are rejected.
         """
         keys = ("123", "../../foo", "FOO/", "FOO-BAR")
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
-        url = '/v1/apps/{app_id}/config'.format(**locals())
+        url = '/v2/apps/{app_id}/config'.format(**locals())
         for k in keys:
             body = {'values': json.dumps({k: "testvalue"})}
             resp = self.client.post(
@@ -294,11 +294,11 @@ class ConfigTest(TransactionTestCase):
         """
         user = User.objects.get(username='autotest2')
         token = Token.objects.get(user=user).key
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
-        url = "/v1/apps/{app_id}/config".format(**locals())
+        url = "/v2/apps/{app_id}/config".format(**locals())
         # set an initial config value
         body = {'values': json.dumps({'PORT': '5000'})}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
@@ -313,11 +313,11 @@ class ConfigTest(TransactionTestCase):
         Test that limit is auto-created for a new app and that
         limits can be updated using a PATCH
         """
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
-        url = '/v1/apps/{app_id}/config'.format(**locals())
+        url = '/v2/apps/{app_id}/config'.format(**locals())
         # check default limit
         response = self.client.get(url, content_type='application/json',
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -400,11 +400,11 @@ class ConfigTest(TransactionTestCase):
         """
         Test that CPU limits can be set
         """
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
-        url = '/v1/apps/{app_id}/config'.format(**locals())
+        url = '/v2/apps/{app_id}/config'.format(**locals())
         # check default limit
         response = self.client.get(url, content_type='application/json',
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -471,11 +471,11 @@ class ConfigTest(TransactionTestCase):
         """
         Test that tags can be set on an application
         """
-        url = '/v1/apps'
+        url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
-        url = '/v1/apps/{app_id}/config'.format(**locals())
+        url = '/v2/apps/{app_id}/config'.format(**locals())
         # check default
         response = self.client.get(url, content_type='application/json',
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -559,7 +559,7 @@ class ConfigTest(TransactionTestCase):
         requests should return a 403.
         """
         app_id = 'autotest'
-        base_url = '/v1/apps'
+        base_url = '/v2/apps'
         body = {'id': app_id}
         response = self.client.post(base_url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -573,7 +573,7 @@ class ConfigTest(TransactionTestCase):
 
     def _test_app_healthcheck(self):
         # post a new build, expecting it to pass as usual
-        url = "/v1/apps/{self.app}/builds".format(**locals())
+        url = "/v2/apps/{self.app}/builds".format(**locals())
         body = {'image': 'autotest/example'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -581,7 +581,7 @@ class ConfigTest(TransactionTestCase):
         # mock out the etcd client
         api.models._etcd_client = MockEtcdClient(self.app)
         # set an initial healthcheck url.
-        url = "/v1/apps/{self.app}/config".format(**locals())
+        url = "/v2/apps/{self.app}/config".format(**locals())
         body = {'values': json.dumps({'HEALTHCHECK_URL': '/'})}
         return self.client.post(url, json.dumps(body), content_type='application/json',
                                 HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -634,7 +634,7 @@ seconds".format(self.app.id)
         Ensure that when a healthcheck fails, a backoff strategy is used before trying again.
         """
         # post a new build, expecting it to pass as usual
-        url = "/v1/apps/{self.app}/builds".format(**locals())
+        url = "/v2/apps/{self.app}/builds".format(**locals())
         body = {'image': 'autotest/example'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -642,7 +642,7 @@ seconds".format(self.app.id)
         # mock out the etcd client
         api.models._etcd_client = MockEtcdClient(self.app)
         # set an initial healthcheck url.
-        url = "/v1/apps/{self.app}/config".format(**locals())
+        url = "/v2/apps/{self.app}/config".format(**locals())
         body = {'values': json.dumps({'HEALTHCHECK_URL': '/'})}
         return self.client.post(url, json.dumps(body), content_type='application/json',
                                 HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -656,7 +656,7 @@ seconds".format(self.app.id)
         x is the number of seconds in the initial timeout.
         """
         # post a new build, expecting it to pass as usual
-        url = "/v1/apps/{self.app}/builds".format(**locals())
+        url = "/v2/apps/{self.app}/builds".format(**locals())
         body = {'image': 'autotest/example'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -664,7 +664,7 @@ seconds".format(self.app.id)
         # mock out the etcd client
         api.models._etcd_client = MockEtcdClient(self.app)
         # set an initial healthcheck url.
-        url = "/v1/apps/{self.app}/config".format(**locals())
+        url = "/v2/apps/{self.app}/config".format(**locals())
         body = {'values': json.dumps({'HEALTHCHECK_URL': '/'})}
         return self.client.post(url, json.dumps(body), content_type='application/json',
                                 HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -672,7 +672,7 @@ seconds".format(self.app.id)
         # mock_time; one for the call in the code, and one for this invocation.
         mock_time.assert_called_with(0)
         app = App.objects.all()[0]
-        url = "/v1/apps/{app}/config".format(**locals())
+        url = "/v2/apps/{app}/config".format(**locals())
         body = {'values': json.dumps({'HEALTHCHECK_INITIAL_DELAY': 10})}
         self.client.post(url, json.dumps(body), content_type='application/json',
                          HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -687,7 +687,7 @@ seconds".format(self.app.id)
         """
         self._test_app_healthcheck()
         app = App.objects.all()[0]
-        url = "/v1/apps/{app}/config".format(**locals())
+        url = "/v2/apps/{app}/config".format(**locals())
         body = {'values': json.dumps({'HEALTHCHECK_TIMEOUT': 10})}
         self.client.post(url, json.dumps(body), content_type='application/json',
                          HTTP_AUTHORIZATION='token {}'.format(self.token))
