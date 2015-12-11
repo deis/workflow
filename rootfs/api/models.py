@@ -163,7 +163,9 @@ class App(UuidAuditedModel):
     @property
     def _scheduler(self):
         mod = importlib.import_module(settings.SCHEDULER_MODULE)
-        return mod.SchedulerClient()
+        return mod.SchedulerClient(settings.SCHEDULER_URL,
+                                   settings.SCHEDULER_AUTH,
+                                   settings.SCHEDULER_OPTIONS)
 
     def __str__(self):
         return self.id
