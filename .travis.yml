@@ -34,10 +34,18 @@ install:
   - GLIDE_HOME=/home/travis/.glide make -C client bootstrap
 script:
   - make test
-  - make -C client/ test
-  - make -C docs/ test
+  - make -C client/ build test
+  - make -C docs/ build test
 deploy:
   provider: script
+  # ensure client/doc builds aren't removed
+  # see https://docs.travis-ci.com/user/deployment/#Uploading-Files
+  skip_cleanup: true
   script: _scripts/deploy.sh
   on:
     branch: master
+addons:
+  artifacts:
+    paths:
+      - client/deis
+      - docs/_build
