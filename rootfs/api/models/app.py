@@ -5,7 +5,6 @@ import re
 import time
 from threading import Thread
 import requests
-from docker.utils import utils as dockerutils
 
 # Django
 from django.core.exceptions import ValidationError
@@ -504,17 +503,7 @@ class App(UuidAuditedModel):
                                      release=self.release_set.latest(),
                                      type='run',
                                      num=c_num)
-        image = c.release.image
 
-        # check for backwards compatibility
-        def _has_hostname(image):
-            repo, tag = dockerutils.parse_repository_tag(image)
-            return True if '/' in repo and '.' in repo.split('/')[0] else False
-
-        if not _has_hostname(image):
-            image = '{}:{}/{}'.format(settings.REGISTRY_HOST,
-                                      settings.REGISTRY_PORT,
-                                      image)
         # SECURITY: shell-escape user input
         escaped_command = command.replace("'", "'\\''")
         return c.run(escaped_command)
