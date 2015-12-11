@@ -39,7 +39,7 @@ Once this is done, you can SSH into the minion running the controller and run th
 ```
 $ curl -sSL http://deis.io/deis-cli/install.sh | sh
 $ sudo mv deis /bin
-$ kubectl get service deis-workflow
+$ kubectl get service --namespace=deis deis-workflow
 $ deis register 10.247.59.157 # or the appropriate CLUSTER_IP
 $ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 $ eval $(ssh-agent) && ssh-add ~/.ssh/id_rsa
