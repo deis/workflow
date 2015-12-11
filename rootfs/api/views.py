@@ -15,8 +15,6 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.authtoken.models import Token
 
 from api import authentication, models, permissions, serializers, viewsets
-from models.app import validate_app_structure
-from api.models import App, Build, Domain, Config, Key, Push, Release, Certificate, Container
 
 import requests
 
@@ -126,7 +124,7 @@ class AppResourceViewSet(BaseDeisViewSet):
     """A viewset for objects which are attached to an application."""
 
     def get_app(self):
-        app = get_object_or_404(App, id=self.kwargs['id'])
+        app = get_object_or_404(models.App, id=self.kwargs['id'])
         self.check_object_permissions(self.request, app)
         return app
 
@@ -163,7 +161,7 @@ class ReleasableViewSet(AppResourceViewSet):
 
 class AppViewSet(BaseDeisViewSet):
     """A viewset for interacting with App objects."""
-    model = App
+    model = models.App
     serializer_class = serializers.AppSerializer
 
     def get_queryset(self, *args, **kwargs):
@@ -194,7 +192,7 @@ class AppViewSet(BaseDeisViewSet):
         try:
             for target, count in request.data.viewitems():
                 new_structure[target] = int(count)
-            validate_app_structure(new_structure)
+            models.validate_app_structure(new_structure)
             app.scale(request.user, new_structure)
         except (TypeError, ValueError) as e:
             return Response({'detail': 'Invalid scaling format: {}'.format(e)},
@@ -249,7 +247,7 @@ class AppViewSet(BaseDeisViewSet):
 
 class BuildViewSet(ReleasableViewSet):
     """A viewset for interacting with Build objects."""
-    model = Build
+    model = models.Build
     serializer_class = serializers.BuildSerializer
 
     def post_save(self, build):
@@ -259,7 +257,7 @@ class BuildViewSet(ReleasableViewSet):
 
 class ConfigViewSet(ReleasableViewSet):
     """A viewset for interacting with Config objects."""
-    model = Config
+    model = models.Config
     serializer_class = serializers.ConfigSerializer
 
     def post_save(self, config):
@@ -274,7 +272,7 @@ class ConfigViewSet(ReleasableViewSet):
 
 class ContainerViewSet(AppResourceViewSet):
     """A viewset for interacting with Container objects."""
-    model = Container
+    model = models.Container
     serializer_class = serializers.ContainerSerializer
 
     def get_queryset(self, **kwargs):
@@ -301,7 +299,7 @@ class ContainerViewSet(AppResourceViewSet):
 
 class DomainViewSet(AppResourceViewSet):
     """A viewset for interacting with Domain objects."""
-    model = Domain
+    model = models.Domain
     serializer_class = serializers.DomainSerializer
 
     def get_object(self, **kwargs):
@@ -311,7 +309,7 @@ class DomainViewSet(AppResourceViewSet):
 
 class CertificateViewSet(BaseDeisViewSet):
     """A viewset for interacting with Domain objects."""
-    model = Certificate
+    model = models.Certificate
     serializer_class = serializers.CertificateSerializer
 
     def get_object(self, **kwargs):
@@ -322,14 +320,14 @@ class CertificateViewSet(BaseDeisViewSet):
 
 class KeyViewSet(BaseDeisViewSet):
     """A viewset for interacting with Key objects."""
-    model = Key
+    model = models.Key
     permission_classes = [IsAuthenticated, permissions.IsOwner]
     serializer_class = serializers.KeySerializer
 
 
 class ReleaseViewSet(AppResourceViewSet):
     """A viewset for interacting with Release objects."""
-    model = Release
+    model = models.Release
     serializer_class = serializers.ReleaseSerializer
 
     def get_object(self, **kwargs):
@@ -363,11 +361,11 @@ class BaseHookViewSet(BaseDeisViewSet):
 
 class PushHookViewSet(BaseHookViewSet):
     """API hook to create new :class:`~api.models.Push`"""
-    model = Push
+    model = models.Push
     serializer_class = serializers.PushSerializer
 
     def create(self, request, *args, **kwargs):
-        app = get_object_or_404(App, id=request.data['receive_repo'])
+        app = get_object_or_404(models.App, id=request.data['receive_repo'])
         request.user = get_object_or_404(User, username=request.data['receive_user'])
         # check the user is authorized for this app
         if not permissions.is_app_user(request, app):
@@ -379,11 +377,11 @@ class PushHookViewSet(BaseHookViewSet):
 
 class BuildHookViewSet(BaseHookViewSet):
     """API hook to create new :class:`~api.models.Build`"""
-    model = Build
+    model = models.Build
     serializer_class = serializers.BuildSerializer
 
     def create(self, request, *args, **kwargs):
-        app = get_object_or_404(App, id=request.data['receive_repo'])
+        app = get_object_or_404(models.App, id=request.data['receive_repo'])
         self.user = request.user = get_object_or_404(User, username=request.data['receive_user'])
         # check the user is authorized for this app
         if not permissions.is_app_user(request, app):
@@ -401,12 +399,12 @@ class BuildHookViewSet(BaseHookViewSet):
 
 
 class ConfigHookViewSet(BaseHookViewSet):
-    """API hook to grab latest :class:`~api.build.Config`"""
-    model = Config
+    """API hook to grab latest :class:`~api.models.Config`"""
+    model = models.Config
     serializer_class = serializers.ConfigSerializer
 
     def create(self, request, *args, **kwargs):
-        app = get_object_or_404(App, id=request.data['receive_repo'])
+        app = get_object_or_404(models.App, id=request.data['receive_repo'])
         request.user = get_object_or_404(User, username=request.data['receive_user'])
         # check the user is authorized for this app
         if not permissions.is_app_user(request, app):
@@ -419,7 +417,7 @@ class ConfigHookViewSet(BaseHookViewSet):
 class AppPermsViewSet(BaseDeisViewSet):
     """RESTful views for sharing apps with collaborators."""
 
-    model = App  # models class
+    model = models.App  # models class
     perm = 'use_app'    # short name for permission
 
     def get_queryset(self):
@@ -444,7 +442,7 @@ class AppPermsViewSet(BaseDeisViewSet):
         return Response(status=status.HTTP_201_CREATED)
 
     def destroy(self, request, **kwargs):
-        app = get_object_or_404(App, id=self.kwargs['id'])
+        app = get_object_or_404(models.App, id=self.kwargs['id'])
         user = get_object_or_404(User, username=kwargs['username'])
 
         perm_name = "api.{}".format(self.perm)

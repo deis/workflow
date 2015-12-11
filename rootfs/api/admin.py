@@ -9,7 +9,13 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from guardian.admin import GuardedModelAdmin
 
-from .models import App, Build, Config, Container, Domain, Key, Release
+from .models import App
+from .models import Build
+from .models import Config
+from .models import Container
+from .models import Domain
+from .models import Key
+from .models import Release
 
 
 class AppAdmin(GuardedModelAdmin):

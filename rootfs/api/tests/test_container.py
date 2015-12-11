@@ -18,7 +18,7 @@ from scheduler.states import TransitionError
 from . import mock_status_ok
 
 
-@mock.patch('api.models.release.publish_release', lambda *args: None)
+@mock.patch('api.models.publish_release', lambda *args: None)
 class ContainerTest(TransactionTestCase):
     """Tests creation of containers on nodes"""
 

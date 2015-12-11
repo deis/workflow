@@ -13,7 +13,7 @@ from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from api.models import App, Release, Push, Container, Certificate, Domain, Config, Build, Key
+from api import models
 
 
 PROCTYPE_MATCH = re.compile(r'^(?P<type>[a-z]+)')
@@ -144,7 +144,7 @@ class AppSerializer(ModelSerializer):
 
     class Meta:
         """Metadata options for a :class:`AppSerializer`."""
-        model = App
+        model = models.App
         fields = ['uuid', 'id', 'owner', 'url', 'structure', 'created', 'updated']
         read_only_fields = ['uuid']
 
@@ -152,7 +152,7 @@ class AppSerializer(ModelSerializer):
 class BuildSerializer(ModelSerializer):
     """Serialize a :class:`~api.models.Build` model."""
 
-    app = serializers.SlugRelatedField(slug_field='id', queryset=App.objects.all())
+    app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
     procfile = JSONFieldSerializer(required=False)
     created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
@@ -160,7 +160,7 @@ class BuildSerializer(ModelSerializer):
 
     class Meta:
         """Metadata options for a :class:`BuildSerializer`."""
-        model = Build
+        model = models.Build
         fields = ['owner', 'app', 'image', 'sha', 'procfile', 'dockerfile', 'created',
                   'updated', 'uuid']
         read_only_fields = ['uuid']
@@ -169,7 +169,7 @@ class BuildSerializer(ModelSerializer):
 class ConfigSerializer(ModelSerializer):
     """Serialize a :class:`~api.models.Config` model."""
 
-    app = serializers.SlugRelatedField(slug_field='id', queryset=App.objects.all())
+    app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
     values = JSONStringFieldSerializer(required=False)
     memory = JSONStringFieldSerializer(required=False)
@@ -180,7 +180,7 @@ class ConfigSerializer(ModelSerializer):
 
     class Meta:
         """Metadata options for a :class:`ConfigSerializer`."""
-        model = Config
+        model = models.Config
 
     def validate_values(self, value):
         for k, v in value.viewitems():
@@ -233,20 +233,20 @@ class ConfigSerializer(ModelSerializer):
 class ReleaseSerializer(ModelSerializer):
     """Serialize a :class:`~api.models.Release` model."""
 
-    app = serializers.SlugRelatedField(slug_field='id', queryset=App.objects.all())
+    app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
     created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
     updated = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
 
     class Meta:
         """Metadata options for a :class:`ReleaseSerializer`."""
-        model = Release
+        model = models.Release
 
 
 class ContainerSerializer(ModelSerializer):
     """Serialize a :class:`~api.models.Container` model."""
 
-    app = serializers.SlugRelatedField(slug_field='id', queryset=App.objects.all())
+    app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
     created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
     updated = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
@@ -254,7 +254,7 @@ class ContainerSerializer(ModelSerializer):
 
     class Meta:
         """Metadata options for a :class:`ContainerSerializer`."""
-        model = Container
+        model = models.Container
         fields = ['owner', 'app', 'release', 'type', 'num', 'state', 'created', 'updated', 'uuid']
 
     def get_release(self, obj):
@@ -271,20 +271,20 @@ class KeySerializer(ModelSerializer):
 
     class Meta:
         """Metadata options for a KeySerializer."""
-        model = Key
+        model = models.Key
 
 
 class DomainSerializer(ModelSerializer):
     """Serialize a :class:`~api.models.Domain` model."""
 
-    app = serializers.SlugRelatedField(slug_field='id', queryset=App.objects.all())
+    app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
     created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
     updated = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
 
     class Meta:
         """Metadata options for a :class:`DomainSerializer`."""
-        model = Domain
+        model = models.Domain
         fields = ['uuid', 'owner', 'created', 'updated', 'app', 'domain']
 
     def validate_domain(self, value):
@@ -307,14 +307,14 @@ class DomainSerializer(ModelSerializer):
             if not match or '--' in label or label.isdigit() or \
                len(labels) == 1 and any(char.isdigit() for char in label):
                 raise serializers.ValidationError('Hostname does not look valid.')
-        if Domain.objects.filter(domain=value).exists():
+        if models.Domain.objects.filter(domain=value).exists():
             raise serializers.ValidationError(
                 "The domain {} is already in use by another app".format(value))
         return value
 
 
 class CertificateSerializer(ModelSerializer):
-    """Serialize a :class:`~api.models.Certificate` model."""
+    """Serialize a :class:`~api.models.Cert` model."""
 
     owner = serializers.ReadOnlyField(source='owner.username')
     expires = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
@@ -323,7 +323,7 @@ class CertificateSerializer(ModelSerializer):
 
     class Meta:
         """Metadata options for a DomainCertSerializer."""
-        model = Certificate
+        model = models.Certificate
         extra_kwargs = {'certificate': {'write_only': True},
                         'key': {'write_only': True},
                         'common_name': {'required': False}}
@@ -333,13 +333,13 @@ class CertificateSerializer(ModelSerializer):
 class PushSerializer(ModelSerializer):
     """Serialize a :class:`~api.models.Push` model."""
 
-    app = serializers.SlugRelatedField(slug_field='id', queryset=App.objects.all())
+    app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
     created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
     updated = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
 
     class Meta:
         """Metadata options for a :class:`PushSerializer`."""
-        model = Push
+        model = models.Push
         fields = ['uuid', 'owner', 'app', 'sha', 'fingerprint', 'receive_user', 'receive_repo',
                   'ssh_connection', 'ssh_original_command', 'created', 'updated']

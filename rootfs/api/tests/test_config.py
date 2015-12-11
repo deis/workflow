@@ -17,6 +17,7 @@ import etcd
 import mock
 from rest_framework.authtoken.models import Token
 
+import api.exceptions
 from api.models import App, Config
 from . import mock_status_ok
 
@@ -33,20 +34,19 @@ def mock_request_connection_error(*args, **kwargs):
 
 
 class MockEtcdClient:
+
+    def __init__(self, app):
+        self.app = app
+
     def get(self, key, *args, **kwargs):
-        app = App.objects.all()[0]
         node = {
-            'key': '/deis/services/{}/{}_v2.web.1'.format(app, app),
+            'key': '/deis/services/{}/{}_v2.web.1'.format(self.app, self.app),
             'value': '127.0.0.1:1234'
         }
         return etcd.EtcdResult(None, node)
 
 
-def get_mock_etcd_client():
-    return MockEtcdClient()
-
-
-@mock.patch('api.models.release.publish_release', lambda *args: None)
+@mock.patch('api.models.publish_release', lambda *args: None)
 class ConfigTest(TransactionTestCase):
 
     """Tests setting and updating config values"""
@@ -571,7 +571,6 @@ class ConfigTest(TransactionTestCase):
                                     HTTP_AUTHORIZATION='token {}'.format(unauthorized_token))
         self.assertEqual(response.status_code, 403)
 
-    @mock.patch('api.models.app.get_etcd_client', get_mock_etcd_client)
     def _test_app_healthcheck(self):
         # post a new build, expecting it to pass as usual
         url = "/v2/apps/{self.app}/builds".format(**locals())
@@ -579,7 +578,8 @@ class ConfigTest(TransactionTestCase):
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
-
+        # mock out the etcd client
+        api.models._etcd_client = MockEtcdClient(self.app)
         # set an initial healthcheck url.
         url = "/v2/apps/{self.app}/config".format(**locals())
         body = {'values': json.dumps({'HEALTHCHECK_URL': '/'})}
@@ -598,6 +598,7 @@ class ConfigTest(TransactionTestCase):
         self.assertEqual(self.app.release_set.latest().version, 3)
 
     @mock.patch('requests.get', mock_status_not_found)
+    @mock.patch('api.models.get_etcd_client', lambda func: func)
     @mock.patch('time.sleep', lambda func: func)
     @mock.patch('api.models.logger')
     def test_app_healthcheck_bad(self, mock_logger):
@@ -626,7 +627,7 @@ seconds".format(self.app.id)
         self.assertEqual(log_calls.count(exp_log_call), 1)
 
     @mock.patch('requests.get', mock_status_not_found)
-    @mock.patch('api.models.get_etcd_client', get_mock_etcd_client)
+    @mock.patch('api.models.get_etcd_client', lambda func: func)
     @mock.patch('time.sleep')
     def test_app_backoff_interval(self, mock_time):
         """
@@ -638,7 +639,8 @@ seconds".format(self.app.id)
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
-
+        # mock out the etcd client
+        api.models._etcd_client = MockEtcdClient(self.app)
         # set an initial healthcheck url.
         url = "/v2/apps/{self.app}/config".format(**locals())
         body = {'values': json.dumps({'HEALTHCHECK_URL': '/'})}
@@ -647,7 +649,6 @@ seconds".format(self.app.id)
         self.assertEqual(mock_time.call_count, 5)
 
     @mock.patch('requests.get', mock_status_ok)
-    @mock.patch('api.models.get_etcd_client', get_mock_etcd_client)
     @mock.patch('time.sleep')
     def test_app_healthcheck_initial_delay(self, mock_time):
         """
@@ -660,7 +661,8 @@ seconds".format(self.app.id)
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
-
+        # mock out the etcd client
+        api.models._etcd_client = MockEtcdClient(self.app)
         # set an initial healthcheck url.
         url = "/v2/apps/{self.app}/config".format(**locals())
         body = {'values': json.dumps({'HEALTHCHECK_URL': '/'})}
@@ -676,8 +678,7 @@ seconds".format(self.app.id)
                          HTTP_AUTHORIZATION='token {}'.format(self.token))
         mock_time.assert_called_with(10)
 
-    @mock.patch('requests.get', side_effect=mock_status_ok)
-    @mock.patch('api.models.app.get_etcd_client', get_mock_etcd_client)
+    @mock.patch('requests.get')
     @mock.patch('time.sleep', lambda func: func)
     def test_app_healthcheck_timeout(self, mock_request):
         """
@@ -688,8 +689,7 @@ seconds".format(self.app.id)
         app = App.objects.all()[0]
         url = "/v2/apps/{app}/config".format(**locals())
         body = {'values': json.dumps({'HEALTHCHECK_TIMEOUT': 10})}
-        self.client.post(url, json.dumps(body),
-                         content_type='application/json',
+        self.client.post(url, json.dumps(body), content_type='application/json',
                          HTTP_AUTHORIZATION='token {}'.format(self.token))
         mock_request.assert_called_with('http://127.0.0.1:1234/', timeout=10)
 
