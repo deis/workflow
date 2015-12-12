@@ -152,8 +152,9 @@ func configPush(argv []string) error {
 	usage := `
 Sets environment variables for an application.
 
-The environment is read from <path>. This file can be read by foreman
-to load the local environment for your app.
+This file can be read by foreman
+to load the local environment for your app. The file should be piped via
+stdin, 'deis config:push < .env', or using the --path option.
 
 Usage: deis config:push [options]
 
