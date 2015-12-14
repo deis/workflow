@@ -5,3 +5,7 @@ test-setup:
 
 test-integration:
 	go test -v ./...
+
+build:
+# Precompile the test suite into a binary "_tests.test"
+	ginkgo build -race -r

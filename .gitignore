@@ -27,6 +27,7 @@ docs/_build/
 docs/docs.zip
 docs/dummy.sqlite3
 manifests/*.tmp.yml
+_tests/_tests.test
 
 # coverage reports
 .coverage
