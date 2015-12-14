@@ -12,6 +12,7 @@ omit =
     # osx library files when not running in virtualenv
     /Library/*
     /System/*
+    /usr/local/lib/*
 
 [report]
 ignore_errors = True
