@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import json
 import logging
 import re
@@ -10,6 +11,8 @@ from docker import Client
 from .states import JobState
 from . import AbstractSchedulerClient
 import requests
+from .utils import dict_merge
+
 
 logger = logging.getLogger(__name__)
 
@@ -82,7 +85,8 @@ SERVICE_TEMPLATE = """\
     "name": "$name",
     "labels": {
       "app": "$name"
-    }
+    },
+    "annotations": {}
   },
   "spec": {
     "ports": [
@@ -392,7 +396,14 @@ class KubeHTTPClient(AbstractSchedulerClient):
         name = name.replace('.', '-').replace('_', '-')
         app_name = kwargs.get('aname', {})
         try:
-            self._create_service(name, app_name, app_type)
+            # Make sure the router knows what to do with this
+            data = {}
+            # TODO this should potentially be higher up in the flow
+            # see http://docs.deis.io/en/latest/using_deis/process-types/#web-vs-cmd-process-types
+            if app_type in ['web', 'cmd']:
+                data = {'metadata': {'labels': {'routable': 'true'}}}
+
+            self._create_service(name, app_name, app_type, data)
         except:
             self._scale_app(name, 0, app_name)
             self._delete_rc(name, app_name)
@@ -400,17 +411,17 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
     def _get_service(self, name, namespace):
         url = self._api("/namespaces/{}/services/{}", namespace, name)
-        resp = self.session.get(url)
-        if unhealthy(resp.status_code):
-            error(resp, 'get Service "{}" in Namespace "{}"', name, namespace)
+        response = self.session.get(url)
+        if unhealthy(response.status_code):
+            error(response, 'get Service "{}" in Namespace "{}"', name, namespace)
 
-        return resp.status_code, resp.text, resp.reason
+        return response
 
-    def _create_service(self, name, app_name, app_type):
+    def _create_service(self, name, app_name, app_type, data={}):
         actual_pod = {}
         for _ in xrange(300):
-            status, data, reason = self._get_pods(app_name)
-            parsed_json = json.loads(data)
+            status, json_data, reason = self._get_pods(app_name)
+            parsed_json = json.loads(json_data)
             for pod in parsed_json['items']:
                 if('generateName' in pod['metadata'] and
                    pod['metadata']['generateName'] == name + '-'):
@@ -441,23 +452,28 @@ class KubeHTTPClient(AbstractSchedulerClient):
             "name": app_name,
         }
 
-        template = string.Template(SERVICE_TEMPLATE).substitute(l)
+        # Merge external data on to the prefined template
+        template = json.loads(string.Template(SERVICE_TEMPLATE).substitute(l))
+        data = dict_merge(template, data)
+
         url = self._api("/namespaces/{}/services", app_name)
-        resp = self.session.post(url, json=json.loads(template))
+        resp = self.session.post(url, json=data)
         if resp.status_code == 409:
-            status, data, reason = self._get_service(app_name, app_name)
-            srv = json.loads(data)
+            srv = self._get_service(app_name, app_name).json()
             if srv['spec']['selector']['type'] == 'web':
                 return
 
             srv['spec']['selector']['type'] = app_type
             srv['spec']['ports'][0]['targetPort'] = port
-            url = self._api("/namespaces/{}/services/{}", app_name, app_name)
-            resp2 = self.session.put(url, json=srv)
+            resp2 = self._update_service(app_name, app_name, srv)
             if unhealthy(resp2.status_code):
                 error(resp, 'update Service "{}" in Namespace "{}"', app_name, app_name)
         elif unhealthy(resp.status_code):
             error(resp, 'create Service "{}" in Namespace "{}"', app_name, app_name)
+
+    def _update_service(self, namespace, app, data):
+        url = self._api("/namespaces/{}/services/{}", namespace, app)
+        return self.session.put(url, json=data)
 
     def start(self, name):
         """Start a container."""
