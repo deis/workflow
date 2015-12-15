@@ -14,6 +14,9 @@ Fortunately, most modern applications feature a stateless application tier that 
 
 ## Login to the Controller
 
+!!! important
+	if you haven't yet, now is a good time to [install the client](installing-the-client.md).
+
 Before deploying an application, users must first authenticate against the Deis [Controller][].
 
     $ deis login http://deis.example.com
