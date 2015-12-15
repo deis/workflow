@@ -10,8 +10,17 @@ First check that you have `helm` installed and the version is correct.
 
 Ensure your kubectl client is installed and ensure it can connect to your kubernetes cluster. This
 is where `helm` will attempt to communicate with the cluster. You can test that it is working
-properly by running `kubectl get nodes`. If you see a list of available nodes, kubectl is
-communicating with the kubernetes master.
+properly by running
+
+    $ helm target
+    Kubernetes master is running at https://10.245.1.2
+    Heapster is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/heapster
+    KubeDNS is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-dns
+    KubeUI is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-ui
+    Grafana is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
+    InfluxDB is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
+
+If you see a list of targets like the one above, helm can communicate with the kubernetes master.
 
 Once finished, run this command to provision the Deis platform:
 
