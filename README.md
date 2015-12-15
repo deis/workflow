@@ -37,7 +37,7 @@ $ kubectl get pods --namespace=deis
 Once this is done, you can SSH into the minion running the controller and run the following:
 
 ```
-$ curl -sSL https://s3-us-west-1.amazonaws.com/bacongobbler/bacongobbler/workflow/19/19.1/client/deis
+$ curl -sSL https://get-deis.s3.amazonaws.com/deis/workflow/220/220.1/client/deis
 $ chmod 755 deis
 $ sudo mv deis /bin
 $ kubectl get service --namespace=deis deis-workflow
@@ -55,7 +55,7 @@ If you want to retrieve the latest client build, check
 [the latest builds on Travis CI](https://travis-ci.org/deis/workflow/builds), notice the last build
 number that went green and use the following URL to retrieve the client build:
 
-    <https://s3-us-west-1.amazonaws.com/get-deis/deis/workflow/$BUILD_NUM/$BUILD_NUM.1/client/deis>
+    <https://get-deis.s3.amazonaws.com/deis/workflow/$BUILD_NUM/$BUILD_NUM.1/client/deis>
 
 If you want to hack on a new feature, build the deis/workflow image and push it to a Docker
 registry. The `$DEIS_REGISTRY` environment variable must point to a registry accessible to your
