@@ -32,20 +32,29 @@ install:
   - pip install -r rootfs/dev_requirements.txt
   - make -C docs/ deps
   - GLIDE_HOME=/home/travis/.glide make -C client bootstrap
+  - make prep-bintray-json
 script:
   - make test
   - make -C client/ build test
   - make -C docs/ build test
 deploy:
-  provider: script
-  # ensure client/doc builds aren't removed
-  # see https://docs.travis-ci.com/user/deployment/#Uploading-Files
-  skip_cleanup: true
-  script: _scripts/deploy.sh
-  on:
-    branch: master
+  - provider: script
+    # ensure client/doc builds aren't removed
+    # see https://docs.travis-ci.com/user/deployment/#Uploading-Files
+    skip_cleanup: true
+    script: _scripts/deploy.sh
+    on:
+      branch: master
+  - provider: bintray
+    skip_cleanup: true
+    file: _scripts/ci/bintray-ci.json
+    user: deis-admin
+    key:
+      secure: "JVCyPvXZIabZBhWgZ2wX4UDoTpIAjVnp+Ox6cXywYbACzKZSTz6G1kFcItzpUiEygUtye1213Zb+2050jq3BK7wohy5lcZCDJgrhyw6RxTRWIQQ5o+pS+O/AOYCSbpPn2E5goNutAhlOVsf2TlXkt4wz0jl5qOaecm0QXoiXBPUH5H1a3ifnCylybVG2jc2Kj/9S5uMGDQqocrPTXedZo9E/Es61MbKttlJGfcIrjbS71J8QZvDTcTSjzGT5CVdQulzkLNmFI5y31XwBE9XC6ro/Can10bIvy6yzYSWraUBTXVLWY2mPrPSlohOqNiYg2goQFQ2KwAGe6mVbq3UqOrYqNLXDdpSnCsRkx2KBw+ifET+0neq1NI3v5oSjKZ+p2zKCWQoOxahU40Eg+hA12oN17yHglaj2PGLuxYicDc+BQEGcGdBHAPJNXALd+rSDCdq5Gnd9HsCQE2Tyc+YK2bKvfpgcQNLS7gtiIxoRLZ1/qRBq3SB3IyQik7jjPe9Y0Meqnmdk8PeXM113/MSGdqZtVfyaOcT8SPgN22dhV42fs/BQtplTT3Hcs3yhmDwtl1w1udynerHcWx0PqZFn3h95SozJFPi8UdsbZog5V/CY/OAFs3K4bm3ay4Re1r2vTFCRuukp6UwtT5QR4kjsKWrLkewFbjId2FazJA8kMc4="
+    on:
+      tags: true
+      branch: master
 addons:
   artifacts:
     paths:
-      - client/deis
       - docs/_build
