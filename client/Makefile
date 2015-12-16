@@ -19,7 +19,7 @@ define check-static-binary
 endef
 
 bootstrap:
-	glide -y glide.yaml up
+	glide -y glide.yaml install 
 
 build:
 	CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags '-s' -o deis .
