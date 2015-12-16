@@ -21,7 +21,9 @@ If running multiple (at least three) machines of an adequate size is unreasonabl
 
 ## Network
 
-Due to changes introduced in Docker 1.3.1 related to insecure Docker registries, the hosts running Deis must be able to communicate via a private network in one of the RFC 1918 or RFC 6598 private address spaces: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, or `100.64.0.0/10`.
+Due to changes introduced in Docker 1.3.1 related to insecure Docker registries, the hosts running Deis must be able to communicate via a private network procured by kubernetes in the `10.0.0.0/8` private address space. This allows the docker daemon used by the controller to communicate with the registry. Ensure that your hosts have the following entries in their respective DOCKER_OPTS:
+
+	EXTRA_DOCKER_OPTS="--insecure-registry 10.0.0.0/8"
 
 
 [dokku]: https://github.com/progrium/dokku
