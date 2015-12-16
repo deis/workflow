@@ -12,6 +12,7 @@ import importlib
 import logging
 import re
 import time
+import json
 from threading import Thread
 
 from django.conf import settings
@@ -30,7 +31,7 @@ from rest_framework.authtoken.models import Token
 
 from api import fields, utils, exceptions
 from registry import publish_release
-from utils import dict_diff, fingerprint
+from utils import dict_diff, dict_merge, fingerprint
 
 
 logger = logging.getLogger(__name__)
@@ -325,7 +326,13 @@ class App(UuidAuditedModel):
                     name=job_id,
                     image=image,
                     command=command,
-                    **kwargs)
+                    **kwargs
+                )
+
+                # Attach the platform specific application sub domain
+                # scheduler.scale creates the required service on apps:create
+                if not Domain.objects.filter(owner=self.owner, app=self, domain=self).exists():
+                    Domain(owner=self.owner, app=self, domain=str(self)).save()
             except Exception as e:
                 err = '{} (scale): {}'.format(job_id, e)
                 log_event(self, err, logging.ERROR)
@@ -614,7 +621,8 @@ class Container(UuidAuditedModel):
                 name=self.job_id,
                 image=image,
                 command=self._command,
-                **kwargs)
+                **kwargs
+            )
         except Exception as e:
             err = '{} (create): {}'.format(self.job_id, e)
             log_event(self.app, err, logging.ERROR)
@@ -965,6 +973,69 @@ class Domain(AuditedModel):
     app = models.ForeignKey('App')
     domain = models.TextField(blank=False, null=False, unique=True)
 
+    @property
+    def _scheduler(self):
+        mod = importlib.import_module(settings.SCHEDULER_MODULE)
+        return mod.SchedulerClient(settings.SCHEDULER_URL,
+                                   settings.SCHEDULER_AUTH,
+                                   settings.SCHEDULER_OPTIONS)
+
+    def _load_service_config(self, app):
+        # Get the service from k8s to attach the domain correctly
+        svc = self._scheduler._get_service(app, app).json()
+        # Get minimum structure going if it is missing on the service
+        if 'metadata' not in svc or 'annotations' not in svc['metadata']:
+            default = {'metadata': {'annotations': {}}}
+            svc = dict_merge(svc, default)
+
+        # Check if any config has been set
+        if 'deis.io/routerConfig' not in svc['metadata']['annotations']:
+            config = {}
+        else:
+            config = json.loads(svc['metadata']['annotations']['deis.io/routerConfig'])
+
+        # See if domains are available
+        if 'domains' not in config:
+            config['domains'] = []
+
+        return svc, config
+
+    def save(self, *args, **kwargs):
+        app = str(self.app)
+        domain = str(self.domain)
+
+        # setup the service and config dict
+        svc, config = self._load_service_config(app)
+        if domain not in config['domains']:
+            config['domains'].append(domain)
+
+        # save as a JSON string since annotations don't take a structure on its keys
+        svc['metadata']['annotations']['deis.io/routerConfig'] = json.dumps(config)
+
+        # Update the k8s service for the application with new domain information
+        self._scheduler._update_service(app, app, svc)
+
+        # Save to DB
+        return super(Domain, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        app = str(self.app)
+        domain = str(self.domain)
+
+        # setup the service and config dict
+        svc, config = self._load_service_config(app)
+        if domain in config['domains']:
+            config['domains'].remove(domain)
+
+        # save as a JSON string since annotations don't take a structure on its keys
+        svc['metadata']['annotations']['deis.io/routerConfig'] = json.dumps(config)
+
+        # Update the k8s service for the application with new domain information
+        self._scheduler._update_service(app, app, svc)
+
+        # Delete from DB
+        return super(Domain, self).delete(*args, **kwargs)
+
     def __str__(self):
         return self.domain
 
@@ -1154,21 +1225,6 @@ def _etcd_purge_config(**kwargs):
     except KeyError:
         pass
 
-
-def _etcd_publish_domains(**kwargs):
-    domain = kwargs['instance']
-    _etcd_client.write('/deis/domains/{}'.format(domain), domain.app)
-
-
-def _etcd_purge_domains(**kwargs):
-    domain = kwargs['instance']
-    try:
-        _etcd_client.delete('/deis/domains/{}'.format(domain),
-                            prevExist=True, dir=True, recursive=True)
-    except KeyError:
-        pass
-
-
 # Log significant app-related events
 post_save.connect(_log_build_created, sender=Build, dispatch_uid='api.models.log')
 post_save.connect(_log_release_created, sender=Release, dispatch_uid='api.models.log')
@@ -1193,8 +1249,6 @@ if _etcd_client:
     post_save.connect(_etcd_publish_key, sender=Key, dispatch_uid='api.models')
     post_delete.connect(_etcd_purge_key, sender=Key, dispatch_uid='api.models')
     post_delete.connect(_etcd_purge_user, sender=get_user_model(), dispatch_uid='api.models')
-    post_save.connect(_etcd_publish_domains, sender=Domain, dispatch_uid='api.models')
-    post_delete.connect(_etcd_purge_domains, sender=Domain, dispatch_uid='api.models')
     post_save.connect(_etcd_publish_app, sender=App, dispatch_uid='api.models')
     post_delete.connect(_etcd_purge_app, sender=App, dispatch_uid='api.models')
     post_save.connect(_etcd_publish_cert, sender=Certificate, dispatch_uid='api.models')

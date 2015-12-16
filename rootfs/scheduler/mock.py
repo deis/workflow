@@ -1,4 +1,5 @@
 import json
+import requests
 
 from . import AbstractSchedulerClient
 from .states import JobState, TransitionError
@@ -52,6 +53,16 @@ class MockSchedulerClient(AbstractSchedulerClient):
                                   JobState.up,
                                   'the container must be up to stop')
         job['state'] = JobState.down
+
+    # Related to k8s services
+    def _get_service(self, namespace, name):
+        resp = requests.Response()
+        resp.status_code = 200
+        resp._content = json.dumps({})
+        return resp
+
+    def _update_service(self, namespace, name, data):
+        pass
 
 
 SchedulerClient = MockSchedulerClient
