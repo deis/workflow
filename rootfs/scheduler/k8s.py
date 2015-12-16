@@ -36,7 +36,7 @@ POD_TEMPLATE = """\
 }
 """
 
-RC_TEMPLATE = """\
+RCD_TEMPLATE = """\
 {
   "kind": "ReplicationController",
   "apiVersion": "$version",
@@ -68,7 +68,80 @@ RC_TEMPLATE = """\
         "containers": [
           {
             "name": "$containername",
-            "image": "$image"
+            "image": "$image",
+            "env": [
+            {
+                "name":"DEIS_APP",
+                "value":"$id"
+            },
+            {
+                "name":"DEIS_RELEASE",
+                "value":"$appversion"
+            }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+"""
+
+RCB_TEMPLATE = """\
+{
+  "kind": "ReplicationController",
+  "apiVersion": "$version",
+  "metadata": {
+    "name": "$name",
+    "labels": {
+      "app": "$id",
+      "heritage": "deis"
+    }
+  },
+  "spec": {
+    "replicas": $num,
+    "selector": {
+      "app": "$id",
+      "version": "$appversion",
+      "type": "$type",
+      "heritage": "deis"
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "$id",
+          "version": "$appversion",
+          "type": "$type",
+          "heritage": "deis"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "$containername",
+            "image": "quay.io/deisci/slugrunner:v2-alpha",
+            "env": [
+            {
+                "name":"PORT",
+                "value":"5000"
+            },
+            {
+                "name":"SLUG_URL",
+                "value":"$image"
+            },
+            {
+                "name":"DEBUG",
+                "value":"1"
+            },
+            {
+                "name":"DEIS_APP",
+                "value":"$id"
+            },
+            {
+                "name":"DEIS_RELEASE",
+                "value":"$appversion"
+            }
+            ]
           }
         ]
       }
@@ -156,7 +229,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
         exists = False
         prev_rc = []
         for rc in resp.json()['items']:
-            if('name' in rc['metadata']['labels'] and name == rc['metadata']['labels']['name'] and
+            if('app' in rc['spec']['selector'] and name == rc['metadata']['labels']['app'] and
                'type' in rc['spec']['selector'] and app_type == rc['spec']['selector']['type']):
                 exists = True
                 prev_rc = rc
@@ -185,6 +258,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
         app_type = name.split(".")[1]
         old_rc = self._get_old_rc(app_name, app_type)
         new_rc = self._create_rc(name, image, command, **kwargs)
+        old_temp_rc = old_rc
         if old_rc:
             desired = int(old_rc["spec"]["replicas"])
             old_rc_name = old_rc["metadata"]["name"]
@@ -196,8 +270,8 @@ class KubeHTTPClient(AbstractSchedulerClient):
             count = 1
             while desired >= count:
                 new_rc = self._scale_app(new_rc_name, count, app_name)
-                if old_rc:
-                    old_rc = self._scale_app(old_rc_name, desired-count, app_name)
+                if old_temp_rc:
+                    old_temp_rc = self._scale_app(old_rc_name, desired-count, app_name)
                 count += 1
         except Exception as e:
             self._scale_app(new_rc["metadata"]["name"], 0, app_name)
@@ -207,7 +281,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
             raise RuntimeError('{} (deploy): {}'.format(name, e))
         if old_rc:
-            self._delete_rc(old_rc_name, app_name)
+            self._delete_rc(app_name, old_rc_name)
 
     def _get_events(self, namespace):
         url = self._api("/namespaces/{}/events", namespace)
@@ -305,6 +379,25 @@ class KubeHTTPClient(AbstractSchedulerClient):
             self._scale_app(name, old_replicas, app_name)
             raise RuntimeError('{} (Scale): {}'.format(name, e))
 
+    def _create_namespace(self, app_name):
+        url = self._api("/namespaces")
+        data = {
+            "kind": "Namespace",
+            "apiVersion": self.apiversion,
+            "metadata": {
+                "name": app_name
+                }
+            }
+        resp = self.session.post(url, json=data)
+        if not resp.status_code == 201:
+            error(resp, "create Namespace {}".format(app_name))
+
+    def _check_status(self, resp, app_name):
+        if resp.status_code == 404:
+            self._create_namespace(app_name)
+        elif resp.status_code != 200:
+            error(resp, "locate Namespace {}".format(app_name))
+
     def _create_rc(self, name, image, command, **kwargs):
         container_fullname = name
         app_name = kwargs.get('aname', {})
@@ -316,35 +409,25 @@ class KubeHTTPClient(AbstractSchedulerClient):
         # First ensure that the namespace was created
         url = self._api("/namespaces/{}", app_name)
         resp = self.session.get(url)
-        if resp.status_code == 404:
-            url = self._api("/namespaces")
-            data = {
-                "kind": "Namespace",
-                "apiVersion": self.apiversion,
-                "metadata": {
-                    "name": app_name
-                }
-            }
-
-            resp = self.session.post(url, json=data)
-            if not resp.status_code == 201:
-                error(resp, "create Namespace {}".format(app_name))
-        elif resp.status_code != 200:
-            error(resp, "locate Namespace {}".format(app_name))
-
+        self._check_status(resp, app_name)
         num = kwargs.get('num', {})
+        imgurl = self.registry + "/" + image
+        TEMPLATE = RCD_TEMPLATE
+        shalen = len(image[image.index(":")+5:])
+        if image[image.index(":")+1:image.index(":")+4] == "git" and shalen == 8:
+            imgurl = "http://"+settings.S3EP+"/git/home/"+image+"/slug"
+            TEMPLATE = RCB_TEMPLATE
         l = {
             "name": name,
             "id": app_name,
             "appversion": kwargs.get("version", {}),
             "version": self.apiversion,
-            "image": self.registry + "/" + image,
+            "image": imgurl,
             "num": kwargs.get("num", {}),
             "containername": container_name,
             "type": app_type,
         }
-
-        template = string.Template(RC_TEMPLATE).substitute(l)
+        template = string.Template(TEMPLATE).substitute(l)
         js_template = json.loads(template)
         containers = js_template["spec"]["template"]["spec"]["containers"]
         containers[0]['args'] = args
@@ -352,6 +435,10 @@ class KubeHTTPClient(AbstractSchedulerClient):
         loc.update(re.match(MATCH, container_fullname).groupdict())
         mem = kwargs.get('memory', {}).get(loc['c_type'])
         cpu = kwargs.get('cpu', {}).get(loc['c_type'])
+        env = kwargs.get('envs', {})
+        if env:
+            for k, v in env.iteritems():
+                containers[0]["env"].append({"name": k, "value": v})
         if mem or cpu:
             containers[0]["resources"] = {"limits": {}}
 
@@ -365,13 +452,11 @@ class KubeHTTPClient(AbstractSchedulerClient):
         if cpu:
             cpu = float(cpu)/1024
             containers[0]["resources"]["limits"]["cpu"] = cpu
-
         url = self._api("/namespaces/{}/replicationcontrollers", app_name)
         resp = self.session.post(url, json=js_template)
         if unhealthy(resp.status_code):
             error(resp, 'create ReplicationController "{}" in Namespace "{}"',
                   name, app_name)
-
         create = False
         for _ in xrange(30):
             if not create and self._get_rc_status(name, app_name) == 404:
@@ -483,7 +568,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
         """Stop a container."""
         pass
 
-    def _delete_rc(self, name, namespace):
+    def _delete_rc(self, namespace, name):
         url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
         resp = self.session.delete(url)
         if unhealthy(resp.status_code):
