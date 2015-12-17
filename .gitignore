@@ -39,3 +39,5 @@ venv/
 
 # vendored go source code
 vendor/
+client/client
+client/deis
