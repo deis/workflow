@@ -2,16 +2,42 @@ package _tests_test
 
 import (
 	. "github.com/onsi/ginkgo"
-	// . "github.com/onsi/gomega"
+	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Config", func() {
 	Context("with a deployed app", func() {
+		appName := getRandAppName()
+		BeforeEach(func() {
+			login(url, testUser, testPassword)
+		})
 
-		XIt("can list environment variables", func() {
-			// "deis config:set FOO=bar--app=%s"
+		It("can create a new app", func() {
+			output, err := execute("deis apps:create %s", appName)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(output).To(SatisfyAll(
+				ContainSubstring("Creating Application... done, created %s", appName),
+				ContainSubstring("Git remote deis added"),
+				ContainSubstring("remote available at ")))
+		})
+
+		It("can list environment variables", func() {
+			out, err := execute("deis config:set FOO=bar -a=%s", appName)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(out).To(SatisfyAll(
+				ContainSubstring("Creating config... done"),
+				ContainSubstring("FOO      bar"),
+				ContainSubstring("=== %s Config", appName),
+			))
+			out, err = execute("deis config:list --a=%s", appName)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(out).To(SatisfyAll(
+				ContainSubstring("=== %s Config", appName),
+				ContainSubstring("FOO      bar"),
+			))
+			// TODO: the following won't work as-is because there is no app running
 			// "deis run env --app=%s"
-			// "deis config:list --app=%s"
+
 		})
 
 		XIt("can set an integer environment variable", func() {
