@@ -2,6 +2,9 @@
 
 For Deis clusters, DNS records must be created. The Deis cluster runs multiple routers infront of the Deis controller and apps you deploy, so a [load balancer][] is recommended.
 
+You can find the IP addresses of your Kubernetes cluster nodes by
+running `kubectl get nodes`.
+
 ## Necessary DNS records
 
 Deis requires a wildcard DNS record. Assuming `myapps.com` is the top-level domain
