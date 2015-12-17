@@ -1,15 +1,9 @@
 package _tests_test
 
 import (
-	"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"math/rand"
 )
-
-func getRandAppName() string {
-	return fmt.Sprintf("apps-test-%d", rand.Int())
-}
 
 var _ = Describe("Apps", func() {
 	app1Name := getRandAppName()
