@@ -79,4 +79,7 @@ test-unit:
 test-functional:
 	@echo "Implement functional tests in _tests directory"
 
+test-integration:
+	$(MAKE) -C _tests/ test-setup test-integration
+
 .PHONY: build clean commit-hook full-clean postgres setup-venv test test-style test-unit test-functional
