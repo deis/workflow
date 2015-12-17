@@ -32,7 +32,7 @@ var (
 )
 
 var _ = BeforeSuite(func() {
-	// TODO: require ../client/deis as the `deis` binary
+	Expect("../client/deis").Should(BeAnExistingFile())
 
 	// register the test-admin user
 	register(url, testAdminUser, testAdminPassword, testAdminEmail)
