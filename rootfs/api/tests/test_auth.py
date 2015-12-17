@@ -4,10 +4,9 @@ Unit tests for the Deis api app.
 Run the tests with "./manage.py test api"
 """
 
-from __future__ import unicode_literals
 
 import json
-import urllib
+from urllib.parse import urlencode
 
 from django.contrib.auth.models import User
 from django.test import TestCase
@@ -66,7 +65,7 @@ class AuthTest(TestCase):
         self.assertDictContainsSubset(expected, response.data)
         # test login
         url = '/v2/auth/login/'
-        payload = urllib.urlencode({'username': username, 'password': password})
+        payload = urlencode({'username': username, 'password': password})
         response = self.client.post(url, data=payload,
                                     content_type='application/x-www-form-urlencoded')
         self.assertEqual(response.status_code, 200)
@@ -142,7 +141,7 @@ class AuthTest(TestCase):
         self.assertDictContainsSubset(expected, response.data)
         # test login
         url = '/v2/auth/login/'
-        payload = urllib.urlencode({'username': username, 'password': password})
+        payload = urlencode({'username': username, 'password': password})
         response = self.client.post(url, data=payload,
                                     content_type='application/x-www-form-urlencoded')
         self.assertEqual(response.status_code, 200)
@@ -163,7 +162,7 @@ class AuthTest(TestCase):
 
         try:
             self.client.post(url, json.dumps(submit), content_type='application/json')
-        except Exception, e:
+        except Exception as e:
             self.assertEqual(str(e), 'not_a_mode is not a valid registation mode')
 
     def test_cancel(self):
@@ -260,12 +259,12 @@ class AuthTest(TestCase):
         self.assertEqual(response.status_code, 200)
         # test login with old password
         url = '/v2/auth/login/'
-        payload = urllib.urlencode({'username': username, 'password': password})
+        payload = urlencode({'username': username, 'password': password})
         response = self.client.post(url, data=payload,
                                     content_type='application/x-www-form-urlencoded')
         self.assertEqual(response.status_code, 400)
         # test login with new password
-        payload = urllib.urlencode({'username': username, 'password': 'password2'})
+        payload = urlencode({'username': username, 'password': 'password2'})
         response = self.client.post(url, data=payload,
                                     content_type='application/x-www-form-urlencoded')
         self.assertEqual(response.status_code, 200)
@@ -287,12 +286,12 @@ class AuthTest(TestCase):
         self.assertEqual(response.status_code, 200)
         # test login with old password
         url = '/v2/auth/login/'
-        payload = urllib.urlencode({'username': self.user1.username, 'password': old_password})
+        payload = urlencode({'username': self.user1.username, 'password': old_password})
         response = self.client.post(url, data=payload,
                                     content_type='application/x-www-form-urlencoded')
         self.assertEqual(response.status_code, 400)
         # test login with new password
-        payload = urllib.urlencode({'username': self.user1.username, 'password': new_password})
+        payload = urlencode({'username': self.user1.username, 'password': new_password})
         response = self.client.post(url, data=payload,
                                     content_type='application/x-www-form-urlencoded')
         self.assertEqual(response.status_code, 200)
@@ -308,7 +307,7 @@ class AuthTest(TestCase):
         self.assertEqual(response.status_code, 200)
         # test login with new password
         url = '/v2/auth/login/'
-        payload = urllib.urlencode({'username': self.user1.username, 'password': old_password})
+        payload = urlencode({'username': self.user1.username, 'password': old_password})
         response = self.client.post(url, data=payload,
                                     content_type='application/x-www-form-urlencoded')
         self.assertEqual(response.status_code, 200)

@@ -1,7 +1,6 @@
 """
 Helper functions used by the Deis server.
 """
-from __future__ import unicode_literals
 import base64
 import hashlib
 import random
@@ -121,7 +120,7 @@ def dict_merge(origin, merge):
         return merge
 
     result = deepcopy(origin)
-    for key, value in merge.iteritems():
+    for key, value in merge.items():
         if key in result and isinstance(result[key], dict):
             result[key] = dict_merge(result[key], value)
         else:

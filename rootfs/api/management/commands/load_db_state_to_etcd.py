@@ -9,8 +9,8 @@ class Command(BaseCommand):
     """
     def handle(self, *args, **options):
         """Publishes Deis platform state from the database to etcd."""
-        print "Publishing DB state to etcd..."
+        print("Publishing DB state to etcd...")
         for model in (Key, App, Domain, Certificate, Config):
             for obj in model.objects.all():
                 obj.save()
-        print "Done Publishing DB state to etcd."
+        print("Done Publishing DB state to etcd.")

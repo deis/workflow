@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Support the Deis workflow by manipulating and publishing Docker images."""
 
-from __future__ import unicode_literals
 import logging
 
 from django.conf import settings
@@ -84,7 +83,7 @@ def log_output(stream):
     for chunk in stream:
         logger.debug(chunk)
         # error handling requires looking at the response body
-        if '"error"' in chunk.lower():
+        if b'"error"' in chunk.lower():
             raise docker.errors.DockerException(chunk)
 
 

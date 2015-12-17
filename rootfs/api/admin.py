@@ -4,7 +4,6 @@
 Django admin app configuration for Deis API models.
 """
 
-from __future__ import unicode_literals
 
 from django.contrib import admin
 from guardian.admin import GuardedModelAdmin

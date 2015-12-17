@@ -2,7 +2,4 @@
 coverage>=4.0
 
 # Run "make flake8" to check python syntax and style
-flake8==2.4.1
-
-# Used for mocking endpoints
-mock==1.0.1
+flake8==2.5.1

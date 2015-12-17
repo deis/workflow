@@ -4,14 +4,13 @@ Unit tests for the Deis api app.
 Run the tests with "./manage.py test api"
 """
 
-from __future__ import unicode_literals
 
 import json
 import uuid
 
 from django.contrib.auth.models import User
 from django.test import TransactionTestCase
-import mock
+from unittest import mock
 from rest_framework.authtoken.models import Token
 
 from api.models import Release
@@ -59,7 +58,7 @@ class ReleaseTest(TransactionTestCase):
         release1 = response.data
         self.assertIn('config', response.data)
         self.assertIn('build', response.data)
-        self.assertEquals(release1['version'], 1)
+        self.assertEqual(release1['version'], 1)
         # check to see that a new release was created
         url = '/v2/apps/{app_id}/releases/v2'.format(**locals())
         response = self.client.get(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -68,7 +67,7 @@ class ReleaseTest(TransactionTestCase):
         self.assertNotEqual(release1['uuid'], release2['uuid'])
         self.assertNotEqual(release1['config'], release2['config'])
         self.assertEqual(release1['build'], release2['build'])
-        self.assertEquals(release2['version'], 2)
+        self.assertEqual(release2['version'], 2)
         # check that updating the build rolls a new release
         url = '/v2/apps/{app_id}/builds'.format(**locals())
         build_config = json.dumps({'PATH': 'bin:/usr/local/bin:/usr/bin:/bin'})
@@ -85,7 +84,7 @@ class ReleaseTest(TransactionTestCase):
         release3 = response.data
         self.assertNotEqual(release2['uuid'], release3['uuid'])
         self.assertNotEqual(release2['build'], release3['build'])
-        self.assertEquals(release3['version'], 3)
+        self.assertEqual(release3['version'], 3)
         # check that we can fetch a previous release
         url = '/v2/apps/{app_id}/releases/v2'.format(**locals())
         response = self.client.get(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -93,7 +92,7 @@ class ReleaseTest(TransactionTestCase):
         release2 = response.data
         self.assertNotEqual(release2['uuid'], release3['uuid'])
         self.assertNotEqual(release2['build'], release3['build'])
-        self.assertEquals(release2['version'], 2)
+        self.assertEqual(release2['version'], 2)
         # disallow post/put/patch/delete
         url = '/v2/apps/{app_id}/releases'.format(**locals())
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -175,13 +174,13 @@ class ReleaseTest(TransactionTestCase):
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
         release1 = response.data
-        self.assertEquals(release1['version'], 1)
+        self.assertEqual(release1['version'], 1)
         url = '/v2/apps/{app_id}/releases/v3'.format(**locals())
         response = self.client.get(url, content_type='application/json',
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
         release3 = response.data
-        self.assertEquals(release3['version'], 3)
+        self.assertEqual(release3['version'], 3)
         self.assertNotEqual(release1['uuid'], release3['uuid'])
         self.assertEqual(release1['build'], release3['build'])
         self.assertEqual(release1['config'], release3['config'])

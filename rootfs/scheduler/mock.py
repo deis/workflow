@@ -58,7 +58,7 @@ class MockSchedulerClient(AbstractSchedulerClient):
     def _get_service(self, namespace, name):
         resp = requests.Response()
         resp.status_code = 200
-        resp._content = json.dumps({})
+        resp._content = b'{}'
         return resp
 
     def _update_service(self, namespace, name, data):

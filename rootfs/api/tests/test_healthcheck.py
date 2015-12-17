@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 
 from django.test import TestCase
 
@@ -11,8 +10,7 @@ class HealthCheckTest(TestCase):
     def test_healthcheck(self):
         # GET and HEAD (no auth required)
         resp = self.client.get(self.url)
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.content, "OK")
+        self.assertContains(resp, "OK", status_code=200)
 
         resp = self.client.head(self.url)
         self.assertEqual(resp.status_code, 200)
