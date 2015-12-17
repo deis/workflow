@@ -62,11 +62,11 @@ func register(url, username, password, email string) {
 
 func cancel(url, username, password string) {
 	// log in to the account
-	login(url, testUser, testPassword)
+	login(url, username, password)
 
 	// cancel the account
 	cmd := "deis auth:cancel --username=%s --password=%s --yes"
-	output, err := execute(cmd, testUser, testPassword)
+	output, err := execute(cmd, username, password)
 	Expect(err).NotTo(HaveOccurred())
 	Expect(output).To(ContainSubstring("Account cancelled"))
 }
