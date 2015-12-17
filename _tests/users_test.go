@@ -14,10 +14,10 @@ var _ = Describe("Users", func() {
 		It("can list all users", func() {
 			output, err := execute("deis users:list")
 			Expect(err).NotTo(HaveOccurred())
-			// TODO: search for both test and test-admin users
 			Expect(output).To(SatisfyAll(
 				HavePrefix("=== Users"),
-				ContainSubstring(testUser)))
+				ContainSubstring(testUser),
+				ContainSubstring(testAdminUser)))
 		})
 	})
 
