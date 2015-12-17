@@ -316,6 +316,7 @@ class App(UuidAuditedModel):
             kwargs = {'memory': release.config.memory,
                       'cpu': release.config.cpu,
                       'tags': release.config.tags,
+                      'envs': release.config.values,
                       'version': version,
                       'aname': self.id,
                       'num': scale_types[scale_type]}
@@ -472,6 +473,7 @@ class App(UuidAuditedModel):
             kwargs = {'memory': release.config.memory,
                       'cpu': release.config.cpu,
                       'tags': release.config.tags,
+                      'envs': release.config.values,
                       'aname': self.id,
                       'num': 0,
                       'version': version}
@@ -615,7 +617,8 @@ class Container(UuidAuditedModel):
         image = self.release.image
         kwargs = {'memory': self.release.config.memory,
                   'cpu': self.release.config.cpu,
-                  'tags': self.release.config.tags}
+                  'tags': self.release.config.tags,
+                  'envs': self.release.config.values}
         try:
             self._scheduler.create(
                 name=self.job_id,
@@ -831,7 +834,9 @@ class Release(UuidAuditedModel):
 
     @property
     def image(self):
-        return '{}:v{}'.format(self.app.id, str(self.version))
+        if not self.build.dockerfile and not self.build.sha:
+            return '{}:v{}'.format(self.app.id, str(self.version))
+        return '{}:git-{}'.format(self.app.id, str(self.build.sha))
 
     def new(self, user, config, build, summary=None, source_version='latest'):
         """
@@ -863,7 +868,8 @@ class Release(UuidAuditedModel):
             source_image = "{}:{}".format(source_image, source_tag)
         # If the build has a SHA, assume it's from deis-builder and in the deis-registry already
         deis_registry = bool(self.build.sha)
-        publish_release(source_image, self.config.values, self.image, deis_registry)
+        if not self.build.dockerfile and not self.build.sha:
+            publish_release(source_image, self.config.values, self.image, deis_registry)
 
     def previous(self):
         """
