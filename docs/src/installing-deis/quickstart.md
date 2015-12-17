@@ -26,3 +26,4 @@ Now that you've finished provisioning a cluster, please [Install the Deis Platfo
 [configuring dns]: ../managing-deis/configuring-dns.md
 [install deis]: installing-the-deis-platform.md
 [system requirements]: system-requirements.md
+[configuring object storage]: configuring-object-storage.md
