@@ -20,6 +20,7 @@ controller/.secret_key
 
 # local binaries, installers, and artifacts
 client/deis
+client/client
 client/deis.exe
 client/*.run
 client/makeself/

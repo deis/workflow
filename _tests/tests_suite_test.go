@@ -32,7 +32,11 @@ var (
 )
 
 var _ = BeforeSuite(func() {
-	// TODO: require ../client/deis as the `deis` binary
+	workflowHost := os.Getenv("DEIS_WORKFLOW_SERVICE_HOST")
+	workflowPort := os.Getenv("DEIS_WORKFLOW_SERVICE_HOST")
+	Expect(workflowHost).ShouldNot(BeEmpty())
+	Expect(workflowPort).ShouldNot(BeEmpty())
+	Expect("../client/deis").Should(BeAnExistingFile())
 
 	// register the test-admin user
 	register(url, testAdminUser, testAdminPassword, testAdminEmail)
