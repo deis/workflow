@@ -35,9 +35,83 @@ $ kubectl get pods --namespace=deis
 
 Once you see all of the pods ready, your Deis platform is running on a cluster!
 
+## Mapping a Default Domain
+
+Deis will route traffic from Kubernetes nodes to Deis components, but to
+do so it needs a domain. By default, Deis is configured to use the
+domain `example.com`. For basic Deis testing, simply add an entry to
+your host machine's `/etc/hosts` file.
+
+You can find the IP address of a node using `kubectl`:
+
+```
+$ kubectl get nodes
+NAME         LABELS                              STATUS    AGE
+10.245.1.3   kubernetes.io/hostname=10.245.1.3   Ready     19h
+```
+
+You may have numerous entries. All entries should be able to route to
+Deis, though.
+
+In your `/etc/hosts` file, add an entry like this:
+
+```
+10.245.1.3    example.com deis.example.com
+```
+
+This route will get you started, though you may find that you have to
+manually maintain this file.
+
+### Using a DNS Service
+
+Rather than hard-coding a hostfile entry, you may prefer to [configure a DNS][]
+record. `xip.io` is a particularly easy way to do this.
+
+Edit `$(helm home)/workspace/charts/deis/manifests/deis-router-rc.yaml`
+and change the `domain` annotation to point to your DNS entry:
+
+```yaml
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: deis-router
+  namespace: deis
+  labels:
+    heritage: deis
+  annotations:
+    deis.io/routerConfig: |
+      {
+        "domain": "10.245.1.3.xip.io",
+        "useProxyProtocol": false
+      }
+spec:
+  replicas: 1
+  selector:
+    app: deis-router
+#...
+```
+
+Once you have changed and saved the file, run `kubectl apply`:
+
+```
+$ kubectl --namespace=deis apply -f $(helm home)/workspace/charts/deis/manifests/deis-router-rc.yaml
+```
+
+After a moment or two, you should be able to test with a brief curl
+command:
+
+```
+curl http://deis.10.245.1.3.xip.io/v2/
+{"detail":"Authentication credentials were not provided."}
+```
+
+This message indicates that the message has been routed all the way to
+the Deis controller.
+
 Now that you've finished provisioning a cluster, start [Using Deis][] to deploy your first
 application on Deis.
 
 [install deisctl]: installing-deisctl.md
 [helm]: http://helm.sh
 [using deis]: ../using-deis/deploying-an-application.md
+[configure dns]: ../managing-deis/configuring-dns.md
