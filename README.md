@@ -57,6 +57,9 @@ number that went green and use the following URL to retrieve the client build:
 
     <https://get-deis.s3.amazonaws.com/deis/workflow/$BUILD_NUM/$BUILD_NUM.1/client/deis>
 
+Note that this client build will only work on Linux. If you're on OS X, you'll have to build the
+client from source.
+
 If you want to hack on a new feature, build the deis/workflow image and push it to a Docker
 registry. The `$DEIS_REGISTRY` environment variable must point to a registry accessible to your
 Kubernetes cluster. You may need to configure the Docker engines on your Kubernetes nodes to allow
