@@ -7,6 +7,7 @@ Run the tests with "./manage.py test api"
 from __future__ import unicode_literals
 
 import json
+import uuid
 
 from django.contrib.auth.models import User
 from django.test import TransactionTestCase
@@ -124,7 +125,7 @@ class ReleaseTest(TransactionTestCase):
             'owner': self.user.username,
             'app': 'test',
             'build': None,
-            'config': config_response.data['uuid'],
+            'config': uuid.UUID(config_response.data['uuid']),
             'summary': '{} added NEW_URL'.format(self.user.username),
             'version': 2
         }
