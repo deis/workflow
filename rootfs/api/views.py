@@ -363,7 +363,8 @@ class ReleaseViewSet(AppResourceViewSet):
         except EnvironmentError as e:
             return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except RuntimeError:
-            new_release.delete()
+            if 'new_release' in locals():
+                new_release.delete()
             raise
 
 

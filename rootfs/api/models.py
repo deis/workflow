@@ -738,7 +738,8 @@ class Build(UuidAuditedModel):
             self.app.deploy(user, new_release)
             return new_release
         except RuntimeError:
-            new_release.delete()
+            if 'new_release' in locals():
+                new_release.delete()
             raise
 
     def save(self, **kwargs):
@@ -895,7 +896,8 @@ class Release(UuidAuditedModel):
             self.app.deploy(user, new_release)
             return new_release
         except RuntimeError:
-            new_release.delete()
+            if 'new_release' in locals():
+                new_release.delete()
             raise
 
     def save(self, *args, **kwargs):  # noqa
