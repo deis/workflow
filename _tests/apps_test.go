@@ -3,12 +3,12 @@ package _tests_test
 import (
 	"fmt"
 	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/ginkgo/config"
 	. "github.com/onsi/gomega"
+	"math/rand"
 )
 
 func getRandAppName() string {
-	return fmt.Sprintf("apps-test-%d", GinkgoConfig.RandomSeed)
+	return fmt.Sprintf("apps-test-%d", rand.Int())
 }
 
 var _ = Describe("Apps", func() {
