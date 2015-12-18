@@ -39,15 +39,11 @@ $ helm install deis/deis
 Complete instructions for installing and managing a Deis cluster are
 available in the [docs folder](https://github.com/deis/workflow/tree/master/docs/src).
 
+If you want to retrieve the latest client dev build for OS X or Linux, download the client:
 
-If you want to retrieve the latest client build, check
-[the latest builds on Travis CI](https://travis-ci.org/deis/workflow/builds), notice the last build
-number that went green and use the following URL to retrieve the client build:
-
-    <https://get-deis.s3.amazonaws.com/deis/workflow/$BUILD_NUM/$BUILD_NUM.1/client/deis>
-
-Note that this client build will only work on Linux. If you're on OS X, you'll have to build the
-client from source.
+```console
+$ curl -sSL http://deis.io/deis-cli/install-v2-alpha.sh | sh
+```
 
 If you want to hack on a new feature, build the deis/workflow image and push it to a Docker
 registry. The `$DEIS_REGISTRY` environment variable must point to a registry accessible to your
