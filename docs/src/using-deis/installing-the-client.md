@@ -8,7 +8,7 @@ with a Deis [Controller][]. You must install the client to use Deis.
 
 Install the latest `deis` client for Linux or Mac OS X with:
 
-    $ curl -sSL http://deis.io/deis-cli/install.sh | sh
+    $ curl -sSL http://deis.io/deis-cli/install-v2-alpha.sh | sh
 
 The installer puts `deis` in your current directory, but you should move it
 somewhere in your $PATH:
@@ -75,6 +75,6 @@ of running the ps command against an app with the same name from two profiles:
 
     $ DEIS_PROFILE=production deis ps -a helloworld
     $ DEIS_PROFILE=staging deis ps -a helloworld
-    
+
 
 [controller]: ../understanding-deis/components.md#controller
