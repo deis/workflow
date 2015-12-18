@@ -42,9 +42,7 @@ var (
 
 var _ = BeforeSuite(func() {
 	workflowHost := os.Getenv("DEIS_WORKFLOW_SERVICE_HOST")
-	workflowPort := os.Getenv("DEIS_WORKFLOW_SERVICE_PORT")
 	Expect(workflowHost).ShouldNot(BeEmpty())
-	Expect(workflowPort).ShouldNot(BeEmpty())
 	// use the "deis" executable in the search $PATH
 	_, err := exec.LookPath("deis")
 	Expect(err).NotTo(HaveOccurred())
