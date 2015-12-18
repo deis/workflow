@@ -477,6 +477,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
         """Create a container."""
         logger.debug('create {}, img {}, params {}, cmd "{}"'.format(name, image, kwargs, command))
         self._create_rc(name, image, command, **kwargs)
+        image = self.registry + '/' + image
         app_type = name.split('.')[1]
         name = name.replace('.', '-').replace('_', '-')
         app_name = kwargs.get('aname', {})
@@ -488,7 +489,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             if app_type in ['web', 'cmd']:
                 data = {'metadata': {'labels': {'routable': 'true'}}}
 
-            self._create_service(name, app_name, app_type, data)
+            self._create_service(name, app_name, app_type, data, image=image)
         except:
             self._scale_app(name, 0, app_name)
             self._delete_rc(name, app_name)
@@ -502,31 +503,14 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
         return response
 
-    def _create_service(self, name, app_name, app_type, data={}):
-        actual_pod = {}
-        for _ in xrange(300):
-            status, json_data, reason = self._get_pods(app_name)
-            parsed_json = json.loads(json_data)
-            for pod in parsed_json['items']:
-                if('generateName' in pod['metadata'] and
-                   pod['metadata']['generateName'] == name + '-'):
-                    actual_pod = pod
-                    break
-
-            if actual_pod and actual_pod['status']['phase'] == 'Running':
-                break
-
-            time.sleep(1)
-
-        container_id = actual_pod['status']['containerStatuses'][0]['containerID'].split("//")[1]
-        # ip = actual_pod['status']['hostIP']
-        # TODO: more robust way of determining the first exposed port--this will only work on
-        # the node where this deis/workflow pod is running.
-        # Find the first exposed port by inspecting the Docker container
+    def _create_service(self, name, app_name, app_type, data={}, **kwargs):
         docker_cli = Client(version="auto")
         try:
-            container = docker_cli.inspect_container(container_id)
-            port = int(container['Config']['ExposedPorts'].keys()[0].split("/")[0])
+            image = kwargs.get('image')
+            # image already includes the tag, so we split it out here
+            docker_cli.pull(image.rsplit(':')[0], image.rsplit(':')[1])
+            image_info = docker_cli.inspect_image(image)
+            port = int(image_info['Config']['ExposedPorts'].keys()[0].split("/")[0])
         except:
             port = 5000
 
