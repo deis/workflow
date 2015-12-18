@@ -5,6 +5,7 @@ import re
 import string
 import time
 import urlparse
+import base64
 
 from django.conf import settings
 from docker import Client
@@ -120,6 +121,7 @@ RCB_TEMPLATE = """\
           {
             "name": "$containername",
             "image": "quay.io/deisci/slugrunner:v2-alpha",
+            "imagePullPolicy": "Always",
             "env": [
             {
                 "name":"PORT",
@@ -140,9 +142,28 @@ RCB_TEMPLATE = """\
             {
                 "name":"DEIS_RELEASE",
                 "value":"$appversion"
+            },
+            {
+                "name": "DOCKERIMAGE",
+                "value":"1"
+            }
+            ],
+            "volumeMounts":[
+            {
+                "name":"minio-user",
+                "mountPath":"/var/run/secrets/object/store",
+                "readOnly":true
             }
             ]
           }
+        ],
+        "volumes":[
+        {
+            "name":"minio-user",
+            "secret":{
+            "secretName":"minio-user"
+            }
+        }
         ]
       }
     }
@@ -174,6 +195,22 @@ SERVICE_TEMPLATE = """\
       "type": "$type",
       "heritage": "deis"
     }
+  }
+}
+"""
+
+SECRET_TEMPLATE = """\
+{
+  "kind": "Secret",
+  "apiVersion": "$version",
+  "metadata": {
+    "name": "minio-user",
+    "namespace": "$id"
+  },
+  "type": "Opaque",
+  "data":{
+  "access-key-id": "$secretId",
+  "access-secret-key": "$secretKey"
   }
 }
 """
@@ -255,7 +292,8 @@ class KubeHTTPClient(AbstractSchedulerClient):
     def deploy(self, name, image, command, **kwargs):
         logger.debug('deploy {}, img {}, params {}, cmd "{}"'.format(name, image, kwargs, command))
         app_name = kwargs.get('aname', {})
-        app_type = name.split(".")[1]
+        name = name.replace('.', '-').replace('_', '-')
+        app_type = name.split('-')[-1]
         old_rc = self._get_old_rc(app_name, app_type)
         new_rc = self._create_rc(name, image, command, **kwargs)
         old_temp_rc = old_rc
@@ -401,21 +439,16 @@ class KubeHTTPClient(AbstractSchedulerClient):
     def _create_rc(self, name, image, command, **kwargs):
         container_fullname = name
         app_name = kwargs.get('aname', {})
-        app_type = name.split('.')[1]
+        app_type = name.split('-')[-1]
         container_name = app_name + '-' + app_type
-        name = name.replace('.', '-').replace('_', '-')
         args = command.split()
-
-        # First ensure that the namespace was created
-        url = self._api("/namespaces/{}", app_name)
-        resp = self.session.get(url)
-        self._check_status(resp, app_name)
         num = kwargs.get('num', {})
         imgurl = self.registry + "/" + image
         TEMPLATE = RCD_TEMPLATE
         shalen = len(image[image.index(":")+5:])
-        if image[image.index(":")+1:image.index(":")+4] == "git" and shalen == 8:
-            imgurl = "http://"+settings.S3EP+"/git/home/"+image+"/slug"
+        git = image[image.index(":")+1:image.index(":")+4]
+        if git == "git" and shalen == 8 and app_type == 'web':
+            imgurl = "http://"+settings.S3EP+"/git/home/"+image+"/push/slug.tgz"
             TEMPLATE = RCB_TEMPLATE
         l = {
             "name": name,
@@ -462,7 +495,6 @@ class KubeHTTPClient(AbstractSchedulerClient):
             if not create and self._get_rc_status(name, app_name) == 404:
                 time.sleep(1)
                 continue
-
             create = True
             rc = self._get_rc_(name, app_name)
             if ("observedGeneration" in rc["status"]
@@ -470,16 +502,13 @@ class KubeHTTPClient(AbstractSchedulerClient):
                 break
 
             time.sleep(1)
-
         return resp.json()
 
     def create(self, name, image, command, **kwargs):
         """Create a container."""
         logger.debug('create {}, img {}, params {}, cmd "{}"'.format(name, image, kwargs, command))
-        self._create_rc(name, image, command, **kwargs)
-        image = self.registry + '/' + image
-        app_type = name.split('.')[1]
         name = name.replace('.', '-').replace('_', '-')
+        app_type = name.split('-')[-1]
         app_name = kwargs.get('aname', {})
         try:
             # Make sure the router knows what to do with this
@@ -488,9 +517,12 @@ class KubeHTTPClient(AbstractSchedulerClient):
             # see http://docs.deis.io/en/latest/using_deis/process-types/#web-vs-cmd-process-types
             if app_type in ['web', 'cmd']:
                 data = {'metadata': {'labels': {'routable': 'true'}}}
-
+            self._create_namespace(app_name)
+            self._create_secret(app_name)
+            self._create_rc(name, image, command, **kwargs)
             self._create_service(name, app_name, app_type, data, image=image)
-        except:
+        except Exception as e:
+            logger.debug(e)
             self._scale_app(name, 0, app_name)
             self._delete_rc(name, app_name)
             raise
@@ -503,35 +535,51 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
         return response
 
+    def _create_secret(self, namespace):
+        secretId, secretKey = '', ''
+        with open("/var/run/secrets/deis/minio/user/access-key-id") as the_file:
+            secretId = the_file.read()
+        with open("/var/run/secrets/deis/minio/user/access-secret-key") as the_file:
+            secretKey = the_file.read()
+        Key, Id = base64.b64encode(secretKey), base64.b64encode(secretId)
+        l = {
+            "version": self.apiversion,
+            "id": namespace,
+            "secretId": Id,
+            "secretKey": Key,
+            }
+        template = json.loads(string.Template(SECRET_TEMPLATE).substitute(l))
+        url = self._api("/namespaces/{}/secrets", namespace)
+        resp = self.session.post(url, json=template)
+        if unhealthy(resp.status_code):
+            error(resp, 'failed to create secret in Namespace "{}"', namespace)
+
     def _create_service(self, name, app_name, app_type, data={}, **kwargs):
         docker_cli = Client(version="auto")
+        image = kwargs.get('image')
         try:
-            image = kwargs.get('image')
+            image = self.registry + '/' + image
             # image already includes the tag, so we split it out here
             docker_cli.pull(image.rsplit(':')[0], image.rsplit(':')[1])
             image_info = docker_cli.inspect_image(image)
             port = int(image_info['Config']['ExposedPorts'].keys()[0].split("/")[0])
         except:
             port = 5000
-
         l = {
             "version": self.apiversion,
             "port": port,
             "type": app_type,
             "name": app_name,
         }
-
         # Merge external data on to the prefined template
         template = json.loads(string.Template(SERVICE_TEMPLATE).substitute(l))
         data = dict_merge(template, data)
-
         url = self._api("/namespaces/{}/services", app_name)
         resp = self.session.post(url, json=data)
         if resp.status_code == 409:
             srv = self._get_service(app_name, app_name).json()
             if srv['spec']['selector']['type'] == 'web':
                 return
-
             srv['spec']['selector']['type'] = app_type
             srv['spec']['ports'][0]['targetPort'] = port
             resp2 = self._update_service(app_name, app_name, srv)
