@@ -22,50 +22,57 @@ var _ = Describe("Config", func() {
 		})
 
 		It("can list environment variables", func() {
-			out, err := execute("deis config:set FOO=bar -a=%s", appName)
+			out, err := execute("deis config:set FOO=bar -a %s", appName)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(out).To(SatisfyAll(
 				ContainSubstring("Creating config... done"),
 				ContainSubstring("FOO      bar"),
 				ContainSubstring("=== %s Config", appName),
 			))
-			out, err = execute("deis config:list --a=%s", appName)
+			out, err = execute("deis config:list -a %s", appName)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(out).To(SatisfyAll(
 				ContainSubstring("=== %s Config", appName),
 				ContainSubstring("FOO      bar"),
 			))
 			// TODO: the following won't work as-is because there is no app running
-			// "deis run env --app=%s"
+			// "deis run env -a %s"
 
 		})
 
-		XIt("can set an integer environment variable", func() {
-			// "deis config:set FOO=10 --app=%s"
-			// "deis run env --app=%s"
+		It("can set an integer environment variable", func() {
+			out, err := execute("deis config:set FOO=1 -a %s", appName)
+			Expect(err).NoTo(HaveOccurred())
+			Expect(out).To(ContainSubstring("FOO      1"))
 		})
 
-		XIt("can set an environment variable containing spaces", func() {
-			// "config:set POWERED_BY=\"the Deis team\" --app={{.AppName}}"
-			// "deis run env --app=%s"
+		It("can set an environment variable containing spaces", func() {
+			out, err := execute(`deis config:set POWERED_BY=the\ Deis\ team -a %s`, appName)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(out).To(ContainSubstring("POWERED_BY      the Deis team"))
 		})
 
-		XIt("can set a multi-line environment variable", func() {
-			// `deis config:set FOO="This is a
-			//multiline string" --app={{.AppName}}`
-			// "deis run env --app=%s"
+		It("can set a multi-line environment variable", func() {
+			out, err := execute(`deis config:set FOO=This\ is\ a\
+				multiline\ string -a %s`, appName)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(out).To(ContainSubstring(`FOO             This\ is\ a\
+multiline\ string`))
 		})
 
-		XIt("can set an environment variable with multibyte chars", func() {
-			// "deis config:set FOO=讲台 --app=%s"
-			// "deis run env --app=%s"
+		It("can set an environment variable with multibyte chars", func() {
+			out, err := execute("deis config:set FOO=讲台 -a %s", test1)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(out).To(ContainSubstring("FOO             讲台"))
 		})
 
-		XIt("can unset an environment variable", func() {
-			// "deis config:set FOO=bar --app=%s"
-			// "deis run env --app=%s"
-			// "deis config:unset FOO --app=%s"
-			// "deis run env --app=%s"
+		It("can unset an environment variable", func() {
+			out, err := execute("deis config:set FOO=bar -a %s", appName)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(out).To(ContainSubstring("FOO             bar"))
+			out, err = execute("deis config:unset FOO -a %s", appName)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(out).NotTo(ContainSubstring("FOO"))
 		})
 
 		XIt("can pull the configuration to an .env file", func() {
