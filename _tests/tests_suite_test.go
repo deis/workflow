@@ -45,7 +45,9 @@ var _ = BeforeSuite(func() {
 	workflowPort := os.Getenv("DEIS_WORKFLOW_SERVICE_PORT")
 	Expect(workflowHost).ShouldNot(BeEmpty())
 	Expect(workflowPort).ShouldNot(BeEmpty())
-	Expect("../client/deis").Should(BeAnExistingFile())
+	// use the "deis" executable in the search $PATH
+	_, err := exec.LookPath("deis")
+	Expect(err).NotTo(HaveOccurred())
 
 	// register the test-admin user
 	register(url, testAdminUser, testAdminPassword, testAdminEmail)
