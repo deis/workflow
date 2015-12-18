@@ -10,8 +10,16 @@ a lightweight, [Heroku-inspired](http://heroku.com) workflow.
 
 ![Deis Graphic](https://s3-us-west-2.amazonaws.com/get-deis/deis-graphic-small.png)
 
-Deis Workflow v2 is changing quickly. Your feedback and participation are more than welcome, but be
+Deis Workflow v2 is currently in alpha. Your feedback and participation are more than welcome, but be
 aware that this project is considered a work in progress.
+
+The following features are not ready in Alpha1, but will be coming
+soon.
+
+- Complete SSL support
+- Dockerfile builds
+- Backup and restore features
+- Persistent storage (though it can be manually configured)
 
 ## Hacking Workflow
 
@@ -28,28 +36,9 @@ Then, install Deis!
 $ helm install deis/deis
 ```
 
-You can then monitor their status by running
+Complete instructions for installing and managing a Deis cluster are
+available in the [docs folder](https://github.com/deis/workflow/tree/master/docs/src).
 
-```console
-$ kubectl get pods --namespace=deis
-```
-
-Once this is done, you can SSH into the minion running the controller and run the following:
-
-```
-$ curl -sSL https://get-deis.s3.amazonaws.com/deis/workflow/220/220.1/client/deis
-$ chmod 755 deis
-$ sudo mv deis /bin
-$ kubectl get service --namespace=deis deis-workflow
-$ deis register 10.247.59.157 # or the appropriate CLUSTER_IP
-$ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
-$ eval $(ssh-agent) && ssh-add ~/.ssh/id_rsa
-$ deis keys:add ~/.ssh/id_rsa.pub
-$ deis create --no-remote
-Creating Application... done, created madras-radiator
-$ deis pull deis/example-go -a madras-radiator
-Creating build... ..o
-```
 
 If you want to retrieve the latest client build, check
 [the latest builds on Travis CI](https://travis-ci.org/deis/workflow/builds), notice the last build
