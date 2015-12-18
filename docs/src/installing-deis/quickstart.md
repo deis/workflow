@@ -11,10 +11,7 @@ The Deis provision scripts default to a machine size which should be adequate to
 Choose one of the following providers and deploy a new kubernetes cluster:
 
 - [Amazon AWS](http://kubernetes.io/v1.1/docs/getting-started-guides/aws.html)
-- [Bare Metal](bare-metal.md)
-- [DigitalOcean](digitalocean.md)
-- [Google Compute Engine](http://kubernetes.io/v1.1/docs/getting-started-guides/gce.html)
-- [Microsoft Azure](http://kubernetes.io/v1.1/docs/getting-started-guides/azure.html)
+- [Google Container Engine](https://cloud.google.com/container-engine/docs/before-you-begin)
 - [Vagrant](http://kubernetes.io/v1.1/docs/getting-started-guides/vagrant.html)
 
 ## Configure DNS
