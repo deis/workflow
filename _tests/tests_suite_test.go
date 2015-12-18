@@ -3,6 +3,7 @@ package _tests_test
 import (
 	"bytes"
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"os/user"
@@ -15,6 +16,14 @@ import (
 
 	"testing"
 )
+
+func init() {
+	rand.Seed(GinkgoConfig.RandomSeed)
+}
+
+func getRandAppName() string {
+	return fmt.Sprintf("apps-test-%d", rand.Int())
+}
 
 func TestTests(t *testing.T) {
 	RegisterFailHandler(Fail)
