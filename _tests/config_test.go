@@ -42,7 +42,7 @@ var _ = Describe("Config", func() {
 
 		It("can set an integer environment variable", func() {
 			out, err := execute("deis config:set FOO=1 -a %s", appName)
-			Expect(err).NoTo(HaveOccurred())
+			Expect(err).NotTo(HaveOccurred())
 			Expect(out).To(ContainSubstring("FOO      1"))
 		})
 
@@ -61,7 +61,7 @@ multiline\ string`))
 		})
 
 		It("can set an environment variable with multibyte chars", func() {
-			out, err := execute("deis config:set FOO=讲台 -a %s", test1)
+			out, err := execute("deis config:set FOO=讲台 -a %s", appName)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(out).To(ContainSubstring("FOO             讲台"))
 		})
