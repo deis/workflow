@@ -24,6 +24,7 @@ If you see a list of targets like the one above, helm can communicate with the k
 
 Once finished, run this command to provision the Deis platform:
 
+    $ helm update
     $ helm repo add deis https://github.com/deis/charts
     $ helm install deis/deis
 
@@ -137,7 +138,7 @@ Using the pod name determined through the above, one can
 use `kubectl` to determine what node the pod is running on:
 
 ```
-$ kubectl describe pod describe pod deis-router-ih25q --namespace=deis
+$ kubectl describe pod deis-router-ih25q --namespace=deis
 ```
 
 The `Node` field of the response should provide an IP:
