@@ -1,0 +1,16 @@
+{
+  "package": {
+    "name": "deis",
+    "repo": "deisci",
+    "subject": "deis"
+  },
+  "version": {
+    "name": "0.0.0"
+  },
+  "files": [
+    {
+      "includePattern": "client/deis"
+    }
+  ],
+  "publish": true
+}

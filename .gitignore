@@ -40,3 +40,6 @@ venv/
 
 # vendored go source code
 vendor/
+
+# generated bintray scripts during ci
+_scripts/ci/bintray-ci.json
