@@ -42,7 +42,7 @@ available in the [docs folder](https://github.com/deis/workflow/tree/master/docs
 If you want to retrieve the latest client dev build for OS X or Linux, download the client:
 
 ```console
-$ curl -sSL http://deis.io/deis-cli/install-v2-alpha.sh | sh
+$ curl -sSL http://deis.io/deis-cli/install-v2-alpha.sh | bash
 ```
 
 If you want to hack on a new feature, build the deis/workflow image and push it to a Docker

@@ -8,7 +8,7 @@ with a Deis [Controller][]. You must install the client to use Deis.
 
 Install the latest `deis` client for Linux or Mac OS X with:
 
-    $ curl -sSL http://deis.io/deis-cli/install-v2-alpha.sh | sh
+    $ curl -sSL http://deis.io/deis-cli/install-v2-alpha.sh | bash
 
 The installer puts `deis` in your current directory, but you should move it
 somewhere in your $PATH:
