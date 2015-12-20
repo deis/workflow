@@ -41,8 +41,6 @@ var (
 )
 
 var _ = BeforeSuite(func() {
-	workflowHost := os.Getenv("DEIS_WORKFLOW_SERVICE_HOST")
-	Expect(workflowHost).ShouldNot(BeEmpty())
 	// use the "deis" executable in the search $PATH
 	_, err := exec.LookPath("deis")
 	Expect(err).NotTo(HaveOccurred())
@@ -131,11 +129,13 @@ func addKey(name string) {
 }
 
 func getController() string {
-	host := os.Getenv("DEIS_WORKFLOW_SERVICE_HOST")
+	host := os.Getenv("DEIS_HOST")
 	if host == "" {
-		panic("DEIS_WORKFLOW_SERVICE_HOST isn't set")
+		panic(`Set DEIS_HOST to the workflow controller hostname for tests, such as:
+
+$ DEIS_HOST=deis.10.245.1.3.xip.io make test-integration`)
 	}
-	port := os.Getenv("DEIS_WORKFLOW_SERVICE_PORT")
+	port := os.Getenv("DEIS_PORT")
 	switch port {
 	case "443":
 		return "https://" + host
