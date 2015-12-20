@@ -47,7 +47,9 @@ var _ = BeforeSuite(func() {
 
 	// register the test-admin user
 	register(url, testAdminUser, testAdminPassword, testAdminEmail)
-	// TODO: verify that this user is actually an admin
+	// verify this user is an admin by running a privileged command
+	_, err = execute("deis users:list")
+	Expect(err).NotTo(HaveOccurred())
 
 	// register the test user and add a key
 	register(url, testUser, testPassword, testEmail)
