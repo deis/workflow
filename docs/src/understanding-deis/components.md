@@ -40,11 +40,6 @@ Image data is stored by [Store][].
 The logger component is a syslog server that collects logs from across the platform.
 This data can then be queried by the [Controller][].
 
-## Publisher
-
-The publisher component is a microservice written in Go that publishes
-containers to etcd so they can be exposed by the platform [router][].
-
 ## Router
 
 The router component uses [Nginx][] to route traffic to application containers.
