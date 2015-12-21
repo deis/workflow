@@ -53,7 +53,7 @@ git commit messages must follow this format:
 
 ### Example
 
-    feat(logger): add frobnitz pipeline spout discovery
+    feat(workflow): add frobnitz pipeline spout discovery
 
     Introduces a FPSD component compatible with the industry standard for
     spout discovery.
