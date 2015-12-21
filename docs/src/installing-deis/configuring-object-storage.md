@@ -23,5 +23,4 @@ The Deis components determine what object storage system to use via environment 
 
 # Limitations
 
-- In some cases, the minio service must be started up before other components, so that they see the Minio service's environment variables. If you use [helm](https://github.com/helm/helm) to install deis, this ordering won't be ensured. (builder, slugbuilder and slugrunner are fine)
-- Registry doesn't currently automatically look up the minio service, nor will it look for other storage env vars.
+The only currently known limitation is that [the Deis registry component](https://github.com/deis/registry) will not automatically look up the minio service, nor will it look for other storage env vars. That fix is being tracked in a [GitHub issue](https://github.com/deis/registry/issues/7) and is planned for our beta release.
