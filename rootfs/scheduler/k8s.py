@@ -294,32 +294,44 @@ class KubeHTTPClient(AbstractSchedulerClient):
         app_name = kwargs.get('aname', {})
         name = name.replace('.', '-').replace('_', '-')
         app_type = name.split('-')[-1]
+
+        # Fetch old RC and create the new one for a release
         old_rc = self._get_old_rc(app_name, app_type)
         new_rc = self._create_rc(name, image, command, **kwargs)
-        old_temp_rc = old_rc
+
+        # Get the desired number to scale to
         if old_rc:
             desired = int(old_rc["spec"]["replicas"])
-            old_rc_name = old_rc["metadata"]["name"]
         else:
             desired = 1
 
-        new_rc_name = new_rc["metadata"]["name"]
         try:
             count = 1
             while desired >= count:
-                new_rc = self._scale_app(new_rc_name, count, app_name)
-                if old_temp_rc:
-                    old_temp_rc = self._scale_app(old_rc_name, desired-count, app_name)
+                logger.debug('scaling release {} to {} out of final {}'.format(
+                    new_rc["metadata"]["name"], count, desired)
+                )
+                self._scale_app(new_rc["metadata"]["name"], count, app_name)
+                if old_rc:
+                    logger.debug('scaling old release {} from {} to {}'.format(
+                        old_rc["metadata"]["name"], desired, (desired-count))
+                    )
+                    self._scale_app(old_rc["metadata"]["name"], (desired-count), app_name)
+
                 count += 1
         except Exception as e:
+            logger.error('Could not scale {} to {}. Deleting and going back to old release'.format(
+                new_rc["metadata"]["name"], desired)
+            )
             self._scale_app(new_rc["metadata"]["name"], 0, app_name)
             self._delete_rc(new_rc["metadata"]["name"], app_name)
             if old_rc:
                 self._scale_app(old_rc["metadata"]["name"], desired, app_name)
 
             raise RuntimeError('{} (deploy): {}'.format(name, e))
+
         if old_rc:
-            self._delete_rc(app_name, old_rc_name)
+            self._delete_rc(app_name, old_rc["metadata"]["name"])
 
     def _get_events(self, namespace):
         url = self._api("/namespaces/{}/events", namespace)
@@ -363,9 +375,10 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
             time.sleep(1)
 
-    def _scale_rc(self, rc, namespace):
-        name = rc['metadata']['name']
-        num = rc["spec"]["replicas"]
+    def _scale_rc(self, name, namespace, num):
+        rc = self._get_rc_(name, namespace)
+        rc["spec"]["replicas"] = num
+
         url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
         resp = self.session.put(url, json=rc)
         if unhealthy(resp.status_code):
@@ -395,9 +408,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             time.sleep(1)
 
     def _scale_app(self, name, num, namespace):
-        js_template = self._get_rc_(name, namespace)
-        js_template["spec"]["replicas"] = num
-        self._scale_rc(js_template, namespace)
+        self._scale_rc(name, namespace, num)
 
     def scale(self, name, image, command, **kwargs):
         logger.debug('scale {}, img {}, params {}, cmd "{}"'.format(name, image, kwargs, command))
