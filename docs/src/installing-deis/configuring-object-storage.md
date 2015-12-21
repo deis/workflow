@@ -18,7 +18,8 @@ Additionally, Deis ships with a [Minio](http://minio.io) [component](https://git
 
 The Deis components determine what object storage system to use via environment variables that you set up:
 
-TODO: list the lookup order
+- `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT` - The in-cluster Minio service
+- `DEIS_OUTSIDE_STORAGE_HOST` and `DEIS_OUTSIDE_STORAGE_PORT` - The external S3-compatible object storage system
 
 # Limitations
 
