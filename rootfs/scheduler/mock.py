@@ -1,7 +1,7 @@
 import json
 import requests
 
-from . import AbstractSchedulerClient
+from .abstract import AbstractSchedulerClient
 from .states import JobState, TransitionError
 
 

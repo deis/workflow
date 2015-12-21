@@ -10,7 +10,7 @@ import base64
 from django.conf import settings
 from docker import Client
 from .states import JobState
-from . import AbstractSchedulerClient
+from .abstract import AbstractSchedulerClient
 import requests
 from .utils import dict_merge
 
@@ -252,43 +252,6 @@ class KubeHTTPClient(AbstractSchedulerClient):
         session.verify = False
         self.session = session
 
-    def _api(self, tmpl, *args):
-        """Return a fully-qualified Kubernetes API URL from a string template with args."""
-        url = "/api/{}".format(self.apiversion) + tmpl.format(*args)
-        return urlparse.urljoin(self.url, url)
-
-    def _get_old_rc(self, name, app_type):
-        url = self._api("/namespaces/{}/replicationcontrollers", name)
-        resp = self.session.get(url)
-        if unhealthy(resp.status_code):
-            error(resp, 'get ReplicationControllers in Namespace "{}"', name)
-
-        exists = False
-        prev_rc = []
-        for rc in resp.json()['items']:
-            if('app' in rc['spec']['selector'] and name == rc['metadata']['labels']['app'] and
-               'type' in rc['spec']['selector'] and app_type == rc['spec']['selector']['type']):
-                exists = True
-                prev_rc = rc
-                break
-        if exists:
-            return prev_rc
-
-        return 0
-
-    def _get_rc_status(self, name, namespace):
-        url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
-        resp = self.session.get(url)
-        return resp.status_code
-
-    def _get_rc_(self, name, namespace):
-        url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
-        resp = self.session.get(url)
-        if unhealthy(resp.status_code):
-            error(resp, 'get ReplicationController "{}" in Namespace "{}"', name, namespace)
-
-        return resp.json()
-
     def deploy(self, name, image, command, **kwargs):
         logger.debug('deploy {}, img {}, params {}, cmd "{}"'.format(name, image, kwargs, command))
         app_name = kwargs.get('aname', {})
@@ -311,104 +274,27 @@ class KubeHTTPClient(AbstractSchedulerClient):
                 logger.debug('scaling release {} to {} out of final {}'.format(
                     new_rc["metadata"]["name"], count, desired)
                 )
-                self._scale_app(new_rc["metadata"]["name"], count, app_name)
+                self._scale_rc(new_rc["metadata"]["name"], app_name, count)
                 if old_rc:
                     logger.debug('scaling old release {} from {} to {}'.format(
                         old_rc["metadata"]["name"], desired, (desired-count))
                     )
-                    self._scale_app(old_rc["metadata"]["name"], (desired-count), app_name)
+                    self._scale_rc(old_rc["metadata"]["name"], app_name, (desired-count))
 
                 count += 1
         except Exception as e:
             logger.error('Could not scale {} to {}. Deleting and going back to old release'.format(
                 new_rc["metadata"]["name"], desired)
             )
-            self._scale_app(new_rc["metadata"]["name"], 0, app_name)
+            self._scale_rc(new_rc["metadata"]["name"], app_name, 0)
             self._delete_rc(new_rc["metadata"]["name"], app_name)
             if old_rc:
-                self._scale_app(old_rc["metadata"]["name"], desired, app_name)
+                self._scale_rc(old_rc["metadata"]["name"], app_name, desired)
 
             raise RuntimeError('{} (deploy): {}'.format(name, e))
 
         if old_rc:
             self._delete_rc(app_name, old_rc["metadata"]["name"])
-
-    def _get_events(self, namespace):
-        url = self._api("/namespaces/{}/events", namespace)
-        resp = self.session.get(url)
-        if unhealthy(resp.status_code):
-            error(resp, "get Events in Namespace {}", namespace)
-
-        return resp.status_code, resp.text, resp.reason
-
-    def _get_schedule_status(self, name, num, namespace):
-        pods = []
-        for _ in xrange(120):
-            count = 0
-            pods = []
-            status, data, reason = self._get_pods(namespace)
-            parsed_json = json.loads(data)
-            for pod in parsed_json['items']:
-                if pod['metadata']['generateName'] == name+'-':
-                    count += 1
-                    pods.append(pod['metadata']['name'])
-
-            if count == num:
-                break
-
-            time.sleep(1)
-
-        for _ in xrange(120):
-            count = 0
-            status, data, reason = self._get_events(namespace)
-            parsed_json = json.loads(data)
-            for event in parsed_json['items']:
-                if(event['involvedObject']['name'] in pods and
-                   event['source']['component'] == 'scheduler'):
-                    if event['reason'] == 'Scheduled':
-                        count += 1
-                    else:
-                        raise RuntimeError(event['message'])
-
-            if count == num:
-                break
-
-            time.sleep(1)
-
-    def _scale_rc(self, name, namespace, num):
-        rc = self._get_rc_(name, namespace)
-        rc["spec"]["replicas"] = num
-
-        url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
-        resp = self.session.put(url, json=rc)
-        if unhealthy(resp.status_code):
-            error(resp, 'scale ReplicationController "{}"', name)
-
-        resource_ver = rc['metadata']['resourceVersion']
-        for _ in xrange(30):
-            js_template = self._get_rc_(name, namespace)
-            if js_template["metadata"]["resourceVersion"] != resource_ver:
-                break
-
-            time.sleep(1)
-
-        self._get_schedule_status(name, num, namespace)
-        for _ in xrange(120):
-            count = 0
-            status, data, reason = self._get_pods(namespace)
-            parsed_json = json.loads(data)
-            for pod in parsed_json['items']:
-                if(pod['metadata']['generateName'] == name+'-' and
-                   pod['status']['phase'] == 'Running'):
-                    count += 1
-
-            if count == num:
-                break
-
-            time.sleep(1)
-
-    def _scale_app(self, name, num, namespace):
-        self._scale_rc(name, namespace, num)
 
     def scale(self, name, image, command, **kwargs):
         logger.debug('scale {}, img {}, params {}, cmd "{}"'.format(name, image, kwargs, command))
@@ -423,97 +309,10 @@ class KubeHTTPClient(AbstractSchedulerClient):
         js_template = self._get_rc_(name, app_name)
         old_replicas = js_template["spec"]["replicas"]
         try:
-            self._scale_app(name, num, app_name)
+            self._scale_rc(name, app_name, num)
         except Exception as e:
-            self._scale_app(name, old_replicas, app_name)
+            self._scale_rc(name, app_name, old_replicas)
             raise RuntimeError('{} (Scale): {}'.format(name, e))
-
-    def _create_namespace(self, app_name):
-        url = self._api("/namespaces")
-        data = {
-            "kind": "Namespace",
-            "apiVersion": self.apiversion,
-            "metadata": {
-                "name": app_name
-                }
-            }
-        resp = self.session.post(url, json=data)
-        if not resp.status_code == 201:
-            error(resp, "create Namespace {}".format(app_name))
-
-    def _check_status(self, resp, app_name):
-        if resp.status_code == 404:
-            self._create_namespace(app_name)
-        elif resp.status_code != 200:
-            error(resp, "locate Namespace {}".format(app_name))
-
-    def _create_rc(self, name, image, command, **kwargs):
-        container_fullname = name
-        app_name = kwargs.get('aname', {})
-        app_type = name.split('-')[-1]
-        container_name = app_name + '-' + app_type
-        args = command.split()
-        num = kwargs.get('num', {})
-        imgurl = self.registry + "/" + image
-        TEMPLATE = RCD_TEMPLATE
-        shalen = len(image[image.index(":")+5:])
-        git = image[image.index(":")+1:image.index(":")+4]
-        if git == "git" and shalen == 8 and app_type == 'web':
-            imgurl = "http://"+settings.S3EP+"/git/home/"+image+"/push/slug.tgz"
-            TEMPLATE = RCB_TEMPLATE
-        l = {
-            "name": name,
-            "id": app_name,
-            "appversion": kwargs.get("version", {}),
-            "version": self.apiversion,
-            "image": imgurl,
-            "num": kwargs.get("num", {}),
-            "containername": container_name,
-            "type": app_type,
-        }
-        template = string.Template(TEMPLATE).substitute(l)
-        js_template = json.loads(template)
-        containers = js_template["spec"]["template"]["spec"]["containers"]
-        containers[0]['args'] = args
-        loc = locals().copy()
-        loc.update(re.match(MATCH, container_fullname).groupdict())
-        mem = kwargs.get('memory', {}).get(loc['c_type'])
-        cpu = kwargs.get('cpu', {}).get(loc['c_type'])
-        env = kwargs.get('envs', {})
-        if env:
-            for k, v in env.iteritems():
-                containers[0]["env"].append({"name": k, "value": v})
-        if mem or cpu:
-            containers[0]["resources"] = {"limits": {}}
-
-        if mem:
-            if mem[-2:-1].isalpha() and mem[-1].isalpha():
-                mem = mem[:-1]
-
-            mem = mem+"i"
-            containers[0]["resources"]["limits"]["memory"] = mem
-
-        if cpu:
-            cpu = float(cpu)/1024
-            containers[0]["resources"]["limits"]["cpu"] = cpu
-        url = self._api("/namespaces/{}/replicationcontrollers", app_name)
-        resp = self.session.post(url, json=js_template)
-        if unhealthy(resp.status_code):
-            error(resp, 'create ReplicationController "{}" in Namespace "{}"',
-                  name, app_name)
-        create = False
-        for _ in xrange(30):
-            if not create and self._get_rc_status(name, app_name) == 404:
-                time.sleep(1)
-                continue
-            create = True
-            rc = self._get_rc_(name, app_name)
-            if ("observedGeneration" in rc["status"]
-                    and rc["metadata"]["generation"] == rc["status"]["observedGeneration"]):
-                break
-
-            time.sleep(1)
-        return resp.json()
 
     def create(self, name, image, command, **kwargs):
         """Create a container."""
@@ -534,74 +333,9 @@ class KubeHTTPClient(AbstractSchedulerClient):
             self._create_service(name, app_name, app_type, data, image=image)
         except Exception as e:
             logger.debug(e)
-            self._scale_app(name, 0, app_name)
+            self._scale_rc(name, app_name, 0)
             self._delete_rc(name, app_name)
             raise
-
-    def _get_service(self, name, namespace):
-        url = self._api("/namespaces/{}/services/{}", namespace, name)
-        response = self.session.get(url)
-        if unhealthy(response.status_code):
-            error(response, 'get Service "{}" in Namespace "{}"', name, namespace)
-
-        return response
-
-    def _create_secret(self, namespace):
-        secretId, secretKey = '', ''
-        with open("/var/run/secrets/deis/minio/user/access-key-id") as the_file:
-            secretId = the_file.read()
-        with open("/var/run/secrets/deis/minio/user/access-secret-key") as the_file:
-            secretKey = the_file.read()
-        Key, Id = base64.b64encode(secretKey), base64.b64encode(secretId)
-        l = {
-            "version": self.apiversion,
-            "id": namespace,
-            "secretId": Id,
-            "secretKey": Key,
-            }
-        template = json.loads(string.Template(SECRET_TEMPLATE).substitute(l))
-        url = self._api("/namespaces/{}/secrets", namespace)
-        resp = self.session.post(url, json=template)
-        if unhealthy(resp.status_code):
-            error(resp, 'failed to create secret in Namespace "{}"', namespace)
-
-    def _create_service(self, name, app_name, app_type, data={}, **kwargs):
-        docker_cli = Client(version="auto")
-        image = kwargs.get('image')
-        try:
-            image = self.registry + '/' + image
-            # image already includes the tag, so we split it out here
-            docker_cli.pull(image.rsplit(':')[0], image.rsplit(':')[1])
-            image_info = docker_cli.inspect_image(image)
-            port = int(image_info['Config']['ExposedPorts'].keys()[0].split("/")[0])
-        except:
-            port = 5000
-        l = {
-            "version": self.apiversion,
-            "port": port,
-            "type": app_type,
-            "name": app_name,
-        }
-        # Merge external data on to the prefined template
-        template = json.loads(string.Template(SERVICE_TEMPLATE).substitute(l))
-        data = dict_merge(template, data)
-        url = self._api("/namespaces/{}/services", app_name)
-        resp = self.session.post(url, json=data)
-        if resp.status_code == 409:
-            srv = self._get_service(app_name, app_name).json()
-            if srv['spec']['selector']['type'] == 'web':
-                return
-            srv['spec']['selector']['type'] = app_type
-            srv['spec']['ports'][0]['targetPort'] = port
-            resp2 = self._update_service(app_name, app_name, srv)
-            if unhealthy(resp2.status_code):
-                error(resp, 'update Service "{}" in Namespace "{}"', app_name, app_name)
-        elif unhealthy(resp.status_code):
-            error(resp, 'create Service "{}" in Namespace "{}"', app_name, app_name)
-
-    def _update_service(self, namespace, app, data):
-        url = self._api("/namespaces/{}/services/{}", namespace, app)
-        return self.session.put(url, json=data)
 
     def start(self, name):
         """Start a container."""
@@ -610,13 +344,6 @@ class KubeHTTPClient(AbstractSchedulerClient):
     def stop(self, name):
         """Stop a container."""
         pass
-
-    def _delete_rc(self, namespace, name):
-        url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
-        resp = self.session.delete(url)
-        if unhealthy(resp.status_code):
-            error(resp, 'delete ReplicationController "{}" in Namespace "{}"',
-                  name, namespace)
 
     def destroy(self, name):
         """Destroy a application by deleting its namespace."""
@@ -628,48 +355,6 @@ class KubeHTTPClient(AbstractSchedulerClient):
             logger.warn('delete Namespace "{}": not found'.format(namespace))
         elif resp.status_code != 200:
             error(resp, 'delete Namespace "{}"', namespace)
-
-    def _get_pod(self, name, namespace):
-        url = self._api("/namespaces/{}/pods/{}", namespace, name)
-        resp = self.session.get(url)
-        if unhealthy(resp.status_code):
-            error(resp, 'get Pod "{}" in Namespace "{}"', name, namespace)
-
-        return resp.status_code, resp.reason, resp.text
-
-    def _get_pods(self, namespace):
-        url = self._api("/namespaces/{}/pods", namespace)
-        resp = self.session.get(url)
-        if unhealthy(resp.status_code):
-            error(resp, 'get Pods in Namespace "{}"', namespace)
-
-        return resp.status_code, resp.text, resp.reason
-
-    def _delete_pod(self, name, namespace):
-        url = self._api("/namespaces/{}/pods/{}", namespace, name)
-        resp = self.session.delete(url)
-        if unhealthy(resp.status_code):
-            error(resp, 'delete Pod "{}" in Namespace "{}"', name, namespace)
-
-        # Verify the pod has been deleted. Give it 5 seconds.
-        for _ in xrange(5):
-            status, reason, data = self._get_pod(name, namespace)
-            if status == 404:
-                break
-
-            time.sleep(1)
-
-        # Pod was not deleted within the grace period.
-        if status != 404:
-            error(resp, 'delete Pod "{}" in Namespace "{}"', name, namespace)
-
-    def _pod_log(self, name, namespace):
-        url = self._api("/namespaces/{}/pods/{}/log", namespace, name)
-        resp = self.session.get(url)
-        if unhealthy(resp.status_code):
-            error(resp, 'get logs for Pod "{}" in Namespace "{}"', name, namespace)
-
-        return resp.status_code, resp.text, resp.reason
 
     def logs(self, name):
         logger.debug("logs {}".format(name))
@@ -770,5 +455,330 @@ class KubeHTTPClient(AbstractSchedulerClient):
         except Exception as err:
             logger.warn(err)
             return JobState.error
+
+    def _api(self, tmpl, *args):
+        """Return a fully-qualified Kubernetes API URL from a string template with args."""
+        url = "/api/{}".format(self.apiversion) + tmpl.format(*args)
+        return urlparse.urljoin(self.url, url)
+
+    # EVENTS #
+
+    def _get_events(self, namespace):
+        url = self._api("/namespaces/{}/events", namespace)
+        resp = self.session.get(url)
+        if unhealthy(resp.status_code):
+            error(resp, "get Events in Namespace {}", namespace)
+
+        return resp.status_code, resp.text, resp.reason
+
+    # NAMESPACE #
+
+    def _create_namespace(self, app_name):
+        url = self._api("/namespaces")
+        data = {
+            "kind": "Namespace",
+            "apiVersion": self.apiversion,
+            "metadata": {
+                "name": app_name
+                }
+            }
+        resp = self.session.post(url, json=data)
+        if not resp.status_code == 201:
+            error(resp, "create Namespace {}".format(app_name))
+
+    def _check_status(self, resp, app_name):
+        if resp.status_code == 404:
+            self._create_namespace(app_name)
+        elif resp.status_code != 200:
+            error(resp, "locate Namespace {}".format(app_name))
+
+    # REPLICATION CONTROLLER #
+
+    def _get_old_rc(self, name, app_type):
+        url = self._api("/namespaces/{}/replicationcontrollers", name)
+        resp = self.session.get(url)
+        if unhealthy(resp.status_code):
+            error(resp, 'get ReplicationControllers in Namespace "{}"', name)
+
+        exists = False
+        prev_rc = []
+        for rc in resp.json()['items']:
+            if('app' in rc['spec']['selector'] and name == rc['metadata']['labels']['app'] and
+               'type' in rc['spec']['selector'] and app_type == rc['spec']['selector']['type']):
+                exists = True
+                prev_rc = rc
+                break
+        if exists:
+            return prev_rc
+
+        return 0
+
+    def _get_rc_status(self, name, namespace):
+        url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
+        resp = self.session.get(url)
+        return resp.status_code
+
+    def _get_rc_(self, name, namespace):
+        url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
+        resp = self.session.get(url)
+        if unhealthy(resp.status_code):
+            error(resp, 'get ReplicationController "{}" in Namespace "{}"', name, namespace)
+
+        return resp.json()
+
+    def _get_schedule_status(self, name, num, namespace):
+        pods = []
+        for _ in xrange(120):
+            count = 0
+            pods = []
+            status, data, reason = self._get_pods(namespace)
+            parsed_json = json.loads(data)
+            for pod in parsed_json['items']:
+                if pod['metadata']['generateName'] == name+'-':
+                    count += 1
+                    pods.append(pod['metadata']['name'])
+
+            if count == num:
+                break
+
+            time.sleep(1)
+
+        for _ in xrange(120):
+            count = 0
+            status, data, reason = self._get_events(namespace)
+            parsed_json = json.loads(data)
+            for event in parsed_json['items']:
+                if(event['involvedObject']['name'] in pods and
+                   event['source']['component'] == 'scheduler'):
+                    if event['reason'] == 'Scheduled':
+                        count += 1
+                    else:
+                        raise RuntimeError(event['message'])
+
+            if count == num:
+                break
+
+            time.sleep(1)
+
+    def _scale_rc(self, name, namespace, num):
+        rc = self._get_rc_(name, namespace)
+        rc["spec"]["replicas"] = num
+
+        url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
+        resp = self.session.put(url, json=rc)
+        if unhealthy(resp.status_code):
+            error(resp, 'scale ReplicationController "{}"', name)
+
+        resource_ver = rc['metadata']['resourceVersion']
+        for _ in xrange(30):
+            js_template = self._get_rc_(name, namespace)
+            if js_template["metadata"]["resourceVersion"] != resource_ver:
+                break
+
+            time.sleep(1)
+
+        self._get_schedule_status(name, num, namespace)
+        for _ in xrange(120):
+            count = 0
+            status, data, reason = self._get_pods(namespace)
+            parsed_json = json.loads(data)
+            for pod in parsed_json['items']:
+                if(pod['metadata']['generateName'] == name+'-' and
+                   pod['status']['phase'] == 'Running'):
+                    count += 1
+
+            if count == num:
+                break
+
+            time.sleep(1)
+
+    def _create_rc(self, name, image, command, **kwargs):
+        container_fullname = name
+        app_name = kwargs.get('aname', {})
+        app_type = name.split('-')[-1]
+        container_name = app_name + '-' + app_type
+        args = command.split()
+        num = kwargs.get('num', {})
+        imgurl = self.registry + "/" + image
+        TEMPLATE = RCD_TEMPLATE
+        shalen = len(image[image.index(":")+5:])
+        git = image[image.index(":")+1:image.index(":")+4]
+        if git == "git" and shalen == 8 and app_type == 'web':
+            imgurl = "http://"+settings.S3EP+"/git/home/"+image+"/push/slug.tgz"
+            TEMPLATE = RCB_TEMPLATE
+        l = {
+            "name": name,
+            "id": app_name,
+            "appversion": kwargs.get("version", {}),
+            "version": self.apiversion,
+            "image": imgurl,
+            "num": kwargs.get("num", {}),
+            "containername": container_name,
+            "type": app_type,
+        }
+        template = string.Template(TEMPLATE).substitute(l)
+        js_template = json.loads(template)
+        containers = js_template["spec"]["template"]["spec"]["containers"]
+        containers[0]['args'] = args
+        loc = locals().copy()
+        loc.update(re.match(MATCH, container_fullname).groupdict())
+        mem = kwargs.get('memory', {}).get(loc['c_type'])
+        cpu = kwargs.get('cpu', {}).get(loc['c_type'])
+        env = kwargs.get('envs', {})
+        if env:
+            for k, v in env.iteritems():
+                containers[0]["env"].append({"name": k, "value": v})
+        if mem or cpu:
+            containers[0]["resources"] = {"limits": {}}
+
+        if mem:
+            if mem[-2:-1].isalpha() and mem[-1].isalpha():
+                mem = mem[:-1]
+
+            mem = mem+"i"
+            containers[0]["resources"]["limits"]["memory"] = mem
+
+        if cpu:
+            cpu = float(cpu)/1024
+            containers[0]["resources"]["limits"]["cpu"] = cpu
+        url = self._api("/namespaces/{}/replicationcontrollers", app_name)
+        resp = self.session.post(url, json=js_template)
+        if unhealthy(resp.status_code):
+            error(resp, 'create ReplicationController "{}" in Namespace "{}"',
+                  name, app_name)
+        create = False
+        for _ in xrange(30):
+            if not create and self._get_rc_status(name, app_name) == 404:
+                time.sleep(1)
+                continue
+            create = True
+            rc = self._get_rc_(name, app_name)
+            if ("observedGeneration" in rc["status"]
+                    and rc["metadata"]["generation"] == rc["status"]["observedGeneration"]):
+                break
+
+            time.sleep(1)
+        return resp.json()
+
+    def _delete_rc(self, namespace, name):
+        url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
+        resp = self.session.delete(url)
+        if unhealthy(resp.status_code):
+            error(resp, 'delete ReplicationController "{}" in Namespace "{}"',
+                  name, namespace)
+
+    # SECRETS #
+
+    def _create_secret(self, namespace):
+        secretId, secretKey = '', ''
+        with open("/var/run/secrets/deis/minio/user/access-key-id") as the_file:
+            secretId = the_file.read()
+        with open("/var/run/secrets/deis/minio/user/access-secret-key") as the_file:
+            secretKey = the_file.read()
+        Key, Id = base64.b64encode(secretKey), base64.b64encode(secretId)
+        l = {
+            "version": self.apiversion,
+            "id": namespace,
+            "secretId": Id,
+            "secretKey": Key,
+            }
+        template = json.loads(string.Template(SECRET_TEMPLATE).substitute(l))
+        url = self._api("/namespaces/{}/secrets", namespace)
+        resp = self.session.post(url, json=template)
+        if unhealthy(resp.status_code):
+            error(resp, 'failed to create secret in Namespace "{}"', namespace)
+
+    # SERVICES #
+
+    def _get_service(self, name, namespace):
+        url = self._api("/namespaces/{}/services/{}", namespace, name)
+        response = self.session.get(url)
+        if unhealthy(response.status_code):
+            error(response, 'get Service "{}" in Namespace "{}"', name, namespace)
+
+        return response
+
+    def _create_service(self, name, app_name, app_type, data={}, **kwargs):
+        docker_cli = Client(version="auto")
+        image = kwargs.get('image')
+        try:
+            image = self.registry + '/' + image
+            # image already includes the tag, so we split it out here
+            docker_cli.pull(image.rsplit(':')[0], image.rsplit(':')[1])
+            image_info = docker_cli.inspect_image(image)
+            port = int(image_info['Config']['ExposedPorts'].keys()[0].split("/")[0])
+        except:
+            port = 5000
+        l = {
+            "version": self.apiversion,
+            "port": port,
+            "type": app_type,
+            "name": app_name,
+        }
+        # Merge external data on to the prefined template
+        template = json.loads(string.Template(SERVICE_TEMPLATE).substitute(l))
+        data = dict_merge(template, data)
+        url = self._api("/namespaces/{}/services", app_name)
+        resp = self.session.post(url, json=data)
+        if resp.status_code == 409:
+            srv = self._get_service(app_name, app_name).json()
+            if srv['spec']['selector']['type'] == 'web':
+                return
+            srv['spec']['selector']['type'] = app_type
+            srv['spec']['ports'][0]['targetPort'] = port
+            resp2 = self._update_service(app_name, app_name, srv)
+            if unhealthy(resp2.status_code):
+                error(resp, 'update Service "{}" in Namespace "{}"', app_name, app_name)
+        elif unhealthy(resp.status_code):
+            error(resp, 'create Service "{}" in Namespace "{}"', app_name, app_name)
+
+    def _update_service(self, namespace, app, data):
+        url = self._api("/namespaces/{}/services/{}", namespace, app)
+        return self.session.put(url, json=data)
+
+    # PODS #
+
+    def _get_pod(self, name, namespace):
+        url = self._api("/namespaces/{}/pods/{}", namespace, name)
+        resp = self.session.get(url)
+        if unhealthy(resp.status_code):
+            error(resp, 'get Pod "{}" in Namespace "{}"', name, namespace)
+
+        return resp.status_code, resp.reason, resp.text
+
+    def _get_pods(self, namespace):
+        url = self._api("/namespaces/{}/pods", namespace)
+        resp = self.session.get(url)
+        if unhealthy(resp.status_code):
+            error(resp, 'get Pods in Namespace "{}"', namespace)
+
+        return resp.status_code, resp.text, resp.reason
+
+    def _delete_pod(self, name, namespace):
+        url = self._api("/namespaces/{}/pods/{}", namespace, name)
+        resp = self.session.delete(url)
+        if unhealthy(resp.status_code):
+            error(resp, 'delete Pod "{}" in Namespace "{}"', name, namespace)
+
+        # Verify the pod has been deleted. Give it 5 seconds.
+        for _ in xrange(5):
+            status, reason, data = self._get_pod(name, namespace)
+            if status == 404:
+                break
+
+            time.sleep(1)
+
+        # Pod was not deleted within the grace period.
+        if status != 404:
+            error(resp, 'delete Pod "{}" in Namespace "{}"', name, namespace)
+
+    def _pod_log(self, name, namespace):
+        url = self._api("/namespaces/{}/pods/{}/log", namespace, name)
+        resp = self.session.get(url)
+        if unhealthy(resp.status_code):
+            error(resp, 'get logs for Pod "{}" in Namespace "{}"', name, namespace)
+
+        return resp.status_code, resp.text, resp.reason
+
 
 SchedulerClient = KubeHTTPClient
