@@ -44,9 +44,10 @@ Now that you have the Deis chart, you'll need to make a minor edit to the
 incoming traffic on a domain of your choice. Follow the following steps to make
 the edit:
 
-1. Open the `$HELM_HOME/workspace/charts/deis/manifests/deis-router-rc.yaml`
-file in your favorite editor. Note that if `HELM_HOME` is not in your environment,
-it defaults to `~/.helm`
+1. Open the `$(helm home)/workspace/charts/deis/manifests/deis-router-rc.yaml`
+file in your favorite editor. Note that `$(helm home)` executes the command to get
+the directory that helm uses to store its config and all its charts. See
+http://helm.readthedocs.org/en/latest/workspace/ for details.
 2. Replace `example.com` under `metadata.annotations.deis.io/routerConfig` with
 the domain of your choice. This will be called the _platform domain_. You may choose
 any domain, but the `Routing Traffic` section below details how to configure DNS or your
