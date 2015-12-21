@@ -50,7 +50,6 @@ security     | Security-related issues such as TLS encryption, network segregati
 - etcd/fleet
 - kubernetes
 - logger
-- logspout
 - publisher
 - registry
 - router
