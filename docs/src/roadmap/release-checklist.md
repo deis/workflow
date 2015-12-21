@@ -39,7 +39,6 @@ $ ./contrib/bumpver/bumpver -f A.B.C A.B.D \
     docs/reference/api-v1.7.rst \
     docs/troubleshooting_deis/index.rst \
     logger/image/Dockerfile \
-    logspout/image/Dockerfile \
     mesos/template \
     mesos/zookeeper/Dockerfile \
     publisher/image/Dockerfile \

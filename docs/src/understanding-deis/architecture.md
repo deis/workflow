@@ -43,7 +43,6 @@ The platform scheduler is in charge of placing containers on hosts in the data p
 Deis also requires a few lightweight components on these hosts:
 
  * [publisher][] - publishes end-user containers to the [router][]
- * [logspout][] - feeds log data to the Control Plane [logger][]
 
 ## Router Mesh
 
@@ -75,7 +74,6 @@ See [Isolating the Planes][isolating-planes] for further details.
 [database]: components.md#database
 [isolating-planes]: ../managing-deis/isolating-the-planes.md
 [logger]: components.md#logger
-[logspout]: components.md#logspout
 [publisher]: components.md#publisher
 [registry]: components.md#registry
 [router]: components.md#router

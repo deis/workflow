@@ -35,16 +35,9 @@ The builder component uses a [Git][] server to process
 The registry component hosts [Docker][] images on behalf of the platform.
 Image data is stored by [Store][].
 
-## Logspout
-
-The logspout component is a customized version of [progrium's logspout][] that runs
-on all CoreOS hosts in the cluster and collects logs from running containers.
-It sends the logs to the [logger][] component.
-
 ## Logger
 
-The logger component is a syslog server that collects logs from [logspout][]
-components spread across the platform.
+The logger component is a syslog server that collects logs from across the platform.
 This data can then be queried by the [Controller][].
 
 ## Publisher
@@ -73,11 +66,9 @@ and [Logger][].
 [etcd]: https://github.com/coreos/etcd
 [Git]: http://git-scm.com/
 [logger]: #logger
-[logspout]: #logspout
 [Nginx]: http://nginx.org/
 [OpenStack Storage]: http://www.openstack.org/software/openstack-storage/
 [PostgreSQL]: http://www.postgresql.org/
-[progrium's logspout]: https://github.com/progrium/logspout
 [Redis]: http://redis.io/
 [registry]: #registry
 [release]: ../reference-guide/terms.md#release
