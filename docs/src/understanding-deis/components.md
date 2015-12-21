@@ -63,7 +63,6 @@ and [Logger][].
 [Ceph]: http://ceph.com
 [database]: #database
 [Docker]: http://docker.io/
-[etcd]: https://github.com/coreos/etcd
 [Git]: http://git-scm.com/
 [logger]: #logger
 [Nginx]: http://nginx.org/

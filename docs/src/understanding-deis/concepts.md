@@ -24,17 +24,6 @@ distributed across your cluster as Docker containers.
 
 (Deis itself is also a set of coordinated Docker containers.)
 
-## CoreOS
-
-[CoreOS][] is a new, minimal Linux distribution, rearchitected for
-running modern, containerized infrastructure stacks.
-
-Deis runs on CoreOS machines that can be hosted anywhere -- public cloud,
-private cloud, bare metal or even your workstation.
-
-CoreOS allows Deis to host applications and services at scale with
-high resilience, in a way that is simple to operate.
-
 ## Applications
 
 Deis is designed around the concept of an [application][], or app.
@@ -89,7 +78,6 @@ to swap services provided by other apps, or to switch to external or third-party
 [config]: ../reference-guide/terms.md#config
 [containers]: ../reference-guide/terms.md#container
 [Docker]: http://docker.io/
-[CoreOS]: https://coreos.com/
 [Build and Run]: http://12factor.net/build-release-run
 [backing services]: http://12factor.net/backing-services
 [environment variables]: http://12factor.net/config

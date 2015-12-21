@@ -29,7 +29,7 @@ Within the scope of this master test plan are these items:
 
 - The Deis project codebase at <https://github.com/deis/deis>
 - The Docker containers that constitute Deis
-- The assembled Deis platform on a CoreOS cluster
+- The assembled Deis platform on a Kubernetes cluster
 - The HTML documentation set for Deis
 - Binary installers for the `deis` CLI hosted at AWS S3
 - Binary installers for the `deisctl` CLI hosted at AWS S3
@@ -40,7 +40,7 @@ Within the scope of this master test plan are these items:
 
 At a high level, the overall features of the platform that are tested are:
 
-- The Deis platform can be installed on a new CoreOS vagrant cluster
+- The Deis platform can be installed on a new Kubernetes cluster
 - The Deis platform can be upgraded from a recent release to the current one
 - Users can register with Deis and create and deploy applications
 - Deis can build and scale a variety of Heroku-style and Dockerfile-based apps
@@ -52,7 +52,7 @@ At a high level, the overall features of the platform that are tested are:
 While these features are effectively covered in ad-hoc testing and by existing
 customer usage, they are not specifically tested as part of the test plan yet.
 
-- The Deis platform can be installed on an existing CoreOS cluster
+- The Deis platform can be installed on an existing Kubernetes cluster
 - The Deis platform survives the loss of one or more nodes
 - The Deis platform can run for several weeks without interruption
 - The Deis platform handles stressful multi-user workloads

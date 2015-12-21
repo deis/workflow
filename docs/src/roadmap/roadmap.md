@@ -74,12 +74,11 @@ This feature is tracked as GitHub issue [#3072][].
 ## Update Service
 
 Deis must support 100% automated, zero-downtime updates of the control plane.
-Like CoreOS, Deis clusters should be attached to an alpha, beta or stable channel and rely on an automatic update mechanism.
+Deis clusters should be attached to an alpha, beta or stable channel and rely on an automatic update mechanism.
 To accomplish this, Deis plans to use the `Google Omaha Protocol`_ as implemented by `CoreUpdate`_.
 
  - [x]  [Update client/agent][]
  - [ ]  Update server
- - [ ]  [Automatic CoreOS upgrades][]
  - [ ]  CI Integration
 
 This feature is tracked as GitHub issue [#2106][].

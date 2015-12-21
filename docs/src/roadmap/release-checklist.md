@@ -26,7 +26,6 @@ $ ./contrib/bumpver/bumpver -f A.B.C A.B.D \
     builder/rootfs/usr/local/src/slugrunner/Dockerfile \
     client/deis-version \
     contrib/utils.sh \
-    contrib/coreos/user-data.example \
     controller/deis/__init__.py \
     controller/Dockerfile \
     database/Dockerfile \
@@ -82,7 +81,6 @@ $ ./contrib/bumpver/bumpver -f A.B.D-dev A.B.D \
 $ ./contrib/bumpver/bumpver -f A.B.C A.B.D \
     README.md \
     contrib/utils.sh \
-    contrib/coreos/user-data.example \
     docs/_includes/_get-the-source.rst \
     docs/installing_deis/install-deisctl.rst \
     docs/installing_deis/install-platform.rst \
@@ -146,7 +144,6 @@ $ ./contrib/bumpver/bumpver -f A.B.C A.B.D \
 ./contrib/bumpver/bumpver -f A.B.C A.B.D \
   README.md \
   contrib/utils.sh \
-  contrib/coreos/user-data.example \
   docs/_includes/_get-the-source.rst \
   docs/installing_deis/install-deisctl.rst \
   docs/installing_deis/install-platform.rst \
