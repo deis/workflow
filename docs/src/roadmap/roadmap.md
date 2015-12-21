@@ -23,15 +23,6 @@ of etcd in Deis, with a focus on performance and reliability.
 
 This feature is tracked as GitHub issue [#4404][].
 
-## New Default Scheduler
-
-Deis now has support for Docker Swarm, Apache Mesos, and Google Kubernetes as
-application schedulers. With the known limitations of fleet (primarily, not being
-a resource-aware scheduler), we should investigate using a different scheduler
-as our default.
-
-This feature is tracked as GitHub issue [#4222][].
-
 ## Permissions and Teams
 
 Deis deployments in larger organizations require more fine-grained control
