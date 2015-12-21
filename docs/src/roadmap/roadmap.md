@@ -23,17 +23,6 @@ of etcd in Deis, with a focus on performance and reliability.
 
 This feature is tracked as GitHub issue [#4404][].
 
-## Rigger
-
-We want the provisioning process of CoreOS hosts to be as smooth as the
-`deisctl` experience when users install and start Deis. We've started working
-on a tool called [Rigger][] which provisions hosts and deploys Deis on
-any supported provider.
-
-We're still defining the interface between Rigger and the provider-specific
-provision logic. We'd love input from the community on this discussion in
-[#4345][].
-
 ## New Default Scheduler
 
 Deis now has support for Docker Swarm, Apache Mesos, and Google Kubernetes as
