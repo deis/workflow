@@ -3,6 +3,8 @@
 We will use the `helm` utility to provision the Deis platform to a kubernetes cluster. If you don't
 have `helm` installed, see [installing helm][helm] for more info.
 
+## Check Your Setup
+
 First check that you have `helm` installed and the version is correct.
 
     $ helm --version
@@ -22,54 +24,66 @@ properly by running
 
 If you see a list of targets like the one above, helm can communicate with the kubernetes master.
 
-Once finished, run this command to provision the Deis platform:
+## Get the Helm Chart
 
-    $ helm update
-    $ helm repo add deis https://github.com/deis/charts
-    $ helm install deis/deis
+The [Helm Deis Chart](https://github.com/deis/charts) contains everything you
+need to install Deis onto your Kubernetes cluster, with a single `helm install` command.
 
-You can then monitor their status by running
+Run the following commands to set up your Helm environment and install the chart:
+
+```
+$ helm update
+$ helm repo add deis https://github.com/deis/charts
+$ helm fetch deis/deis
+```
+
+## Set up the Deis Router
+
+Now that you have the Deis chart, you'll need to make a minor edit to the
+`deis-router-rc.yaml` Kubernetes manifest file to prepare the router to accept
+incoming traffic on a domain of your choice. Follow the following steps to make
+the edit:
+
+1. Open the `$(helm home)/workspace/charts/deis/manifests/deis-router-rc.yaml`
+file in your favorite editor. Note that `$(helm home)` executes the command to get
+the directory that helm uses to store its config and all its charts. See
+http://helm.readthedocs.org/en/latest/workspace/ for details.
+2. Replace `example.com` under `metadata.annotations.deis.io/routerConfig` with
+the domain of your choice. This will be called the _platform domain_. You may choose
+any domain, but the `Routing Traffic` section below details how to configure DNS or your
+host to use that domain properly, so you may want to read that section before proceeding.
+
+## Launch Your Deis Cluster
+
+Now that you have it prepared, launch the Deis cluster with:
+
+```
+$ helm install deis/deis
+```
+
+This command will launch a variety of Kubernetes resources in the `deis` namespace.
+You'll need to wait for the pods that it launched to be ready. Monitor their status
+by running:
 
 ```
 $ kubectl get pods --namespace=deis
 ```
 
-Once you see all of the pods ready, your Deis platform is running on a cluster!
+Once you see all of the pods in the `READY` state, your Deis platform is running on a cluster!
 
-## Routing Traffic
+## A Note on Routing Traffic
 
-The Deis router component will use an incoming request's HTTP `Host`
-header to direct traffic to Deis components and to applications deployed
-via Deis. It is therefore important that the router be configured
-properly and that DNS and/or your local `/etc/hosts` file are as well.
-
-### Configuring the Platform Domain
-
-The Deis router requires a "platform domain" be set.  Deis components
-that respond to HTTP requests and applications deployed via Deis will
-all live on subdomains of the platform domain.  When installing Deis
-via helm, the platform domain is set to `example.com` by default.  This
-can be changed by editing Deis' helm chart prior to installation.
-Alternatively, the change can be made after Deis has been installed
-by editing the router's replication controller like so:
-
-```
-$ kubectl edit rc deis-router --namespace=deis
-```
-
-Find `example.com` in the manifest, change it to a domain of your
-choosing, and save changes.  Kubernetes will apply the changes and
-the router will dynamically reconfigure itself accordingly.
+As mentioned above, the Deis router component is responsible for accepting traffic
+from outside the Kubernetes cluster and directing appropriately. It uses the
+incoming request's HTTP `Host` header to direct traffic to Deis components and
+to applications deployed via Deis.
 
 ### Getting Traffic to the Cluster
 
-With the platform domain configured, the only remaining concern
-is to ensure traffic for that domain reaches the cluster.  There
-are a few ways of doing this, and which you use may depend on the
-capabilities of your infrastructure and your Kubernetes cluster.
-
-In general, the goal is to connect traffic bound for
-`*.the-domain-you.picked` to your Kubernetes cluster.
+You already configured the router with a platform domain in the above setup instructions.
+This section details how to configure DNS and/or your local `/etc/hosts` file so that
+traffic bound for `*.your-platform.domain` will make it to your Kubernetes cluster
+and the Deis router.
 
 #### Using an Automatically Provisioned Load Balancer
 
