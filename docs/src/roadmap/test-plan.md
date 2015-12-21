@@ -32,7 +32,6 @@ Within the scope of this master test plan are these items:
 - The assembled Deis platform on a Kubernetes cluster
 - The HTML documentation set for Deis
 - Binary installers for the `deis` CLI hosted at AWS S3
-- Binary installers for the `deisctl` CLI hosted at AWS S3
 - Hosted HTML documentation updates at http://docs.deis.io/
 - Docker images hosted at <https://registry.hub.docker.com/repos/deis/>
 

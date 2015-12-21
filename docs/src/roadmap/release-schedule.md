@@ -22,7 +22,7 @@ defined as:
 
 - the REST API for *deis-controller*
 - etcd keys and values that are publicly documented
-- `deis` and `deisctl` commands and options
+- `deis` commands and options
 - essential `Makefile` targets
 - provider scripts under `contrib/`
 

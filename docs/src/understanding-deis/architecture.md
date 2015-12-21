@@ -7,7 +7,7 @@ grouped into a Control Plane, Data Plane and Router Mesh.
 
 ![Deis System Diagram](DeisSystemDiagram.png)
 
-Operators use the `Deisctl API` to stand up the cluster's Control Plane, Data Plane and Router Mesh.
+Operators use [Helm][] to stand up the cluster's Control Plane, Data Plane and Router Mesh.
 End-users of the platform interact with the Control Plane using the `Deis API`.
 
 The Control Plane dispatches work to the Data Plane via a scheduler.
@@ -65,6 +65,7 @@ See [Isolating the Planes][isolating-planes] for further details.
 [applications]: ../reference-guide/terms.md#application
 [builder]: components.md#builder
 [components]: components.md
+[helm]: http://helm.sh
 [containers]: ../reference-guide/terms.md#container
 [controller]: components.md#controller
 [database]: components.md#database

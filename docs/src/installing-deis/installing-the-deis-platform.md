@@ -203,7 +203,6 @@ the following is an indicator of success:
 Now that you've finished provisioning a cluster, start [Using Deis][] to deploy your first
 application on Deis.
 
-[install deisctl]: installing-deisctl.md
 [helm]: http://helm.sh
 [using deis]: ../using-deis/deploying-an-application.md
 [configure dns]: ../managing-deis/configuring-dns.md
