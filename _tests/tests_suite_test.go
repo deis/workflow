@@ -28,7 +28,7 @@ func init() {
 }
 
 func getRandAppName() string {
-	return fmt.Sprintf("apps-test-%d", rand.Int())
+	return fmt.Sprintf("test-%d", rand.Intn(1000))
 }
 
 func TestTests(t *testing.T) {
