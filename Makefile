@@ -1,5 +1,5 @@
 # If DEIS_REGISTRY is not set, try to populate it from legacy DEV_REGISTRY
-DEIS_REGISTRY ?= $(DEV_REGISTRY)/
+DEIS_REGISTRY ?= $(DEV_REGISTRY)
 IMAGE_PREFIX ?= deis
 COMPONENT ?= workflow
 VERSION ?= git-$(shell git rev-parse --short HEAD)
