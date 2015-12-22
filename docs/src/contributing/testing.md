@@ -47,7 +47,7 @@ The `test-setup.sh` script also prepares the testing environment, as well as tea
 - runs documentation tests
 - builds Docker images tagged with `$BUILD_TAG`
 - runs unit and functional tests
-- creates a 3-node Vagrant CoreOS cluster
+- creates a 3-node Vagrant cluster
 - pushes the Docker images to a registry
 - provisions the cluster for Deis with the registry images
 - runs all integration tests
@@ -73,7 +73,7 @@ make -C tests/ test-full
 - runs documentation tests
 - builds Docker images tagged with `$BUILD_TAG`
 - runs unit and functional tests
-- creates a 3-node Vagrant CoreOS cluster
+- creates a 3-node Vagrant cluster
 - pushes the Docker images to a registry
 - provisions the cluster for Deis with the registry images
 - runs a "smoke test" that pushes and scales an app
@@ -82,7 +82,7 @@ make -C tests/ test-full
 ### test-latest.sh
 
 - installs the latest `deis` and `deisctl` client releases
-- creates a 3-node Vagrant CoreOS cluster
+- creates a 3-node Vagrant cluster
 - provisions the cluster for Deis with latest release images
 - runs a "smoke test" that pushes and scales an app
 - takes roughly 30 minutes

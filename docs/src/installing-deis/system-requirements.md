@@ -9,9 +9,9 @@ Deis components consume approximately 2 - 2.5GB of memory across the cluster, an
 * At least 4GB of RAM (more is better)
 * At least 40GB of hard disk space
 
-Note that these estimates are for Deis and CoreOS only, and there should be ample room for deployed applications.
+Note that these estimates are for Deis and Kubernetes only, and there should be ample room for deployed applications.
 
-Running smaller machines will likely result in increased system load and has been known to result in component failures, issues with etcd/fleet, and other problems.
+Running smaller machines will likely result in increased system load and has been known to result in component failures and other problems.
 
 ## Cluster Size
 

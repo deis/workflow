@@ -118,24 +118,6 @@ CPU shares are on a scale of 0 to 1024, with 1024 being all CPU resources on the
     the `limits:set` command will hang.  If this happens, use CTRL-C
     to break out of `limits:set` and use `limits:unset` to revert.
 
-
-## Isolate the Application
-
-Deis supports isolating applications onto a set of hosts using `tags`.
-
-!!! note
-    In order to use tags, you must first launch your hosts with
-    the proper key/value tag information.  If you do not, tag commands will fail.
-    Learn more by reading the [machine metadata][] section of Fleet documentation.
-
-Once your hosts are configured with appropriate key/value metadata, use
-`deis tags:set` to restrict the application to those hosts:
-
-    $ deis tags:set environ=prod
-    Applying tags...  done, v4
-
-    environ  prod
-
 [application]: ../reference-guide/terms.md#application
 [container]: ../reference-guide/terms.md#container
 [store config in environment variables]: http://12factor.net/config
@@ -144,4 +126,3 @@ Once your hosts are configured with appropriate key/value metadata, use
 [treat logs as event streams]: http://12factor.net/logs
 [use one-off processes for admin tasks]: http://12factor.net/admin-processes
 [Procfile]: http://ddollar.github.io/foreman/#PROCFILE
-[machine metadata]: https://coreos.com/docs/launching-containers/launching/fleet-unit-files/#user-defined-requirements

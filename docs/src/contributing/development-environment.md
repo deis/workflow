@@ -205,7 +205,7 @@ If you are developing elsewhere, you must set up a registry yourself. Make sure 
 2. Hosts in the cluster can pull images with the same URL
 
 !!! note
-    If the development registry is insecure and has an IP address in a range other than `10.0.0.0/8`, `172.16.0.0/12`, or `192.168.0.0/16`, you'll have to modify `contrib/coreos/user-data.example` and whitelist your development registry so the daemons can pull your custom components.
+    If the development registry is insecure, then the Docker deamon on each of your nodes must be configured to allow communication with insecure registries in the applicable IP range.
 
 ## Initial Platform Build
 
