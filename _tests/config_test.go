@@ -14,7 +14,7 @@ var _ = Describe("Config", func() {
 
 		It("can create a new app", func() {
 			output, err := execute("deis apps:create %s", appName)
-			Expect(err).NotTo(HaveOccurred())
+			Expect(err).To(BeNil())
 			Expect(output).To(SatisfyAll(
 				ContainSubstring("Creating Application... done, created %s", appName),
 				ContainSubstring("Git remote deis added"),

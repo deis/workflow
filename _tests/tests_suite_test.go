@@ -1,7 +1,6 @@
 package _tests_test
 
 import (
-	"bytes"
 	"fmt"
 	"math/rand"
 	"os"
@@ -103,17 +102,6 @@ func logout() {
 	output, err := execute("deis auth:logout")
 	Expect(err).NotTo(HaveOccurred())
 	Expect(output).To(Equal("Logged out\n"))
-}
-
-func execute(cmdLine string, args ...interface{}) (string, error) {
-	var stdout, stderr bytes.Buffer
-	var cmd *exec.Cmd
-	cmd = exec.Command("/bin/sh", "-c", fmt.Sprintf(cmdLine, args...))
-	cmd.Stdout, cmd.Stderr = &stdout, &stderr
-	if err := cmd.Run(); err != nil {
-		return stderr.String(), err
-	}
-	return stdout.String(), nil
 }
 
 func createKey(name string) {
