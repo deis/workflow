@@ -40,9 +40,6 @@ HTTP API. They can also interact with the [builder][] via `git push`.
 The Data Plane is where [containers][] (in blue) are run on behalf of end-users.
 
 The platform scheduler is in charge of placing containers on hosts in the data plane.
-Deis also requires a few lightweight components on these hosts:
-
- * [publisher][] - publishes end-user containers to the [router][]
 
 ## Router Mesh
 
@@ -74,7 +71,6 @@ See [Isolating the Planes][isolating-planes] for further details.
 [database]: components.md#database
 [isolating-planes]: ../managing-deis/isolating-the-planes.md
 [logger]: components.md#logger
-[publisher]: components.md#publisher
 [registry]: components.md#registry
 [router]: components.md#router
 [store]: components.md#store

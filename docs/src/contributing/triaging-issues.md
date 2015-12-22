@@ -49,7 +49,6 @@ security     | Security-related issues such as TLS encryption, network segregati
 - docs
 - kubernetes
 - logger
-- publisher
 - registry
 - router
 - store (Ceph)
