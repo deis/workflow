@@ -48,7 +48,6 @@ security     | Security-related issues such as TLS encryption, network segregati
 - deisctl
 - docs
 - kubernetes
-- logger
 - registry
 - router
 - store (Ceph)

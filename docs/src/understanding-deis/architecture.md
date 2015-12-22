@@ -28,7 +28,6 @@ for the control plane's stateful components:
 
  * [registry][] - a Docker registry used to hold images and configuration data
  * [database][] - a Postgres database used to store platform state
- * [logger][] - a syslog log server that holds aggregated logs from the data plane
 
 End-users interact primarily with the [controller][] which exposes an
 HTTP API. They can also interact with the [builder][] via `git push`.
@@ -70,7 +69,6 @@ See [Isolating the Planes][isolating-planes] for further details.
 [controller]: components.md#controller
 [database]: components.md#database
 [isolating-planes]: ../managing-deis/isolating-the-planes.md
-[logger]: components.md#logger
 [registry]: components.md#registry
 [router]: components.md#router
 [store]: components.md#store

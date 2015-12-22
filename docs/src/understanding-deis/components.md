@@ -35,11 +35,6 @@ The builder component uses a [Git][] server to process
 The registry component hosts [Docker][] images on behalf of the platform.
 Image data is stored by [Store][].
 
-## Logger
-
-The logger component is a syslog server that collects logs from across the platform.
-This data can then be queried by the [Controller][].
-
 ## Router
 
 The router component uses [Nginx][] to route traffic to application containers.
@@ -47,8 +42,7 @@ The router component uses [Nginx][] to route traffic to application containers.
 ## Store
 
 The store component uses [Ceph][] to store data for Deis components
-which need to store state, including [Registry][], [Database][]
-and [Logger][].
+which need to store state, including [Registry][], [Database][].
 
 [Amazon S3]: http://aws.amazon.com/s3/
 [Application]: ../reference-guide/terms.md#application
@@ -59,7 +53,6 @@ and [Logger][].
 [database]: #database
 [Docker]: http://docker.io/
 [Git]: http://git-scm.com/
-[logger]: #logger
 [Nginx]: http://nginx.org/
 [OpenStack Storage]: http://www.openstack.org/software/openstack-storage/
 [PostgreSQL]: http://www.postgresql.org/

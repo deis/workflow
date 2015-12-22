@@ -37,7 +37,6 @@ $ ./contrib/bumpver/bumpver -f A.B.C A.B.D \
     docs/managing_deis/upgrading-deis.rst \
     docs/reference/api-v1.7.rst \
     docs/troubleshooting_deis/index.rst \
-    logger/image/Dockerfile \
     registry/Dockerfile \
     router/Dockerfile \
     store/base/Dockerfile \

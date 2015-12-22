@@ -91,7 +91,7 @@ make -C tests/ test-full
 
 Run the tests for a single component this way:
 
-    $ make -C logger test            # unit + functional
+    $ make -C database test            # unit + functional
     $ make -C controller test-unit
     $ make -C router test-functional
 
