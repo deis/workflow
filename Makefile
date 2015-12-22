@@ -2,12 +2,12 @@
 DEIS_REGISTRY ?= $(DEV_REGISTRY)/
 IMAGE_PREFIX ?= deis
 COMPONENT ?= workflow
-BUILD_TAG ?= git-$(shell git rev-parse --short HEAD)
-IMAGE = $(DEIS_REGISTRY)$(IMAGE_PREFIX)/$(COMPONENT):$(BUILD_TAG)
+VERSION ?= git-$(shell git rev-parse --short HEAD)
+IMAGE = $(DEIS_REGISTRY)$(IMAGE_PREFIX)/$(COMPONENT):$(VERSION)
 SHELL_SCRIPTS = $(wildcard rootfs/bin/*) $(shell find "rootfs" -name '*.sh') $(wildcard _scripts/*.sh)
 
 info:
-	@echo "Build tag:  ${BUILD_TAG}"
+	@echo "Build tag:  ${VERSION}"
 	@echo "Registry:   ${DEIS_REGISTRY}"
 	@echo "Image:      ${IMAGE}"
 
@@ -20,10 +20,10 @@ check-docker:
 prep-bintray-json:
 # TRAVIS_TAG is set to the tag name if the build is a tag
 ifdef TRAVIS_TAG
-	@jq '.version.name |= "$(BUILD_TAG)"' _scripts/ci/bintray-template.json | \
+	@jq '.version.name |= "$(VERSION)"' _scripts/ci/bintray-template.json | \
 		jq '.package.repo |= "deis"' > _scripts/ci/bintray-ci.json
 else
-	@jq '.version.name |= "$(BUILD_TAG)"' _scripts/ci/bintray-template.json \
+	@jq '.version.name |= "$(VERSION)"' _scripts/ci/bintray-template.json \
 		> _scripts/ci/bintray-ci.json
 endif
 
