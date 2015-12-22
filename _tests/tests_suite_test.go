@@ -17,6 +17,11 @@ import (
 	"testing"
 )
 
+const (
+	deisWorkflowServiceHost = "DEIS_WORKFLOW_SERVICE_HOST"
+	deisWorkflowServicePort = "DEIS_WORKFLOW_SERVICE_PORT"
+)
+
 func init() {
 	rand.Seed(GinkgoConfig.RandomSeed)
 }
@@ -41,19 +46,22 @@ var (
 )
 
 var _ = BeforeSuite(func() {
-	workflowHost := os.Getenv("DEIS_WORKFLOW_SERVICE_HOST")
-	Expect(workflowHost).ShouldNot(BeEmpty())
 	// use the "deis" executable in the search $PATH
 	_, err := exec.LookPath("deis")
 	Expect(err).NotTo(HaveOccurred())
 
 	// register the test-admin user
 	register(url, testAdminUser, testAdminPassword, testAdminEmail)
-	// TODO: verify that this user is actually an admin
+	// verify this user is an admin by running a privileged command
+	_, err = execute("deis users:list")
+	Expect(err).NotTo(HaveOccurred())
 
 	// register the test user and add a key
 	register(url, testUser, testPassword, testEmail)
-	addKey("deis-test")
+	createKey("deis-test")
+	output, err := execute("deis keys:add ~/.ssh/deis-test.pub")
+	Expect(err).NotTo(HaveOccurred())
+	Expect(output).To(ContainSubstring("Uploading deis-test.pub to deis... done"))
 })
 
 var _ = AfterSuite(func() {
@@ -108,7 +116,7 @@ func execute(cmdLine string, args ...interface{}) (string, error) {
 	return stdout.String(), nil
 }
 
-func addKey(name string) {
+func createKey(name string) {
 	var home string
 	if user, err := user.Current(); err != nil {
 		home = "~"
@@ -118,24 +126,24 @@ func addKey(name string) {
 	path := path.Join(home, ".ssh", name)
 	// create the key under ~/.ssh/<name> if it doesn't already exist
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		cmd := "ssh-keygen -q -t rsa -b 4096 -C otto.test@deis.com -f %s -N ''"
-		_, err := execute(cmd, path)
+		cmd := "ssh-keygen -q -t rsa -b 4096 -C %s -f %s -N ''"
+		_, err := execute(cmd, name, path)
 		Expect(err).NotTo(HaveOccurred())
 	}
 	// add the key to ssh-agent
 	_, err := execute("eval $(ssh-agent) && ssh-add %s", path)
 	Expect(err).NotTo(HaveOccurred())
-	// add the public key to deis (assumes the user is logged in)
-	_, err = execute("deis keys:add %s.pub", path)
-	Expect(err).NotTo(HaveOccurred())
 }
 
 func getController() string {
-	host := os.Getenv("DEIS_WORKFLOW_SERVICE_HOST")
+	host := os.Getenv(deisWorkflowServiceHost)
 	if host == "" {
-		panic("DEIS_WORKFLOW_SERVICE_HOST isn't set")
+		panicStr := fmt.Sprintf(`Set %s to the workflow controller hostname for tests, such as:
+
+$ %s=deis.10.245.1.3.xip.io make test-integration`, deisWorkflowServiceHost, deisWorkflowServiceHost)
+		panic(panicStr)
 	}
-	port := os.Getenv("DEIS_WORKFLOW_SERVICE_PORT")
+	port := os.Getenv(deisWorkflowServicePort)
 	switch port {
 	case "443":
 		return "https://" + host

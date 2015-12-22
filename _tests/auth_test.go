@@ -56,13 +56,13 @@ var _ = Describe("Auth", func() {
 		It("regenerates the token for a specified user", func() {
 			output, err := execute("deis auth:regenerate -u %s", testUser)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(output).To(ContainSubstring("???"))
+			Expect(output).To(ContainSubstring("Token Regenerated"))
 		})
 
 		It("regenerates the token for all users", func() {
 			output, err := execute("deis auth:regenerate --all")
 			Expect(err).NotTo(HaveOccurred())
-			Expect(output).To(ContainSubstring("???"))
+			Expect(output).To(ContainSubstring("Token Regenerated"))
 		})
 	})
 })
