@@ -16,17 +16,12 @@ var _ = Describe("Auth", func() {
 		It("won't print the current user", func() {
 			sess, err := start("deis auth:whoami")
 			Expect(err).To(BeNil())
-			Eventually(sess).Should(gexec.Exit(0))
-			Eventually(sess).Should(gbytes.Say("Not logged in"))
-			Eventually(sess).Should(gbytes.Say(testUser))
+			Eventually(sess).Should(gexec.Exit(1))
+			Eventually(sess.Err).Should(gbytes.Say("Not logged in"))
 		})
 	})
 
 	Context("when logged in", func() {
-		BeforeEach(func() {
-			login(url, testUser, testPassword)
-		})
-
 		It("can log out", func() {
 			logout()
 		})
