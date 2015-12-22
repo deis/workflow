@@ -1,20 +1,20 @@
 # Contributor Overview
 
-Interested in contributing to the Deis project?  There are lots of ways to help.
+Interested in contributing to a Deis project?  There are lots of ways to help.
 
 ## File Bugs & Enhancements
 
-Find a bug? Want to see a new feature? Have a request for the maintainers? Open a [GitHub issue][issue] and we’ll get the conversation started.
+Find a bug? Want to see a new feature? Have a request for the maintainers? Open a Github issue in the applicable repository and we’ll get the conversation started.
 
 ## Write Documentation
 
-We are always looking to improve and expand our documentation. Most docs reside in the main repository under the [docs/][docs] directory. Simply fork the project, update docs and send us a pull request.
+We are always looking to improve and expand our documentation. Most docs reside in the [deis/workflow][workflow] repository under the [docs/][docs] directory. Simply fork the project, update docs and send us a pull request.
 
 ## Contribute Code
 
-We are always looking for help improving the core framework, modules, tooling and test coverage. Interested in contributing code? Let’s chat in IRC. Make sure to check out issues tagged [easy-fix][].
+We are always looking for help improving the core platform, other workloads, tooling, and test coverage. Interested in contributing code? Let’s chat in IRC. Make sure to check out issues tagged [easy-fix][].
 
-When you're ready to begin writing code, review [design documents][dd] and get your [development environment set up][dev-environment].
+When you're ready to begin writing code, review [Design Documents][dd] and get your [Development Environment][dev-environment] set up.
 
 !!! important
     If you're a new contributor to Deis, your Pull Request could earn you [credit at DigitalOcean][do-credit]!
@@ -27,10 +27,9 @@ If you don't have time to code, consider helping with triage. The community will
 
 Interact with the community on our user mailing list or live in our IRC channel, \#deis on Freenode, where you can chat with other Deis users any time of day.
 
-
+[workflow]: https://github.com/deis/workflow
 [dd]: design-documents.md
 [dev-environment]: development-environment.md
 [do-credit]: development-environment.md#digitalocean-credit
-[docs]: https://github.com/deis/deis/tree/master/docs
-[easy-fix]: https://github.com/deis/deis/labels/easy-fix
-[issue]: https://github.com/deis/deis/issues/new
+[docs]: https://github.com/deis/workflow/tree/master/docs
+[easy-fix]: https://github.com/deis/workflow/labels/easy-fix
