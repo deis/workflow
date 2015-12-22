@@ -1,6 +1,6 @@
 # Design Documents
 
-Before submitting a pull request which will change the behavior of Deis significantly, such as a new feature or major refactoring, contributors should first open an issue representing a design document.
+Before submitting a pull request which will significantly alter the behavior of any Deis component, such as a new feature or major refactoring, contributors should first open an issue representing a design document.
 
 ## Goals
 
