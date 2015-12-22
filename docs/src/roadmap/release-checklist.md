@@ -38,13 +38,10 @@ $ ./contrib/bumpver/bumpver -f A.B.C A.B.D \
     docs/reference/api-v1.7.rst \
     docs/troubleshooting_deis/index.rst \
     logger/image/Dockerfile \
-    mesos/template \
-    mesos/zookeeper/Dockerfile \
     publisher/image/Dockerfile \
     registry/Dockerfile \
     router/Dockerfile \
     store/base/Dockerfile \
-    swarm/image/Dockerfile \
     version/version.go
 ```
 

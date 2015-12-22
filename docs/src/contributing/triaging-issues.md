@@ -47,7 +47,6 @@ security     | Security-related issues such as TLS encryption, network segregati
 - database
 - deisctl
 - docs
-- etcd/fleet
 - kubernetes
 - logger
 - publisher
