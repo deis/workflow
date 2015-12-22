@@ -17,6 +17,11 @@ import (
 	"testing"
 )
 
+const (
+	deisWorkflowServiceHost = "DEIS_WORKFLOW_SERVICE_HOST"
+	deisWorkflowServicePort = "DEIS_WORKFLOW_SERVICE_PORT"
+)
+
 func init() {
 	rand.Seed(GinkgoConfig.RandomSeed)
 }
@@ -131,13 +136,14 @@ func createKey(name string) {
 }
 
 func getController() string {
-	host := os.Getenv("DEIS_HOST")
+	host := os.Getenv(deisWorkflowServiceHost)
 	if host == "" {
-		panic(`Set DEIS_HOST to the workflow controller hostname for tests, such as:
+		panicStr := fmt.Sprintf(`Set %s to the workflow controller hostname for tests, such as:
 
-$ DEIS_HOST=deis.10.245.1.3.xip.io make test-integration`)
+$ %s=deis.10.245.1.3.xip.io make test-integration`, deisWorkflowServiceHost, deisWorkflowServiceHost)
+		panic(panicStr)
 	}
-	port := os.Getenv("DEIS_PORT")
+	port := os.Getenv(deisWorkflowServicePort)
 	switch port {
 	case "443":
 		return "https://" + host
