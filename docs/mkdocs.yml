@@ -62,6 +62,7 @@ pages:
     - Community: contributing/community.md
     - Triaging Issues: contributing/triaging-issues.md
     - Conduct: contributing/conduct.md
+    - Maintainers: contributing/maintainers.md
   - Reference Guide:
     - Terms: reference-guide/terms.md
     - Creating a Self-Signed SSL Certificate: reference-guide/creating-a-self-signed-ssl-certificate.md
