@@ -12,8 +12,8 @@ import importlib
 import logging
 import re
 import time
-import json
 import uuid
+import morph
 from threading import Thread
 
 from django.conf import settings
@@ -1001,7 +1001,7 @@ class Domain(AuditedModel):
                                    settings.SCHEDULER_AUTH,
                                    settings.SCHEDULER_OPTIONS)
 
-    def _load_service_config(self, app):
+    def _fetch_service_config(self, app):
         # Get the service from k8s to attach the domain correctly
         svc = self._scheduler._get_service(app, app).json()
         # Get minimum structure going if it is missing on the service
@@ -1009,32 +1009,53 @@ class Domain(AuditedModel):
             default = {'metadata': {'annotations': {}}}
             svc = dict_merge(svc, default)
 
-        # Check if any config has been set
-        if 'deis.io/routerConfig' not in svc['metadata']['annotations']:
-            config = {}
-        else:
-            config = json.loads(svc['metadata']['annotations']['deis.io/routerConfig'])
+        return svc
 
-        # See if domains are available
-        if 'domains' not in config:
-            config['domains'] = []
+    def _load_service_config(self, app, component):
+        # fetch setvice definition with minimum structure
+        svc = self._fetch_service_config(app)
 
-        return svc, config
+        # always assume a .deis.io/ ending
+        component = "%s.deis.io/" % component
+
+        # Filter to only include values for the component and strip component out of it
+        # Processes dots into a nested structure
+        config = morph.unflatten(morph.pick(svc['metadata']['annotations'], prefix=component))
+
+        return config
+
+    def _save_service_config(self, app, component, data):
+        # fetch setvice definition with minimum structure
+        svc = self._fetch_service_config(app)
+
+        # always assume a .deis.io ending
+        component = "%s.deis.io/" % component
+
+        # add component to data and flatten
+        data = {"%s%s" % (component, key): value for key, value in data.items()}
+        svc['metadata']['annotations'].update(morph.flatten(data))
+
+        # Update the k8s service for the application with new domain information
+        self._scheduler._update_service(app, app, svc)
 
     def save(self, *args, **kwargs):
         app = str(self.app)
         domain = str(self.domain)
 
-        # setup the service and config dict
-        svc, config = self._load_service_config(app)
-        if domain not in config['domains']:
-            config['domains'].append(domain)
+        # get annotations for the service
+        config = self._load_service_config(app, 'router')
 
-        # save as a JSON string since annotations don't take a structure on its keys
-        svc['metadata']['annotations']['deis.io/routerConfig'] = json.dumps(config)
+        # See if domains are available
+        if 'domains' not in config:
+            config['domains'] = ''
 
-        # Update the k8s service for the application with new domain information
-        self._scheduler._update_service(app, app, svc)
+        # convert from string to list to work with and filter out empty strings
+        domains = filter(None, config['domains'].split(','))
+        if domain not in domains:
+            domains.append(domain)
+        config['domains'] = ','.join(domains)
+
+        self._save_service_config(app, 'router', config)
 
         # Save to DB
         return super(Domain, self).save(*args, **kwargs)
@@ -1043,16 +1064,20 @@ class Domain(AuditedModel):
         app = str(self.app)
         domain = str(self.domain)
 
-        # setup the service and config dict
-        svc, config = self._load_service_config(app)
-        if domain in config['domains']:
-            config['domains'].remove(domain)
+        # get annotations for the service
+        config = self._load_service_config(app, 'router')
 
-        # save as a JSON string since annotations don't take a structure on its keys
-        svc['metadata']['annotations']['deis.io/routerConfig'] = json.dumps(config)
+        # See if domains are available
+        if 'domains' not in config:
+            config['domains'] = ''
 
-        # Update the k8s service for the application with new domain information
-        self._scheduler._update_service(app, app, svc)
+        # convert from string to list to work with and filter out empty strings
+        domains = filter(None, config['domains'].split(','))
+        if domain in domains:
+            domains.remove(domain)
+        config['domains'] = ','.join(domains)
+
+        self._save_service_config(app, 'router', config)
 
         # Delete from DB
         return super(Domain, self).delete(*args, **kwargs)

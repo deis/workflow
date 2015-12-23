@@ -141,26 +141,6 @@ def dict_merge(origin, merge):
     return result
 
 
-def flatten(collection):
-    """
-    Flatten an arbitrarily deep structure of dicts, lists and tuples and
-    extract the strings at the leaves of the structures.
-    """
-    vals = []
-    if isinstance(collection, basestring):
-        vals.append(collection)
-    elif isinstance(collection, (list, tuple)):
-        for item in collection:
-            vals.extend(flatten(item))
-    elif isinstance(collection, dict):
-        vals.extend(flatten(collection.values()))
-    else:
-        raise Exception(
-            "Can't extract values from a %s" % collection.__class__
-        )
-    return vals
-
-
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
