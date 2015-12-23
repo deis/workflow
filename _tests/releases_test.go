@@ -16,7 +16,7 @@ var _ = Describe("Releases", func() {
 		It("can deploy the app", func() {
 			output, err := execute("deis pull deis/example-go -a %s", appName)
 			Expect(err).To(BeNil())
-			Expect(output).To(ContainSubstring(HavePrefix("Creating build... done")))
+			Expect(output).To(ContainSubstring("Creating build... done"))
 		})
 	})
 
