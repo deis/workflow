@@ -17,10 +17,6 @@ DEIS_DOMAIN = '{{ getv "/deis/platform/domain" }}'
 REGISTRATION_MODE = '{{ getv "/deis/controller/registrationMode" }}'
 {{ end }}
 
-{{ if exists "/deis/controller/webEnabled" }}
-WEB_ENABLED = bool({{ getv "/deis/controller/webEnabled" }})
-{{ end }}
-
 {{ if exists "/deis/controller/subdomain" }}
 DEIS_RESERVED_NAMES = ['{{ getv "/deis/controller/subdomain" }}']
 {{ end }}
