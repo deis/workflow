@@ -12,7 +12,7 @@ var _ = Describe("Auth", func() {
 		})
 
 		It("won't print the current user", func() {
-			Expect(execute("deis auth:whoami")).To(BeASuccessfulCommandWithOutputMatching(
+			Expect(execute("deis auth:whoami")).To(BeASuccessfulCmdWithOutput(
 				ContainSubstring("Not logged in."),
 				ContainSubstring(testUser),
 			))
@@ -30,19 +30,19 @@ var _ = Describe("Auth", func() {
 
 		It("won't register twice", func() {
 			cmd := "deis register %s --username=%s --password=%s --email=%s"
-			out := execute(cmd, url, testUser, testPassword, testEmail)
-			Expect(out.err).To(HaveOccurred())
-			Expect(out.str).To(ContainSubstring("Registration failed"))
+			out, err := execute(cmd, url, testUser, testPassword, testEmail)
+			Expect(err).To(HaveOccurred())
+			Expect(out).To(ContainSubstring("Registration failed"))
 		})
 
 		It("prints the current user", func() {
-			Expect(execute("deis auth:whoami")).To(SucceedWithOutput(
+			Expect(execute("deis auth:whoami")).To(BeASuccessfulCmdWithOutput(
 				ContainSubstring("You are %s", testUser),
 			))
 		})
 
 		It("regenerates the token for the current user", func() {
-			Expect(execute("deis auth:regenerate")).To(SucceedWithOutput(
+			Expect(execute("deis auth:regenerate")).To(BeASuccessfulCmdWithOutput(
 				ContainSubstring("Token Regenerated"),
 			))
 		})

@@ -14,30 +14,30 @@ var _ = Describe("Apps", func() {
 		})
 
 		It("can't get app info", func() {
-			Expect(execute("deis info -a %s", app1Name)).To(SucceedWithOutput(ContainSubstring("NOT FOUND")))
+			Expect(execute("deis info -a %s", app1Name)).To(BeASuccessfulCmdWithOutput(ContainSubstring("NOT FOUND")))
 		})
 
 		It("can't get app logs", func() {
-			out := execute("deis logs -a %s", app1Name)
-			Expect(out.err).To(HaveOccurred())
-			Expect(out.str).To(ContainSubstring("NOT FOUND"))
+			out, err := execute("deis logs -a %s", app1Name)
+			Expect(err).To(HaveOccurred())
+			Expect(out).To(ContainSubstring("NOT FOUND"))
 		})
 
 		// TODO: this currently returns "Error: json: cannot unmarshal object into Go value of type []interface {}"
 		XIt("can't run a command in the app environment", func() {
-			out := execute("deis apps:run echo Hello, 世界")
-			Expect(out.err).To(HaveOccurred())
-			Expect(out.str).To(ContainSubstring("NOT FOUND"))
+			out, err := execute("deis apps:run echo Hello, 世界")
+			Expect(err).To(HaveOccurred())
+			Expect(out).To(ContainSubstring("NOT FOUND"))
 		})
 
 		It("can create an app", func() {
-			Expect(execute("deis apps:create %s", app1Name)).To(SucceedWithOutput(
+			Expect(execute("deis apps:create %s", app1Name)).To(BeASuccessfulCmdWithOutput(
 				ContainSubstring("Creating Application... done, created %s", app1Name),
 				ContainSubstring("Git remote deis added"),
 				ContainSubstring("remote available at "),
 			))
 
-			Expect(execute("deis apps:destroy --confirm=%s", app1Name)).To(SucceedWithOutput(
+			Expect(execute("deis apps:destroy --confirm=%s", app1Name)).To(BeASuccessfulCmdWithOutput(
 				ContainSubstring("Destroying %s...", app1Name),
 				ContainSubstring("done in "),
 				ContainSubstring("Git remote deis removed"),
