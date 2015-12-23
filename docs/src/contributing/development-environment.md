@@ -276,6 +276,6 @@ things you should do when proposing a change to any Deis component.
 [k8s]: http://kubernetes.io/
 [k8s-getting-started]: http://kubernetes.io/gettingstarted/
 [digitalocean]: https://www.digitalocean.com/
-[pr]: https://github.com/deis/deis/pulls
+[pr]: submitting-a-pull-request.md
 [dh]: https://hub.docker.com/
 [quay]: https://quay.io/
