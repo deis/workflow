@@ -41,50 +41,51 @@ Python code should always adhere to [PEP8][], the python code style guide, with 
 
 ## Commit Style
 
-git commit messages must follow this format:
+We follow a convention for commit messages borrowed from CoreOS, who borrowed theirs
+from AngularJS. This is an example of a commit:
 
-    {type}({scope}): {subject}
-    <BLANK LINE>
-    {body}
-    <BLANK LINE>
-    {footer}
+```
+feat(scripts/test-cluster): add a cluster test command
 
-### Example
+this uses tmux to setup a test cluster that you can easily kill and
+start for debugging.
+```
 
-    feat(workflow): add frobnitz pipeline spout discovery
+To make it more formal, it looks something like this:
 
-    Introduces a FPSD component compatible with the industry standard for
-    spout discovery.
+```
+{type}({scope}): {subject}
+<BLANK LINE>
+{body}
+<BLANK LINE>
+{footer}
+```
 
-    BREAKING CHANGE: Fixing the buffer overflow in the master subroutine
-        required losing compatibility with the UVEX-9. Any UVEX-9 or
-        umVEX-8 series artifacts will need to be updated to umVX format
-        with the consortium or vendor toolset.
+The allowed `{types}` are as follows:
 
-### Subject Line
+* `feat` -> feature
+* `fix`` -> bug fix
+* `docs` -> documentation
+* `style` -> formatting
+* `ref` -> refactoring code
+* `test` -> adding missing tests
+* `chore` -> maintenance
 
-The first line of a commit message is its subject. It contains a brief description of the change, no longer than 50 characters.
+The `{scope}` can be anything specifying the location(s) of the commit change(s).
 
-These `{types}` are allowed:
+The `{subject}` needs to be an imperative, present tense verb: “change”, not “changed” nor
+“changes”. The first letter should not be capitalized, and there is no dot (.) at the end.
 
-- **feat** -> feature
-- **fix** -> bug fix
-- **docs** -> documentation
-- **style** -> formatting
-- **ref** -> refactoring code
-- **test** -> adding missing tests
-- **chore** -> maintenance
+Just like the `{subject}`, the message `{body}` needs to be in the present tense, and includes
+the motivation for the change, as well as a contrast with the previous behavior. The first
+letter in a paragraph must be capitalized.
 
-The `{scope}` specifies the location of the change, such as "Dockerfile," "tests", or "manifests". The `{subject}` should use an imperative, present-tense verb: "change," not "changes" or "changed." Don't capitalize the verb or add a period (.) at the end of the subject line.
+All breaking changes need to be mentioned in the `{footer}` with the description of the
+change, the justification behind the change and any migration notes required.
 
-### Message Body
-
-Separate the message body from the subject with a blank line. It includes the motivation for the change and points out differences from previous behavior. The body and the footer should be written as full sentences.
-
-### Message Footer
-
-Separate a footer from the message body with a blank line. Mention any breaking change along with the justification and migration notes. If the changes cannot be tested by Deis' test scripts, include specific instructions for manual testing.
-
+Any line of the commit message cannot be longer than 72 characters, with the subject line
+limited to 50 characters. This allows the message to be easier to read on GitHub as well
+as in various git tools.
 
 ## Merge Approval
 
