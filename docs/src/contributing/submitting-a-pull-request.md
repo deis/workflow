@@ -97,8 +97,7 @@ If the PR is from a Deis maintainer, then he or she should be the one to close i
 [go]: http://golang.org/
 [glide]: https://github.com/Masterminds/glide
 [flake8]: https://pypi.python.org/pypi/flake8/
-[issue]: https://github.com/deis/deis/issues
-[maintainers]: https://github.com/deis/deis/blob/master/MAINTAINERS.md
+[maintainers]: maintainers.md
 [pep8]: http://www.python.org/dev/peps/pep-0008/
 [python]: http://www.python.org/
 [zen]: http://www.python.org/dev/peps/pep-0020/
