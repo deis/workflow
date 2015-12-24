@@ -4,7 +4,7 @@ Deis features a lightweight process that emphasizes openness and ensures every c
 
 ## The Role of Maintainers
 
-[Maintainers][] lead the project. Their duties include proposing the Roadmap, reviewing and integrating contributions and maintaining the vision of the project.
+[Maintainers][] lead the Deis projects. Their duties include proposing the Roadmap, reviewing and integrating contributions and maintaining the vision of the project.
 
 ## Open Roadmap
 
@@ -77,5 +77,5 @@ Thanks to [Amy Lindburg][] and our friends at [Docker][] for their inspiration.
 [community]: ../contributing/community.md
 [Docker]: https://www.docker.com/
 [event]: https://goo.gl/q27Jyh
-[Maintainers]: https://github.com/deis/deis/blob/master/MAINTAINERS.md
+[Maintainers]: ../contributing/maintainers.md
 [Release Schedule]: release-schedule.md
