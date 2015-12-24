@@ -1,3 +1,3 @@
-# Troubleshooting with kubectl
+# Troubleshooting
 
 TODO (bacongobbler): rewrite for v2

@@ -46,7 +46,7 @@ pages:
   - Customizing Deis:
     - CLI Plugins: customizing-deis/cli-plugins.md
   - Troubleshooting:
-    - Troubleshooting with kubectl: troubleshooting/troubleshooting-with-kubectl.md
+    - Troubleshooting with kubectl: troubleshooting/troubleshooting.md
   - Roadmap:
     - Planning Process: roadmap/planning-process.md
     - Roadmap: roadmap/roadmap.md
