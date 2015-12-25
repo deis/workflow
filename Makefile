@@ -88,7 +88,7 @@ test-style:
 
 test-unit:
 	cd rootfs \
-		&& coverage run manage.py test --noinput web registry api \
+		&& coverage run manage.py test --noinput registry api \
 		&& coverage report -m
 
 test-functional:

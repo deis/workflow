@@ -121,14 +121,6 @@ ROOT_URLCONF = 'deis.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'deis.wsgi.application'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates"
-    # or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    PROJECT_ROOT + '/web/templates',
-)
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -150,7 +142,6 @@ INSTALLED_APPS = (
     # Deis apps
     'api',
     'registry',
-    'web',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -323,9 +314,6 @@ LOGGER_PORT = os.environ.get('DEIS_LOGGER_SERVICE_PORT', 8088)
 
 # check if we can register users with `deis register`
 REGISTRATION_ENABLED = True
-
-# check if we should enable the web UI module
-WEB_ENABLED = False
 
 DATABASES = {
     'default': {
