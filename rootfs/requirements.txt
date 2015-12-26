@@ -6,13 +6,11 @@ django-cors-headers==1.0.0
 django-fsm==2.2.0
 django-guardian==1.2.5
 jsonfield==1.0.3
-django-auth-ldap==1.2.5
 djangorestframework==3.0.5
 docker-py==1.6.0
 gunicorn==19.3.0
 psycopg2==2.6.1
 python-etcd==0.3.2
-python-ldap==2.4.19
 PyYAML==3.11
 requests==2.8.1
 simpleflock==0.0.2

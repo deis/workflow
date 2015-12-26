@@ -16,8 +16,6 @@ apk add --update-cache \
   curl \
   libffi-dev \
   libpq \
-  openldap \
-  openldap-dev \
   postgresql-dev \
   python \
   python-dev
@@ -42,7 +40,6 @@ apk del --purge \
   build-base \
   curl \
   libffi-dev \
-  openldap-dev \
   postgresql-dev \
   python-dev
 rm -rf /var/cache/apk/*

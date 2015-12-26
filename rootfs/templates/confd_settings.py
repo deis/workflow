@@ -20,16 +20,3 @@ REGISTRATION_MODE = '{{ getv "/deis/controller/registrationMode" }}'
 {{ if exists "/deis/controller/subdomain" }}
 DEIS_RESERVED_NAMES = ['{{ getv "/deis/controller/subdomain" }}']
 {{ end }}
-
-# AUTH
-# LDAP
-{{ if exists "/deis/controller/auth/ldap/endpoint" }}
-LDAP_ENDPOINT = '{{ if exists "/deis/controller/auth/ldap/endpoint" }}{{ getv "/deis/controller/auth/ldap/endpoint"}}{{ else }} {{ end }}'
-BIND_DN = '{{ if exists "/deis/controller/auth/ldap/bind/dn" }}{{ getv "/deis/controller/auth/ldap/bind/dn"}}{{ else }} {{ end }}'
-BIND_PASSWORD = '{{ if exists "/deis/controller/auth/ldap/bind/password" }}{{ getv "/deis/controller/auth/ldap/bind/password"}}{{ else }} {{ end }}'
-USER_BASEDN = '{{ if exists "/deis/controller/auth/ldap/user/basedn" }}{{ getv "/deis/controller/auth/ldap/user/basedn"}}{{ else }} {{ end }}'
-USER_FILTER = '{{ if exists "/deis/controller/auth/ldap/user/filter" }}{{ getv "/deis/controller/auth/ldap/user/filter"}}{{ else }} {{ end }}'
-GROUP_BASEDN = '{{ if exists "/deis/controller/auth/ldap/group/basedn" }}{{ getv "/deis/controller/auth/ldap/group/basedn"}}{{ else }} {{ end }}'
-GROUP_FILTER = '{{ if exists "/deis/controller/auth/ldap/group/filter" }}{{ getv "/deis/controller/auth/ldap/group/filter"}}{{ else }} {{ end }}'
-GROUP_TYPE = '{{ if exists "/deis/controller/auth/ldap/group/type" }}{{ getv "/deis/controller/auth/ldap/group/type"}}{{ else }} {{ end }}'
-{{ end }}
