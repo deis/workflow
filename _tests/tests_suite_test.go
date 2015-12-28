@@ -68,11 +68,16 @@ var _ = BeforeSuite(func() {
 })
 
 var _ = AfterSuite(func() {
-	// cancel the test user
-	cancel(url, testUser, testPassword)
-
-	// cancel the test-admin user
-	cancel(url, testAdminUser, testAdminPassword)
+	cancelUserSess, cancelUserErr := cancelSess(url, testUser, testPassword)
+	cancelAdminSess, cancelAdminErr := cancelSess(url, testAdminEmail, testAdminPassword)
+	Expect(cancelUserErr).To(BeNil())
+	Expect(cancelAdminErr).To(BeNil())
+	cancelUserSess.Wait()
+	cancelAdminSess.Wait()
+	Expect(cancelUserSess.ExitCode()).To(BeZero())
+	Expect(cancelAdminSess.ExitCode()).To(BeZero())
+	Expect(cancelUserSess.Out.Contents()).To(ContainSubstring("Account cancelled"))
+	Expect(cancelAdminSess.Out.Contents()).To(ContainSubstring("Account cancelled"))
 })
 
 func register(url, username, password, email string) {
@@ -80,6 +85,16 @@ func register(url, username, password, email string) {
 	Expect(err).To(BeNil())
 	Eventually(sess).Should(gbytes.Say("Registered %s", username))
 	Eventually(sess).Should(gbytes.Say("Logged in as %s", username))
+}
+
+func cancelSess(url, user, pass string) (*gexec.Session, error) {
+	lgSess, err := loginSess(url, user, pass)
+	if err != nil {
+		return nil, err
+	}
+	lgSess.Wait()
+	cmd := exec.Command("deis", "auth:cancel", fmt.Sprintf("--username=%s", user), fmt.Sprintf("--password=%s", pass), "--yes")
+	return gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 }
 
 func cancel(url, username, password string) {
@@ -91,6 +106,11 @@ func cancel(url, username, password string) {
 	Expect(err).To(BeNil())
 	Eventually(sess).Should(gexec.Exit(0))
 	Eventually(sess).Should(gbytes.Say("Account cancelled"))
+}
+
+func loginSess(url, user, pass string) (*gexec.Session, error) {
+	cmd := exec.Command("deis", "login", url, fmt.Sprintf("--username=%s", user), fmt.Sprintf("--password=%s", pass))
+	return gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 }
 
 func login(url, user, password string) {
