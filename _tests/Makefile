@@ -4,7 +4,7 @@ test-setup:
 	go get github.com/onsi/gomega
 
 test-integration:
-	go test -v ./...
+	go test -v -ginkgo.v ./...
 
 build:
 # Precompile the test suite into a binary "_tests.test"
