@@ -3,7 +3,6 @@ package _tests_test
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"math/rand"
 	"os"
 	"os/exec"
