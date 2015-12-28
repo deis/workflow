@@ -37,12 +37,13 @@ func TestTests(t *testing.T) {
 }
 
 var (
-	testAdminUser     = fmt.Sprintf("test-admin-%d", rand.Intn(1000))
+	randSuffix        = rand.Intn(1000)
+	testAdminUser     = fmt.Sprintf("test-admin-%d", randSuffix)
 	testAdminPassword = "asdf1234"
-	testAdminEmail    = fmt.Sprintf("test-admin-%d@deis.io", rand.Intn(1000))
-	testUser          = fmt.Sprintf("test-%d", rand.Intn(1000))
+	testAdminEmail    = fmt.Sprintf("test-admin-%d@deis.io", randSuffix)
+	testUser          = fmt.Sprintf("test-%d", randSuffix)
 	testPassword      = "asdf1234"
-	testEmail         = fmt.Sprintf("test-%d@deis.io", rand.Intn(1000))
+	testEmail         = fmt.Sprintf("test-%d@deis.io", randSuffix)
 	url               = getController()
 )
 
