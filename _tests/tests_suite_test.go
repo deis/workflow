@@ -3,6 +3,7 @@ package _tests_test
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"math/rand"
 	"os"
 	"os/exec"
@@ -120,7 +121,9 @@ func execute(cmdLine string, args ...interface{}) (string, error) {
 }
 
 func start(cmdLine string, args ...interface{}) (*gexec.Session, error) {
-	cmd := exec.Command("/bin/sh", "-c", fmt.Sprintf(cmdLine, args...))
+	cmdStr := fmt.Sprintf(cmdLine, args...)
+	fmt.Println(cmdStr)
+	cmd := exec.Command("/bin/sh", "-c", cmdStr)
 	return gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 }
 
