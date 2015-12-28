@@ -68,7 +68,7 @@ var _ = BeforeSuite(func() {
 
 var _ = AfterSuite(func() {
 	cancelUserSess, cancelUserErr := cancelSess(url, testUser, testPassword)
-	cancelAdminSess, cancelAdminErr := cancelSess(url, testAdminEmail, testAdminPassword)
+	cancelAdminSess, cancelAdminErr := cancelSess(url, testAdminUser, testAdminPassword)
 	Expect(cancelUserErr).To(BeNil())
 	Expect(cancelAdminErr).To(BeNil())
 	cancelUserSess.Wait()
