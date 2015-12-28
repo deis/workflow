@@ -70,45 +70,52 @@ var _ = Describe("Apps", func() {
 		})
 
 		It("can create an app with a custom buildpack", func() {
-			output, err := execute("deis apps:create %s --buildpack https://example.com", app1Name)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(output).To(SatisfyAll(
-				ContainSubstring("Creating Application... done, created %s", app1Name),
-				ContainSubstring("Git remote deis added"),
-				ContainSubstring("remote available at ")))
-			output, err = execute("deis config:list")
-			Expect(err).NotTo(HaveOccurred())
-			Expect(output).To(ContainSubstring("BUILDPACK_URL"))
-			output, err = execute("deis apps:destroy --app=%s --confirm=%s", app1Name, app1Name)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(output).To(SatisfyAll(
-				ContainSubstring("Destroying %s...", app1Name),
-				ContainSubstring("done in "),
-				ContainSubstring("Git remote deis removed")))
+			sess, err := start("deis apps:create %s --buildpack https://example.com", app1Name)
+			Expect(err).To(BeNil())
+			Eventually(sess).Should(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("Creating Application... done, created %s", app1Name))
+			Eventually(sess).Should(gbytes.Say("Git remote deis added"))
+			Eventually(sess).Should(gbytes.Say("remote available at "))
+
+			sess, err = start("deis config:list")
+			Expect(err).To(BeNil())
+			Eventually(sess).Should(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("BUILDPACK_URL"))
+
+			sess, err = start("deis apps:destroy --app=%s --confirm=%s", app1Name, app1Name)
+			Expect(err).To(BeNil())
+			Eventually(sess).Should(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("Destroying %s...", app1Name))
+			Eventually(sess).Should(gbytes.Say("done in "))
+			Eventually(sess).Should(gbytes.Say("Git remote deis removed"))
 		})
 	})
 
 	Context("with a deployed app", func() {
 		repository := "https://github.com/deis/example-go.git"
 		It("can clone the example-go repository", func() {
-			output, err := execute("git clone %s", repository)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(output).To(SatisfyAll(
-				ContainSubstring("Cloning into "),
-				ContainSubstring("done.")))
-			_, err = execute("cd example-go")
-			Expect(err).NotTo(HaveOccurred())
-			output, err = execute("deis apps:create %s", app2Name)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(output).To(SatisfyAll(
-				ContainSubstring("Creating Application... done, created %s", app2Name),
-				ContainSubstring("Git remote deis added"),
-				ContainSubstring("remote available at ")))
-			output, err = execute("git push deis master")
-			Expect(err).NotTo(HaveOccurred())
-			Expect(output).To(SatisfyAll(
-				ContainSubstring("-----> Launching..."),
-				ContainSubstring("done, %s:v2 deployed to Deis", app2Name)))
+			sess, err := start("git clone %s", repository)
+			Expect(err).To(BeNil())
+			Eventually(sess).Should(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("Cloning into "))
+			Eventually(sess).Should(gbytes.Say("done."))
+
+			sess, err = start("cd example-go")
+			Expect(err).To(BeNil())
+			Expect(sess).To(gexec.Exit(0))
+
+			sess, err = start("deis apps:create %s", app2Name)
+			Expect(err).To(BeNil())
+			Eventually(sess).Should(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("Creating Application... done, created %s", app2Name))
+			Eventually(sess).Should(gbytes.Say("Git remote deis added"))
+			Eventually(sess).Should(gbytes.Say("remote available at "))
+
+			sess, err = start("git push deis master")
+			Expect(err).To(BeNil())
+			Eventually(sess).Should(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("-----> Launching..."))
+			Eventually(sess).Should(gbytes.Say("done, %s:v2 deployed to Deis", app2Name))
 		})
 
 		It("can't create an existing app", func() {
