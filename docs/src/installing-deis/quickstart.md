@@ -22,8 +22,14 @@ See [Configuring DNS][] for more information on properly setting up your DNS rec
 
 Now that you've finished provisioning a cluster, please [Install the Deis Platform][install deis].
 
+## Register a User
 
+Once your cluster has been provisioned and the Deis Platform has been installed, you can
+[install the client][client] and [register your first user][register]!
+
+[client]: ../using-deis/installing-the-client.md
+[configuring object storage]: configuring-object-storage.md
 [configuring dns]: ../managing-deis/configuring-dns.md
 [install deis]: installing-the-deis-platform.md
+[register]: ../using-deis/registering-a-user.md
 [system requirements]: system-requirements.md
-[configuring object storage]: configuring-object-storage.md
