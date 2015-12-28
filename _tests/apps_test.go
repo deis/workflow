@@ -3,6 +3,8 @@ package _tests_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gbytes"
+	"github.com/onsi/gomega/gexec"
 )
 
 var _ = Describe("Apps", func() {
@@ -14,49 +16,57 @@ var _ = Describe("Apps", func() {
 		})
 
 		It("can't get app info", func() {
-			Expect(execute("deis info -a %s", app1Name)).To(BeASuccessfulCmdWithOutput(ContainSubstring("NOT FOUND")))
+			sess, err := start("deis info -a %s", app1Name)
+			Expect(err).ToNot(BeNil())
+			Eventually(sess).ShouldNot(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("NOT FOUND"))
 		})
 
 		It("can't get app logs", func() {
-			out, err := execute("deis logs -a %s", app1Name)
-			Expect(err).To(HaveOccurred())
-			Expect(out).To(ContainSubstring("NOT FOUND"))
+			sess, err := start("deis logs -a %s", app1Name)
+			Expect(err).To(BeNil())
+			Eventually(sess).ShouldNot(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("NOT FOUND"))
 		})
 
 		// TODO: this currently returns "Error: json: cannot unmarshal object into Go value of type []interface {}"
 		XIt("can't run a command in the app environment", func() {
-			out, err := execute("deis apps:run echo Hello, 世界")
-			Expect(err).To(HaveOccurred())
-			Expect(out).To(ContainSubstring("NOT FOUND"))
+			sess, err := start("deis apps:run echo Hello, 世界")
+			Expect(err).To(BeNil())
+			Eventually(sess).ShouldNot(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("NOT FOUND"))
 		})
 
 		It("can create an app", func() {
-			Expect(execute("deis apps:create %s", app1Name)).To(BeASuccessfulCmdWithOutput(
-				ContainSubstring("Creating Application... done, created %s", app1Name),
-				ContainSubstring("Git remote deis added"),
-				ContainSubstring("remote available at "),
-			))
+			sess, err := start("deis apps:create %s", app1Name)
+			Expect(err).To(BeNil())
+			Eventually(sess).Should(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("Creating Application... done, created %s", app1Name))
+			Eventually(sess).Should(gbytes.Say("Git remote deis added"))
+			Eventually(sess).Should(gbytes.Say("remote available at "))
 
-			Expect(execute("deis apps:destroy --confirm=%s", app1Name)).To(BeASuccessfulCmdWithOutput(
-				ContainSubstring("Destroying %s...", app1Name),
-				ContainSubstring("done in "),
-				ContainSubstring("Git remote deis removed"),
-			))
+			sess, err = start("deis apps:destroy --confirm=%s", app1Name)
+			Expect(err).To(BeNil())
+			Eventually(sess).Should(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("Destroying %s...", app1Name))
+			Eventually(sess).Should(gbytes.Say("done in "))
+			Eventually(sess).Should(gbytes.Say("Git remote deis removed"))
 		})
 
 		It("can create an app with no git remote", func() {
-			output, err := execute("deis apps:create %s --no-remote", app1Name)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(output).To(SatisfyAll(
-				ContainSubstring("Creating Application... done, created %s", app1Name),
-				ContainSubstring("remote available at ")))
-			Expect(output).NotTo(ContainSubstring("Git remote deis added"))
-			output, err = execute("deis apps:destroy --app=%s --confirm=%s", app1Name, app1Name)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(output).To(SatisfyAll(
-				ContainSubstring("Destroying %s...", app1Name),
-				ContainSubstring("done in ")))
-			Expect(output).NotTo(ContainSubstring("Git remote deis removed"))
+			sess, err := start("deis apps:create %s --no-remote", app1Name)
+			Expect(err).To(BeNil())
+			Eventually(sess).Should(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("Creating Application... done, created %s", app1Name))
+			Eventually(sess).Should(gbytes.Say("remove available at "))
+			Eventually(sess).ShouldNot(gbytes.Say("git remote deis added"))
+
+			sess, err = start("deis apps:destroy --app=%s --confirm=%s", app1Name, app1Name)
+			Expect(err).To(BeNil())
+			Eventually(sess).Should(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("Destroying %s...", app1Name))
+			Eventually(sess).Should(gbytes.Say("done in "))
+			Eventually(sess).ShouldNot(gbytes.Say("Git remote deis removed"))
 		})
 
 		It("can create an app with a custom buildpack", func() {

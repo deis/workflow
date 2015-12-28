@@ -3,6 +3,8 @@ package _tests_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gbytes"
+	"github.com/onsi/gomega/gexec"
 )
 
 var _ = Describe("Auth", func() {
@@ -12,10 +14,11 @@ var _ = Describe("Auth", func() {
 		})
 
 		It("won't print the current user", func() {
-			Expect(execute("deis auth:whoami")).To(BeASuccessfulCmdWithOutput(
-				ContainSubstring("Not logged in."),
-				ContainSubstring(testUser),
-			))
+			sess, err := start("deis auth:whoami")
+			Expect(err).To(BeNil())
+			Eventually(sess).Should(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("Not logged in"))
+			Eventually(sess).Should(gbytes.Say(testUser))
 		})
 	})
 
@@ -36,15 +39,17 @@ var _ = Describe("Auth", func() {
 		})
 
 		It("prints the current user", func() {
-			Expect(execute("deis auth:whoami")).To(BeASuccessfulCmdWithOutput(
-				ContainSubstring("You are %s", testUser),
-			))
+			sess, err := start("deis auth:whoami")
+			Expect(err).To(BeNil())
+			Eventually(sess).Should(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("You are %s", testUser))
 		})
 
 		It("regenerates the token for the current user", func() {
-			Expect(execute("deis auth:regenerate")).To(BeASuccessfulCmdWithOutput(
-				ContainSubstring("Token Regenerated"),
-			))
+			sess, err := start("deis auth:regenerate")
+			Expect(err).To(BeNil())
+			Eventually(sess).Should(gexec.Exit(0))
+			Eventually(sess).Should(gbytes.Say("Token Regenerated"))
 		})
 	})
 
