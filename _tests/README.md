@@ -1,6 +1,6 @@
 # Deis Integration Tests
 
-This directory contains [Ginkgo]/[Gomega] based integration tests, which exercise
+This directory contains [Ginkgo](http://onsi.github.io/ginkgo)/[Gomega](http://onsi.github.io/gomega) based integration tests, which exercise
 the Deis CLI to extensively test the platform.
 
 # Resetting Cluster State
