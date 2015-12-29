@@ -11,7 +11,6 @@ import logging
 import mock
 import requests
 
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TestCase
 from rest_framework.authtoken.models import Token
@@ -28,12 +27,6 @@ class AppTest(TestCase):
     def setUp(self):
         self.user = User.objects.get(username='autotest')
         self.token = Token.objects.get(user=self.user).key
-        # provide mock authentication used for run commands
-        settings.SSH_PRIVATE_KEY = '<some-ssh-private-key>'
-
-    def tearDown(self):
-        # reset global vars for other tests
-        settings.SSH_PRIVATE_KEY = ''
 
     def test_app(self):
         """
