@@ -8,7 +8,7 @@ To use Deis, you must first register a user on the [Controller][].
 Use `deis register` with the [Controller][] URL (supplied by your Deis administrator)
 to create a new account.  You will be logged in automatically.
 
-The domain you use here should match the one you set with `deisctl config platform set domain=`.
+The domain you use here should match the platform domain you selected when configuring the [Router][].
 Note that you always use `deis.<domain>` to communicate with the controller.
 
     $ deis register http://deis.example.com
@@ -18,13 +18,6 @@ Note that you always use `deis.<domain>` to communicate with the controller.
     email: myuser@example.com
     Registered myuser
     Logged in as myuser
-
-!!! note
-    For Vagrant clusters: `deis register http://deis.local3.deisapp.com`
-
-!!! note
-    The subdomain can be customized by using `deisctl config controller set subdomain=foo`. The
-    router will then route requests from `foo.<domain>` to the controller.
 
 !!! important
     The first user to register with Deis receives "superuser" privileges. Additional users who
@@ -73,3 +66,4 @@ If you already have an account, use `deis login` to authenticate against the Dei
 
 
 [controller]: ../understanding-deis/components.md#controller
+[router]: ../understanding-deis/components.md#router

@@ -45,7 +45,6 @@ security     | Security-related issues such as TLS encryption, network segregati
 - client
 - controller
 - database
-- deisctl
 - docs
 - kubernetes
 - registry

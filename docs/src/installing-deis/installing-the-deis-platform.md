@@ -56,7 +56,6 @@ $ kubectl get pods --namespace=deis
 Once you see all of the pods in the `READY` state, your Deis platform is running on a cluster!
 
 
-[install deisctl]: installing-deisctl.md
 [helm]: http://helm.sh
 [using deis]: ../using-deis/deploying-an-application.md
 [configure dns]: ../managing-deis/configuring-dns.md
