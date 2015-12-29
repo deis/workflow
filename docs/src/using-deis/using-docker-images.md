@@ -27,9 +27,6 @@ In order to deploy Docker images, they must conform to the following requirement
  * The port must be listening for a HTTP connection
  * A default CMD must be specified for running the container
 
-!!! note
-    Docker images which expose more than one port will hit [issue 1156][].
-
 
 ## Create an Application
 
@@ -70,4 +67,3 @@ running that process.
 [Docker Image]: https://docs.docker.com/introduction/understanding-docker/
 [DockerHub]: https://registry.hub.docker.com/
 [CMD instruction]: https://docs.docker.com/reference/builder/#cmd
-[issue 1156]: https://github.com/deis/deis/issues/1156

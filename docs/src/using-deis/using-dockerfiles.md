@@ -20,9 +20,6 @@ In order to deploy Dockerfile applications, they must conform to the following r
 * The port must be listening for a HTTP connection
 * A default CMD must be specified for running the container
 
-!!! note
-    Dockerfiles which expose more than one port will hit [issue 1156][].
-
 
 ## Create an Application
 
@@ -111,5 +108,4 @@ running that process.
 [Dockerfile]: https://docs.docker.com/reference/builder/
 [Docker Image]: https://docs.docker.com/introduction/understanding-docker/
 [CMD instruction]:  https://docs.docker.com/reference/builder/#cmd
-[issue 1156]: https://github.com/deis/deis/issues/1156
 [Procfile]: https://devcenter.heroku.com/articles/procfile
