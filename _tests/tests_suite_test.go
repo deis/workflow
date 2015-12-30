@@ -1,13 +1,13 @@
 package _tests_test
 
 import (
-	"bytes"
 	"fmt"
+	"io/ioutil"
 	"math/rand"
 	"os"
 	"os/exec"
-	"os/user"
 	"path"
+	"strings"
 	"testing"
 	"time"
 
@@ -27,57 +27,108 @@ func init() {
 }
 
 func getRandAppName() string {
-	return fmt.Sprintf("test-%d", rand.Intn(1000))
+	return fmt.Sprintf("test-%d", rand.Intn(999999999))
 }
 
 func TestTests(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Tests Suite")
+	RunSpecs(t, "Deis Workflow")
 }
 
 var (
 	randSuffix        = rand.Intn(1000)
-	testAdminUser     = fmt.Sprintf("test-admin-%d", randSuffix)
-	testAdminPassword = "asdf1234"
-	testAdminEmail    = fmt.Sprintf("test-admin-%d@deis.io", randSuffix)
 	testUser          = fmt.Sprintf("test-%d", randSuffix)
 	testPassword      = "asdf1234"
 	testEmail         = fmt.Sprintf("test-%d@deis.io", randSuffix)
+	testAdminUser     = "admin"
+	testAdminPassword = "admin"
+	testAdminEmail    = "admin@example.com"
+	keyName           = fmt.Sprintf("deiskey-%v", randSuffix)
 	url               = getController()
+	debug             = os.Getenv("DEBUG") != ""
+	homeHome          = os.Getenv("HOME")
 )
 
+var testRoot, testHome, keyPath, gitSSH string
+
 var _ = BeforeSuite(func() {
+	SetDefaultEventuallyTimeout(10 * time.Second)
+
 	// use the "deis" executable in the search $PATH
-	_, err := exec.LookPath("deis")
+	output, err := exec.LookPath("deis")
+	Expect(err).NotTo(HaveOccurred(), output)
+
+	testHome, err = ioutil.TempDir("", "deis-workflow-home")
 	Expect(err).NotTo(HaveOccurred())
+	os.Setenv("HOME", testHome)
 
 	// register the test-admin user
-	register(url, testAdminUser, testAdminPassword, testAdminEmail)
+	registerOrLogin(url, testAdminUser, testAdminPassword, testAdminEmail)
+
 	// verify this user is an admin by running a privileged command
 	sess, err := start("deis users:list")
 	Expect(err).To(BeNil())
 	Eventually(sess).Should(gexec.Exit(0))
 
+	sshDir := path.Join(testHome, ".ssh")
+
 	// register the test user and add a key
-	register(url, testUser, testPassword, testEmail)
-	createKey("deis-test")
-	sess, err = start("deis keys:add ~/.ssh/deis-test.pub")
+	registerOrLogin(url, testUser, testPassword, testEmail)
+
+	keyPath = createKey(keyName)
+
+	gitSSH = path.Join(sshDir, "git-ssh")
+
+	sshFlags := ""
+	if debug {
+		sshFlags = sshFlags + " -v"
+	}
+
+	ioutil.WriteFile(gitSSH, []byte(fmt.Sprintf("#!/bin/sh\nexec /usr/bin/ssh %s -i %s \"$@\"", sshFlags, keyPath)), 0777)
+
+	sess, err = start("deis keys:add %s.pub", keyPath)
 	Expect(err).To(BeNil())
 	Eventually(sess).Should(gexec.Exit(0))
-	Eventually(sess).Should(gbytes.Say("Uploading deis-test.pub to deis... done"))
+	Eventually(sess).Should(gbytes.Say("Uploading %s.pub to deis... done", keyName))
+
+	time.Sleep(5 * time.Second) // wait for ssh key to propagate
+})
+
+var _ = BeforeEach(func() {
+	var err error
+	var output string
+
+	testRoot, err = ioutil.TempDir("", "deis-workflow-test")
+	Expect(err).NotTo(HaveOccurred())
+
+	os.Chdir(testRoot)
+	output, err = execute(`git clone git@github.com:deis/example-go.git .`)
+	Expect(err).NotTo(HaveOccurred(), output)
+
+	login(url, testUser, testPassword)
+})
+
+var _ = AfterEach(func() {
+	err := os.RemoveAll(testRoot)
+	Expect(err).NotTo(HaveOccurred())
 })
 
 var _ = AfterSuite(func() {
 	cancelUserSess, cancelUserErr := cancelSess(url, testUser, testPassword)
 	cancelAdminSess, cancelAdminErr := cancelSess(url, testAdminUser, testAdminPassword)
+
 	Expect(cancelUserErr).To(BeNil())
 	Expect(cancelAdminErr).To(BeNil())
-	cancelUserSess.Wait()
-	cancelAdminSess.Wait()
-	Expect(cancelUserSess.ExitCode()).To(BeZero())
-	Expect(cancelAdminSess.ExitCode()).To(BeZero())
-	Expect(cancelUserSess.Out.Contents()).To(ContainSubstring("Account cancelled"))
-	Expect(cancelAdminSess.Out.Contents()).To(ContainSubstring("Account cancelled"))
+
+	cancelUserSess.Wait(10 * time.Second)
+	cancelAdminSess.Wait(10 * time.Second)
+
+	os.RemoveAll(fmt.Sprintf("~/.ssh/%s*", keyName))
+
+	err := os.RemoveAll(testHome)
+	Expect(err).NotTo(HaveOccurred())
+
+	os.Setenv("HOME", homeHome)
 })
 
 func register(url, username, password, email string) {
@@ -85,6 +136,24 @@ func register(url, username, password, email string) {
 	Expect(err).To(BeNil())
 	Eventually(sess).Should(gbytes.Say("Registered %s", username))
 	Eventually(sess).Should(gbytes.Say("Logged in as %s", username))
+}
+
+func registerOrLogin(url, username, password, email string) {
+	sess, err := start("deis register %s --username=%s --password=%s --email=%s", url, username, password, email)
+
+	Expect(err).To(BeNil())
+
+	sess.Wait()
+
+	if strings.Contains(string(sess.Err.Contents()), "must be unique") {
+		// Already registered
+		login(url, username, password)
+	} else {
+		Eventually(sess).Should(gexec.Exit(0))
+		Eventually(sess).Should(SatisfyAll(
+			gbytes.Say("Registered %s", username),
+			gbytes.Say("Logged in as %s", username)))
+	}
 }
 
 func cancelSess(url, user, pass string) (*gexec.Session, error) {
@@ -130,41 +199,47 @@ func logout() {
 // execute executes the command generated by fmt.Sprintf(cmdLine, args...) and returns its output as a cmdOut structure.
 // this structure can then be matched upon using the SucceedWithOutput matcher below
 func execute(cmdLine string, args ...interface{}) (string, error) {
-	var stdout, stderr bytes.Buffer
 	var cmd *exec.Cmd
-	cmd = exec.Command("/bin/sh", "-c", fmt.Sprintf(cmdLine, args...))
-	cmd.Stdout, cmd.Stderr = &stdout, &stderr
-	if err := cmd.Run(); err != nil {
-		return stderr.String(), err
+	shCommand := fmt.Sprintf(cmdLine, args...)
+
+	if debug {
+		fmt.Println(shCommand)
 	}
-	return stdout.String(), nil
+
+	cmd = exec.Command("/bin/sh", "-c", shCommand)
+	outputBytes, err := cmd.CombinedOutput()
+
+	output := string(outputBytes)
+
+	if debug {
+		fmt.Println(output)
+	}
+
+	return output, err
 }
 
 func start(cmdLine string, args ...interface{}) (*gexec.Session, error) {
 	cmdStr := fmt.Sprintf(cmdLine, args...)
-	fmt.Println(cmdStr)
+	if debug {
+		fmt.Println(cmdStr)
+	}
 	cmd := exec.Command("/bin/sh", "-c", cmdStr)
 	return gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 }
 
-func createKey(name string) {
-	var home string
-	if user, err := user.Current(); err != nil {
-		home = "~"
-	} else {
-		home = user.HomeDir
-	}
-	path := path.Join(home, ".ssh", name)
+func createKey(name string) string {
+	keyPath := path.Join(testHome, ".ssh", name)
+	os.MkdirAll(path.Join(testHome, ".ssh"), 0777)
 	// create the key under ~/.ssh/<name> if it doesn't already exist
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		sess, err := start("ssh-keygen -q -t rsa -b 4096 -C %s -f %s -N ''", name, path)
+	if _, err := os.Stat(keyPath); os.IsNotExist(err) {
+		sess, err := start("ssh-keygen -q -t rsa -b 4096 -C %s -f %s -N ''", name, keyPath)
 		Expect(err).To(BeNil())
 		Eventually(sess).Should(gexec.Exit(0))
 	}
-	// add the key to ssh-agent
-	sess, err := start("eval $(ssh-agent) && ssh-add %s", path)
-	Expect(err).To(BeNil())
-	Eventually(sess).Should(gexec.Exit(0))
+
+	os.Chmod(keyPath, 0600)
+
+	return keyPath
 }
 
 func getController() string {
@@ -184,4 +259,23 @@ $ %s=deis.10.245.1.3.xip.io make test-integration`, deisWorkflowServiceHost, dei
 	default:
 		return fmt.Sprintf("http://%s:%s", host, port)
 	}
+}
+
+func createApp(name string) *gexec.Session {
+	cmd, err := start("deis apps:create %s", name)
+	Expect(err).NotTo(HaveOccurred())
+	Eventually(cmd).Should(gbytes.Say("created %s", name))
+
+	return cmd
+}
+
+func destroyApp(name string) *gexec.Session {
+	cmd, err := start("deis apps:destroy --app=%s --confirm=%s", name, name)
+	Expect(err).NotTo(HaveOccurred())
+	Eventually(cmd).Should(gexec.Exit(0))
+	Eventually(cmd).Should(SatisfyAll(
+		gbytes.Say("Destroying %s...", name),
+		gbytes.Say(`done in `)))
+
+	return cmd
 }

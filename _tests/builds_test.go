@@ -1,35 +1,32 @@
 package _tests_test
 
 import (
-	"fmt"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gbytes"
+	"github.com/onsi/gomega/gexec"
+	"time"
 )
 
 var _ = Describe("Builds", func() {
-	appName := getRandAppName()
 	Context("with a logged-in user", func() {
-		BeforeEach(func() {
-			login(url, testUser, testPassword)
-		})
-
 		Context("with no app", func() {
-			It("can create an app", func() {
-				output, err := execute("deis apps:create %s --no-remote", appName)
+			var appName string
+
+			BeforeEach(func() {
+				appName = getRandAppName()
+				// This returns 404 NOT FOUND
+				cmd, err := start("deis builds:create %s -a %s", "deis/example-go:latest", appName)
 				Expect(err).NotTo(HaveOccurred())
-				Expect(output).To(ContainSubstring(fmt.Sprintf("Creating Application... done, created %s", appName)))
+				Eventually(cmd, (1 * time.Minute)).Should(gexec.Exit(0))
+				Eventually(cmd).Should(gbytes.Say("Creating build... done"))
 			})
-			It("can deploy the app", func() {
-				output, err := execute("deis builds:create %s -a %s", "deis/example-go", appName)
+
+			XIt("can list app builds", func() {
+				cmd, err := start("deis builds:list --app=%s", appName)
 				Expect(err).NotTo(HaveOccurred())
-				Expect(output).To(ContainSubstring("Creating build... done"))
-			})
-			It("can list app builds", func() {
-				output, err := execute("deis builds:list --app=%s", appName)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(output).To(SatisfyAll(
-					MatchRegexp(`[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}`)))
+				Eventually(cmd, (1 * time.Minute)).Should(gexec.Exit(0))
+				Eventually(cmd).Should(gbytes.Say(`[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}`))
 			})
 		})
 

@@ -44,10 +44,6 @@ var _ = Describe("Perms", func() {
 	})
 
 	Context("when logged in as a normal user", func() {
-		BeforeEach(func() {
-			login(url, testUser, testPassword)
-		})
-
 		It("can't create, list, or delete admin permissions", func() {
 			output, err := execute("deis perms:create %s --admin", testAdminUser)
 			Expect(err).To(HaveOccurred())
