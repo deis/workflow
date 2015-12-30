@@ -120,8 +120,8 @@ RCB_TEMPLATE = """\
         "containers": [
           {
             "name": "$containername",
-            "image": "quay.io/deisci/slugrunner:v2-alpha",
-            "imagePullPolicy": "Always",
+            "image": "quay.io/deis/slugrunner:2.0.0-alpha",
+            "imagePullPolicy": "IfNotPresent",
             "env": [
             {
                 "name":"PORT",
