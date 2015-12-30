@@ -60,11 +60,10 @@ class AppTest(TestCase):
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         for key in response.data:
-            self.assertIn(key, ['uuid', 'created', 'updated', 'id', 'owner', 'url', 'structure'])
+            self.assertIn(key, ['uuid', 'created', 'updated', 'id', 'owner', 'structure'])
         expected = {
             'id': 'test',
             'owner': self.user.username,
-            'url': 'test.deisapp.local',
             'structure': {}
         }
         self.assertDictContainsSubset(expected, response.data)

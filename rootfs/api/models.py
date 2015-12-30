@@ -184,10 +184,6 @@ class App(UuidAuditedModel):
     def __str__(self):
         return self.id
 
-    @property
-    def url(self):
-        return self.id + '.' + settings.DEIS_DOMAIN
-
     def _get_job_id(self, container_type):
         app = self.id
         release = self.release_set.latest()
