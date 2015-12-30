@@ -95,6 +95,6 @@ test-functional:
 	@echo "Implement functional tests in _tests directory"
 
 test-integration:
-	$(MAKE) -C _tests/ test-setup test-integration
+	@echo "Check https://github.com/deis/workflow-e2e for the complete interation test suite"
 
 .PHONY: build clean commit-hook full-clean postgres setup-venv test test-style test-unit test-functional
