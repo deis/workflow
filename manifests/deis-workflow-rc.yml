@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: deis-workflow
-          image: quay.io/deis/workflow:2.0.0-alpha
+          image: quay.io/deisci/workflow:v2-beta
           readinessProbe:
             httpGet:
               path: /health-check
@@ -29,7 +29,7 @@ spec:
               port: 8000
             initialDelaySeconds: 30
             timeoutSeconds: 1
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: DEBUG
               value: "true"
