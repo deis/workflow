@@ -16,7 +16,6 @@ import json
 from threading import Thread
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError, SuspiciousOperation
 from django.db import models
 from django.db.models import Count
@@ -34,6 +33,7 @@ from registry import publish_release
 from utils import dict_diff, dict_merge, fingerprint
 
 
+User = settings.AUTH_USER_MODEL
 logger = logging.getLogger(__name__)
 
 
@@ -126,16 +126,6 @@ class AuditedModel(models.Model):
         abstract = True
 
 
-def select_app_name():
-    """Select a unique randomly generated app name"""
-    name = utils.generate_app_name()
-
-    while App.objects.filter(id=name).exists():
-        name = utils.generate_app_name()
-
-    return name
-
-
 class UuidAuditedModel(AuditedModel):
     """Add a UUID primary key to an :class:`AuditedModel`."""
 
@@ -153,7 +143,7 @@ class App(UuidAuditedModel):
     """
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
-    id = models.SlugField(max_length=24, unique=True, default=select_app_name,
+    id = models.SlugField(max_length=24, unique=True, null=True,
                           validators=[validate_id_is_docker_compatible,
                                       validate_reserved_names])
     structure = JSONField(default={}, blank=True, validators=[validate_app_structure])
@@ -162,11 +152,29 @@ class App(UuidAuditedModel):
         permissions = (('use_app', 'Can use app'),)
 
     @property
+    def select_app_name(self):
+        """Select a unique randomly generated app name"""
+        name = utils.generate_app_name()
+
+        while App.objects.filter(id=name).exists():
+            name = utils.generate_app_name()
+
+        return name
+
+    @property
     def _scheduler(self):
         mod = importlib.import_module(settings.SCHEDULER_MODULE)
         return mod.SchedulerClient(settings.SCHEDULER_URL,
                                    settings.SCHEDULER_AUTH,
                                    settings.SCHEDULER_OPTIONS)
+
+    def save(self, **kwargs):
+        if not self.id:
+            self.id = utils.generate_app_name()
+            while App.objects.filter(id=self.id).exists():
+                self.id = utils.generate_app_name()
+
+        return super(App, self).save(**kwargs)
 
     def __str__(self):
         return self.id
@@ -1218,7 +1226,7 @@ post_delete.connect(_log_cert_removed, sender=Certificate, dispatch_uid='api.mod
 
 
 # automatically generate a new token on creation
-@receiver(post_save, sender=get_user_model())
+@receiver(post_save, sender=User)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
@@ -1230,7 +1238,7 @@ _etcd_client = get_etcd_client()
 if _etcd_client:
     post_save.connect(_etcd_publish_key, sender=Key, dispatch_uid='api.models')
     post_delete.connect(_etcd_purge_key, sender=Key, dispatch_uid='api.models')
-    post_delete.connect(_etcd_purge_user, sender=get_user_model(), dispatch_uid='api.models')
+    post_delete.connect(_etcd_purge_user, sender=User, dispatch_uid='api.models')
     post_save.connect(_etcd_publish_app, sender=App, dispatch_uid='api.models')
     post_delete.connect(_etcd_purge_app, sender=App, dispatch_uid='api.models')
     post_save.connect(_etcd_publish_cert, sender=Certificate, dispatch_uid='api.models')

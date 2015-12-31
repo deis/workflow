@@ -133,7 +133,6 @@ INSTALLED_APPS = (
     'gunicorn',
     'rest_framework',
     'rest_framework.authtoken',
-    'south',
     'corsheaders',
     # Deis apps
     'api',
@@ -148,8 +147,6 @@ AUTHENTICATION_BACKENDS = (
 ANONYMOUS_USER_ID = -1
 LOGIN_URL = '/v2/auth/login/'
 LOGIN_REDIRECT_URL = '/'
-
-SOUTH_TESTS_MIGRATE = False
 
 CORS_ORIGIN_ALLOW_ALL = True
 
