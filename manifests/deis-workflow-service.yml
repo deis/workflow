@@ -4,10 +4,13 @@ metadata:
   name: deis-workflow
   labels:
     heritage: deis
+    routable: "true"
+  annotations:
+    router.deis.io/domains: deis
 spec:
   ports:
   - name: http
-    port: 8000
+    port: 80
     targetPort: 8000
     protocol: TCP
   selector:
