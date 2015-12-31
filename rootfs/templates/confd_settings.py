@@ -5,7 +5,7 @@ SECRET_KEY = '{{ getv "/deis/controller/secretKey" }}'
 BUILDER_KEY = '{{ getv "/deis/controller/builderKey" }}'
 
 # scheduler settings
-SCHEDULER_MODULE = 'scheduler.k8s'
+SCHEDULER_MODULE = 'scheduler'
 SCHEDULER_URL = "https://{}:{}".format(
     os.environ.get('KUBERNETES_SERVICE_HOST', 'kubernetes.default.svc.cluster.local'),
     os.environ.get('KUBERNETES_SERVICE_PORT', '443'))
