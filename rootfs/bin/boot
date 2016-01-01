@@ -9,6 +9,10 @@ set -eo pipefail
 # set debug based on envvar
 [[ $DEBUG ]] && set -x
 
+echo system information:
+echo "Django Version: $(./manage.py --version)"
+python --version
+
 # configure etcd
 export ETCD_PORT=${DEIS_ETCD_1_SERVICE_PORT_CLIENT:-4001}
 export ETCD_HOST=${DEIS_ETCD_1_SERVICE_HOST:-$HOST}

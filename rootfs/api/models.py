@@ -13,6 +13,7 @@ import logging
 import re
 import time
 import json
+import uuid
 from threading import Thread
 
 from django.conf import settings
@@ -28,7 +29,7 @@ from OpenSSL import crypto
 import requests
 from rest_framework.authtoken.models import Token
 
-from api import fields, utils, exceptions
+from api import utils, exceptions
 from registry import publish_release
 from utils import dict_diff, dict_merge, fingerprint
 
@@ -129,7 +130,12 @@ class AuditedModel(models.Model):
 class UuidAuditedModel(AuditedModel):
     """Add a UUID primary key to an :class:`AuditedModel`."""
 
-    uuid = fields.UuidField('UUID', primary_key=True)
+    uuid = models.UUIDField('UUID',
+                            default=uuid.uuid4,
+                            primary_key=True,
+                            editable=False,
+                            auto_created=True,
+                            unique=True)
 
     class Meta:
         """Mark :class:`UuidAuditedModel` as abstract."""
@@ -155,7 +161,6 @@ class App(UuidAuditedModel):
     def select_app_name(self):
         """Select a unique randomly generated app name"""
         name = utils.generate_app_name()
-
         while App.objects.filter(id=name).exists():
             name = utils.generate_app_name()
 
@@ -767,7 +772,7 @@ class Build(UuidAuditedModel):
         return super(Build, self).save(**kwargs)
 
     def __str__(self):
-        return "{0}-{1}".format(self.app.id, self.uuid[:7])
+        return "{0}-{1}".format(self.app.id, str(self.uuid)[:7])
 
 
 @python_2_unicode_compatible
@@ -790,7 +795,7 @@ class Config(UuidAuditedModel):
         unique_together = (('app', 'uuid'),)
 
     def __str__(self):
-        return "{}-{}".format(self.app.id, self.uuid[:7])
+        return "{}-{}".format(self.app.id, str(self.uuid)[:7])
 
     def save(self, **kwargs):
         """merge the old config with the new"""

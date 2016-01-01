@@ -7,11 +7,10 @@ installed apps.
 
 from __future__ import unicode_literals
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from api.views import HealthCheckView
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^health-check$', HealthCheckView.as_view()),
     url(r'^v2/', include('api.urls')),
-)
+]

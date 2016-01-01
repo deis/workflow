@@ -5,16 +5,16 @@ URL routing patterns for the Deis REST API.
 from __future__ import unicode_literals
 
 from django.conf import settings
-from django.conf.urls import include, patterns, url
+from django.conf.urls import include, url
 
 from api import routers, views
+from rest_framework.authtoken.views import obtain_auth_token as views_obtain_auth_token
 
 
 router = routers.ApiRouter()
 
 # Add the generated REST URLs and login/logout endpoint
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^', include(router.urls)),
     # application release components
     url(r"^apps/(?P<id>{})/config/?".format(settings.APP_URL_REGEX),
@@ -86,7 +86,7 @@ urlpatterns = patterns(
     url(r'^auth/passwd/?',
         views.UserManagementViewSet.as_view({'post': 'passwd'})),
     url(r'^auth/login/',
-        'rest_framework.authtoken.views.obtain_auth_token'),
+        views_obtain_auth_token),
     url(r'^auth/tokens/',
         views.TokenManagementViewSet.as_view({'post': 'regenerate'})),
     # admin sharing
@@ -100,4 +100,4 @@ urlpatterns = patterns(
         views.CertificateViewSet.as_view({'get': 'list', 'post': 'create'})),
     # list users
     url(r'^users/', views.UserView.as_view({'get': 'list'})),
-)
+]
