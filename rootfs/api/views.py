@@ -190,9 +190,11 @@ class AppViewSet(BaseDeisViewSet):
         instance = self.filter_queryset(queryset)
         page = self.paginate_queryset(instance)
         if page is not None:
-            serializer = self.get_pagination_serializer(page)
-        else:
-            serializer = self.get_serializer(instance, many=True)
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(instance, many=True)
+
         return Response(serializer.data)
 
     def post_save(self, app):

@@ -79,7 +79,7 @@ class AppTest(TestCase):
         response = self.client.post('/v2/apps', json.dumps(body),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
-        self.assertContains(response, 'This field must be unique.', status_code=400)
+        self.assertContains(response, 'App with this id already exists.', status_code=400)
         return response
 
     @mock.patch('requests.get')

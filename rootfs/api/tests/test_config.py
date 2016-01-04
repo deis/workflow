@@ -250,7 +250,7 @@ class ConfigTest(TransactionTestCase):
         """Test the text representation of a node."""
         config5 = self.test_config()
         config = Config.objects.get(uuid=config5['uuid'])
-        self.assertEqual(str(config), "{}-{}".format(config5['app'], config5['uuid'][:7]))
+        self.assertEqual(str(config), "{}-{}".format(config5['app'], str(config5['uuid'])[:7]))
 
     @mock.patch('requests.post', mock_status_ok)
     def test_valid_config_keys(self):

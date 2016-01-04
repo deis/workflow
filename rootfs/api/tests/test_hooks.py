@@ -166,10 +166,9 @@ class HookTest(TransactionTestCase):
         build = {'username': 'autotest', 'app': app_id}
         url = '/v2/hooks/builds'.format(**locals())
         SHA = 'ecdff91c57a0b9ab82e89634df87e293d259a3aa'
-        DOCKERFILE = """
-        FROM busybox
-        CMD /bin/true
-        """
+        DOCKERFILE = """FROM busybox
+        CMD /bin/true"""
+
         body = {'receive_user': 'autotest',
                 'receive_repo': app_id,
                 'image': '{app_id}:v2'.format(**locals()),

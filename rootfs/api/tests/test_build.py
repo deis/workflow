@@ -48,7 +48,7 @@ class BuildTest(TransactionTestCase):
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
-        build_id = response.data['uuid']
+        build_id = str(response.data['uuid'])
         build1 = response.data
         self.assertEqual(response.data['image'], body['image'])
         # read the build
@@ -203,7 +203,7 @@ class BuildTest(TransactionTestCase):
         self.assertEqual(response.status_code, 201)
         build = Build.objects.get(uuid=response.data['uuid'])
         self.assertEqual(str(build), "{}-{}".format(
-                         response.data['app'], response.data['uuid'][:7]))
+                         response.data['app'], str(response.data['uuid'])[:7]))
 
     @mock.patch('requests.post', mock_status_ok)
     def test_admin_can_create_builds_on_other_apps(self):
@@ -225,7 +225,7 @@ class BuildTest(TransactionTestCase):
         self.assertEqual(response.status_code, 201)
         build = Build.objects.get(uuid=response.data['uuid'])
         self.assertEqual(str(build), "{}-{}".format(
-                         response.data['app'], response.data['uuid'][:7]))
+                         response.data['app'], str(response.data['uuid'])[:7]))
 
     @mock.patch('requests.post', mock_status_ok)
     def test_unauthorized_user_cannot_modify_build(self):
