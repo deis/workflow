@@ -21,6 +21,7 @@ func CreateHTTPClient(sslVerify bool) *http.Client {
 	tr := &http.Transport{
 		TLSClientConfig:   &tls.Config{InsecureSkipVerify: !sslVerify},
 		DisableKeepAlives: true,
+		Proxy:             http.ProxyFromEnvironment,
 	}
 	return &http.Client{Transport: tr}
 }
