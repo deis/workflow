@@ -99,8 +99,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
-                "django.contrib.messages.context_processors.messages",
-                "deis.context_processors.site"
+                "django.contrib.messages.context_processors.messages"
             ],
         },
     },
@@ -112,6 +111,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'api.middleware.APIVersionMiddleware',
     'deis.middleware.PlatformVersionMiddleware',
     # Uncomment the next line for simple clickjacking protection:
@@ -140,8 +140,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'corsheaders',
     # Deis apps
-    'api',
-    'registry',
+    'api'
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -313,7 +312,7 @@ REGISTRATION_ENABLED = True
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('DEIS_DATABASE_NAME', 'deis'),
         'USER': os.environ.get('DEIS_DATABASE_USER', ''),
         'PASSWORD': os.environ.get('DEIS_DATABASE_PASSWORD', ''),
