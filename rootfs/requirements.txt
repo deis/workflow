@@ -13,3 +13,4 @@ PyYAML==3.11
 requests==2.8.1
 simpleflock==0.0.2
 static==1.1.1
+morph==0.1.2
