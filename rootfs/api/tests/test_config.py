@@ -8,16 +8,13 @@ Run the tests with "./manage.py test api"
 from __future__ import unicode_literals
 
 import json
-import logging
 import requests
 
 from django.contrib.auth.models import User
 from django.test import TransactionTestCase
-import etcd
 import mock
 from rest_framework.authtoken.models import Token
 
-import api.exceptions
 from api.models import App, Config
 from . import mock_status_ok
 
@@ -31,19 +28,6 @@ def mock_status_not_found(*args, **kwargs):
 
 def mock_request_connection_error(*args, **kwargs):
     raise requests.exceptions.ConnectionError("connection error")
-
-
-class MockEtcdClient:
-
-    def __init__(self, app):
-        self.app = app
-
-    def get(self, key, *args, **kwargs):
-        node = {
-            'key': '/deis/services/{}/{}_v2.web.1'.format(self.app, self.app),
-            'value': '127.0.0.1:1234'
-        }
-        return etcd.EtcdResult(None, node)
 
 
 @mock.patch('api.models.publish_release', lambda *args: None)
@@ -570,142 +554,3 @@ class ConfigTest(TransactionTestCase):
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(unauthorized_token))
         self.assertEqual(response.status_code, 403)
-
-    def _test_app_healthcheck(self):
-        # post a new build, expecting it to pass as usual
-        url = "/v2/apps/{self.app}/builds".format(**locals())
-        body = {'image': 'autotest/example'}
-        response = self.client.post(url, json.dumps(body), content_type='application/json',
-                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
-        self.assertEqual(response.status_code, 201)
-        # mock out the etcd client
-        api.models._etcd_client = MockEtcdClient(self.app)
-        # set an initial healthcheck url.
-        url = "/v2/apps/{self.app}/config".format(**locals())
-        body = {'values': json.dumps({'HEALTHCHECK_URL': '/'})}
-        return self.client.post(url, json.dumps(body), content_type='application/json',
-                                HTTP_AUTHORIZATION='token {}'.format(self.token))
-
-    @mock.patch('requests.get', mock_status_ok)
-    @mock.patch('time.sleep', lambda func: func)
-    def test_app_healthcheck_good(self):
-        """
-        If a user deploys an app with a config value set for HEALTHCHECK_URL, the controller
-        should check that the application responds with a 200 OK.
-        """
-        response = self._test_app_healthcheck()
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(self.app.release_set.latest().version, 3)
-
-    @mock.patch('requests.get', mock_status_not_found)
-    @mock.patch('api.models.get_etcd_client', lambda func: func)
-    @mock.patch('time.sleep', lambda func: func)
-    @mock.patch('api.models.logger')
-    def test_app_healthcheck_bad(self, mock_logger):
-        """
-        If a user deploys an app with a config value set for HEALTHCHECK_URL, the controller
-        should check that the application responds with a 200 OK. If it's down, the app should be
-        rolled back.
-        """
-        response = self._test_app_healthcheck()
-        self.assertEqual(response.status_code, 503)
-        self.assertEqual(
-            response.data,
-            {'detail': 'aborting, app containers failed to respond to health check'})
-        # check that only the build and initial release exist
-        self.assertEqual(self.app.release_set.latest().version, 2)
-        # assert that the reason why the containers failed was because
-        # they failed the health check 4 times; we do this by looking
-        # at logs-- there may be a better way
-        exp_msg = "{}: app failed health check (got '404', expected: '200'); trying again in 0.0 \
-seconds".format(self.app.id)
-        exp_log_call = mock.call(logging.WARNING, exp_msg)
-        log_calls = mock_logger.log.mock_calls
-        self.assertEqual(log_calls.count(exp_log_call), 3)
-        exp_msg = "{}: app failed health check (got '404', expected: '200')".format(self.app.id)
-        exp_log_call = mock.call(logging.WARNING, exp_msg)
-        self.assertEqual(log_calls.count(exp_log_call), 1)
-
-    @mock.patch('requests.get', mock_status_not_found)
-    @mock.patch('api.models.get_etcd_client', lambda func: func)
-    @mock.patch('time.sleep')
-    def test_app_backoff_interval(self, mock_time):
-        """
-        Ensure that when a healthcheck fails, a backoff strategy is used before trying again.
-        """
-        # post a new build, expecting it to pass as usual
-        url = "/v2/apps/{self.app}/builds".format(**locals())
-        body = {'image': 'autotest/example'}
-        response = self.client.post(url, json.dumps(body), content_type='application/json',
-                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
-        self.assertEqual(response.status_code, 201)
-        # mock out the etcd client
-        api.models._etcd_client = MockEtcdClient(self.app)
-        # set an initial healthcheck url.
-        url = "/v2/apps/{self.app}/config".format(**locals())
-        body = {'values': json.dumps({'HEALTHCHECK_URL': '/'})}
-        return self.client.post(url, json.dumps(body), content_type='application/json',
-                                HTTP_AUTHORIZATION='token {}'.format(self.token))
-        self.assertEqual(mock_time.call_count, 5)
-
-    @mock.patch('requests.get', mock_status_ok)
-    @mock.patch('time.sleep')
-    def test_app_healthcheck_initial_delay(self, mock_time):
-        """
-        Ensure that when an initial delay is set, the request will sleep for x seconds, where
-        x is the number of seconds in the initial timeout.
-        """
-        # post a new build, expecting it to pass as usual
-        url = "/v2/apps/{self.app}/builds".format(**locals())
-        body = {'image': 'autotest/example'}
-        response = self.client.post(url, json.dumps(body), content_type='application/json',
-                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
-        self.assertEqual(response.status_code, 201)
-        # mock out the etcd client
-        api.models._etcd_client = MockEtcdClient(self.app)
-        # set an initial healthcheck url.
-        url = "/v2/apps/{self.app}/config".format(**locals())
-        body = {'values': json.dumps({'HEALTHCHECK_URL': '/'})}
-        return self.client.post(url, json.dumps(body), content_type='application/json',
-                                HTTP_AUTHORIZATION='token {}'.format(self.token))
-        # mock_time increments by one each time its called, so we should expect 2 calls to
-        # mock_time; one for the call in the code, and one for this invocation.
-        mock_time.assert_called_with(0)
-        app = App.objects.all()[0]
-        url = "/v2/apps/{app}/config".format(**locals())
-        body = {'values': json.dumps({'HEALTHCHECK_INITIAL_DELAY': 10})}
-        self.client.post(url, json.dumps(body), content_type='application/json',
-                         HTTP_AUTHORIZATION='token {}'.format(self.token))
-        mock_time.assert_called_with(10)
-
-    @mock.patch('requests.get')
-    @mock.patch('time.sleep', lambda func: func)
-    def test_app_healthcheck_timeout(self, mock_request):
-        """
-        Ensure when a timeout value is set, the controller respects that value
-        when making a request.
-        """
-        self._test_app_healthcheck()
-        app = App.objects.all()[0]
-        url = "/v2/apps/{app}/config".format(**locals())
-        body = {'values': json.dumps({'HEALTHCHECK_TIMEOUT': 10})}
-        self.client.post(url, json.dumps(body), content_type='application/json',
-                         HTTP_AUTHORIZATION='token {}'.format(self.token))
-        mock_request.assert_called_with('http://127.0.0.1:1234/', timeout=10)
-
-    @mock.patch('requests.get', mock_request_connection_error)
-    @mock.patch('time.sleep', lambda func: func)
-    def test_app_healthcheck_connection_error(self):
-        """
-        If a user deploys an app with a config value set for HEALTHCHECK_URL but the app
-        returns a connection error, the controller should continue checking until either the app
-        responds or the app fails to respond within the timeout.
-
-        NOTE (bacongobbler): the Docker userland proxy listens for connections and returns a
-        ConnectionError, hence the unit test.
-        """
-        response = self._test_app_healthcheck()
-        self.assertEqual(response.status_code, 503)
-        self.assertEqual(
-            response.data,
-            {'detail': 'aborting, app containers failed to respond to health check'})

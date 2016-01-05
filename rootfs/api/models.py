@@ -11,7 +11,6 @@ import etcd
 import importlib
 import logging
 import re
-import time
 import uuid
 import morph
 from threading import Thread
@@ -29,7 +28,7 @@ from OpenSSL import crypto
 import requests
 from rest_framework.authtoken.models import Token
 
-from api import utils, exceptions
+from api import utils
 from registry import publish_release
 from utils import dict_diff, dict_merge, fingerprint
 
@@ -322,13 +321,18 @@ class App(UuidAuditedModel):
         for scale_type in scale_types:
             image = release.image
             version = "v{}".format(release.version)
-            kwargs = {'memory': release.config.memory,
-                      'cpu': release.config.cpu,
-                      'tags': release.config.tags,
-                      'envs': release.config.values,
-                      'version': version,
-                      'aname': self.id,
-                      'num': scale_types[scale_type]}
+            kwargs = {
+                'memory': release.config.memory,
+                'cpu': release.config.cpu,
+                'tags': release.config.tags,
+                'envs': release.config.values,
+                'version': version,
+                'aname': self.id,
+                'num': scale_types[scale_type],
+                'app_type': scale_type,
+                'healthcheck': release.config.healthcheck()
+            }
+
             job_id = self._get_job_id(scale_type)
             command = self._get_command(scale_type)
             try:
@@ -343,6 +347,7 @@ class App(UuidAuditedModel):
                 # scheduler.scale creates the required service on apps:create
                 if not Domain.objects.filter(owner=self.owner, app=self, domain=self).exists():
                     Domain(owner=self.owner, app=self, domain=str(self)).save()
+
             except Exception as e:
                 err = '{} (scale): {}'.format(job_id, e)
                 log_event(self, err, logging.ERROR)
@@ -367,59 +372,6 @@ class App(UuidAuditedModel):
         if set([c.state for c in to_add]) != set(['up']):
             err = 'warning, some containers failed to start'
             log_event(self, err, logging.WARNING)
-        # if the user specified a health check, try checking to see if it's running
-        try:
-            config = self.config_set.latest()
-            if 'HEALTHCHECK_URL' in config.values.keys():
-                self._healthcheck(to_add, config.values)
-        except Config.DoesNotExist:
-            pass
-
-    def _healthcheck(self, containers, config):
-        # if at first it fails, back off and try again at 10%, 50% and 100% of INITIAL_DELAY
-        intervals = [1.0, 0.1, 0.5, 1.0]
-        # HACK (bacongobbler): we need to wait until publisher has a chance to publish each
-        # service to etcd, which can take up to 20 seconds.
-        time.sleep(20)
-        for i in xrange(len(intervals)):
-            delay = int(config.get('HEALTHCHECK_INITIAL_DELAY', 0))
-            try:
-                # sleep until the initial timeout is over
-                if delay > 0:
-                    time.sleep(delay * intervals[i])
-                to_healthcheck = [c for c in containers if c.type in ['web', 'cmd']]
-                self._do_healthcheck(to_healthcheck, config)
-                break
-            except exceptions.HealthcheckException as e:
-                try:
-                    next_delay = delay * intervals[i+1]
-                    msg = "{}; trying again in {} seconds".format(e, next_delay)
-                    log_event(self, msg, logging.WARNING)
-                except IndexError:
-                    log_event(self, e, logging.WARNING)
-        else:
-            self._destroy_containers(containers)
-            msg = "aborting, app containers failed to respond to health check"
-            log_event(self, msg, logging.ERROR)
-            raise RuntimeError(msg)
-
-    def _do_healthcheck(self, containers, config):
-        path = config.get('HEALTHCHECK_URL', '/')
-        timeout = int(config.get('HEALTHCHECK_TIMEOUT', 1))
-        if not _etcd_client:
-            raise exceptions.HealthcheckException('no etcd client available')
-        for container in containers:
-            try:
-                key = "/deis/services/{self}/{container.job_id}".format(**locals())
-                url = "http://{}{}".format(_etcd_client.get(key).value, path)
-                response = requests.get(url, timeout=timeout)
-                if response.status_code != requests.codes.OK:
-                    raise exceptions.HealthcheckException(
-                        "app failed health check (got '{}', expected: '200')".format(
-                            response.status_code))
-            except (requests.Timeout, requests.ConnectionError, KeyError) as e:
-                raise exceptions.HealthcheckException(
-                    'failed to connect to container ({})'.format(e))
 
     def _restart_containers(self, to_restart):
         """Restarts containers via the scheduler"""
@@ -479,13 +431,18 @@ class App(UuidAuditedModel):
         for scale_type in scale_types:
             image = release.image
             version = "v{}".format(release.version)
-            kwargs = {'memory': release.config.memory,
-                      'cpu': release.config.cpu,
-                      'tags': release.config.tags,
-                      'envs': release.config.values,
-                      'aname': self.id,
-                      'num': 0,
-                      'version': version}
+            kwargs = {
+                'memory': release.config.memory,
+                'cpu': release.config.cpu,
+                'tags': release.config.tags,
+                'envs': release.config.values,
+                'aname': self.id,
+                'num': 0,
+                'version': version,
+                'app_type': scale_type,
+                'healthcheck': release.config.healthcheck()
+            }
+
             job_id = self._get_job_id(scale_type)
             command = self._get_command(scale_type)
             try:
@@ -793,6 +750,15 @@ class Config(UuidAuditedModel):
     def __str__(self):
         return "{}-{}".format(self.app.id, str(self.uuid)[:7])
 
+    def healthcheck(self):
+        # Update healthcheck - Scheduler determines the app type
+        path = self.values.get('HEALTHCHECK_URL', '/')
+        timeout = int(self.values.get('HEALTHCHECK_TIMEOUT', 1))
+        delay = int(self.values.get('HEALTHCHECK_INITIAL_DELAY', 10))
+        port = int(self.values.get('HEALTHCHECK_PORT', 8080))
+
+        return {'path': path, 'timeout': timeout, 'delay': delay, 'port': port}
+
     def save(self, **kwargs):
         """merge the old config with the new"""
         try:
@@ -804,16 +770,19 @@ class Config(UuidAuditedModel):
                     data = getattr(previous_config, attr).copy()
                 except AttributeError:
                     data = {}
+
                 try:
                     new_data = getattr(self, attr).copy()
                 except AttributeError:
                     new_data = {}
+
                 data.update(new_data)
                 # remove config keys if we provided a null value
                 [data.pop(k) for k, v in new_data.viewitems() if v is None]
                 setattr(self, attr, data)
         except Config.DoesNotExist:
             pass
+
         return super(Config, self).save(**kwargs)
 
 
