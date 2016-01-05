@@ -131,7 +131,7 @@ class AppSerializer(serializers.ModelSerializer):
     class Meta:
         """Metadata options for a :class:`AppSerializer`."""
         model = models.App
-        fields = ['uuid', 'id', 'owner', 'url', 'structure', 'created', 'updated']
+        fields = ['uuid', 'id', 'owner', 'structure', 'created', 'updated']
         read_only_fields = ['uuid']
 
 

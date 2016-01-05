@@ -10,9 +10,6 @@ SCHEDULER_URL = "https://{}:{}".format(
     os.environ.get('KUBERNETES_SERVICE_HOST', 'kubernetes.default.svc.cluster.local'),
     os.environ.get('KUBERNETES_SERVICE_PORT', '443'))
 
-# platform domain must be provided
-DEIS_DOMAIN = '{{ getv "/deis/platform/domain" }}'
-
 {{ if exists "/deis/controller/registrationMode" }}
 REGISTRATION_MODE = '{{ getv "/deis/controller/registrationMode" }}'
 {{ end }}

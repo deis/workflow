@@ -23,6 +23,12 @@ func List(c *client.Client, results int) ([]api.App, int, error) {
 		return []api.App{}, -1, err
 	}
 
+	for name, app := range apps {
+		// Add in app URL based on controller hostname, port included
+		app.URL = fmt.Sprintf("%s.%s", app.ID, c.ControllerURL.Host)
+		apps[name] = app
+	}
+
 	return apps, count, nil
 }
 
@@ -51,6 +57,9 @@ func New(c *client.Client, id string) (api.App, error) {
 		return api.App{}, err
 	}
 
+	// Add in app URL based on controller hostname, port included
+	app.URL = fmt.Sprintf("%s.%s", app.ID, c.ControllerURL.Host)
+
 	return app, nil
 }
 
@@ -69,6 +78,9 @@ func Get(c *client.Client, appID string) (api.App, error) {
 	if err = json.Unmarshal([]byte(body), &app); err != nil {
 		return api.App{}, err
 	}
+
+	// Add in app URL based on controller hostname, port included
+	app.URL = fmt.Sprintf("%s.%s", app.ID, c.ControllerURL.Host)
 
 	return app, nil
 }

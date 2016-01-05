@@ -21,7 +21,6 @@ const appFixture string = `
     "owner": "test",
     "structure": {},
     "updated": "2014-01-01T00:00:00UTC",
-    "url": "example-go.example.com",
     "uuid": "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75"
 }`
 
@@ -37,7 +36,6 @@ const appsFixture string = `
             "owner": "test",
             "structure": {},
             "updated": "2014-01-01T00:00:00UTC",
-            "url": "example-go.example.com",
             "uuid": "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75"
         }
     ]
@@ -157,15 +155,6 @@ func (f *fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 func TestAppsCreate(t *testing.T) {
 	t.Parallel()
 
-	expected := api.App{
-		ID:      "example-go",
-		Created: "2014-01-01T00:00:00UTC",
-		Owner:   "test",
-		Updated: "2014-01-01T00:00:00UTC",
-		URL:     "example-go.example.com",
-		UUID:    "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
-	}
-
 	handler := fakeHTTPServer{createID: false, createWithoutID: false}
 	server := httptest.NewServer(&handler)
 	defer server.Close()
@@ -174,6 +163,15 @@ func TestAppsCreate(t *testing.T) {
 
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	expected := api.App{
+		ID:      "example-go",
+		Created: "2014-01-01T00:00:00UTC",
+		Owner:   "test",
+		Updated: "2014-01-01T00:00:00UTC",
+		URL:     fmt.Sprintf("example-go.%s", u.Host),
+		UUID:    "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
 	}
 
 	httpClient := client.CreateHTTPClient(false)
@@ -196,15 +194,6 @@ func TestAppsCreate(t *testing.T) {
 func TestAppsGet(t *testing.T) {
 	t.Parallel()
 
-	expected := api.App{
-		ID:      "example-go",
-		Created: "2014-01-01T00:00:00UTC",
-		Owner:   "test",
-		Updated: "2014-01-01T00:00:00UTC",
-		URL:     "example-go.example.com",
-		UUID:    "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
-	}
-
 	handler := fakeHTTPServer{}
 	server := httptest.NewServer(&handler)
 	defer server.Close()
@@ -213,6 +202,15 @@ func TestAppsGet(t *testing.T) {
 
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	expected := api.App{
+		ID:      "example-go",
+		Created: "2014-01-01T00:00:00UTC",
+		Owner:   "test",
+		Updated: "2014-01-01T00:00:00UTC",
+		URL:     fmt.Sprintf("example-go.%s", u.Host),
+		UUID:    "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
 	}
 
 	httpClient := client.CreateHTTPClient(false)
@@ -288,17 +286,6 @@ func TestAppsRun(t *testing.T) {
 func TestAppsList(t *testing.T) {
 	t.Parallel()
 
-	expected := []api.App{
-		{
-			ID:      "example-go",
-			Created: "2014-01-01T00:00:00UTC",
-			Owner:   "test",
-			Updated: "2014-01-01T00:00:00UTC",
-			URL:     "example-go.example.com",
-			UUID:    "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
-		},
-	}
-
 	handler := fakeHTTPServer{}
 	server := httptest.NewServer(&handler)
 	defer server.Close()
@@ -307,6 +294,17 @@ func TestAppsList(t *testing.T) {
 
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	expected := []api.App{
+		{
+			ID:      "example-go",
+			Created: "2014-01-01T00:00:00UTC",
+			Owner:   "test",
+			Updated: "2014-01-01T00:00:00UTC",
+			URL:     fmt.Sprintf("example-go.%s", u.Host),
+			UUID:    "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
+		},
 	}
 
 	httpClient := client.CreateHTTPClient(false)

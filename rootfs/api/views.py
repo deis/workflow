@@ -405,8 +405,7 @@ class BuildHookViewSet(BaseHookViewSet):
         request.data['owner'] = self.user
         super(BuildHookViewSet, self).create(request, *args, **kwargs)
         # return the application databag
-        response = {'release': {'version': app.release_set.latest().version},
-                    'domains': ['.'.join([app.id, settings.DEIS_DOMAIN])]}
+        response = {'release': {'version': app.release_set.latest().version}}
         return Response(response, status=status.HTTP_200_OK)
 
     def post_save(self, build):

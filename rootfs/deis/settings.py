@@ -274,7 +274,6 @@ ETCD_PORT = os.environ.get('DEIS_ETCD_1_SERVICE_PORT_CLIENT', 4001)
 # default deis settings
 LOG_LINES = 1000
 TEMPDIR = tempfile.mkdtemp(prefix='deis')
-DEIS_DOMAIN = 'deisapp.local'
 
 # standard datetime format used for logging, model timestamps, etc.
 DEIS_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S%Z'

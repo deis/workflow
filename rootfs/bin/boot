@@ -64,10 +64,6 @@ etcd_safe_mkdir /deis/platform
 etcd_safe_mkdir /deis/scheduler
 etcd_safe_mkdir /deis/services
 
-# HACK: set up keys for platform
-etcd_safe_mkdir /deis/platform
-ETCD_PATH=/deis/platform etcd_set_default domain localhost
-
 # wait for confd to run once and install initial templates
 until confd -onetime -node "$ETCD" --confdir /app --log-level error; do
 	echo "controller: waiting for confd to write initial templates..."

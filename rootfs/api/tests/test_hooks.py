@@ -113,7 +113,6 @@ class HookTest(TransactionTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('release', response.data)
         self.assertIn('version', response.data['release'])
-        self.assertIn('domains', response.data)
 
     def test_build_hook_procfile(self):
         """Test creating a Procfile build via an API Hook"""
@@ -139,7 +138,6 @@ class HookTest(TransactionTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('release', response.data)
         self.assertIn('version', response.data['release'])
-        self.assertIn('domains', response.data)
         # make sure build fields were populated
         url = '/v2/apps/{app_id}/builds'.format(**locals())
         response = self.client.get(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
@@ -183,7 +181,6 @@ class HookTest(TransactionTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('release', response.data)
         self.assertIn('version', response.data['release'])
-        self.assertIn('domains', response.data)
         # make sure build fields were populated
         url = '/v2/apps/{app_id}/builds'.format(**locals())
         response = self.client.get(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
