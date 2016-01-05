@@ -11,7 +11,6 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils import timezone
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
 
 from api import models
 
@@ -77,23 +76,6 @@ class JSONStringFieldSerializer(JSONFieldSerializer):
         return field
 
 
-class ModelSerializer(serializers.ModelSerializer):
-
-    uuid = serializers.ReadOnlyField()
-
-    def get_validators(self):
-        """
-        Hack to remove DRF's UniqueTogetherValidator when it concerns the UUID.
-
-        See https://github.com/deis/deis/pull/2898#discussion_r23105147
-        """
-        validators = super(ModelSerializer, self).get_validators()
-        for v in validators:
-            if isinstance(v, UniqueTogetherValidator) and 'uuid' in v.fields:
-                validators.remove(v)
-        return validators
-
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -113,14 +95,18 @@ class UserSerializer(serializers.ModelSerializer):
             date_joined=now,
             is_active=True
         )
+
         if validated_data.get('first_name'):
             user.first_name = validated_data['first_name']
+
         if validated_data.get('last_name'):
             user.last_name = validated_data['last_name']
+
         user.set_password(validated_data['password'])
         # Make the first signup an admin / superuser
         if not User.objects.filter(is_superuser=True).exists():
             user.is_superuser = user.is_staff = True
+
         user.save()
         return user
 
@@ -134,7 +120,7 @@ class AdminUserSerializer(serializers.ModelSerializer):
         read_only_fields = ['username']
 
 
-class AppSerializer(ModelSerializer):
+class AppSerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.App` model."""
 
     owner = serializers.ReadOnlyField(source='owner.username')
@@ -149,7 +135,7 @@ class AppSerializer(ModelSerializer):
         read_only_fields = ['uuid']
 
 
-class BuildSerializer(ModelSerializer):
+class BuildSerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.Build` model."""
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
@@ -166,7 +152,7 @@ class BuildSerializer(ModelSerializer):
         read_only_fields = ['uuid']
 
 
-class ConfigSerializer(ModelSerializer):
+class ConfigSerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.Config` model."""
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
@@ -188,49 +174,61 @@ class ConfigSerializer(ModelSerializer):
                 raise serializers.ValidationError(
                     "Config keys must start with a letter or underscore and "
                     "only contain [A-z0-9_]")
+
         return value
 
     def validate_memory(self, value):
         for k, v in value.viewitems():
             if v is None:  # use NoneType to unset a value
                 continue
+
             if not re.match(PROCTYPE_MATCH, k):
                 raise serializers.ValidationError("Process types can only contain [a-z]")
+
             if not re.match(MEMLIMIT_MATCH, str(v)):
                 raise serializers.ValidationError(
                     "Limit format: <number><unit>, where unit = B, K, M or G")
+
         return value
 
     def validate_cpu(self, value):
         for k, v in value.viewitems():
             if v is None:  # use NoneType to unset a value
                 continue
+
             if not re.match(PROCTYPE_MATCH, k):
                 raise serializers.ValidationError("Process types can only contain [a-z]")
+
             shares = re.match(CPUSHARE_MATCH, str(v))
             if not shares:
                 raise serializers.ValidationError("CPU shares must be an integer")
+
             for v in shares.groupdict().viewvalues():
                 try:
                     i = int(v)
                 except ValueError:
                     raise serializers.ValidationError("CPU shares must be an integer")
+
                 if i > 1024 or i < 0:
                     raise serializers.ValidationError("CPU shares must be between 0 and 1024")
+
         return value
 
     def validate_tags(self, value):
         for k, v in value.viewitems():
             if v is None:  # use NoneType to unset a value
                 continue
+
             if not re.match(TAGKEY_MATCH, k):
                 raise serializers.ValidationError("Tag keys can only contain [a-z]")
+
             if not re.match(TAGVAL_MATCH, str(v)):
                 raise serializers.ValidationError("Invalid tag value")
+
         return value
 
 
-class ReleaseSerializer(ModelSerializer):
+class ReleaseSerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.Release` model."""
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
@@ -243,7 +241,7 @@ class ReleaseSerializer(ModelSerializer):
         model = models.Release
 
 
-class ContainerSerializer(ModelSerializer):
+class ContainerSerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.Container` model."""
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
@@ -261,7 +259,7 @@ class ContainerSerializer(ModelSerializer):
         return "v{}".format(obj.release.version)
 
 
-class KeySerializer(ModelSerializer):
+class KeySerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.Key` model."""
 
     owner = serializers.ReadOnlyField(source='owner.username')
@@ -274,7 +272,7 @@ class KeySerializer(ModelSerializer):
         model = models.Key
 
 
-class DomainSerializer(ModelSerializer):
+class DomainSerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.Domain` model."""
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
@@ -285,7 +283,7 @@ class DomainSerializer(ModelSerializer):
     class Meta:
         """Metadata options for a :class:`DomainSerializer`."""
         model = models.Domain
-        fields = ['uuid', 'owner', 'created', 'updated', 'app', 'domain']
+        fields = ['owner', 'created', 'updated', 'app', 'domain']
 
     def validate_domain(self, value):
         """
@@ -293,27 +291,33 @@ class DomainSerializer(ModelSerializer):
         """
         if len(value) > 255:
             raise serializers.ValidationError('Hostname must be 255 characters or less.')
+
         if value[-1:] == ".":
             value = value[:-1]  # strip exactly one dot from the right, if present
+
         labels = value.split('.')
         if 'xip.io' in value:
             return value
+
         if labels[0] == '*':
             raise serializers.ValidationError(
                 'Adding a wildcard subdomain is currently not supported.')
+
         allowed = re.compile("^(?!-)[a-z0-9-]{1,63}(?<!-)$", re.IGNORECASE)
         for label in labels:
             match = allowed.match(label)
             if not match or '--' in label or label.isdigit() or \
                len(labels) == 1 and any(char.isdigit() for char in label):
                 raise serializers.ValidationError('Hostname does not look valid.')
+
         if models.Domain.objects.filter(domain=value).exists():
             raise serializers.ValidationError(
                 "The domain {} is already in use by another app".format(value))
+
         return value
 
 
-class CertificateSerializer(ModelSerializer):
+class CertificateSerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.Cert` model."""
 
     owner = serializers.ReadOnlyField(source='owner.username')
@@ -330,7 +334,7 @@ class CertificateSerializer(ModelSerializer):
         read_only_fields = ['expires', 'created', 'updated']
 
 
-class PushSerializer(ModelSerializer):
+class PushSerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.Push` model."""
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
