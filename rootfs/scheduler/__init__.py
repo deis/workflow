@@ -622,8 +622,8 @@ class KubeHTTPClient(AbstractSchedulerClient):
         containers[0]['args'] = args
         loc = locals().copy()
         loc.update(re.match(MATCH, container_fullname).groupdict())
-        mem = kwargs.get('memory', {}).get(loc['c_type'])
-        cpu = kwargs.get('cpu', {}).get(loc['c_type'])
+        mem = kwargs.get('memory', {}).get(app_type)
+        cpu = kwargs.get('cpu', {}).get(app_type)
         env = kwargs.get('envs', {})
         if env:
             for k, v in env.iteritems():
