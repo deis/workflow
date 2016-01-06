@@ -13,62 +13,11 @@ echo system information:
 echo "Django Version: $(./manage.py --version)"
 python --version
 
-# configure etcd
-export ETCD_PORT=${DEIS_ETCD_1_SERVICE_PORT_CLIENT:-4001}
-export ETCD_HOST=${DEIS_ETCD_1_SERVICE_HOST:-$HOST}
-export ETCD="$ETCD_HOST:$ETCD_PORT"
-export ETCD_PATH=${ETCD_PATH:-/deis/controller}
-export ETCD_TTL=${ETCD_TTL:-20}
+# spawn confd in the background to update services based on changes
+confd -backend env --confdir /app --log-level error --interval 5 &
 
-# wait for etcd to be available
-until etcdctl --no-sync -C "$ETCD" ls >/dev/null 2>&1; do
-	echo "waiting for etcd at $ETCD..."
-	sleep $((ETCD_TTL/2))  # sleep for half the TTL
-done
-
-function etcd_set_default {
-	set +e
-	ERROR="$(etcdctl --no-sync -C "$ETCD" mk "$ETCD_PATH/$1" "$2" 2>&1)"
-	if [[ $? -ne 0 ]] && echo "$ERROR" | grep -iqve "key already exists"; then
-		echo "etcd_set_default: an etcd error occurred ($ERROR)"
-		echo "aborting..."
-		exit 1
-	fi
-	set -e
-}
-
-function etcd_safe_mkdir {
-	set +e
-	ERROR="$(etcdctl --no-sync -C "$ETCD" mkdir "$1" 2>&1)"
-
-	if [[ $? -ne 0 ]] && echo "$ERROR" | grep -iqve "key already exists"; then
-		echo "etcd_safe_mkdir: an etcd error occurred ($ERROR)"
-		echo "aborting..."
-		exit 1
-	fi
-	set -e
-}
-
-etcd_set_default protocol "${DEIS_PROTOCOL:-http}"
-etcd_set_default registrationMode "enabled"
-etcd_set_default webEnabled 0
-
-# safely create required keyspaces
-etcd_safe_mkdir /deis/domains
-etcd_safe_mkdir /deis/platform
-etcd_safe_mkdir /deis/scheduler
-etcd_safe_mkdir /deis/services
-
-# wait for confd to run once and install initial templates
-until confd -onetime -node "$ETCD" --confdir /app --log-level error; do
-	echo "controller: waiting for confd to write initial templates..."
-	sleep $((ETCD_TTL/2))  # sleep for half the TTL
-done
-
-cd /app
-
-mkdir -p /data/logs
-chmod 777 /data/logs
+mkdir -p /app/data/logs
+chmod -R 777 /app/data/logs
 
 # allow deis user group permission to Docker socket
 if addgroup -g "$(stat -c "%g" /var/run/docker.sock)" docker; then
@@ -78,18 +27,18 @@ else
 fi
 
 echo "Django checks:"
-./manage.py check --deploy api
+python /app/manage.py check --deploy api
 
 echo "Health Checks:"
-./manage.py healthchecks
+python /app/manage.py healthchecks
 
 echo "Database Migrations:"
-sudo -E -u deis ./manage.py migrate --noinput
+sudo -E -u deis python /app/manage.py migrate --noinput
 
 # spawn a gunicorn server in the background
-sudo -E -u deis gunicorn -c deis/gconf.py deis.wsgi &
+sudo -E -u deis gunicorn -c /app/deis/gconf.py deis.wsgi &
 
-./manage.py load_db_state_to_etcd
+python /app/manage.py load_db_state_to_k8s
 
 # smart shutdown on SIGTERM (SIGINT is handled by gunicorn)
 function on_exit() {
@@ -99,9 +48,6 @@ function on_exit() {
 	exit 0
 }
 trap on_exit TERM
-
-# spawn confd in the background to update services based on etcd changes
-confd -node "$ETCD" --confdir /app --log-level error --interval 5 &
 
 echo deis-controller running...
 

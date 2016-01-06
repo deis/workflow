@@ -5,9 +5,6 @@ RUN apk add --update-cache curl bash openssl sudo && rm -rf /var/cache/apk/*
 
 # install etcdctl and confd
 RUN apk add --update-cache curl tar \
-    && curl -sSL https://github.com/coreos/etcd/releases/download/v2.2.1/etcd-v2.2.1-linux-amd64.tar.gz \
-    | tar -vxz -C /usr/local/bin --strip=1 etcd-v2.2.1-linux-amd64/etcdctl \
-    && chown root:root /usr/local/bin/etcdctl \
     && curl -sSL -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.10.0/confd-0.10.0-linux-amd64 \
     && chmod +x /usr/local/bin/confd \
     && apk del --purge curl tar \
