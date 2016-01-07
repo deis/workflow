@@ -3,17 +3,13 @@ Classes to serialize the RESTful representation of Deis API models.
 """
 
 from __future__ import unicode_literals
-
-import json
 import re
 
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils import timezone
 from rest_framework import serializers
 
 from api import models
-
 
 PROCTYPE_MATCH = re.compile(r'^(?P<type>[a-z]+)')
 MEMLIMIT_MATCH = re.compile(r'^(?P<mem>[0-9]+(MB|KB|GB|[BKMG]))$', re.IGNORECASE)
@@ -23,57 +19,27 @@ TAGVAL_MATCH = re.compile(r'^\w+$')
 CONFIGKEY_MATCH = re.compile(r'^[a-z_]+[a-z0-9_]*$', re.IGNORECASE)
 
 
-class JSONFieldSerializer(serializers.Field):
-    """
-    A Django REST framework serializer for JSON data.
-    """
+class JSONFieldSerializer(serializers.JSONField):
+    def __init__(self, *args, **kwargs):
+        self.type = kwargs.pop('type', 'string')
+        super(JSONFieldSerializer, self).__init__(*args, **kwargs)
 
     def to_representation(self, obj):
         """Serialize the field's JSON data, for read operations."""
+        for k, v in obj.viewitems():
+            if v is None:  # NoneType is used to unset a value
+                continue
+
+            try:
+                if self.type == 'int':
+                    obj[k] = int(v)
+                else:
+                    obj[k] = str(v)
+            except ValueError:
+                obj[k] = v
+                # Do nothing, the validator will catch this later
+
         return obj
-
-    def to_internal_value(self, data):
-        """Deserialize the field's JSON data, for write operations."""
-        try:
-            val = json.loads(data)
-        except TypeError:
-            val = data
-        return val
-
-
-class JSONIntFieldSerializer(JSONFieldSerializer):
-    """
-    A JSON serializer that coerces its data to integers.
-    """
-
-    def to_internal_value(self, data):
-        """Deserialize the field's JSON integer data."""
-        field = super(JSONIntFieldSerializer, self).to_internal_value(data)
-
-        for k, v in field.viewitems():
-            if v is not None:  # NoneType is used to unset a value
-                try:
-                    field[k] = int(v)
-                except ValueError:
-                    field[k] = v
-                    # Do nothing, the validator will catch this later
-        return field
-
-
-class JSONStringFieldSerializer(JSONFieldSerializer):
-    """
-    A JSON serializer that coerces its data to strings.
-    """
-
-    def to_internal_value(self, data):
-        """Deserialize the field's JSON string data."""
-        field = super(JSONStringFieldSerializer, self).to_internal_value(data)
-
-        for k, v in field.viewitems():
-            if v is not None:  # NoneType is used to unset a value
-                field[k] = unicode(v)
-
-        return field
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -124,9 +90,9 @@ class AppSerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.App` model."""
 
     owner = serializers.ReadOnlyField(source='owner.username')
-    structure = JSONFieldSerializer(required=False)
-    created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
-    updated = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
+    structure = serializers.JSONField(required=False)
+    created = serializers.DateTimeField(read_only=True)
+    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a :class:`AppSerializer`."""
@@ -140,9 +106,9 @@ class BuildSerializer(serializers.ModelSerializer):
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
-    procfile = JSONFieldSerializer(required=False)
-    created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
-    updated = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
+    procfile = serializers.JSONField(required=False)
+    created = serializers.DateTimeField(read_only=True)
+    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a :class:`BuildSerializer`."""
@@ -157,12 +123,12 @@ class ConfigSerializer(serializers.ModelSerializer):
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
-    values = JSONStringFieldSerializer(required=False)
-    memory = JSONStringFieldSerializer(required=False)
-    cpu = JSONIntFieldSerializer(required=False)
-    tags = JSONStringFieldSerializer(required=False)
-    created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
-    updated = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
+    values = JSONFieldSerializer(required=False, binary=True)
+    memory = JSONFieldSerializer(required=False, binary=True)
+    cpu = JSONFieldSerializer(required=False, binary=True, type='int')
+    tags = JSONFieldSerializer(required=False, binary=True)
+    created = serializers.DateTimeField(read_only=True)
+    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a :class:`ConfigSerializer`."""
@@ -233,8 +199,8 @@ class ReleaseSerializer(serializers.ModelSerializer):
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
-    created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
-    updated = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
+    created = serializers.DateTimeField(read_only=True)
+    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a :class:`ReleaseSerializer`."""
@@ -246,8 +212,8 @@ class ContainerSerializer(serializers.ModelSerializer):
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
-    created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
-    updated = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
+    created = serializers.DateTimeField(read_only=True)
+    updated = serializers.DateTimeField(read_only=True)
     release = serializers.SerializerMethodField()
 
     class Meta:
@@ -264,8 +230,8 @@ class KeySerializer(serializers.ModelSerializer):
 
     owner = serializers.ReadOnlyField(source='owner.username')
     fingerprint = serializers.CharField(read_only=True)
-    created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
-    updated = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
+    created = serializers.DateTimeField(read_only=True)
+    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a KeySerializer."""
@@ -277,8 +243,8 @@ class DomainSerializer(serializers.ModelSerializer):
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
-    created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
-    updated = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
+    created = serializers.DateTimeField(read_only=True)
+    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a :class:`DomainSerializer`."""
@@ -321,9 +287,9 @@ class CertificateSerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.Cert` model."""
 
     owner = serializers.ReadOnlyField(source='owner.username')
-    expires = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
-    created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
-    updated = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
+    expires = serializers.DateTimeField(read_only=True)
+    created = serializers.DateTimeField(read_only=True)
+    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a DomainCertSerializer."""
@@ -339,8 +305,8 @@ class PushSerializer(serializers.ModelSerializer):
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
-    created = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
-    updated = serializers.DateTimeField(format=settings.DEIS_DATETIME_FORMAT, read_only=True)
+    created = serializers.DateTimeField(read_only=True)
+    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a :class:`PushSerializer`."""

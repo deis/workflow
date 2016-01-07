@@ -168,7 +168,11 @@ CORS_EXPOSE_HEADERS = (
     'Deis-Release',
 )
 
+# standard datetime format used for logging, model timestamps, etc.
+DEIS_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S%Z'
+
 REST_FRAMEWORK = {
+    'DATETIME_FORMAT': DEIS_DATETIME_FORMAT,
     'DEFAULT_MODEL_SERIALIZER_CLASS': 'rest_framework.serializers.ModelSerializer',
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -274,9 +278,6 @@ ETCD_PORT = os.environ.get('DEIS_ETCD_1_SERVICE_PORT_CLIENT', 4001)
 # default deis settings
 LOG_LINES = 1000
 TEMPDIR = tempfile.mkdtemp(prefix='deis')
-
-# standard datetime format used for logging, model timestamps, etc.
-DEIS_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S%Z'
 
 # names which apps cannot reserve for routing
 DEIS_RESERVED_NAMES = ['deis']
