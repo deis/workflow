@@ -10,6 +10,8 @@ import (
 	"github.com/deis/workflow/client/controller/client"
 )
 
+const workflowURLPrefix = "deis."
+
 // List lists apps on a Deis controller.
 func List(c *client.Client, results int) ([]api.App, int, error) {
 	body, count, err := c.LimitedRequest("/v2/apps/", results)
@@ -25,7 +27,7 @@ func List(c *client.Client, results int) ([]api.App, int, error) {
 
 	for name, app := range apps {
 		// Add in app URL based on controller hostname, port included
-		app.URL = fmt.Sprintf("%s.%s", app.ID, c.ControllerURL.Host)
+		app.URL = fmt.Sprintf("%s.%s", app.ID, strings.TrimPrefix(c.ControllerURL.Host, workflowURLPrefix))
 		apps[name] = app
 	}
 
@@ -58,7 +60,7 @@ func New(c *client.Client, id string) (api.App, error) {
 	}
 
 	// Add in app URL based on controller hostname, port included
-	app.URL = fmt.Sprintf("%s.%s", app.ID, c.ControllerURL.Host)
+	app.URL = fmt.Sprintf("%s.%s", app.ID, strings.TrimPrefix(c.ControllerURL.Host, workflowURLPrefix))
 
 	return app, nil
 }
@@ -80,7 +82,7 @@ func Get(c *client.Client, appID string) (api.App, error) {
 	}
 
 	// Add in app URL based on controller hostname, port included
-	app.URL = fmt.Sprintf("%s.%s", app.ID, c.ControllerURL.Host)
+	app.URL = fmt.Sprintf("%s.%s", app.ID, strings.TrimPrefix(c.ControllerURL.Host, workflowURLPrefix))
 
 	return app, nil
 }
