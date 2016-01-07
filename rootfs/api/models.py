@@ -847,7 +847,7 @@ class Release(UuidAuditedModel):
         # If the build has a SHA, assume it's from deis-builder and in the deis-registry already
         deis_registry = bool(self.build.sha)
         if not self.build.dockerfile and not self.build.sha:
-            publish_release(source_image, self.config.values, self.image, deis_registry)
+            publish_release(source_image, self.image, deis_registry)
 
     def previous(self):
         """
