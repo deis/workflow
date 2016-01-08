@@ -3,6 +3,7 @@ Classes to serialize the RESTful representation of Deis API models.
 """
 
 from __future__ import unicode_literals
+import json
 import re
 
 from django.contrib.auth.models import User
@@ -23,6 +24,14 @@ class JSONFieldSerializer(serializers.JSONField):
     def __init__(self, *args, **kwargs):
         self.type = kwargs.pop('type', 'string')
         super(JSONFieldSerializer, self).__init__(*args, **kwargs)
+
+    def to_internal_value(self, data):
+        """Deserialize the field's JSON data, for write operations."""
+        try:
+            val = json.loads(data)
+        except TypeError:
+            val = data
+        return val
 
     def to_representation(self, obj):
         """Serialize the field's JSON data, for read operations."""
