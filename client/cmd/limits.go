@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"regexp"
-	"strconv"
 
 	"github.com/deis/pkg/prettyprint"
 
@@ -43,7 +42,7 @@ func LimitsList(appID string) error {
 		cpuMap := make(map[string]string)
 
 		for key, value := range config.CPU {
-			cpuMap[key] = strconv.Itoa(int(value.(float64)))
+			cpuMap[key] = value.(string)
 		}
 
 		fmt.Print(prettyprint.PrettyTabs(cpuMap, 5))
@@ -145,7 +144,7 @@ func parseLimits(limits []string) map[string]interface{} {
 }
 
 func parseLimit(limit string) (string, string, error) {
-	regex := regexp.MustCompile("^([A-z]+)=([0-9]+[bkmgBKMG]{1,2}|[0-9]{1,4})$")
+	regex := regexp.MustCompile("^([A-z]+)=([0-9]+[bkmgBKMG]{1,2}|[0-9.]{1,5}|[0-9.]{1,5}[m]{0,1})$")
 
 	if !regex.MatchString(limit) {
 		return "", "", fmt.Errorf(`%s doesn't fit format type=#unit or type=#
