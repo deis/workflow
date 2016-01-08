@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 
 import json
 
@@ -106,7 +105,7 @@ thejiQz0ThCMBw7QMpVOiSvYAlQG0ATsRYwdTDqENIWKlerOLCSuxmbqe8XeDKhq
                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
         expected = {'common_name': 'autotest.example.com',
                     'expires': '2016-03-05T17:14:27UTC'}
-        for key, value in expected.items():
+        for key, value in list(expected.items()):
             self.assertEqual(response.data[key], value)
 
     def test_certficate_denied_requests(self):

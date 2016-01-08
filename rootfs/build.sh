@@ -17,11 +17,15 @@ apk add --update-cache \
   libffi-dev \
   libpq \
   postgresql-dev \
-  python \
-  python-dev
+  python3 \
+  python3-dev \
+  git
+
+# Symlink python3 binary to python
+ln -s /usr/bin/python3 /usr/bin/python
 
 # install pip
-curl -sSL https://raw.githubusercontent.com/pypa/pip/7.0.3/contrib/get-pip.py | python -
+curl -sSL https://raw.githubusercontent.com/pypa/pip/7.1.2/contrib/get-pip.py | python -
 
 # add a deis user
 adduser deis -D -h /app -s /bin/bash
@@ -41,5 +45,6 @@ apk del --purge \
   curl \
   libffi-dev \
   postgresql-dev \
-  python-dev
+  python3-dev \
+  git
 rm -rf /var/cache/apk/*

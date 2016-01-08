@@ -2,7 +2,6 @@
 Classes to serialize the RESTful representation of Deis API models.
 """
 
-from __future__ import unicode_literals
 import json
 import re
 
@@ -35,7 +34,7 @@ class JSONFieldSerializer(serializers.JSONField):
 
     def to_representation(self, obj):
         """Serialize the field's JSON data, for read operations."""
-        for k, v in obj.viewitems():
+        for k, v in obj.items():
             if v is None:  # NoneType is used to unset a value
                 continue
 
@@ -143,64 +142,64 @@ class ConfigSerializer(serializers.ModelSerializer):
         """Metadata options for a :class:`ConfigSerializer`."""
         model = models.Config
 
-    def validate_values(self, value):
-        for k, v in value.viewitems():
-            if not re.match(CONFIGKEY_MATCH, k):
+    def validate_values(self, data):
+        for key, value in data.items():
+            if not re.match(CONFIGKEY_MATCH, key):
                 raise serializers.ValidationError(
                     "Config keys must start with a letter or underscore and "
                     "only contain [A-z0-9_]")
 
-        return value
+        return data
 
-    def validate_memory(self, value):
-        for k, v in value.viewitems():
-            if v is None:  # use NoneType to unset a value
+    def validate_memory(self, data):
+        for key, value in data.items():
+            if value is None:  # use NoneType to unset an item
                 continue
 
-            if not re.match(PROCTYPE_MATCH, k):
+            if not re.match(PROCTYPE_MATCH, key):
                 raise serializers.ValidationError("Process types can only contain [a-z]")
 
-            if not re.match(MEMLIMIT_MATCH, str(v)):
+            if not re.match(MEMLIMIT_MATCH, str(value)):
                 raise serializers.ValidationError(
                     "Limit format: <number><unit>, where unit = B, K, M or G")
 
-        return value
+        return data
 
-    def validate_cpu(self, value):
-        for k, v in value.viewitems():
-            if v is None:  # use NoneType to unset a value
+    def validate_cpu(self, data):
+        for key, value in data.items():
+            if value is None:  # use NoneType to unset an item
                 continue
 
-            if not re.match(PROCTYPE_MATCH, k):
+            if not re.match(PROCTYPE_MATCH, key):
                 raise serializers.ValidationError("Process types can only contain [a-z]")
 
-            shares = re.match(CPUSHARE_MATCH, str(v))
+            shares = re.match(CPUSHARE_MATCH, str(value))
             if not shares:
                 raise serializers.ValidationError("CPU shares must be an integer")
 
-            for v in shares.groupdict().viewvalues():
+            for share in shares.groupdict().values():
                 try:
-                    i = int(v)
+                    i = int(share)
                 except ValueError:
                     raise serializers.ValidationError("CPU shares must be an integer")
 
                 if i > 1024 or i < 0:
                     raise serializers.ValidationError("CPU shares must be between 0 and 1024")
 
-        return value
+        return data
 
-    def validate_tags(self, value):
-        for k, v in value.viewitems():
-            if v is None:  # use NoneType to unset a value
+    def validate_tags(self, data):
+        for key, value in data.items():
+            if value is None:  # use NoneType to unset an item
                 continue
 
-            if not re.match(TAGKEY_MATCH, k):
+            if not re.match(TAGKEY_MATCH, key):
                 raise serializers.ValidationError("Tag keys can only contain [a-z]")
 
-            if not re.match(TAGVAL_MATCH, str(v)):
-                raise serializers.ValidationError("Invalid tag value")
+            if not re.match(TAGVAL_MATCH, str(value)):
+                raise serializers.ValidationError("Invalid tag data")
 
-        return value
+        return data
 
 
 class ReleaseSerializer(serializers.ModelSerializer):

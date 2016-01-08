@@ -4,14 +4,13 @@ Unit tests for the Deis api app.
 Run the tests with "./manage.py test api"
 """
 
-from __future__ import unicode_literals
 
 import json
 
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TransactionTestCase
-import mock
+from unittest import mock
 from rest_framework.authtoken.models import Token
 
 from . import mock_status_ok

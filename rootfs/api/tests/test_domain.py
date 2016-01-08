@@ -4,7 +4,6 @@ Unit tests for the Deis api app.
 Run the tests with "./manage.py test api"
 """
 
-from __future__ import unicode_literals
 
 import json
 

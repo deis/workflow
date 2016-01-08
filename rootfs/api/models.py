@@ -4,7 +4,6 @@
 Data models for the Deis API.
 """
 
-from __future__ import unicode_literals
 import base64
 from datetime import datetime
 import etcd
@@ -18,19 +17,16 @@ from threading import Thread
 from django.conf import settings
 from django.core.exceptions import ValidationError, SuspiciousOperation
 from django.db import models
-from django.db.models import Count
-from django.db.models import Max
+from django.db.models import Count, Max
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
-from django.utils.encoding import python_2_unicode_compatible
 from jsonfield import JSONField
 from OpenSSL import crypto
 import requests
 from rest_framework.authtoken.models import Token
 
-from api import utils
 from registry import publish_release
-from utils import dict_diff, dict_merge, fingerprint
+from api.utils import dict_diff, dict_merge, fingerprint, generate_app_name
 
 
 User = settings.AUTH_USER_MODEL
@@ -82,9 +78,9 @@ def validate_id_is_docker_compatible(value):
 def validate_app_structure(value):
     """Error if the dict values aren't ints >= 0."""
     try:
-        if any(int(v) < 0 for v in value.viewvalues()):
+        if any(int(v) < 0 for v in value.values()):
             raise ValueError("Must be greater than or equal to zero")
-    except ValueError, err:
+    except ValueError as err:
         raise ValidationError(err)
 
 
@@ -141,7 +137,6 @@ class UuidAuditedModel(AuditedModel):
         abstract = True
 
 
-@python_2_unicode_compatible
 class App(UuidAuditedModel):
     """
     Application used to service requests on behalf of end-users
@@ -159,9 +154,9 @@ class App(UuidAuditedModel):
     @property
     def select_app_name(self):
         """Select a unique randomly generated app name"""
-        name = utils.generate_app_name()
+        name = generate_app_name()
         while App.objects.filter(id=name).exists():
-            name = utils.generate_app_name()
+            name = generate_app_name()
 
         return name
 
@@ -174,9 +169,9 @@ class App(UuidAuditedModel):
 
     def save(self, **kwargs):
         if not self.id:
-            self.id = utils.generate_app_name()
+            self.id = generate_app_name()
             while App.objects.filter(id=self.id).exists():
-                self.id = utils.generate_app_name()
+                self.id = generate_app_name()
 
         return super(App, self).save(**kwargs)
 
@@ -265,7 +260,7 @@ class App(UuidAuditedModel):
                 raise EnvironmentError(
                     'Container type {} does not exist in application'.format(container_type))
         msg = '{} scaled containers '.format(user.username) + ' '.join(
-            "{}={}".format(k, v) for k, v in requested_structure.items())
+            "{}={}".format(k, v) for k, v in list(requested_structure.items()))
         log_event(self, msg)
         # iterate and scale by container type (web, worker, etc)
         changed = False
@@ -273,7 +268,7 @@ class App(UuidAuditedModel):
         scale_types = {}
 
         # iterate on a copy of the container_type keys
-        for container_type in requested_structure.keys():
+        for container_type in list(requested_structure.keys()):
             containers = list(self.container_set.filter(type=container_type).order_by('created'))
             # increment new container nums off the most recent container
             results = self.container_set.filter(type=container_type).aggregate(Max('num'))
@@ -518,7 +513,6 @@ class App(UuidAuditedModel):
         return c.run(escaped_command)
 
 
-@python_2_unicode_compatible
 class Container(UuidAuditedModel):
     """
     Docker container used to securely host an application process.
@@ -649,7 +643,6 @@ class Container(UuidAuditedModel):
             raise
 
 
-@python_2_unicode_compatible
 class Push(UuidAuditedModel):
     """
     Instance of a push used to trigger an application build
@@ -674,7 +667,6 @@ class Push(UuidAuditedModel):
         return "{0}-{1}".format(self.app.id, self.sha[:7])
 
 
-@python_2_unicode_compatible
 class Build(UuidAuditedModel):
     """
     Instance of a software build used by runtime nodes
@@ -728,7 +720,6 @@ class Build(UuidAuditedModel):
         return "{0}-{1}".format(self.app.id, str(self.uuid)[:7])
 
 
-@python_2_unicode_compatible
 class Config(UuidAuditedModel):
     """
     Set of configuration values applied as environment variables
@@ -778,7 +769,7 @@ class Config(UuidAuditedModel):
 
                 data.update(new_data)
                 # remove config keys if we provided a null value
-                [data.pop(k) for k, v in new_data.viewitems() if v is None]
+                [data.pop(k) for k, v in new_data.items() if v is None]
                 setattr(self, attr, data)
         except Config.DoesNotExist:
             pass
@@ -786,7 +777,6 @@ class Config(UuidAuditedModel):
         return super(Config, self).save(**kwargs)
 
 
-@python_2_unicode_compatible
 class Release(UuidAuditedModel):
     """
     Software release deployed by the application platform
@@ -953,7 +943,6 @@ class Release(UuidAuditedModel):
         super(Release, self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class Domain(AuditedModel):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     app = models.ForeignKey('App')
@@ -997,7 +986,7 @@ class Domain(AuditedModel):
         component = "%s.deis.io/" % component
 
         # add component to data and flatten
-        data = {"%s%s" % (component, key): value for key, value in data.items()}
+        data = {"%s%s" % (component, key): value for key, value in list(data.items())}
         svc['metadata']['annotations'].update(morph.flatten(data))
 
         # Update the k8s service for the application with new domain information
@@ -1015,7 +1004,7 @@ class Domain(AuditedModel):
             config['domains'] = ''
 
         # convert from string to list to work with and filter out empty strings
-        domains = filter(None, config['domains'].split(','))
+        domains = [_f for _f in config['domains'].split(',') if _f]
         if domain not in domains:
             domains.append(domain)
         config['domains'] = ','.join(domains)
@@ -1037,7 +1026,7 @@ class Domain(AuditedModel):
             config['domains'] = ''
 
         # convert from string to list to work with and filter out empty strings
-        domains = filter(None, config['domains'].split(','))
+        domains = [_f for _f in config['domains'].split(',') if _f]
         if domain in domains:
             domains.remove(domain)
         config['domains'] = ','.join(domains)
@@ -1051,7 +1040,6 @@ class Domain(AuditedModel):
         return self.domain
 
 
-@python_2_unicode_compatible
 class Certificate(AuditedModel):
     """
     Public and private key pair used to secure application traffic at the router.
@@ -1077,13 +1065,17 @@ class Certificate(AuditedModel):
         certificate = self._get_certificate()
         if not self.common_name:
             self.common_name = certificate.get_subject().CN
+
         if not self.expires:
+            # https://pyopenssl.readthedocs.org/en/latest/api/crypto.html#OpenSSL.crypto.X509.get_notAfter
+            # Convert bytes to string
+            timestamp = certificate.get_notAfter().decode(encoding='UTF-8')
             # convert openssl's expiry date format to Django's DateTimeField format
-            self.expires = datetime.strptime(certificate.get_notAfter(), '%Y%m%d%H%M%SZ')
+            self.expires = datetime.strptime(timestamp, '%Y%m%d%H%M%SZ')
+
         return super(Certificate, self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class Key(UuidAuditedModel):
     """An SSH public key."""
 

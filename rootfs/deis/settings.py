@@ -2,7 +2,6 @@
 Django settings for the Deis project.
 """
 
-from __future__ import unicode_literals
 import os.path
 import random
 import string

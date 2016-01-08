@@ -2,7 +2,6 @@
 REST framework URL routing classes.
 """
 
-from __future__ import unicode_literals
 
 from rest_framework.routers import DefaultRouter
 from rest_framework.routers import Route

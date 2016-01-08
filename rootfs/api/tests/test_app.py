@@ -4,11 +4,10 @@ Unit tests for the Deis api app.
 Run the tests with "./manage.py test api"
 """
 
-from __future__ import unicode_literals
 
 import json
 import logging
-import mock
+from unittest import mock
 import requests
 
 from django.contrib.auth.models import User
@@ -155,12 +154,12 @@ class AppTest(TestCase):
         url = '/v2/apps/{app_id}'.format(**locals())
         response = self.client.delete(url,
                                       HTTP_AUTHORIZATION='token {}'.format(self.token))
-        self.assertEquals(response.status_code, 204)
+        self.assertEqual(response.status_code, 204)
         for endpoint in ('containers', 'config', 'releases', 'builds'):
             url = '/v2/apps/{app_id}/{endpoint}'.format(**locals())
             response = self.client.get(url,
                                        HTTP_AUTHORIZATION='token {}'.format(self.token))
-            self.assertEquals(response.status_code, 404)
+            self.assertEqual(response.status_code, 404)
 
     def test_app_reserved_names(self):
         """Nobody should be able to create applications with names which are reserved."""

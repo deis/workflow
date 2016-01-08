@@ -204,7 +204,7 @@ class AppViewSet(BaseDeisViewSet):
         new_structure = {}
         app = self.get_object()
         try:
-            for target, count in request.data.viewitems():
+            for target, count in request.data.items():
                 new_structure[target] = int(count)
             models.validate_app_structure(new_structure)
             app.scale(request.user, new_structure)
@@ -228,7 +228,7 @@ class AppViewSet(BaseDeisViewSet):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content_type='text/plain')
         except EnvironmentError as e:
-            if e.message == 'Error accessing deis-logger':
+            if str(e) == 'Error accessing deis-logger':
                 return Response("Error accessing logs for {}".format(app.id),
                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
                                 content_type='text/plain')

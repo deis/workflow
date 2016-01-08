@@ -1,10 +1,9 @@
-from __future__ import unicode_literals
 import json
 import logging
 import re
 import string
 import time
-import urlparse
+from urllib.parse import urljoin
 import base64
 
 from django.conf import settings
@@ -403,7 +402,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             status = 404
             reason = ''
             data = ''
-            for _ in xrange(5):
+            for _ in range(5):
                 status, reason, data = self._get_pod(name, appname)
                 if unhealthy(status):
                     time.sleep(1)
@@ -460,7 +459,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
     def _api(self, tmpl, *args):
         """Return a fully-qualified Kubernetes API URL from a string template with args."""
         url = "/api/{}".format(self.apiversion) + tmpl.format(*args)
-        return urlparse.urljoin(self.url, url)
+        return urljoin(self.url, url)
 
     # EVENTS #
 
@@ -529,7 +528,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
     def _get_schedule_status(self, name, num, namespace):
         pods = []
-        for _ in xrange(120):
+        for _ in range(120):
             count = 0
             pods = []
             status, data, reason = self._get_pods(namespace)
@@ -544,7 +543,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
             time.sleep(1)
 
-        for _ in xrange(120):
+        for _ in range(120):
             count = 0
             status, data, reason = self._get_events(namespace)
             parsed_json = json.loads(data)
@@ -571,7 +570,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             error(resp, 'scale ReplicationController "{}"', name)
 
         resource_ver = rc['metadata']['resourceVersion']
-        for _ in xrange(30):
+        for _ in range(30):
             js_template = self._get_rc(name, namespace)
             if js_template["metadata"]["resourceVersion"] != resource_ver:
                 break
@@ -579,7 +578,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             time.sleep(1)
 
         self._get_schedule_status(name, num, namespace)
-        for _ in xrange(120):
+        for _ in range(120):
             count = 0
             status, data, reason = self._get_pods(namespace)
             parsed_json = json.loads(data)
@@ -627,7 +626,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
         cpu = kwargs.get('cpu', {}).get(app_type)
         env = kwargs.get('envs', {})
         if env:
-            for k, v in env.iteritems():
+            for k, v in env.items():
                 containers[0]["env"].append({"name": k, "value": v})
         if mem or cpu:
             containers[0]["resources"] = {"limits": {}}
@@ -652,7 +651,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             error(resp, 'create ReplicationController "{}" in Namespace "{}"',
                   name, app_name)
         create = False
-        for _ in xrange(30):
+        for _ in range(30):
             if not create and self._get_rc_status(name, app_name) == 404:
                 time.sleep(1)
                 continue
@@ -758,7 +757,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             # image already includes the tag, so we split it out here
             docker_cli.pull(image.rsplit(':')[0], image.rsplit(':')[1])
             image_info = docker_cli.inspect_image(image)
-            port = int(image_info['Config']['ExposedPorts'].keys()[0].split("/")[0])
+            port = int(list(image_info['Config']['ExposedPorts'].keys())[0].split("/")[0])
         except:
             port = 5000
         l = {
@@ -813,7 +812,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             error(resp, 'delete Pod "{}" in Namespace "{}"', name, namespace)
 
         # Verify the pod has been deleted. Give it 5 seconds.
-        for _ in xrange(5):
+        for _ in range(5):
             status, reason, data = self._get_pod(name, namespace)
             if status == 404:
                 break
@@ -831,6 +830,5 @@ class KubeHTTPClient(AbstractSchedulerClient):
             error(resp, 'get logs for Pod "{}" in Namespace "{}"', name, namespace)
 
         return resp.status_code, resp.text, resp.reason
-
 
 SchedulerClient = KubeHTTPClient

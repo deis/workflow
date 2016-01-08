@@ -5,7 +5,6 @@ This is the "master" urls.py which then includes the urls.py files of
 installed apps.
 """
 
-from __future__ import unicode_literals
 
 from django.conf.urls import include, url
 from api.views import HealthCheckView
