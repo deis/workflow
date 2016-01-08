@@ -2,7 +2,6 @@
 """Support the Deis workflow by manipulating and publishing Docker images."""
 
 from __future__ import unicode_literals
-import io
 import logging
 
 from django.conf import settings
@@ -22,7 +21,7 @@ class DockerClient(object):
         self.client = docker.Client(version='auto')
         self.registry = settings.REGISTRY_HOST + ':' + str(settings.REGISTRY_PORT)
 
-    def publish_release(self, source, config, target, deis_registry):
+    def publish_release(self, source, target, deis_registry):
         """Update a source Docker image with environment config and publish it to deis-registry."""
         # get the source repository name and tag
         src_name, src_tag = docker.utils.parse_repository_tag(source)
@@ -42,28 +41,11 @@ class DockerClient(object):
         self.pull(repo, src_tag)
 
         # tag the image locally without the repository URL
-        image = "{}:{}".format(repo, src_tag)
-        self.tag(image, src_name, tag=src_tag)
-
-        # build a Docker image that adds a "last-mile" layer of environment
-        config.update({'DEIS_APP': name, 'DEIS_RELEASE': tag})
-        self.build(source, config, name, tag)
+        image = "{}:{}".format(src_name, src_tag)
+        self.tag(image, "{}/{}".format(self.registry, name), tag=tag)
 
         # push the image to deis-registry
         self.push("{}/{}".format(self.registry, name), tag)
-
-    def build(self, source, config, repo, tag):
-        """Add a "last-mile" layer of environment config to a Docker image for deis-registry."""
-        check_blacklist(repo)
-        env = ' '.join("{}='{}'".format(
-            k, v.encode('unicode-escape').replace("'", "\\'")) for k, v in config.viewitems())
-        dockerfile = "FROM {}\nENV {}".format(source, env)
-        f = io.BytesIO(dockerfile.encode('utf-8'))
-        target_repo = "{}/{}:{}".format(self.registry, repo, tag)
-        logger.info("Building Docker image {}".format(target_repo))
-        with SimpleFlock(self.FLOCKFILE, timeout=1200):
-            stream = self.client.build(fileobj=f, tag=target_repo, stream=True, rm=True)
-            log_output(stream)
 
     def pull(self, repo, tag):
         """Pull a Docker image into the local storage graph."""
@@ -112,7 +94,6 @@ def strip_prefix(name):
     return '/'.join(p for p in paths if p and '.' not in p and ':' not in p)
 
 
-def publish_release(source, config, target, deis_registry):
-
+def publish_release(source, target, deis_registry):
     client = DockerClient()
-    return client.publish_release(source, config, target, deis_registry)
+    return client.publish_release(source, target, deis_registry)

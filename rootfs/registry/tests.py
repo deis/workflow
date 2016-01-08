@@ -25,44 +25,22 @@ class DockerClientTest(unittest.TestCase):
 
     def test_publish_release(self, mock_client):
         self.client = DockerClient()
-        self.client.publish_release('ozzy/embryo:git-f2a8020',
-                                    {'POWERED_BY': 'Deis'}, 'ozzy/embryo:v4', True)
+        self.client.publish_release('ozzy/embryo:git-f2a8020', 'ozzy/embryo:v4', True)
         self.assertTrue(self.client.client.pull.called)
         self.assertTrue(self.client.client.tag.called)
-        self.assertTrue(self.client.client.build.called)
         self.assertTrue(self.client.client.push.called)
         # Test that a registry host prefix is replaced with deis-registry for the target
-        self.client.publish_release('ozzy/embryo:git-f2a8020',
-                                    {'POWERED_BY': 'Deis'}, 'quay.io/ozzy/embryo:v4', True)
+        self.client.publish_release('ozzy/embryo:git-f2a8020', 'quay.io/ozzy/embryo:v4', True)
         docker_push = self.client.client.push
         docker_push.assert_called_with(
             'localhost:5000/ozzy/embryo', tag='v4', insecure_registry=True, stream=True)
         # Test that blacklisted image names can't be published
         with self.assertRaises(PermissionDenied):
             self.client.publish_release(
-                'deis/controller:v1.11.1', {}, 'deis/controller:v1.11.1', True)
+                'deis/controller:v1.11.1', 'deis/controller:v1.11.1', True)
         with self.assertRaises(PermissionDenied):
             self.client.publish_release(
-                'localhost:5000/deis/controller:v1.11.1', {}, 'deis/controller:v1.11.1', True)
-
-    def test_build(self, mock_client):
-        # test that self.client.build was called with proper arguments
-        self.client = DockerClient()
-        self.client.build('ozzy/embryo:git-f3a8020', {'POWERED_BY': 'Deis'}, 'ozzy/embryo', 'v4')
-        docker_build = self.client.client.build
-        self.assertTrue(docker_build.called)
-        args = {"rm": True, "tag": u'localhost:5000/ozzy/embryo:v4', "stream": True}
-        kwargs = docker_build.call_args[1]
-        self.assertDictContainsSubset(args, kwargs)
-        # test that the fileobj arg to "docker build" contains a correct Dockerfile
-        f = kwargs['fileobj']
-        self.assertEqual(f.read(), "FROM ozzy/embryo:git-f3a8020\nENV POWERED_BY='Deis'")
-        # Test that blacklisted image names can't be built
-        with self.assertRaises(PermissionDenied):
-            self.client.build('deis/controller:v1.11.1', {}, 'deis/controller', 'v1.11.1')
-        with self.assertRaises(PermissionDenied):
-            self.client.build(
-                'localhost:5000/deis/controller:v1.11.1', {}, 'deis/controller', 'v1.11.1')
+                'localhost:5000/deis/controller:v1.11.1', 'deis/controller:v1.11.1', True)
 
     def test_pull(self, mock_client):
         self.client = DockerClient()
