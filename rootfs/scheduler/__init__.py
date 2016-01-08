@@ -17,7 +17,7 @@ from .utils import dict_merge
 
 logger = logging.getLogger(__name__)
 
-
+# Used for one off command runs on pods
 POD_TEMPLATE = """\
 {
   "kind": "Pod",
@@ -306,7 +306,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
         name = name.replace('.', '-').replace('_', '-')
         num = kwargs.get('num', {})
-        js_template = self._get_rc_(name, app_name)
+        js_template = self._get_rc(name, app_name)
         old_replicas = js_template["spec"]["replicas"]
         try:
             self._scale_rc(name, app_name, num)
@@ -331,6 +331,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             self._create_secret(app_name)
             self._create_rc(name, image, command, **kwargs)
             self._create_service(name, app_name, app_type, data, image=image)
+
         except Exception as e:
             logger.debug(e)
             self._scale_rc(name, app_name, 0)
@@ -518,7 +519,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
         resp = self.session.get(url)
         return resp.status_code
 
-    def _get_rc_(self, name, namespace):
+    def _get_rc(self, name, namespace):
         url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
         resp = self.session.get(url)
         if unhealthy(resp.status_code):
@@ -561,7 +562,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             time.sleep(1)
 
     def _scale_rc(self, name, namespace, num):
-        rc = self._get_rc_(name, namespace)
+        rc = self._get_rc(name, namespace)
         rc["spec"]["replicas"] = num
 
         url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
@@ -571,7 +572,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
         resource_ver = rc['metadata']['resourceVersion']
         for _ in xrange(30):
-            js_template = self._get_rc_(name, namespace)
+            js_template = self._get_rc(name, namespace)
             if js_template["metadata"]["resourceVersion"] != resource_ver:
                 break
 
@@ -641,6 +642,10 @@ class KubeHTTPClient(AbstractSchedulerClient):
         if cpu:
             cpu = float(cpu)/1024
             containers[0]["resources"]["limits"]["cpu"] = cpu
+
+        # add in healtchecks
+        js_template = self._healthcheck(js_template, **kwargs['healthcheck'])
+
         url = self._api("/namespaces/{}/replicationcontrollers", app_name)
         resp = self.session.post(url, json=js_template)
         if unhealthy(resp.status_code):
@@ -652,7 +657,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
                 time.sleep(1)
                 continue
             create = True
-            rc = self._get_rc_(name, app_name)
+            rc = self._get_rc(name, app_name)
             if ("observedGeneration" in rc["status"]
                     and rc["metadata"]["generation"] == rc["status"]["observedGeneration"]):
                 break
@@ -660,12 +665,59 @@ class KubeHTTPClient(AbstractSchedulerClient):
             time.sleep(1)
         return resp.json()
 
+    def _update_rc(self, namespace, app, data):
+        url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, app)
+        return self.session.put(url, json=data)
+
     def _delete_rc(self, namespace, name):
         url = self._api("/namespaces/{}/replicationcontrollers/{}", namespace, name)
         resp = self.session.delete(url)
         if unhealthy(resp.status_code):
             error(resp, 'delete ReplicationController "{}" in Namespace "{}"',
                   name, namespace)
+
+    def _healthcheck(self, controller, path='/', port=8080, delay=30, timeout=1):
+        # FIXME this logic ideally should live higher up
+        if controller['spec']['selector']['type'] not in ['web', 'cmd']:
+            return controller
+
+        # Inspect if a PORT env is already defined, make sure that's the port used
+        for item in controller['spec']['template']['spec']['containers'][0]['env']:
+            if item['name'] == 'PORT':
+                port = int(item['value'])
+
+        # Only support HTTP checks for now
+        # http://kubernetes.io/v1.1/docs/user-guide/pod-states.html#container-probes
+        healthcheck = {
+            # defines the health checking
+            'livenessProbe': {
+                # an http probe
+                'httpGet': {
+                    'path': path,
+                    'port': port
+                },
+                # length of time to wait for a pod to initialize
+                # after pod startup, before applying health checking
+                'initialDelaySeconds': delay,
+                'timeoutSeconds': timeout
+            },
+            'readinessProbe': {
+                # an http probe
+                'httpGet': {
+                    'path': path,
+                    'port': port
+                },
+                # length of time to wait for a pod to initialize
+                # after pod startup, before applying health checking
+                'initialDelaySeconds': delay,
+                'timeoutSeconds': timeout
+            },
+        }
+
+        # Because it comes from a JSON template, need to hit the first key
+        controller['spec']['template']['spec']['containers'][0].update(healthcheck)
+
+        return controller
 
     # SECRETS #
 

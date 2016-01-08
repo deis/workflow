@@ -78,7 +78,7 @@ appname to the old one:
 ## Custom Health Checks
 
 By default, Deis only checks that a container is running. You can add a healthcheck by configuring a
-URL, initial delay, and timeout value:
+URL, port, initial delay, and timeout value:
 
     $ deis config:set HEALTHCHECK_URL=/200.html
     === peachy-waxworks
@@ -92,12 +92,19 @@ URL, initial delay, and timeout value:
     HEALTHCHECK_TIMEOUT: 5
     HEALTHCHECK_INITIAL_DELAY: 5
     HEALTHCHECK_URL: /200.html
+    $ deis config:set HEALTHCHECK_PORT=5000
+    === peachy-waxworks
+    HEALTHCHECK_TIMEOUT: 5
+    HEALTHCHECK_INITIAL_DELAY: 5
+    HEALTHCHECK_URL: /200.html
+    HEALTHCHECK_PORT: 5000
 
 If a new release does not pass the healthcheck, the application will be rolled back to the previous
 release. Beyond that, if an application container responds to a heartbeat check with a different
-status than a 200 OK, the [router][] will mark that container as down and stop sending
+status than a 200-399, the [router][] will mark that container as down and stop sending
 requests to that container.
 
+The health checks are provided by [kubernetes health checks][]. Currently only HTTP GET is supported.
 
 ## Track Changes
 
@@ -135,3 +142,4 @@ Use `deis rollback` to revert to a previous release.
 [stores config in environment variables]: http://12factor.net/config
 [release]: ../reference-guide/terms.md#release
 [router]:  ../understanding-deis/components.md#router
+[kubernetes health checks]: http://kubernetes.io/v1.1/docs/user-guide/pod-states.html#container-probes
