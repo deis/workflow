@@ -26,9 +26,6 @@ until etcdctl --no-sync -C "$ETCD" ls >/dev/null 2>&1; do
 	sleep $((ETCD_TTL/2))  # sleep for half the TTL
 done
 
-# wait until etcd has discarded potentially stale values
-sleep $((ETCD_TTL+1))
-
 function etcd_set_default {
 	set +e
 	ERROR="$(etcdctl --no-sync -C "$ETCD" mk "$ETCD_PATH/$1" "$2" 2>&1)"
