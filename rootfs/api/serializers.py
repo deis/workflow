@@ -13,7 +13,7 @@ from api import models
 
 PROCTYPE_MATCH = re.compile(r'^(?P<type>[a-z]+)')
 MEMLIMIT_MATCH = re.compile(r'^(?P<mem>[0-9]+(MB|KB|GB|[BKMG]))$', re.IGNORECASE)
-CPUSHARE_MATCH = re.compile(r'^(?P<cpu>[0-9]+)$')
+CPUSHARE_MATCH = re.compile(r'^(?P<cpu>[0-9.]+[m]{0,1})$')
 TAGKEY_MATCH = re.compile(r'^[a-z]+$')
 TAGVAL_MATCH = re.compile(r'^\w+$')
 CONFIGKEY_MATCH = re.compile(r'^[a-z_]+[a-z0-9_]*$', re.IGNORECASE)
@@ -133,7 +133,7 @@ class ConfigSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     values = JSONFieldSerializer(required=False, binary=True)
     memory = JSONFieldSerializer(required=False, binary=True)
-    cpu = JSONFieldSerializer(required=False, binary=True, type='int')
+    cpu = JSONFieldSerializer(required=False, binary=True)
     tags = JSONFieldSerializer(required=False, binary=True)
     created = serializers.DateTimeField(read_only=True)
     updated = serializers.DateTimeField(read_only=True)
@@ -175,16 +175,16 @@ class ConfigSerializer(serializers.ModelSerializer):
 
             shares = re.match(CPUSHARE_MATCH, str(value))
             if not shares:
-                raise serializers.ValidationError("CPU shares must be an integer")
+                raise serializers.ValidationError("CPU shares must be a numeric value")
 
             for share in shares.groupdict().values():
                 try:
-                    i = int(share)
+                    if share[-1] == "m":
+                        float(share[:-1])
+                    else:
+                        float(share)
                 except ValueError:
-                    raise serializers.ValidationError("CPU shares must be an integer")
-
-                if i > 1024 or i < 0:
-                    raise serializers.ValidationError("CPU shares must be between 0 and 1024")
+                    raise serializers.ValidationError("CPU units must be a numeric value")
 
         return data
 

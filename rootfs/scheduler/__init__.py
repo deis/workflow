@@ -639,7 +639,6 @@ class KubeHTTPClient(AbstractSchedulerClient):
             containers[0]["resources"]["limits"]["memory"] = mem
 
         if cpu:
-            cpu = float(cpu)/1024
             containers[0]["resources"]["limits"]["cpu"] = cpu
 
         # add in healtchecks
