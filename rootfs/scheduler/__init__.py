@@ -734,8 +734,8 @@ class KubeHTTPClient(AbstractSchedulerClient):
         template = json.loads(string.Template(SECRET_TEMPLATE).substitute({
             "version": self.apiversion,
             "id": namespace,
-            "secretId": str(base64.b64encode(secretId)),
-            "secretKey": str(base64.b64encode(secretKey)),
+            "secretId": base64.b64encode(secretId).decode(),
+            "secretKey": base64.b64encode(secretKey).decode(),
         }))
 
         url = self._api("/namespaces/{}/secrets", namespace)
