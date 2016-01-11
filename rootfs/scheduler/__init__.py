@@ -592,7 +592,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
             time.sleep(1)
 
-    def _create_rc(self, name, image, command, **kwargs):
+    def _create_rc(self, name, image, command, **kwargs):  # noqa
         container_fullname = name
         app_name = kwargs.get('aname', {})
         app_type = name.split('-')[-1]
@@ -604,13 +604,15 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
         # Check if it is a slug builder image.
         # Example format: golden-earrings:git-5450cbcdaaf9afe6fadd219c94ac9c449bd62413s
-        vcs, sha = image[image.index(':')+1:].split('-')
-        if vcs == 'git' and len(sha) in [8, 40] and app_type == 'web':
-            imgurl = 'http://{}/git/home/{}/push/slug.tgz'.format(
-                settings.S3EP,
-                image.replace(':', '-')
-            )
-            TEMPLATE = RCB_TEMPLATE
+        image_name = image[image.index(':')+1:]
+        if '-' in image_name:
+            vcs, sha = image_name.split('-')
+            if vcs == 'git' and len(sha) in [8, 40] and app_type == 'web':
+                imgurl = 'http://{}/git/home/{}/push/slug.tgz'.format(
+                    settings.S3EP,
+                    image.replace(':', '-')
+                )
+                TEMPLATE = RCB_TEMPLATE
 
         l = {
             "name": name,
