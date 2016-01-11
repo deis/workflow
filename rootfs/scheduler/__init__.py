@@ -80,7 +80,8 @@ RCD_TEMPLATE = """\
             }
             ]
           }
-        ]
+        ],
+        "nodeSelector": {}
       }
     }
   }
@@ -156,6 +157,7 @@ RCB_TEMPLATE = """\
             ]
           }
         ],
+        "nodeSelector": {},
         "volumes":[
         {
             "name":"minio-user",
@@ -480,8 +482,8 @@ class KubeHTTPClient(AbstractSchedulerClient):
             "apiVersion": self.apiversion,
             "metadata": {
                 "name": app_name
-                }
             }
+        }
         resp = self.session.post(url, json=data)
         if not resp.status_code == 201:
             error(resp, "create Namespace {}".format(app_name))
@@ -622,6 +624,12 @@ class KubeHTTPClient(AbstractSchedulerClient):
         }
         template = string.Template(TEMPLATE).substitute(l)
         js_template = json.loads(template)
+
+        # apply tags as needed
+        tags = kwargs.get('tags', {})
+        js_template["spec"]["template"]["spec"]["nodeSelector"] = tags
+
+        # Deal with container information
         containers = js_template["spec"]["template"]["spec"]["containers"]
         containers[0]['args'] = args
         loc = locals().copy()
@@ -629,9 +637,11 @@ class KubeHTTPClient(AbstractSchedulerClient):
         mem = kwargs.get('memory', {}).get(app_type)
         cpu = kwargs.get('cpu', {}).get(app_type)
         env = kwargs.get('envs', {})
+
         if env:
             for k, v in env.items():
                 containers[0]["env"].append({"name": k, "value": v})
+
         if mem or cpu:
             containers[0]["resources"] = {"limits": {}}
 
@@ -653,11 +663,13 @@ class KubeHTTPClient(AbstractSchedulerClient):
         if unhealthy(resp.status_code):
             error(resp, 'create ReplicationController "{}" in Namespace "{}"',
                   name, app_name)
+
         create = False
         for _ in range(30):
             if not create and self._get_rc_status(name, app_name) == 404:
                 time.sleep(1)
                 continue
+
             create = True
             rc = self._get_rc(name, app_name)
             if (
@@ -834,5 +846,31 @@ class KubeHTTPClient(AbstractSchedulerClient):
             error(resp, 'get logs for Pod "{}" in Namespace "{}"', name, namespace)
 
         return resp.status_code, resp.text, resp.reason
+
+    # NODES #
+
+    def _get_nodes(self, **kwargs):
+        path = '/nodes'
+        query = {}
+
+        # labels and fields are encoded slightly differently than python-requests can do
+        labels = kwargs.get('labels', {})
+        if labels:
+            # http://kubernetes.io/v1.1/docs/user-guide/labels.html#list-and-watch-filtering
+            labels = ['{}={}'.format(key, value) for key, value in labels.items()]
+            query['labelSelector'] = ','.join(labels)
+
+        fields = kwargs.get('fields', {})
+        if fields:
+            fields = ['{}={}'.format(key, value) for key, value in fields.items()]
+            query['fieldSelector'] = ','.join(fields)
+
+        url = self._api(path)
+        response = self.session.get(url, params=query)
+        if unhealthy(response.status_code):
+            error(response, 'get Nodes')
+
+        return response
+
 
 SchedulerClient = KubeHTTPClient

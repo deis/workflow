@@ -121,6 +121,13 @@ class AuditedModel(models.Model):
         """Mark :class:`AuditedModel` as abstract."""
         abstract = True
 
+    @property
+    def _scheduler(self):
+        mod = importlib.import_module(settings.SCHEDULER_MODULE)
+        return mod.SchedulerClient(settings.SCHEDULER_URL,
+                                   settings.SCHEDULER_AUTH,
+                                   settings.SCHEDULER_OPTIONS)
+
 
 class UuidAuditedModel(AuditedModel):
     """Add a UUID primary key to an :class:`AuditedModel`."""
@@ -159,13 +166,6 @@ class App(UuidAuditedModel):
             name = generate_app_name()
 
         return name
-
-    @property
-    def _scheduler(self):
-        mod = importlib.import_module(settings.SCHEDULER_MODULE)
-        return mod.SchedulerClient(settings.SCHEDULER_URL,
-                                   settings.SCHEDULER_AUTH,
-                                   settings.SCHEDULER_OPTIONS)
 
     def save(self, **kwargs):
         if not self.id:
@@ -529,10 +529,6 @@ class Container(UuidAuditedModel):
     num = models.PositiveIntegerField()
 
     @property
-    def _scheduler(self):
-        return self.app._scheduler
-
-    @property
     def state(self):
         return self._scheduler.state(self.job_id).name
 
@@ -778,6 +774,18 @@ class Config(UuidAuditedModel):
         except Config.DoesNotExist:
             pass
 
+        # verify the tags exist on any nodes as labels
+        if self.tags:
+            # Get all nodes with label selectors
+            nodes = self._scheduler._get_nodes(labels=self.tags).json()
+            if not nodes['items']:
+                labels = ['{}={}'.format(key, value) for key, value in self.tags.items()]
+                raise EnvironmentError(
+                    'These tags do not match labels on kubernetes nodes: {}'.format(
+                        ', '.join(labels)
+                    )
+                )
+
         return super(Config, self).save(**kwargs)
 
 
@@ -951,13 +959,6 @@ class Domain(AuditedModel):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     app = models.ForeignKey('App')
     domain = models.TextField(blank=False, null=False, unique=True)
-
-    @property
-    def _scheduler(self):
-        mod = importlib.import_module(settings.SCHEDULER_MODULE)
-        return mod.SchedulerClient(settings.SCHEDULER_URL,
-                                   settings.SCHEDULER_AUTH,
-                                   settings.SCHEDULER_OPTIONS)
 
     def _fetch_service_config(self, app):
         # Get the service from k8s to attach the domain correctly
