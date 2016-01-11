@@ -720,19 +720,18 @@ class KubeHTTPClient(AbstractSchedulerClient):
     # SECRETS #
 
     def _create_secret(self, namespace):
-        secretId, secretKey = '', ''
-        with open("/var/run/secrets/deis/minio/user/access-key-id") as the_file:
+        with open("/var/run/secrets/deis/minio/user/access-key-id", "rb") as the_file:
             secretId = the_file.read()
-        with open("/var/run/secrets/deis/minio/user/access-secret-key") as the_file:
+        with open("/var/run/secrets/deis/minio/user/access-secret-key", "rb") as the_file:
             secretKey = the_file.read()
-        Key, Id = base64.b64encode(secretKey), base64.b64encode(secretId)
-        l = {
+
+        template = json.loads(string.Template(SECRET_TEMPLATE).substitute({
             "version": self.apiversion,
             "id": namespace,
-            "secretId": Id,
-            "secretKey": Key,
-            }
-        template = json.loads(string.Template(SECRET_TEMPLATE).substitute(l))
+            "secretId": str(base64.b64encode(secretId)),
+            "secretKey": str(base64.b64encode(secretKey)),
+        }))
+
         url = self._api("/namespaces/{}/secrets", namespace)
         resp = self.session.post(url, json=template)
         if unhealthy(resp.status_code):
