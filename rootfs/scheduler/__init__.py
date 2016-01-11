@@ -601,11 +601,17 @@ class KubeHTTPClient(AbstractSchedulerClient):
         num = kwargs.get('num', {})
         imgurl = self.registry + "/" + image
         TEMPLATE = RCD_TEMPLATE
-        shalen = len(image[image.index(":")+5:])
-        git = image[image.index(":")+1:image.index(":")+4]
-        if git == "git" and shalen == 8 and app_type == 'web':
-            imgurl = "http://"+settings.S3EP+"/git/home/"+image+"/push/slug.tgz"
+
+        # Check if it is a slug builder image.
+        # Example format: golden-earrings:git-5450cbcdaaf9afe6fadd219c94ac9c449bd62413s
+        vcs, sha = image[image.index(':')+1:].split('-')
+        if vcs == 'git' and len(sha) in [8, 40] and app_type == 'web':
+            imgurl = 'http://{}/git/home/{}/push/slug.tgz'.format(
+                settings.S3EP,
+                image.replace(':', '-')
+            )
             TEMPLATE = RCB_TEMPLATE
+
         l = {
             "name": name,
             "id": app_name,
