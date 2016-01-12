@@ -109,6 +109,15 @@ def fingerprint(key):
     return ':'.join(a + b for a, b in zip(fp_plain[::2], fp_plain[1::2]))
 
 
+def app_build_type(release):
+    if not release.build.dockerfile:
+        if not release.build.sha:
+            return "deispull"
+        else:
+            return "buildpack"
+    return "dockerfile"
+
+
 def dict_merge(origin, merge):
     """
     Recursively merges dict's. not just simple a["key"] = b["key"], if
