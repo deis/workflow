@@ -1,8 +1,11 @@
 import os
 
 # security keys and auth tokens
-SECRET_KEY = '{{ getv "/deis/controller/secretKey" }}'
-BUILDER_KEY = '{{ getv "/deis/controller/builderKey" }}'
+with open('/var/run/secrets/api/builder/auth/builder-key') as f:
+    BUILDER_KEY = f.read()
+
+with open('/var/run/secrets/api/django/secret-key') as f:
+    SECRET_KEY = f.read()
 
 # scheduler settings
 SCHEDULER_MODULE = 'scheduler'
