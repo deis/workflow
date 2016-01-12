@@ -610,7 +610,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             if vcs == 'git' and len(sha) in [8, 40] and app_type == 'web':
                 imgurl = 'http://{}/git/home/{}/push/slug.tgz'.format(
                     settings.S3EP,
-                    image.replace(':', '-')
+                    image
                 )
                 TEMPLATE = RCB_TEMPLATE
 
