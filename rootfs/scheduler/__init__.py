@@ -664,8 +664,10 @@ class KubeHTTPClient(AbstractSchedulerClient):
                 continue
             create = True
             rc = self._get_rc(name, app_name)
-            if ("observedGeneration" in rc["status"]
-                    and rc["metadata"]["generation"] == rc["status"]["observedGeneration"]):
+            if (
+                "observedGeneration" in rc["status"] and
+                rc["metadata"]["generation"] == rc["status"]["observedGeneration"]
+            ):
                 break
 
             time.sleep(1)
