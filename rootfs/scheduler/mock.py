@@ -64,5 +64,11 @@ class MockSchedulerClient(AbstractSchedulerClient):
     def _update_service(self, namespace, name, data):
         pass
 
+    def _get_nodes(self, **kwargs):
+        resp = requests.Response()
+        resp.status_code = 200
+        resp._content = b'{"items": [{"metadata": {"labels": {"env": "prod"}}}]}'
+        return resp
+
 
 SchedulerClient = MockSchedulerClient

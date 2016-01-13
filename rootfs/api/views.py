@@ -274,6 +274,12 @@ class ConfigViewSet(ReleasableViewSet):
     model = models.Config
     serializer_class = serializers.ConfigSerializer
 
+    def create(self, request, **kwargs):
+        try:
+            return super(ConfigViewSet, self).create(request, **kwargs)
+        except EnvironmentError as e:
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
     def post_save(self, config):
         release = config.app.release_set.latest()
         self.release = release.new(self.request.user, config=config, build=release.build)
