@@ -26,7 +26,7 @@ import requests
 from rest_framework.authtoken.models import Token
 
 from registry import publish_release
-from api.utils import dict_diff, dict_merge, fingerprint, generate_app_name
+from api.utils import dict_diff, dict_merge, fingerprint, generate_app_name, app_build_type
 
 
 User = settings.AUTH_USER_MODEL
@@ -313,6 +313,7 @@ class App(UuidAuditedModel):
 
     def _scale_containers(self, scale_types, to_remove):
         release = self.release_set.latest()
+        build_type = app_build_type(release)
         for scale_type in scale_types:
             image = release.image
             version = "v{}".format(release.version)
@@ -325,6 +326,7 @@ class App(UuidAuditedModel):
                 'aname': self.id,
                 'num': scale_types[scale_type],
                 'app_type': scale_type,
+                'build_type': build_type,
                 'healthcheck': release.config.healthcheck()
             }
 
@@ -423,6 +425,7 @@ class App(UuidAuditedModel):
             self._default_scale(user, release)
 
     def _deploy_app(self, scale_types, release, existing):
+        build_type = app_build_type(release)
         for scale_type in scale_types:
             image = release.image
             version = "v{}".format(release.version)
@@ -435,6 +438,7 @@ class App(UuidAuditedModel):
                 'num': 0,
                 'version': version,
                 'app_type': scale_type,
+                'build_type': build_type,
                 'healthcheck': release.config.healthcheck()
             }
 
