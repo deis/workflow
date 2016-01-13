@@ -486,16 +486,20 @@ class App(UuidAuditedModel):
         except requests.exceptions.RequestException as e:
             logger.error("Error accessing deis-logger using url '{}': {}".format(url, e))
             raise e
+
         # Handle logs empty or not found
         if r.status_code == 204 or r.status_code == 404:
             logger.info("GET {} returned a {} status code".format(url, r.status_code))
             raise EnvironmentError('Could not locate logs')
+
         # Handle unanticipated status codes
         if r.status_code != 200:
             logger.error("Error accessing deis-logger: GET {} returned a {} status code"
                          .format(url, r.status_code))
             raise EnvironmentError('Error accessing deis-logger')
-        return r.content
+
+        # cast content to string since it comes as bytes via the requests object
+        return str(r.content)
 
     def run(self, user, command):
         """Run a one-off command in an ephemeral app container."""
