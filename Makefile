@@ -55,6 +55,10 @@ kube-create-database:
 
 kube-create-all: kube-create-database kube-create
 
+kube-update: update-manifests
+	kubectl delete -f manifests/deis-workflow-rc.tmp.yml
+	kubectl create -f manifests/deis-workflow-rc.tmp.yml
+
 update-manifests:
 	sed 's#\(image:\) .*#\1 $(IMAGE)#' manifests/deis-workflow-rc.yml \
 		> manifests/deis-workflow-rc.tmp.yml
