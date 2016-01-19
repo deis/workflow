@@ -19,13 +19,13 @@ spec:
           image: quay.io/deisci/workflow:v2-beta
           readinessProbe:
             httpGet:
-              path: /health-check
+              path: /healthz
               port: 8000
             initialDelaySeconds: 30
             timeoutSeconds: 1
           livenessProbe:
             httpGet:
-              path: /health-check
+              path: /healthz
               port: 8000
             initialDelaySeconds: 30
             timeoutSeconds: 1
@@ -65,4 +65,3 @@ spec:
         - name: builder-key-auth
           secret:
             secretName: builder-key-auth
-
