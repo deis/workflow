@@ -29,7 +29,7 @@ def mock_request_connection_error(*args, **kwargs):
     raise requests.exceptions.ConnectionError("connection error")
 
 
-@mock.patch('api.models.publish_release', lambda *args: None)
+@mock.patch('api.models.release.publish_release', lambda *args: None)
 class ConfigTest(TransactionTestCase):
 
     """Tests setting and updating config values"""
