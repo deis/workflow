@@ -16,7 +16,7 @@ from rest_framework.authtoken.models import Token
 from . import mock_status_ok
 
 
-@mock.patch('api.models.publish_release', lambda *args: None)
+@mock.patch('api.models.release.publish_release', lambda *args: None)
 class HookTest(TransactionTestCase):
 
     """Tests API hooks used to trigger actions from external components"""
