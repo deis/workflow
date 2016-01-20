@@ -10,6 +10,6 @@ from django.conf.urls import include, url
 from api.views import HealthCheckView
 
 urlpatterns = [
-    url(r'^health-check$', HealthCheckView.as_view()),
+    url(r'^healthz$', HealthCheckView.as_view()),
     url(r'^v2/', include('api.urls')),
 ]
