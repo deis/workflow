@@ -5,12 +5,13 @@ URL routing patterns for the Deis REST API.
 
 from django.conf import settings
 from django.conf.urls import include, url
-
-from api import routers, views
 from rest_framework.authtoken.views import obtain_auth_token as views_obtain_auth_token
+from rest_framework.routers import DefaultRouter
+
+from api import views
 
 
-router = routers.ApiRouter()
+router = DefaultRouter(trailing_slash=False)
 
 # Add the generated REST URLs and login/logout endpoint
 urlpatterns = [
