@@ -136,7 +136,8 @@ class App(UuidAuditedModel):
     def _clean_app_logs(self):
         """Delete application logs stored by the logger component"""
         try:
-            url = 'http://{}:{}/{}/'.format(settings.LOGGER_HOST, settings.LOGGER_PORT, self.id)
+            url = 'http://{}:{}/logs/{}'.format(settings.LOGGER_HOST,
+                                                settings.LOGGER_PORT, self.id)
             requests.delete(url)
         except Exception as e:
             # Ignore errors deleting application logs.  An error here should not interfere with
@@ -378,8 +379,9 @@ class App(UuidAuditedModel):
     def logs(self, log_lines=str(settings.LOG_LINES)):
         """Return aggregated log data for this application."""
         try:
-            url = "http://{}:{}/{}?log_lines={}".format(settings.LOGGER_HOST, settings.LOGGER_PORT,
-                                                        self.id, log_lines)
+            url = "http://{}:{}/logs/{}?log_lines={}".format(settings.LOGGER_HOST,
+                                                             settings.LOGGER_PORT,
+                                                             self.id, log_lines)
             r = requests.get(url)
         # Handle HTTP request errors
         except requests.exceptions.RequestException as e:
