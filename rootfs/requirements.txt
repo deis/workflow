@@ -11,7 +11,6 @@ psycopg2==2.6.1
 python-etcd==0.3.2
 PyYAML==3.11
 requests==2.9.1
-#simpleflock==0.0.2
-git+https://github.com/helgi/python-simpleflock.git@python3#egg=simpleflock
+simpleflock==0.0.3
 static==1.1.1
 morph==0.1.2
