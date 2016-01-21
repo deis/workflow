@@ -663,6 +663,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
         if unhealthy(resp.status_code):
             error(resp, 'create ReplicationController "{}" in Namespace "{}"',
                   name, app_name)
+            logger.debug('template used: {}'.format(json.dumps(js_template, indent=4)))
 
         create = False
         for _ in range(30):
