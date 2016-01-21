@@ -640,7 +640,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
         if env:
             for k, v in env.items():
-                containers[0]["env"].append({"name": k, "value": v})
+                containers[0]["env"].append({"name": k, "value": str(v)})
 
         if mem or cpu:
             containers[0]["resources"] = {"limits": {}}
