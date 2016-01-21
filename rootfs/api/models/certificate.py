@@ -25,7 +25,7 @@ class Certificate(AuditedModel):
     key = models.TextField()
     # X.509 certificates allow any string of information as the common name.
     common_name = models.TextField(unique=True)
-    expires = models.DateTimeField()
+    expires = models.DateTimeField(editable=False)
 
     def __str__(self):
         return self.common_name

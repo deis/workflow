@@ -99,14 +99,11 @@ class AppSerializer(serializers.ModelSerializer):
 
     owner = serializers.ReadOnlyField(source='owner.username')
     structure = serializers.JSONField(required=False)
-    created = serializers.DateTimeField(read_only=True)
-    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a :class:`AppSerializer`."""
         model = models.App
         fields = ['uuid', 'id', 'owner', 'structure', 'created', 'updated']
-        read_only_fields = ['uuid']
 
 
 class BuildSerializer(serializers.ModelSerializer):
@@ -115,15 +112,12 @@ class BuildSerializer(serializers.ModelSerializer):
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
     procfile = serializers.JSONField(required=False)
-    created = serializers.DateTimeField(read_only=True)
-    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a :class:`BuildSerializer`."""
         model = models.Build
         fields = ['owner', 'app', 'image', 'sha', 'procfile', 'dockerfile', 'created',
                   'updated', 'uuid']
-        read_only_fields = ['uuid']
 
 
 class ConfigSerializer(serializers.ModelSerializer):
@@ -135,8 +129,6 @@ class ConfigSerializer(serializers.ModelSerializer):
     memory = JSONFieldSerializer(required=False, binary=True)
     cpu = JSONFieldSerializer(required=False, binary=True)
     tags = JSONFieldSerializer(required=False, binary=True)
-    created = serializers.DateTimeField(read_only=True)
-    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a :class:`ConfigSerializer`."""
@@ -207,8 +199,6 @@ class ReleaseSerializer(serializers.ModelSerializer):
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
-    created = serializers.DateTimeField(read_only=True)
-    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a :class:`ReleaseSerializer`."""
@@ -220,8 +210,6 @@ class ContainerSerializer(serializers.ModelSerializer):
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
-    created = serializers.DateTimeField(read_only=True)
-    updated = serializers.DateTimeField(read_only=True)
     release = serializers.SerializerMethodField()
 
     class Meta:
@@ -237,9 +225,6 @@ class KeySerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.Key` model."""
 
     owner = serializers.ReadOnlyField(source='owner.username')
-    fingerprint = serializers.CharField(read_only=True)
-    created = serializers.DateTimeField(read_only=True)
-    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a KeySerializer."""
@@ -251,8 +236,6 @@ class DomainSerializer(serializers.ModelSerializer):
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
-    created = serializers.DateTimeField(read_only=True)
-    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a :class:`DomainSerializer`."""
@@ -295,9 +278,6 @@ class CertificateSerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.Cert` model."""
 
     owner = serializers.ReadOnlyField(source='owner.username')
-    expires = serializers.DateTimeField(read_only=True)
-    created = serializers.DateTimeField(read_only=True)
-    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a DomainCertSerializer."""
@@ -305,7 +285,6 @@ class CertificateSerializer(serializers.ModelSerializer):
         extra_kwargs = {'certificate': {'write_only': True},
                         'key': {'write_only': True},
                         'common_name': {'required': False}}
-        read_only_fields = ['expires', 'created', 'updated']
 
 
 class PushSerializer(serializers.ModelSerializer):
@@ -313,8 +292,6 @@ class PushSerializer(serializers.ModelSerializer):
 
     app = serializers.SlugRelatedField(slug_field='id', queryset=models.App.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
-    created = serializers.DateTimeField(read_only=True)
-    updated = serializers.DateTimeField(read_only=True)
 
     class Meta:
         """Metadata options for a :class:`PushSerializer`."""
