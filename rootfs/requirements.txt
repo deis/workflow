@@ -12,5 +12,4 @@ python-etcd==0.3.2
 PyYAML==3.11
 requests==2.9.1
 simpleflock==0.0.3
-static==1.1.1
 morph==0.1.2

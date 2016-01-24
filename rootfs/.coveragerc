@@ -6,9 +6,6 @@ omit =
     api/__init__.py
     api/docker.py
     scheduler/*
-    web/__init__.py
-    web/models.py
-    web/templatetags/__init__.py
     # osx library files when not running in virtualenv
     /Library/*
     /System/*
@@ -27,5 +24,4 @@ exclude_lines =
     if __name__ == .__main__.:
 
 [html]
-extra_css = web/static/css/main.css
 title = Deis Coverage Report
