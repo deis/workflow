@@ -23,8 +23,13 @@ soon.
 
 ## Hacking Workflow
 
-First, install [helm](http://helm.sh) and [boot up a kubernetes cluster][install-k8s]. Next, add the
-deis repository to your chart list:
+First, [obtain a Kubernetes cluster][install-k8s]. Deis Workflow currently targets Kubernetes
+v1.1 with the following requirements:
+
+* Configure Docker's `insecure-registry` parameter to include the subnets used by your Kubernetes installation
+* If you are testing the logger components, you must enable `DaemonSet` experimental APIs via `--runtime-config=extensions/v1beta1/daemonsets=true`
+
+Next, install [helm](http://helm.sh). Next, add the deis repository to your chart list:
 
 ```console
 $ helm repo add deis https://github.com/deis/charts
