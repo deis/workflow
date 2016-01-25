@@ -28,6 +28,4 @@ RUN DOCKER_BUILD=true /app/tmp/build.sh && rm -rf /app/*
 
 ADD . /app
 
-RUN ./manage.py collectstatic --settings=deis.settings --noinput  # create static resources
-
 ENV DEIS_RELEASE 2.0.0-dev
