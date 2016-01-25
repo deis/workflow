@@ -2,10 +2,10 @@ import os
 
 # security keys and auth tokens
 with open('/var/run/secrets/api/builder/auth/builder-key') as f:
-    BUILDER_KEY = f.read()
+    BUILDER_KEY = f.read().strip()
 
 with open('/var/run/secrets/api/django/secret-key') as f:
-    SECRET_KEY = f.read()
+    SECRET_KEY = f.read().strip()
 
 # scheduler settings
 SCHEDULER_MODULE = 'scheduler'
