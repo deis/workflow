@@ -45,9 +45,9 @@ kube-delete-database:
 
 kube-delete-all: kube-delete kube-delete-database
 
-kube-create:
-	kubectl create -f manifests/deis-workflow-rc.tmp.yml
+kube-create: update-manifests
 	kubectl create -f manifests/deis-workflow-service.yml
+	kubectl create -f manifests/deis-workflow-rc.tmp.yml
 
 kube-create-database:
 	kubectl create -f manifests/deis-database-rc.yml

@@ -8,11 +8,11 @@ metadata:
 spec:
   replicas: 1
   selector:
-    name: deis-workflow
+    app: deis-workflow
   template:
     metadata:
       labels:
-        name: deis-workflow
+        app: deis-workflow
     spec:
       containers:
         - name: deis-workflow
