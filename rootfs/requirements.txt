@@ -5,7 +5,7 @@ django-cors-headers==1.1.0
 django-guardian==1.4.1
 djangorestframework==3.3.2
 docker-py==1.6.0
-gunicorn==19.4.1
+gunicorn==19.4.5
 jsonfield==1.0.3
 morph==0.1.2
 psycopg2==2.6.1
