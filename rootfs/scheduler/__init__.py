@@ -330,8 +330,8 @@ class KubeHTTPClient(AbstractSchedulerClient):
                 data = {'metadata': {'labels': {'routable': 'true'}}}
             self._create_namespace(app_name)
             self._create_secret(app_name)
-            self._create_rc(name, image, command, **kwargs)
             self._create_service(name, app_name, app_type, data, image=image)
+            self._create_rc(name, image, command, **kwargs)
 
         except Exception as e:
             logger.debug(e)
@@ -697,11 +697,13 @@ class KubeHTTPClient(AbstractSchedulerClient):
         if controller['spec']['selector']['type'] not in ['web', 'cmd']:
             return controller
 
+        app_name = controller['spec']['selector']['app']
         # Inspect if a PORT env is already defined, make sure that's the port used
-        for item in controller['spec']['template']['spec']['containers'][0]['env']:
-            if item['name'] == 'PORT':
-                port = int(item['value'])
-
+        try:
+            service = self._get_service(app_name, app_name).json()
+            port = service['spec']['ports'][0]['targetPort']
+        except:
+            pass
         # Only support HTTP checks for now
         # http://kubernetes.io/v1.1/docs/user-guide/pod-states.html#container-probes
         healthcheck = {
@@ -770,8 +772,9 @@ class KubeHTTPClient(AbstractSchedulerClient):
         image = kwargs.get('image')
         try:
             image = self.registry + '/' + image
+            repo = image.split(":")
             # image already includes the tag, so we split it out here
-            docker_cli.pull(image.rsplit(':')[0], image.rsplit(':')[1])
+            docker_cli.pull(repo[0]+":"+repo[1], tag=repo[2], insecure_registry=True)
             image_info = docker_cli.inspect_image(image)
             port = int(list(image_info['Config']['ExposedPorts'].keys())[0].split("/")[0])
         except:
