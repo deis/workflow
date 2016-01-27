@@ -81,4 +81,8 @@ markdown_extensions:
   - markdown_checklist.extension
   - admonition
   - codehilite
+extra_javascript:
+  - static/js/adjustments.js
+  - static/js/bootstrap.min.js
+  - static/js/checkURL.js
 google_analytics: ['UA-42867143-1', 'deis.io']
