@@ -77,7 +77,10 @@ else
 	addgroup deis "$(stat -c "%G" /var/run/docker.sock)"
 fi
 
-# run an idempotent database migration
+echo "Health Checks:"
+./manage.py healthchecks
+
+echo "Database Migrations:"
 sudo -E -u deis ./manage.py migrate --noinput
 
 # spawn a gunicorn server in the background

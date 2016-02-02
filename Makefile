@@ -80,7 +80,10 @@ setup-venv:
 	@if [ ! -d venv ]; then virtualenv venv; fi
 	venv/bin/pip install --disable-pip-version-check -q -r rootfs/requirements.txt -r rootfs/dev_requirements.txt
 
-test: test-style test-unit test-functional
+test: test-style test-check test-unit test-functional
+
+test-check:
+	cd rootfs && python manage.py check
 
 test-style:
 	cd rootfs && flake8 --show-pep8 --show-source
