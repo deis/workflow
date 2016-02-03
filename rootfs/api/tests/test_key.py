@@ -71,14 +71,17 @@ class KeyTest(TestCase):
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         key_id = response.data['id']
+
         response = self.client.get(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['results']), 1)
+
         url = '/v2/keys/{key_id}'.format(**locals())
         response = self.client.get(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(body['id'], response.data['id'])
         self.assertEqual(body['public'], response.data['public'])
+
         response = self.client.delete(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 204)
 
