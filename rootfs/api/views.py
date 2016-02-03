@@ -19,14 +19,31 @@ from rest_framework.authtoken.models import Token
 from api import authentication, models, permissions, serializers, viewsets
 
 import requests
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class HealthCheckView(View):
-    """Simple health check view to determine if the server
-       is responding to HTTP requests.
+    """
+    Simple health check view to determine if the server
+    is responding to HTTP requests and DB connection / query.
     """
 
     def get(self, request):
+        try:
+            import django.db
+            with django.db.connection.cursor() as c:
+                c.execute("SELECT 0")
+        except django.db.Error as e:
+            logger.critical("Database health check failed")
+            logger.debug(str(e))
+
+            return HttpResponse(
+                "Database health check failed",
+                status=status.HTTP_503_SERVICE_UNAVAILABLE
+            )
+
         return HttpResponse("OK")
     head = get
 
