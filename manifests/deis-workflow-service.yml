@@ -5,7 +5,7 @@ metadata:
   namespace: deis
   labels:
     heritage: deis
-    routable: "true"
+    router.deis.io/routable: "true"
   annotations:
     router.deis.io/domains: deis
     router.deis.io/connectTimeout: "10"
