@@ -77,6 +77,9 @@ else
 	addgroup deis "$(stat -c "%G" /var/run/docker.sock)"
 fi
 
+echo "Django checks:"
+./manage.py check --deploy api
+
 echo "Health Checks:"
 ./manage.py healthchecks
 

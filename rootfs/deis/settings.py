@@ -13,6 +13,13 @@ PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))
 
 DEBUG = False
 
+# Silence two security messages around SSL as router takes care of them
+# https://docs.djangoproject.com/es/1.9/ref/checks/#security
+SILENCED_SYSTEM_CHECKS = [
+    'security.W004',
+    'security.W008'
+]
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
@@ -84,14 +91,14 @@ TEMPLATES = [
 MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'api.middleware.APIVersionMiddleware',
     'deis.middleware.PlatformVersionMiddleware',
-    # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 ROOT_URLCONF = 'deis.urls'
@@ -125,8 +132,8 @@ ANONYMOUS_USER_ID = -1
 LOGIN_URL = '/v2/auth/login/'
 LOGIN_REDIRECT_URL = '/'
 
+# Security settings
 CORS_ORIGIN_ALLOW_ALL = True
-
 CORS_ALLOW_HEADERS = (
     'content-type',
     'accept',
@@ -140,6 +147,17 @@ CORS_EXPOSE_HEADERS = (
     'DEIS_PLATFORM_VERSION',
     'Deis-Release',
 )
+
+X_FRAME_OPTIONS = 'DENY'
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+
+# Honor HTTPS from a trusted proxy
+# see https://docs.djangoproject.com/en/1.6/ref/settings/#secure-proxy-ssl-header
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # standard datetime format used for logging, model timestamps, etc.
 DEIS_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S%Z'
@@ -262,8 +280,9 @@ SCHEDULER_AUTH = None
 SCHEDULER_OPTIONS = None
 
 # security keys and auth tokens
-SECRET_KEY = os.environ.get('DEIS_SECRET_KEY', 'CHANGEME_sapm$s%upvsw5l_zuy_&29rkywd^78ff(qi')
-BUILDER_KEY = os.environ.get('DEIS_BUILDER_KEY', 'CHANGEME_sapm$s%upvsw5l_zuy_&29rkywd^78ff(qi')
+random_secret = 'CHANGEME_sapm$s%upvsw5l_zuy_&29rkywd^78ff(qi*#@&*^'
+SECRET_KEY = os.environ.get('DEIS_SECRET_KEY', random_secret)
+BUILDER_KEY = os.environ.get('DEIS_BUILDER_KEY', random_secret)
 
 # registry settings
 REGISTRY_HOST = os.environ.get('DEIS_REGISTRY_SERVICE_HOST', '127.0.0.1')
@@ -298,10 +317,6 @@ DATABASES = {
 }
 
 APP_URL_REGEX = '[a-z0-9-]+'
-
-# Honor HTTPS from a trusted proxy
-# see https://docs.djangoproject.com/en/1.6/ref/settings/#secure-proxy-ssl-header
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Unit Hostname handling.
 # Supports:
