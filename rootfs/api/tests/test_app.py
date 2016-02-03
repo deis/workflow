@@ -144,7 +144,11 @@ class AppTest(TestCase):
         body = {'id': 'camelCase'}
         response = self.client.post(url, json.dumps(body), content_type='application/json',
                                     HTTP_AUTHORIZATION='token {}'.format(self.token))
-        self.assertContains(response, 'App IDs can only contain [a-z0-9-]', status_code=400)
+        self.assertContains(
+            response,
+            'App name can only contain a-z (lowercase), 0-9 and hypens',
+            status_code=400
+        )
         url = '/v2/apps'
         body = {'id': app_id}
         response = self.client.post(url, json.dumps(body), content_type='application/json',

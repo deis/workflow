@@ -205,14 +205,11 @@ SECRET_TEMPLATE = """\
   "kind": "Secret",
   "apiVersion": "$version",
   "metadata": {
-    "name": "minio-user",
+    "name": "$name",
     "namespace": "$id"
   },
   "type": "Opaque",
-  "data":{
-  "access-key-id": "$secretId",
-  "access-secret-key": "$secretKey"
-  }
+  "data": {}
 }
 """
 
@@ -329,13 +326,15 @@ class KubeHTTPClient(AbstractSchedulerClient):
             if app_type in ['web', 'cmd']:
                 data = {'metadata': {'labels': {'router.deis.io/routable': 'true'}}}
             self._create_namespace(app_name)
-            self._create_secret(app_name)
+            self._create_minio_secret(app_name)
             self._create_service(name, app_name, app_type, data, image=image)
             self._create_rc(name, image, command, **kwargs)
 
         except Exception as e:
             logger.debug(e)
+            # TODO check if RC exists first
             self._scale_rc(name, app_name, 0)
+            # TODO check if RC exists first
             self._delete_rc(name, app_name)
             raise
 
@@ -366,6 +365,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
         parsed_json = json.loads(data)
         log_data = ''
         for pod in parsed_json['items']:
+            # FIXME: a pod can be running without being in ready state
             if name in pod['metadata']['generateName'] and pod['status']['phase'] == 'Running':
                 status, data, reason = self._pod_log(pod['metadata']['name'], app_name)
                 log_data += data
@@ -736,24 +736,56 @@ class KubeHTTPClient(AbstractSchedulerClient):
         return controller
 
     # SECRETS #
+    # http://kubernetes.io/v1.1/docs/api-reference/v1/definitions.html#_v1_secret
 
-    def _create_secret(self, namespace):
+    def _create_minio_secret(self, namespace):
         with open("/var/run/secrets/deis/minio/user/access-key-id", "rb") as the_file:
             secretId = the_file.read()
         with open("/var/run/secrets/deis/minio/user/access-secret-key", "rb") as the_file:
             secretKey = the_file.read()
 
+        data = {
+            'access-key-id': secretId,
+            'access-secret-key': secretKey
+        }
+        self._create_secret(namespace, 'minio-user', data)
+
+    def _get_secret(self, namespace, name):
+        url = self._api("/namespaces/{}/secrets/{}", namespace, name)
+        response = self.session.get(url)
+        if unhealthy(response.status_code):
+            error(response, 'get Secret "{}" in Namespace "{}"', name, namespace)
+
+        return response
+
+    def _create_secret(self, namespace, name, data):
+        logger.debug(data)
         template = json.loads(string.Template(SECRET_TEMPLATE).substitute({
             "version": self.apiversion,
             "id": namespace,
-            "secretId": base64.b64encode(secretId).decode(),
-            "secretKey": base64.b64encode(secretKey).decode(),
+            "name": name
         }))
 
+        for key, value in data.items():
+            value = value if isinstance(value, bytes) else bytes(value, 'UTF-8')
+            item = base64.b64encode(value).decode()
+            template["data"].update({key: item})
+
         url = self._api("/namespaces/{}/secrets", namespace)
-        resp = self.session.post(url, json=template)
-        if unhealthy(resp.status_code):
-            error(resp, 'failed to create secret in Namespace "{}"', namespace)
+        response = self.session.post(url, json=template)
+        logger.critical(response)
+        if unhealthy(response.status_code):
+            error(response, 'failed to create secret "{}" in Namespace "{}"', name, namespace)
+
+        return response
+
+    def _delete_secret(self, namespace, name):
+        url = self._api("/namespaces/{}/secrets/{}", namespace, name)
+        response = self.session.delete(url)
+        if unhealthy(response.status_code):
+            error(response, 'delete Secret "{}" in Namespace "{}"', name, namespace)
+
+        return response
 
     # SERVICES #
 

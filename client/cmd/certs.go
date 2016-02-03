@@ -3,9 +3,11 @@ package cmd
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
+	"time"
 
-	"github.com/deis/pkg/prettyprint"
+	"github.com/olekukonko/tablewriter"
 
 	"github.com/deis/workflow/client/controller/client"
 	"github.com/deis/workflow/client/controller/models/certs"
@@ -34,45 +36,67 @@ func CertsList(results int) error {
 		return nil
 	}
 
-	certMap := make(map[string]string)
-	nameMax := 0
-	expiresMax := 0
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetBorder(false)
+	table.SetAutoFormatHeaders(false)
+	table.SetHeaderLine(true)
+	table.SetHeader([]string{"Name", "Common Name", "SubjectAltName", "Expires", "Fingerprint", "Domains", "Updated", "Created"})
 	for _, cert := range certList {
-		certMap[cert.Name] = cert.Expires
+		domains := strings.Join(cert.Domains[:], ",")
+		san := strings.Join(cert.SubjectAltName[:], ",")
 
-		if len(cert.Name) > nameMax {
-			nameMax = len(cert.Name)
+		// Make dates more readable
+		now := time.Now()
+		expires := cert.Expires.Time.Format("2 Jan 2006")
+		created := cert.Created.Time.Format("2 Jan 2006")
+		updated := cert.Updated.Time.Format("2 Jan 2006")
+
+		if cert.Expires.Time.Before(now) {
+			expires += " (expired)"
+		} else {
+			// Ghetto solution
+			expires += " (in"
+			year := cert.Expires.Time.Year() - now.Year()
+			month := cert.Expires.Time.Month() - now.Month()
+			day := cert.Expires.Time.Day() - now.Day()
+
+			if year > 0 {
+				expires += fmt.Sprintf(" %d year", year)
+				if year > 1 {
+					expires += "s"
+				}
+			} else if month > 0 {
+				expires += fmt.Sprintf(" %d month", month)
+				if month > 1 {
+					expires += "s"
+				}
+			} else if day != 0 {
+				// special handling on negative days
+				if day < 0 {
+					day *= -1
+				}
+
+				expires += fmt.Sprintf(" %d day", day)
+				if day > 1 {
+					expires += "s"
+				}
+			}
+			expires += ")"
 		}
-		if len(cert.Expires) > nameMax {
-			expiresMax = len(cert.Expires)
-		}
+
+		// show a shorter version of the fingerprint
+		fingerprint := cert.Fingerprint[:5] + "[...]" + cert.Fingerprint[len(cert.Fingerprint)-5:]
+
+		table.Append([]string{cert.Name, cert.CommonName, san, expires, fingerprint, domains, updated, created})
 	}
+	table.Render()
 
-	nameHeader := "Common Name"
-	expiresHeader := "Expires"
-	tabSpaces := 5
-	bufferSpaces := tabSpaces
-
-	if nameMax < len(nameHeader) {
-		tabSpaces += len(nameHeader) - nameMax
-		nameMax = len(nameHeader)
-	} else {
-		bufferSpaces += nameMax - len(nameHeader)
-	}
-
-	if expiresMax < len(expiresHeader) {
-		expiresMax = len(expiresHeader)
-	}
-
-	fmt.Printf("%s%s%s\n", nameHeader, strings.Repeat(" ", bufferSpaces), expiresHeader)
-	fmt.Printf("%s%s%s\n", strings.Repeat("-", nameMax), strings.Repeat(" ", 5),
-		strings.Repeat("-", expiresMax))
-	fmt.Print(prettyprint.PrettyTabs(certMap, tabSpaces))
 	return nil
 }
 
 // CertAdd adds a cert to the controller.
-func CertAdd(cert, key, commonName, sans string) error {
+func CertAdd(cert string, key string, name string) error {
 	c, err := client.New()
 
 	if err != nil {
@@ -81,7 +105,7 @@ func CertAdd(cert, key, commonName, sans string) error {
 
 	fmt.Print("Adding SSL endpoint... ")
 	quit := progress()
-	err = processCertsAdd(c, cert, key, commonName, sans)
+	err = doCertAdd(c, cert, key, name)
 	quit <- true
 	<-quit
 
@@ -93,48 +117,117 @@ func CertAdd(cert, key, commonName, sans string) error {
 	return nil
 }
 
-func processCertsAdd(c *client.Client, cert, key, commonName, sans string) error {
-	if sans != "" {
-		for _, san := range strings.Split(sans, ",") {
-			if err := doCertAdd(c, cert, key, san); err != nil {
-				return err
-			}
-		}
-		return nil
-	}
-
-	return doCertAdd(c, cert, key, commonName)
-}
-
-func doCertAdd(c *client.Client, cert string, key string, commonName string) error {
+func doCertAdd(c *client.Client, cert string, key string, name string) error {
 	certFile, err := ioutil.ReadFile(cert)
-
 	if err != nil {
 		return err
 	}
 
 	keyFile, err := ioutil.ReadFile(key)
-
 	if err != nil {
 		return err
 	}
 
-	_, err = certs.New(c, string(certFile), string(keyFile), commonName)
+	_, err = certs.New(c, string(certFile), string(keyFile), name)
 	return err
 }
 
 // CertRemove deletes a cert from the controller.
-func CertRemove(commonName string) error {
+func CertRemove(name string) error {
+	c, err := client.New()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Removing %s... ", name)
+	quit := progress()
+
+	certs.Delete(c, name)
+
+	quit <- true
+	<-quit
+
+	if err == nil {
+		fmt.Println("done")
+	}
+
+	return err
+}
+
+// CertInfo gets info about certficiate
+func CertInfo(name string) error {
+	c, err := client.New()
+	if err != nil {
+		return err
+	}
+
+	cert, err := certs.Get(c, name)
+	if err != nil {
+		return err
+	}
+
+	domains := strings.Join(cert.Domains[:], ",")
+	if domains == "" {
+		domains = "No connected domains"
+	}
+
+	san := strings.Join(cert.SubjectAltName[:], ",")
+	if san == "" {
+		san = "N/A"
+	}
+
+	fmt.Printf("=== %s Certificate\n", cert.Name)
+	fmt.Println("Common Name(s):    ", cert.CommonName)
+	fmt.Println("Expires At:        ", cert.Expires)
+	fmt.Println("Starts At:         ", cert.Starts)
+	fmt.Println("Fingerprint:       ", cert.Fingerprint)
+	fmt.Println("Subject Alt Name:  ", san)
+	fmt.Println("Issuer:            ", cert.Issuer)
+	fmt.Println("Subject:           ", cert.Subject)
+	fmt.Println()
+	fmt.Println("Connected Domains: ", domains)
+	fmt.Println("Owner:             ", cert.Owner)
+	fmt.Println("Created:           ", cert.Created)
+	fmt.Println("Updated:           ", cert.Updated)
+
+	return nil
+}
+
+// CertAttach attaches a certificate to a domain
+func CertAttach(name string, domain string) error {
 	c, err := client.New()
 
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("Removing %s... ", commonName)
+	fmt.Printf("Attaching certificate %s to domain %s... ", name, domain)
 	quit := progress()
 
-	certs.Delete(c, commonName)
+	certs.Attach(c, name, domain)
+
+	quit <- true
+	<-quit
+
+	if err == nil {
+		fmt.Println("done")
+	}
+
+	return err
+}
+
+// CertDetach detaches a certificate from a domain
+func CertDetach(name string, domain string) error {
+	c, err := client.New()
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Detaching certificate %s from domain %s... ", name, domain)
+	quit := progress()
+
+	certs.Detach(c, name, domain)
 
 	quit <- true
 	<-quit

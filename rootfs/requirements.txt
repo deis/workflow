@@ -8,6 +8,7 @@ docker-py==1.6.0
 gunicorn==19.4.5
 jsonfield==1.0.3
 morph==0.1.2
+ndg-httpsclient==0.4.0
 psycopg2==2.6.1
 python-etcd==0.3.2
 PyYAML==3.11

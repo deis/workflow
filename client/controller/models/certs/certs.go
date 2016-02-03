@@ -24,17 +24,15 @@ func List(c *client.Client, results int) ([]api.Cert, int, error) {
 	return res, count, nil
 }
 
-// New creates a new cert.
-func New(c *client.Client, cert string, key string, commonName string) (api.Cert, error) {
-	req := api.CertCreateRequest{Certificate: cert, Key: key, Name: commonName}
+// New creates a cert.
+func New(c *client.Client, cert string, key string, name string) (api.Cert, error) {
+	req := api.CertCreateRequest{Certificate: cert, Key: key, Name: name}
 	reqBody, err := json.Marshal(req)
-
 	if err != nil {
 		return api.Cert{}, err
 	}
 
 	resBody, err := c.BasicRequest("POST", "/v2/certs/", reqBody)
-
 	if err != nil {
 		return api.Cert{}, err
 	}
@@ -47,10 +45,45 @@ func New(c *client.Client, cert string, key string, commonName string) (api.Cert
 	return resCert, nil
 }
 
-// Delete removes a cert.
-func Delete(c *client.Client, commonName string) error {
-	u := fmt.Sprintf("/v2/certs/%s", commonName)
+// Get information for a certificate
+func Get(c *client.Client, name string) (api.Cert, error) {
+	url := fmt.Sprintf("/v2/certs/%s", name)
+	body, err := c.BasicRequest("GET", url, nil)
+	if err != nil {
+		return api.Cert{}, err
+	}
 
-	_, err := c.BasicRequest("DELETE", u, nil)
+	res := api.Cert{}
+	if err = json.Unmarshal([]byte(body), &res); err != nil {
+		return api.Cert{}, err
+	}
+
+	return res, nil
+}
+
+// Delete removes a cert.
+func Delete(c *client.Client, name string) error {
+	url := fmt.Sprintf("/v2/certs/%s", name)
+	_, err := c.BasicRequest("DELETE", url, nil)
+	return err
+}
+
+// Attach a certificate to a domain
+func Attach(c *client.Client, name string, domain string) error {
+	req := api.CertAttachRequest{Domain: domain}
+	reqBody, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
+
+	url := fmt.Sprintf("/v2/certs/%s/domain/", name)
+	_, err = c.BasicRequest("POST", url, reqBody)
+	return err
+}
+
+// Detach a certificate from a domain
+func Detach(c *client.Client, name string, domain string) error {
+	url := fmt.Sprintf("/v2/certs/%s/domain/%s", name, domain)
+	_, err := c.BasicRequest("DELETE", url, nil)
 	return err
 }

@@ -45,7 +45,7 @@ urlpatterns = [
     url(r"^apps/(?P<id>{})/containers/?".format(settings.APP_URL_REGEX),
         views.ContainerViewSet.as_view({'get': 'list'})),
     # application domains
-    url(r"^apps/(?P<id>{})/domains/(?P<domain>[-\._\w]+)/?".format(settings.APP_URL_REGEX),
+    url(r"^apps/(?P<id>{})/domains/(?P<domain>\**\.?[-\._\w]+)/?".format(settings.APP_URL_REGEX),
         views.DomainViewSet.as_view({'delete': 'destroy'})),
     url(r"^apps/(?P<id>{})/domains/?".format(settings.APP_URL_REGEX),
         views.DomainViewSet.as_view({'post': 'create', 'get': 'list'})),
@@ -98,8 +98,14 @@ urlpatterns = [
         views.AdminPermsViewSet.as_view({'delete': 'destroy'})),
     url(r'^admin/perms/?',
         views.AdminPermsViewSet.as_view({'get': 'list', 'post': 'create'})),
-    url(r'^certs/(?P<common_name>[-_*.\w]+)/?',
-        views.CertificateViewSet.as_view({'get': 'retrieve', 'delete': 'destroy'})),
+    # certificates
+    url(r'^certs/(?P<name>[-_*.\w]+)/domain/(?P<domain>\**\.?[-\._\w]+)?',
+        views.CertificateViewSet.as_view({'delete': 'detach', 'post': 'attach'})),
+    url(r'^certs/(?P<name>[-_*.\w]+)/?',
+        views.CertificateViewSet.as_view({
+            'get': 'retrieve',
+            'delete': 'destroy'
+        })),
     url(r'^certs/?',
         views.CertificateViewSet.as_view({'get': 'list', 'post': 'create'})),
     # list users
