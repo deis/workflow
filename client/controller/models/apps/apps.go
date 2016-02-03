@@ -98,10 +98,21 @@ func Logs(c *client.Client, appID string, lines int) (string, error) {
 	body, err := c.BasicRequest("GET", u, nil)
 
 	if err != nil {
-		return "", err
+		return fmt.Sprintf("Error:%v", err), err
 	}
 
-	return strings.Trim(body, `"`), nil
+	if len(body) < 1 {
+		return fmt.Sprintf(
+			`There are currently no log messages. Please check the following things:
+1) Logger and fluentd pods are running.
+2) The application is writing logs to the logger component.
+You can verify that logs are appearing in the logger component by issuing the following command:
+curl http://<log service ip>:8088/%s on a kubernetes host.
+To get the service ip you can do the following: kubectl get svc deis-logger --namespace=deis`, appID), nil
+	}
+
+	// We need to trim a few characters off the front and end of the string
+	return body[3 : len(body)-2], nil
 }
 
 // Run one time command in an app.

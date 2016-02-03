@@ -267,7 +267,7 @@ ETCD_HOST = os.environ.get('DEIS_ETCD_1_SERVICE_HOST', '127.0.0.1')
 ETCD_PORT = os.environ.get('DEIS_ETCD_1_SERVICE_PORT_CLIENT', 4001)
 
 # default deis settings
-LOG_LINES = 1000
+LOG_LINES = 100
 TEMPDIR = tempfile.mkdtemp(prefix='deis')
 
 # names which apps cannot reserve for routing
@@ -297,7 +297,7 @@ S3EP_PORT = os.environ.get('DEIS_OUTSIDE_STORAGE_PORT', MINIO_PORT)
 S3EP = '{}:{}'.format(S3EP_HOST, S3EP_PORT)
 # logger settings
 LOGGER_HOST = os.environ.get('DEIS_LOGGER_SERVICE_HOST', '127.0.0.1')
-LOGGER_PORT = os.environ.get('DEIS_LOGGER_SERVICE_PORT', 8088)
+LOGGER_PORT = os.environ.get('DEIS_LOGGER_PORT_8088_TCP_PORT', 8088)
 
 # check if we can register users with `deis register`
 REGISTRATION_ENABLED = True
