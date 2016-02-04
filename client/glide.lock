@@ -1,48 +1,38 @@
-hash: 25221b48f89083fe463e680b9b5218e63bf584f0828ebefc4458a5c9198e7028
-updated: 2016-01-04T19:16:11.713972332-08:00
+hash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+updated: 2016-02-04T18:46:24.481822431Z
 imports:
 - name: appengine
   version: ""
   repo: https://appengine
-- name: appengine/datastore
-  version: ""
-  repo: https://appengine/datastore
-- name: appengine/memcache
-  version: ""
-  repo: https://appengine/memcache
-- name: appengine/user
-  version: ""
-  repo: https://appengine/user
 - name: bitbucket.org/bertimus9/systemstat
   version: 1468fd0db20598383c9393cccaa547de6ad99e5e
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c
 - name: code.google.com/p/go-charset
-  version: ebbeafdc430e
+  version: ""
+  repo: https://code.google.com/p/go-charset
 - name: code.google.com/p/go-uuid
-  version: 7dda39b2e7d5
+  version: ""
   subpackages:
   - uuid
 - name: code.google.com/p/go.crypto
-  version: 69e2a90ed92d
+  version: ""
+  repo: https://code.google.com/p/go.crypto
 - name: code.google.com/p/go.net
-  version: 937a34c9de13
+  version: ""
+  repo: https://code.google.com/p/go.net
 - name: code.google.com/p/go.text
-  version: 5b2527008a4c
-- name: code.google.com/p/goauth2
-  version: 222e66a2882e
+  version: ""
+  repo: https://code.google.com/p/go.text
 - name: code.google.com/p/google-api-go-client
-  version: e1c259484b49
-  subpackages:
-  - bigquery/v2
-  - googleapi
+  version: ""
+  repo: https://code.google.com/p/google-api-go-client
 - name: code.google.com/p/goprotobuf
   version: 68415e7123da32b07eab49c96d2c4d6158360e9b
   repo: https://github.com/golang/protobuf
-- name: code.google.com/p/gosqlite
-  version: 74691fb6f837
 - name: code.google.com/p/log4go
-  version: c3294304d93f
+  version: ""
+  repo: https://code.google.com/p/log4go
 - name: github.com/abbot/go-http-auth
   version: c0ef4539dfab4d21c8ef20ba2924f9fc6f186d35
 - name: github.com/AdRoll/goamz
@@ -318,6 +308,9 @@ imports:
   version: 14c555599c2a4f493c1e13fd1ea6fdf721739028
 - name: github.com/gorilla/websocket
   version: 3986be78bf859e01f01af631ad76da5b269d270c
+- name: github.com/Graylog2/go-gelf
+  version: 06974fc6689396066f6ebf5bab951d41979e3386
+  repo: https://github.com/Graylog2/go-gelf
 - name: github.com/hashicorp/consul
   version: 954aec66231b79c161a4122b023fbcad13047f79
   subpackages:
@@ -415,6 +408,9 @@ imports:
   - upid
 - name: github.com/miekg/dns
   version: 3f504e8dabd5d562e997d19ce0200aa41973e1b2
+- name: github.com/mistifyio/go-zfs
+  version: 1b4ae6fb4e77b095934d4430860ff202060169f8
+  repo: https://github.com/mistifyio/go-zfs
 - name: github.com/mitchellh/cli
   version: 8102d0ed5ea2709ade1243798785888175f6e415
 - name: github.com/mitchellh/mapstructure
@@ -611,7 +607,7 @@ imports:
   subpackages:
   - api/v1/types
 - name: k8s.io/kubernetes
-  version: 8dec957e4bba8b1260995d525a8260e03acbc181
+  version: 4309194eda6bfd4db0cc28f46cacabe1719979d7
 - name: launchpad.net/gocheck
   version: 11d3bc7aa68e238947792f30573146a3231fc0f1
   repo: https://github.com/go-check/check
