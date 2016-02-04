@@ -30,10 +30,13 @@ glideup:
 	${DEV_ENV_CMD} glide up
 
 build:
-	${DEV_ENV_CMD} go build -a -installsuffix cgo -ldflags '-s' -o deis .
+	${DEV_ENV_CMD} make binary-build
 	@$(call check-static-binary,deis)
 
-install: build
+binary-build:
+	go build -a -installsuffix cgo -ldflags '-s' -o deis .
+
+install:
 	cp deis $$GOPATH/bin
 
 installer: build
