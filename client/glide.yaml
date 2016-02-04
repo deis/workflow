@@ -1,5 +1,10 @@
 parent: null
 package: main
+ignore:
+- appengine
+- appengine/user
+- appengine/datastore
+- appengine/memcache
 import:
 - package: github.com/deis/pkg
   subpackages:

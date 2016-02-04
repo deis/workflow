@@ -3,6 +3,11 @@ export GO15VENDOREXPERIMENT=1
 # the filepath to this repository, relative to $GOPATH/src
 repo_path = github.com/deis/workflow/client
 
+DEV_ENV_IMAGE := quay.io/deis/go-dev:0.4.0
+DEV_ENV_WORK_DIR := /go/src/${repo_path}
+DEV_ENV_PREFIX := docker run --rm -e GO15VENDOREXPERIMENT=1 -e CGO_ENABLED=0 -v ${CURDIR}:${DEV_ENV_WORK_DIR} -w ${DEV_ENV_WORK_DIR}
+DEV_ENV_CMD := ${DEV_ENV_PREFIX} ${DEV_ENV_IMAGE}
+
 GO_FILES = $(wildcard *.go)
 GO_PACKAGES = cmd controller/api controller/client $(wildcard controller/models/*) parser $(wildcard pkg/*)
 GO_PACKAGES_REPO_PATH = $(addprefix $(repo_path)/,$(GO_PACKAGES))
@@ -19,10 +24,13 @@ define check-static-binary
 endef
 
 bootstrap:
-	glide -y glide.yaml install 
+	${DEV_ENV_CMD} glide install
+
+glideup:
+	${DEV_ENV_CMD} glide up
 
 build:
-	CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags '-s' -o deis .
+	${DEV_ENV_CMD} go build -a -installsuffix cgo -ldflags '-s' -o deis .
 	@$(call check-static-binary,deis)
 
 install: build
