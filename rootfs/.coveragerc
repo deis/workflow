@@ -4,12 +4,12 @@ omit =
     */virtualenv/*
     *tests*
     api/__init__.py
-    api/docker.py
     scheduler/*
     # osx library files when not running in virtualenv
     /Library/*
     /System/*
     /usr/local/lib/*
+branch = True
 
 [report]
 ignore_errors = True
