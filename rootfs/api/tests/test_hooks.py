@@ -15,6 +15,24 @@ from rest_framework.authtoken.models import Token
 
 from . import mock_status_ok
 
+RSA_PUBKEY = (
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCfQkkUUoxpvcNMkvv7jqnfodgs37M2eBO"
+    "APgLK+KNBMaZaaKB4GF1QhTCMfFhoiTW3rqa0J75bHJcdkoobtTHlK8XUrFqsquWyg3XhsT"
+    "Yr/3RQQXvO86e2sF7SVDJqVtpnbQGc5SgNrHCeHJmf5HTbXSIjCO/AJSvIjnituT/SIAMGe"
+    "Bw0Nq/iSltwYAek1hiKO7wSmLcIQ8U4A00KEUtalaumf2aHOcfjgPfzlbZGP0S0cuBwSqLr"
+    "8b5XGPmkASNdUiuJY4MJOce7bFU14B7oMAy2xacODUs1momUeYtGI9T7X2WMowJaO7tP3Gl"
+    "sgBMP81VfYTfYChAyJpKp2yoP autotest@autotesting comment"
+)
+
+RSA_PUBKEY2 = (
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC4xELdubosJ2/bQuiSUyWclVVa71pXpmq"
+    "aXTwfau/XFLgD5yE+TOFbVT22xvEr4AwZqS9w0TBMp4RLfi4pTdjoIK+lau2lDMuEpbF4xg"
+    "PWAveAqKuLcKJbJrZQdo5VWn5//7+M1RHQCPqjeN2iS9I3C8yiPg3mMPT2mKuyZYB9VD3hK"
+    "mhT4xRAsS6vfKZr7CmFHgAmRBqdaU1RetR5nfTj0R5yyAv7Z2BkE8UhUAseFZ0djBs6kzjs"
+    "5ddgM4Gv2Zajs7qVvpVPzZpq3vFB16Q5TMj2YtoYF6UZFFf4u/4KAW8xfYJAFdpNsvh279s"
+    "dJS08nTeElUg6pn83A3hqWX+J testing"
+)
+
 
 @mock.patch('api.models.release.publish_release', lambda *args: None)
 class HookTest(TransactionTestCase):
@@ -27,12 +45,67 @@ class HookTest(TransactionTestCase):
         self.user = User.objects.get(username='autotest')
         self.token = Token.objects.get(user=self.user).key
 
+    def test_key_hook(self):
+        """Test fetching keys for an app and a user"""
+
+        # Create app to use
+        url = '/v2/apps'
+        response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
+        self.assertEqual(response.status_code, 201)
+        app_id = response.data['id']
+
+        # give user permission to app
+        url = "/v2/apps/{}/perms".format(app_id)
+        body = {'username': str(self.user)}
+        response = self.client.post(url, json.dumps(body), content_type='application/json',
+                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
+        self.assertEqual(response.status_code, 201)
+
+        # Create key
+        url = '/v2/keys'
+        body = {'id': str(self.user), 'public': RSA_PUBKEY}
+        response = self.client.post(url, json.dumps(body), content_type='application/json',
+                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
+        self.assertEqual(response.status_code, 201)
+        public = response.data['public']
+
+        # Create another keys
+        url = '/v2/keys'
+        body = {'id': str(self.user), 'public': RSA_PUBKEY2}
+        response = self.client.post(url, json.dumps(body), content_type='application/json',
+                                    HTTP_AUTHORIZATION='token {}'.format(self.token))
+        self.assertEqual(response.status_code, 201)
+        public2 = response.data['public']
+
+        # Make sure 404 is returned for a random app
+        url = '/v2/hooks/keys/doesnotexist'
+        response = self.client.get(url, HTTP_X_DEIS_BUILDER_AUTH=settings.BUILDER_KEY)
+        self.assertEqual(response.status_code, 404)
+
+        # Test app that exists
+        url = '/v2/hooks/keys/{}'.format(app_id)
+        response = self.client.get(url, HTTP_X_DEIS_BUILDER_AUTH=settings.BUILDER_KEY)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {"autotest": [public, public2]})
+
+        # Test against an app that exist but user does not
+        url = '/v2/hooks/keys/{}/foooooo'.format(app_id)
+        response = self.client.get(url, HTTP_X_DEIS_BUILDER_AUTH=settings.BUILDER_KEY)
+        self.assertEqual(response.status_code, 404)
+
+        # Test against an app that exists and user that does
+        url = '/v2/hooks/keys/{}/{}'.format(app_id, str(self.user))
+        response = self.client.get(url, HTTP_X_DEIS_BUILDER_AUTH=settings.BUILDER_KEY)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {"autotest": [public, public2]})
+
     def test_push_hook(self):
         """Test creating a Push via the API"""
         url = '/v2/apps'
         response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
         self.assertEqual(response.status_code, 201)
         app_id = response.data['id']
+
         # prepare a push body
         body = {
             'sha': 'df1e628f2244b73f9cdf944f880a2b3470a122f4',

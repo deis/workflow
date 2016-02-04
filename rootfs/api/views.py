@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.http import HttpResponse
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from guardian.shortcuts import assign_perm, get_objects_for_user, \
     get_users_with_perms, remove_perm
@@ -395,6 +396,53 @@ class ReleaseViewSet(AppResourceViewSet):
 
 class BaseHookViewSet(BaseDeisViewSet):
     permission_classes = [permissions.HasBuilderAuth]
+
+
+class KeyHookViewSet(BaseHookViewSet):
+    """API hook to create new :class:`~api.models.Push`"""
+    model = models.Key
+    serializer_class = serializers.KeySerializer
+
+    def app(self, request, *args, **kwargs):
+        app = get_object_or_404(models.App, id=kwargs['id'])
+
+        perm_name = "api.use_app"
+        usernames = [u.id for u in get_users_with_perms(app)
+                     if u.has_perm(perm_name, app)]
+
+        data = {}
+        result = models.Key.objects \
+                       .filter(owner__in=usernames) \
+                       .values('owner__username', 'public') \
+                       .order_by('created')
+        for info in result:
+            user = info['owner__username']
+            if user not in data:
+                data[user] = []
+
+            data[user].append(info['public'])
+
+        return Response(data, status=status.HTTP_200_OK)
+
+    def users(self, request, *args, **kwargs):
+        app = get_object_or_404(models.App, id=kwargs['id'])
+        request.user = get_object_or_404(User, username=kwargs['username'])
+        # check the user is authorized for this app
+        if not permissions.is_app_user(request, app):
+            raise PermissionDenied()
+
+        data = {request.user.username: []}
+        keys = models.Key.objects \
+                     .filter(owner__username=kwargs['username']) \
+                     .values('public') \
+                     .order_by('created')
+        if not keys:
+            raise Http404("No Keys match the given query.")
+
+        for key in keys:
+            data[request.user.username].append(key['public'])
+
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class PushHookViewSet(BaseHookViewSet):

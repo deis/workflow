@@ -72,6 +72,10 @@ urlpatterns = [
     url(r'^keys/?',
         views.KeyViewSet.as_view({'get': 'list', 'post': 'create'})),
     # hooks
+    url(r'^hooks/keys/(?P<id>{})/(?P<username>[-_\w]+)?'.format(settings.APP_URL_REGEX),
+        views.KeyHookViewSet.as_view({'get': 'users'})),
+    url(r'^hooks/keys/(?P<id>{})/?'.format(settings.APP_URL_REGEX),
+        views.KeyHookViewSet.as_view({'get': 'app'})),
     url(r'^hooks/push/?',
         views.PushHookViewSet.as_view({'post': 'create'})),
     url(r'^hooks/build/?',
