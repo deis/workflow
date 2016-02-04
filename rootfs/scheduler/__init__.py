@@ -327,7 +327,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             # TODO this should potentially be higher up in the flow
             # see http://docs.deis.io/en/latest/using_deis/process-types/#web-vs-cmd-process-types
             if app_type in ['web', 'cmd']:
-                data = {'metadata': {'labels': {'routable': 'true'}}}
+                data = {'metadata': {'labels': {'router.deis.io/routable': 'true'}}}
             self._create_namespace(app_name)
             self._create_secret(app_name)
             self._create_service(name, app_name, app_type, data, image=image)
