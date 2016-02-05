@@ -192,6 +192,30 @@ class HookTest(TransactionTestCase):
         self.assertIn('release', response.data)
         self.assertIn('version', response.data['release'])
 
+    @mock.patch('requests.post', mock_status_ok)
+    def test_build_hook_slug_url(self):
+        """Test creating a slug_url build via an API Hook"""
+        url = '/v2/apps'
+        response = self.client.post(url, HTTP_AUTHORIZATION='token {}'.format(self.token))
+        self.assertEqual(response.status_code, 201)
+        app_id = response.data['id']
+        build = {'username': 'autotest', 'app': app_id}
+        url = '/v2/hooks/builds'.format(**locals())
+        body = {'receive_user': 'autotest',
+                'receive_repo': app_id,
+                'image': 'http://example.com/slugs/foo-12345354.tar.gz'}
+
+        # post the build without an auth token
+        response = self.client.post(url, json.dumps(body), content_type='application/json')
+        self.assertEqual(response.status_code, 401)
+
+        # post the build with the builder auth key
+        response = self.client.post(url, json.dumps(body), content_type='application/json',
+                                    HTTP_X_DEIS_BUILDER_AUTH=settings.BUILDER_KEY)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('release', response.data)
+        self.assertIn('version', response.data['release'])
+
     def test_build_hook_procfile(self):
         """Test creating a Procfile build via an API Hook"""
         url = '/v2/apps'
