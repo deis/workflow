@@ -86,7 +86,10 @@ class HookTest(TransactionTestCase):
         url = '/v2/hooks/keys/{}'.format(app_id)
         response = self.client.get(url, HTTP_X_DEIS_BUILDER_AUTH=settings.BUILDER_KEY)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, {"autotest": [public, public2]})
+        self.assertEqual(response.data, {"autotest": [
+            {'key': public, 'fingerprint': '54:6d:da:1f:91:b5:2b:6f:a2:83:90:c4:f9:73:76:f5'},
+            {'key': public2, 'fingerprint': '43:fd:22:bc:dc:ca:6a:28:ba:71:4c:18:41:1d:d1:e2'}
+        ]})
 
         # Test against an app that exist but user does not
         url = '/v2/hooks/keys/{}/foooooo'.format(app_id)
@@ -97,7 +100,10 @@ class HookTest(TransactionTestCase):
         url = '/v2/hooks/keys/{}/{}'.format(app_id, str(self.user))
         response = self.client.get(url, HTTP_X_DEIS_BUILDER_AUTH=settings.BUILDER_KEY)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, {"autotest": [public, public2]})
+        self.assertEqual(response.data, {"autotest": [
+            {'key': public, 'fingerprint': '54:6d:da:1f:91:b5:2b:6f:a2:83:90:c4:f9:73:76:f5'},
+            {'key': public2, 'fingerprint': '43:fd:22:bc:dc:ca:6a:28:ba:71:4c:18:41:1d:d1:e2'}
+        ]})
 
     def test_push_hook(self):
         """Test creating a Push via the API"""

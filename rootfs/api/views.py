@@ -413,14 +413,17 @@ class KeyHookViewSet(BaseHookViewSet):
         data = {}
         result = models.Key.objects \
                        .filter(owner__in=usernames) \
-                       .values('owner__username', 'public') \
+                       .values('owner__username', 'public', 'fingerprint') \
                        .order_by('created')
         for info in result:
             user = info['owner__username']
             if user not in data:
                 data[user] = []
 
-            data[user].append(info['public'])
+            data[user].append({
+                'key': info['public'],
+                'fingerprint': info['fingerprint']
+            })
 
         return Response(data, status=status.HTTP_200_OK)
 
@@ -434,13 +437,16 @@ class KeyHookViewSet(BaseHookViewSet):
         data = {request.user.username: []}
         keys = models.Key.objects \
                      .filter(owner__username=kwargs['username']) \
-                     .values('public') \
+                     .values('public', 'fingerprint') \
                      .order_by('created')
         if not keys:
             raise Http404("No Keys match the given query.")
 
-        for key in keys:
-            data[request.user.username].append(key['public'])
+        for info in keys:
+            data[request.user.username].append({
+                'key': info['public'],
+                'fingerprint': info['fingerprint']
+            })
 
         return Response(data, status=status.HTTP_200_OK)
 
