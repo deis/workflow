@@ -265,8 +265,6 @@ DEIS_RESERVED_NAMES = ['deis']
 # default scheduler settings
 SCHEDULER_MODULE = 'scheduler.mock'
 SCHEDULER_URL = 'localhost'
-SCHEDULER_AUTH = None
-SCHEDULER_OPTIONS = None
 
 # security keys and auth tokens
 random_secret = 'CHANGEME_sapm$s%upvsw5l_zuy_&29rkywd^78ff(qi*#@&*^'

@@ -4,10 +4,8 @@ class AbstractSchedulerClient(object):
     A generic interface to a scheduler backend.
     """
 
-    def __init__(self, target, auth, options):
+    def __init__(self, target):
         self.target = target
-        self.auth = auth
-        self.options = options
 
     def create(self, name, image, command, **kwargs):
         """Create a new container."""
