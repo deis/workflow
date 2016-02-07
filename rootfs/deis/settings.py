@@ -11,10 +11,17 @@ import tempfile
 
 PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))
 
+# A boolean that turns on/off debug mode.
+# https://docs.djangoproject.com/en/1.9/ref/settings/#debug
 DEBUG = False
 
+# If set to True, Django's normal exception handling of view functions
+# will be suppressed, and exceptions will propagate upwards
+# https://docs.djangoproject.com/en/1.9/ref/settings/#debug-propagate-exceptions
+DEBUG_PROPAGATE_EXCEPTIONS = False
+
 # Silence two security messages around SSL as router takes care of them
-# https://docs.djangoproject.com/es/1.9/ref/checks/#security
+# https://docs.djangoproject.com/en/1.9/ref/checks/#security
 SILENCED_SYSTEM_CHECKS = [
     'security.W004',
     'security.W008'
