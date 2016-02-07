@@ -20,12 +20,6 @@ SILENCED_SYSTEM_CHECKS = [
     'security.W008'
 ]
 
-ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
-)
-
-MANAGERS = ADMINS
-
 CONN_MAX_AGE = 60 * 3
 
 # SECURITY: change this to allowed fqdn's to prevent host poisioning attacks
