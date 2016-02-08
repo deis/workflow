@@ -32,8 +32,15 @@ class Release(UuidAuditedModel):
 
     @property
     def image(self):
-        if not self.build.dockerfile and not self.build.sha:
-            return '{}:v{}'.format(self.app.id, str(self.version))
+        if not self.build.dockerfile:
+            # Deis Pull
+            if not self.build.sha:
+                return '{}:v{}'.format(self.app.id, str(self.version))
+            else:
+                # Build Pack
+                return self.build.image
+
+        # DockerFile
         return '{}:git-{}'.format(self.app.id, str(self.build.sha))
 
     def new(self, user, config, build, summary=None, source_version='latest'):

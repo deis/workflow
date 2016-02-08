@@ -605,11 +605,8 @@ class KubeHTTPClient(AbstractSchedulerClient):
         TEMPLATE = RCD_TEMPLATE
 
         # Check if it is a slug builder image.
-        # Example format: golden-earrings:git-5450cbcdaaf9afe6fadd219c94ac9c449bd62413s
         if kwargs.get('build_type') == "buildpack":
-            imgurl = 'http://{}/git/home/{}/push/slug.tgz'.format(
-                settings.S3EP,
-                image)
+            imgurl = image
             TEMPLATE = RCB_TEMPLATE
 
         l = {

@@ -12,7 +12,7 @@ class Build(UuidAuditedModel):
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     app = models.ForeignKey('App')
-    image = models.CharField(max_length=256)
+    image = models.TextField()
 
     # optional fields populated by builder
     sha = models.CharField(max_length=40, blank=True)

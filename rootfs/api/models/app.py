@@ -149,6 +149,7 @@ class App(UuidAuditedModel):
         """Scale containers up or down to match requested structure."""
         if self.release_set.latest().build is None:
             raise EnvironmentError('No build associated with this release')
+
         requested_structure = structure.copy()
         release = self.release_set.latest()
         # test for available process types
@@ -156,9 +157,11 @@ class App(UuidAuditedModel):
         for container_type in requested_structure:
             if container_type == 'cmd':
                 continue  # allow docker cmd types in case we don't have the image source
+
             if container_type not in available_process_types:
                 raise EnvironmentError(
                     'Container type {} does not exist in application'.format(container_type))
+
         msg = '{} scaled containers '.format(user.username) + ' '.join(
             "{}={}".format(k, v) for k, v in list(requested_structure.items()))
         log_event(self, msg)
@@ -177,12 +180,14 @@ class App(UuidAuditedModel):
             diff = requested - len(containers)
             if diff == 0:
                 continue
+
             changed = True
             scale_types[container_type] = requested
             while diff < 0:
                 c = containers.pop()
                 to_remove.append(c)
                 diff += 1
+
             while diff > 0:
                 # create a database record
                 c = Container.objects.create(owner=self.owner,
@@ -200,8 +205,10 @@ class App(UuidAuditedModel):
             else:
                 if to_add:
                     self._start_containers(to_add)
+
                 if to_remove:
                     self._destroy_containers(to_remove)
+
         # save new structure to the database
         vals = self.container_set.exclude(type='run').values(
             'type').annotate(Count('pk')).order_by()
