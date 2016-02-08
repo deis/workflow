@@ -235,8 +235,8 @@ def unhealthy(status_code):
 
 class KubeHTTPClient(AbstractSchedulerClient):
 
-    def __init__(self, target, auth, options):
-        super(KubeHTTPClient, self).__init__(target, auth, options)
+    def __init__(self, target):
+        super(KubeHTTPClient, self).__init__(target)
         self.url = settings.SCHEDULER_URL
         self.registry = settings.REGISTRY_URL
         self.apiversion = "v1"

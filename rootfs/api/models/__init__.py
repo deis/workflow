@@ -51,9 +51,7 @@ class AuditedModel(models.Model):
     @property
     def _scheduler(self):
         mod = importlib.import_module(settings.SCHEDULER_MODULE)
-        return mod.SchedulerClient(settings.SCHEDULER_URL,
-                                   settings.SCHEDULER_AUTH,
-                                   settings.SCHEDULER_OPTIONS)
+        return mod.SchedulerClient(settings.SCHEDULER_URL)
 
 
 class UuidAuditedModel(AuditedModel):

@@ -8,23 +8,21 @@ import string
 import sys
 import tempfile
 
-
-PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))
-
+# A boolean that turns on/off debug mode.
+# https://docs.djangoproject.com/en/1.9/ref/settings/#debug
 DEBUG = False
 
+# If set to True, Django's normal exception handling of view functions
+# will be suppressed, and exceptions will propagate upwards
+# https://docs.djangoproject.com/en/1.9/ref/settings/#debug-propagate-exceptions
+DEBUG_PROPAGATE_EXCEPTIONS = False
+
 # Silence two security messages around SSL as router takes care of them
-# https://docs.djangoproject.com/es/1.9/ref/checks/#security
+# https://docs.djangoproject.com/en/1.9/ref/checks/#security
 SILENCED_SYSTEM_CHECKS = [
     'security.W004',
     'security.W008'
 ]
-
-ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
-)
-
-MANAGERS = ADMINS
 
 CONN_MAX_AGE = 60 * 3
 
@@ -44,7 +42,8 @@ LANGUAGE_CODE = 'en-us'
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = True
+# https://docs.djangoproject.com/en/1.9/ref/settings/#use-i18n
+USE_I18N = False
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
@@ -52,19 +51,6 @@ USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
-
-# Absolute filesystem path to the directory that will hold user-uploaded files.
-# Example: "/var/www/example.com/media/"
-MEDIA_ROOT = ''
-
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash.
-# Examples: "http://example.com/media/", "http://media.example.com/"
-MEDIA_URL = ''
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
-STATIC_URL = '/static/'
 
 # Manage templates
 TEMPLATES = [
@@ -276,8 +262,6 @@ DEIS_RESERVED_NAMES = ['deis']
 # default scheduler settings
 SCHEDULER_MODULE = 'scheduler.mock'
 SCHEDULER_URL = 'localhost'
-SCHEDULER_AUTH = None
-SCHEDULER_OPTIONS = None
 
 # security keys and auth tokens
 random_secret = 'CHANGEME_sapm$s%upvsw5l_zuy_&29rkywd^78ff(qi*#@&*^'
