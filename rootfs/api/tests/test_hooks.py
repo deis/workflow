@@ -105,6 +105,27 @@ class HookTest(TransactionTestCase):
             {'key': public2, 'fingerprint': '43:fd:22:bc:dc:ca:6a:28:ba:71:4c:18:41:1d:d1:e2'}
         ]})
 
+        # Fetch a valid ssh key
+        url = '/v2/hooks/key/54:6d:da:1f:91:b5:2b:6f:a2:83:90:c4:f9:73:76:f5'
+        response = self.client.get(url, HTTP_X_DEIS_BUILDER_AUTH=settings.BUILDER_KEY)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {
+            "username": str(self.user),
+            "apps": [
+                app_id
+            ]
+        })
+
+        # Fetch an non-existent base64 encoded ssh key
+        url = '/v2/hooks/key/54:6d:da:1f:91:b5:2b:6f:a2:83:90:c4:f9:73:76:wooooo'
+        response = self.client.get(url, HTTP_X_DEIS_BUILDER_AUTH=settings.BUILDER_KEY)
+        self.assertEqual(response.status_code, 404)
+
+        # Fetch an invalid (not encoded) ssh key
+        url = '/v2/hooks/key/nope'
+        response = self.client.get(url, HTTP_X_DEIS_BUILDER_AUTH=settings.BUILDER_KEY)
+        self.assertEqual(response.status_code, 404)
+
     def test_push_hook(self):
         """Test creating a Push via the API"""
         url = '/v2/apps'

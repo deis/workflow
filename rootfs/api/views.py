@@ -427,6 +427,25 @@ class KeyHookViewSet(BaseHookViewSet):
     model = models.Key
     serializer_class = serializers.KeySerializer
 
+    def public_key(self, request, *args, **kwargs):
+        fingerprint = kwargs['fingerprint'].strip()
+        key = get_object_or_404(models.Key, fingerprint=fingerprint)
+
+        queryset = models.App.objects.all() | \
+            get_objects_for_user(self.request.user, 'api.use_app')
+        items = self.filter_queryset(queryset)
+
+        apps = []
+        for item in items:
+            apps.append(item.id)
+
+        data = {
+            'username': key.owner.username,
+            'apps': apps
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
+
     def app(self, request, *args, **kwargs):
         app = get_object_or_404(models.App, id=kwargs['id'])
 
