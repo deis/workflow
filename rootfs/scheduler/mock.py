@@ -1,5 +1,6 @@
 import json
 import requests
+import base64
 
 from .abstract import AbstractSchedulerClient
 from .states import JobState, TransitionError
@@ -7,6 +8,7 @@ from .states import JobState, TransitionError
 
 # HACK: MockSchedulerClient is not persistent across requests
 jobs = {}
+secrets = {}
 
 
 class MockSchedulerClient(AbstractSchedulerClient):
@@ -69,6 +71,27 @@ class MockSchedulerClient(AbstractSchedulerClient):
         resp.status_code = 200
         resp._content = b'{"items": [{"metadata": {"labels": {"env": "prod"}}}]}'
         return resp
+
+    def _get_secret(self, namespace, name):
+        # Fake out the secrets
+        resp = requests.Response()
+        resp.status_code = 200
+        resp._content = json.dumps(secrets.get(name, {})).encode('UTF-8')
+        return resp
+
+    def _create_secret(self, namespace, name, data):
+        items = {
+            'data': {}
+        }
+
+        for key, item in data.items():
+            items['data'][key] = base64.b64encode(bytes(item, 'UTF-8')).decode()
+
+        secrets.setdefault(name, items)
+
+    def _delete_secret(self, namespace, name):
+        if name in secrets:
+            secrets.pop(name)
 
 
 SchedulerClient = MockSchedulerClient

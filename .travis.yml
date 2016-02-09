@@ -35,7 +35,7 @@ install:
   - make prep-bintray-json
 script:
   - make test
-  - make -C client/ build test
+  - make -C client/ bootstrap build test
   - mv client/deis client/deis-linux-amd64
   - GOOS=darwin GOARCH=amd64 make -C client build
   - mv client/deis client/deis-darwin-amd64

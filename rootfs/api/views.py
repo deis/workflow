@@ -1,11 +1,10 @@
 """
 RESTful view classes for presenting Deis API objects.
 """
+from django.http import Http404, HttpResponse
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
-from django.http import HttpResponse
-from django.http import Http404
 from django.shortcuts import get_object_or_404
 from guardian.shortcuts import assign_perm, get_objects_for_user, \
     get_users_with_perms, remove_perm
@@ -18,6 +17,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.authtoken.models import Token
 
 from api import authentication, models, permissions, serializers, viewsets
+from api.models import AlreadyExists
 
 import requests
 import logging
@@ -346,14 +346,38 @@ class DomainViewSet(AppResourceViewSet):
 
 
 class CertificateViewSet(BaseDeisViewSet):
-    """A viewset for interacting with Domain objects."""
+    """A viewset for interacting with Certificate objects."""
     model = models.Certificate
     serializer_class = serializers.CertificateSerializer
 
     def get_object(self, **kwargs):
-        """Retrieve domain certificate by common name"""
+        """Retrieve domain certificate by its name"""
         qs = self.get_queryset(**kwargs)
-        return qs.get(common_name=self.kwargs['common_name'])
+        return qs.get(name=self.kwargs['name'])
+
+    def attach(self, request, *args, **kwargs):
+        try:
+            # TODO how to validate domain is set in the body?
+            kwargs['domain'] = request.data['domain']
+            self.get_object().attach(*args, **kwargs)
+        except Http404:
+            raise
+        except AlreadyExists as e:
+            return Response({'detail': str(e)}, status=status.HTTP_409_CONFLICT)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+    def detach(self, request, *args, **kwargs):
+        try:
+            self.get_object().detach(*args, **kwargs)
+        except Http404:
+            raise
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class KeyViewSet(BaseDeisViewSet):

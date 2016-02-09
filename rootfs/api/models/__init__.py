@@ -7,21 +7,39 @@ import etcd
 import importlib
 import logging
 import uuid
+import morph
+import re
 
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
+from django.core.exceptions import ValidationError
 from rest_framework.authtoken.models import Token
-from api.utils import fingerprint
+from api.utils import fingerprint, dict_merge
+
 
 logger = logging.getLogger(__name__)
+
+
+class AlreadyExists(EnvironmentError):
+    pass
 
 
 def log_event(app, msg, level=logging.INFO):
     # controller needs to know which app this log comes from
     logger.log(level, "{}: {}".format(app.id, msg))
     app.log(msg, level)
+
+
+def validate_label(value):
+    """
+    Check that the value follows the kubernetes name constraints
+    http://kubernetes.io/v1.1/docs/design/identifiers.html
+    """
+    match = re.match(r'^[a-z0-9-]+$', value)
+    if not match:
+        raise ValidationError("Can only contain a-z (lowercase), 0-9 and hypens")
 
 
 def get_etcd_client():
@@ -52,6 +70,43 @@ class AuditedModel(models.Model):
     def _scheduler(self):
         mod = importlib.import_module(settings.SCHEDULER_MODULE)
         return mod.SchedulerClient(settings.SCHEDULER_URL)
+
+    def _fetch_service_config(self, app):
+        # Get the service from k8s to attach the domain correctly
+        svc = self._scheduler._get_service(app, app).json()
+        # Get minimum structure going if it is missing on the service
+        if 'metadata' not in svc or 'annotations' not in svc['metadata']:
+            default = {'metadata': {'annotations': {}}}
+            svc = dict_merge(svc, default)
+
+        return svc
+
+    def _load_service_config(self, app, component):
+        # fetch setvice definition with minimum structure
+        svc = self._fetch_service_config(app)
+
+        # always assume a .deis.io/ ending
+        component = "%s.deis.io/" % component
+
+        # Filter to only include values for the component and strip component out of it
+        # Processes dots into a nested structure
+        config = morph.unflatten(morph.pick(svc['metadata']['annotations'], prefix=component))
+
+        return config
+
+    def _save_service_config(self, app, component, data):
+        # fetch setvice definition with minimum structure
+        svc = self._fetch_service_config(app)
+
+        # always assume a .deis.io ending
+        component = "%s.deis.io/" % component
+
+        # add component to data and flatten
+        data = {"%s%s" % (component, key): value for key, value in list(data.items())}
+        svc['metadata']['annotations'].update(morph.flatten(data))
+
+        # Update the k8s service for the application with new domain information
+        self._scheduler._update_service(app, app, svc)
 
 
 class UuidAuditedModel(AuditedModel):
@@ -171,21 +226,6 @@ def _etcd_purge_app(**kwargs):
         pass
 
 
-def _etcd_publish_cert(**kwargs):
-    cert = kwargs['instance']
-    _etcd_client.write('/deis/certs/{}/cert'.format(cert), cert.certificate)
-    _etcd_client.write('/deis/certs/{}/key'.format(cert), cert.key)
-
-
-def _etcd_purge_cert(**kwargs):
-    cert = kwargs['instance']
-    try:
-        _etcd_client.delete('/deis/certs/{}'.format(cert),
-                            prevExist=True, dir=True, recursive=True)
-    except KeyError:
-        pass
-
-
 # Log significant app-related events
 post_save.connect(_log_build_created, sender=Build, dispatch_uid='api.models.log')
 post_save.connect(_log_release_created, sender=Release, dispatch_uid='api.models.log')
@@ -212,5 +252,3 @@ if _etcd_client:
     post_delete.connect(_etcd_purge_user, sender=settings.AUTH_USER_MODEL, dispatch_uid='api.models')  # noqa
     post_save.connect(_etcd_publish_app, sender=App, dispatch_uid='api.models')
     post_delete.connect(_etcd_purge_app, sender=App, dispatch_uid='api.models')
-    post_save.connect(_etcd_publish_cert, sender=Certificate, dispatch_uid='api.models')
-    post_delete.connect(_etcd_purge_cert, sender=Certificate, dispatch_uid='api.models')

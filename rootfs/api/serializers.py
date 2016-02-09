@@ -21,7 +21,6 @@ CONFIGKEY_MATCH = re.compile(r'^[a-z_]+[a-z0-9_]*$', re.IGNORECASE)
 
 class JSONFieldSerializer(serializers.JSONField):
     def __init__(self, *args, **kwargs):
-        self.type = kwargs.pop('type', 'string')
         super(JSONFieldSerializer, self).__init__(*args, **kwargs)
 
     def to_internal_value(self, data):
@@ -39,10 +38,7 @@ class JSONFieldSerializer(serializers.JSONField):
                 continue
 
             try:
-                if self.type == 'int':
-                    obj[k] = int(v)
-                else:
-                    obj[k] = str(v)
+                obj[k] = str(v)
             except ValueError:
                 obj[k] = v
                 # Do nothing, the validator will catch this later
@@ -241,6 +237,7 @@ class DomainSerializer(serializers.ModelSerializer):
         """Metadata options for a :class:`DomainSerializer`."""
         model = models.Domain
         fields = ['owner', 'created', 'updated', 'app', 'domain']
+        read_only_fields = ['uuid']
 
     def validate_domain(self, value):
         """
@@ -256,10 +253,13 @@ class DomainSerializer(serializers.ModelSerializer):
         if 'xip.io' in value:
             return value
 
+        # Let wildcards through by not trying to validate it
         if labels[0] == '*':
-            raise serializers.ValidationError(
-                'Adding a wildcard subdomain is currently not supported.')
+            labels.pop(0)
+            if len(labels) == 0:
+                raise serializers.ValidationError("Hostname can't only be a wildcard")
 
+        # TODO this doesn't support IDN domains
         allowed = re.compile("^(?!-)[a-z0-9-]{1,63}(?<!-)$", re.IGNORECASE)
         for label in labels:
             match = allowed.match(label)
@@ -278,13 +278,24 @@ class CertificateSerializer(serializers.ModelSerializer):
     """Serialize a :class:`~api.models.Cert` model."""
 
     owner = serializers.ReadOnlyField(source='owner.username')
+    san = serializers.ListField(
+        child=serializers.CharField(allow_blank=True, allow_null=True, required=False),
+        required=False
+    )
+
+    domains = serializers.ListField(
+        child=serializers.CharField(allow_blank=True, allow_null=True, required=False),
+        required=False, default=[]
+    )
 
     class Meta:
-        """Metadata options for a DomainCertSerializer."""
+        """Metadata options for CertificateSerializer."""
         model = models.Certificate
-        extra_kwargs = {'certificate': {'write_only': True},
-                        'key': {'write_only': True},
-                        'common_name': {'required': False}}
+        extra_kwargs = {
+            'certificate': {'write_only': True},
+            'key': {'write_only': True}
+        }
+        read_only_fields = ['common_name', 'fingerprint', 'san', 'domains', 'subject', 'issuer']
 
 
 class PushSerializer(serializers.ModelSerializer):
@@ -296,5 +307,5 @@ class PushSerializer(serializers.ModelSerializer):
     class Meta:
         """Metadata options for a :class:`PushSerializer`."""
         model = models.Push
-        fields = ['uuid', 'owner', 'app', 'sha', 'fingerprint', 'receive_user', 'receive_repo',
+        fields = ['owner', 'app', 'sha', 'fingerprint', 'receive_user', 'receive_repo',
                   'ssh_connection', 'ssh_original_command', 'created', 'updated']

@@ -19,17 +19,18 @@ from api.models.domain import Domain
 logger = logging.getLogger(__name__)
 
 
+# http://kubernetes.io/v1.1/docs/design/identifiers.html
 def validate_id_is_docker_compatible(value):
     """
-    Check that the ID follows docker's image name constraints
+    Check that the value follows the kubernetes name constraints
     """
     match = re.match(r'^[a-z0-9-]+$', value)
     if not match:
-        raise ValidationError("App IDs can only contain [a-z0-9-].")
+        raise ValidationError("App name can only contain a-z (lowercase), 0-9 and hypens")
 
 
 def validate_app_structure(value):
-    """Error if the dict values aren't ints >= 0."""
+    """Error if the dict values aren't ints >= 0"""
     try:
         if any(int(v) < 0 for v in value.values()):
             raise ValueError("Must be greater than or equal to zero")
