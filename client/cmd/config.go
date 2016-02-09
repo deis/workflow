@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bytes"
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
@@ -202,11 +203,25 @@ func ConfigPull(appID string, interactive bool, overwrite bool) error {
 }
 
 // ConfigPush pushes an app's config from a file.
-func ConfigPush(appID string, fileName string) error {
-	contents, err := ioutil.ReadFile(fileName)
+func ConfigPush(appID, fileName string) error {
+	stat, err := os.Stdin.Stat()
 
 	if err != nil {
 		return err
+	}
+
+	var contents []byte
+
+	if (stat.Mode() & os.ModeCharDevice) == 0 {
+		buffer := new(bytes.Buffer)
+		buffer.ReadFrom(os.Stdin)
+		contents = buffer.Bytes()
+	} else {
+		contents, err = ioutil.ReadFile(fileName)
+
+		if err != nil {
+			return err
+		}
 	}
 
 	config := strings.Split(string(contents), "\n")
