@@ -60,3 +60,10 @@ addons:
   artifacts:
     paths:
       - docs/_build
+notifications:
+  webhooks:
+    urls:
+      - secure: "NRYpPmC2o2K54CrFLyFjXQuC2FXOyLyIeLuW/s0UgEj0n2VUGBVXbC7p1E0QPsnu6Pqqo/7KwmdVXJo+LncBQTQS2Rc55PJQwei1a66MmX6gSeZXhZMHJ4xgPEtZxIhe01txlfdkItqDeNFayedu5BB0VqnaKtWp+7P/DcLExSB356Tg0p0NaI+RXSCw9vX9Sua2eAzDdC9u8DjLhUO/nf0B+lqcG2+UwpZrv8ui3nY9nwD9aeyTZjL6X3extAP9LGBD7GaCgLULf/9g0J1t/09bWPcqqiWrLlmzKrHYuRr0IRPZWygZs1TbS+5Oih11e3XieM0cnX3pjhgC5lb85yespeDFnSDFNOhDgEVMG8p4LtABNgpq8WR3NDYd5YKYP2mfgjO7NTSOTPeQEB/+PF5xTKdip91eUAS8z1UHHopGP5EYZIhfzpmiBtumb8xPixeRdr4YCnNTpNsmqrPzudahS2mVpTR3vIsEJC3BuSTgL2K4iTZYv1Xwa7MQmV2MF5xfFX74cJolZw1n62LHZmjnxxPMbRvBY9tnY+uZLgGimBD8e1+BuIzA4bF4IIqTM0Bwop/NFMtnsjqraGulV0qzgUW/79f/mdNVFgwmtW6dY0/ZYEY1D+JCKWe06zEc4hCUkmcE9ZG6+bGkhOnIDUCxoAI/+7hVJj7ACAs/L30="
+    on_success: always
+    on_failure: never
+    on_start: never
