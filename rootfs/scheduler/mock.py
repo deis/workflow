@@ -57,6 +57,18 @@ class MockSchedulerClient(AbstractSchedulerClient):
         job['state'] = JobState.down
 
     # Related to k8s services
+    def resolve_state(self, pod):
+        # See "Pod Phase" at http://kubernetes.io/v1.1/docs/user-guide/pod-states.html
+        states = {
+            "Pending": JobState.initialized,
+            "Running": JobState.up,
+            "Succeeded": JobState.down,
+            "Failed": JobState.crashed,
+            "Unknown": JobState.error,
+        }
+
+        return states[pod["status"]["phase"]]
+
     def _get_service(self, namespace, name):
         resp = requests.Response()
         resp.status_code = 200
@@ -70,6 +82,28 @@ class MockSchedulerClient(AbstractSchedulerClient):
         resp = requests.Response()
         resp.status_code = 200
         resp._content = b'{"items": [{"metadata": {"labels": {"env": "prod"}}}]}'
+        return resp
+
+    def _get_pods(self, namespace, **kwargs):
+        data = {
+            "items": [
+                {
+                    "metadata": {
+                        "labels": {
+                            "app": "foo",
+                            "version": "v2",
+                            "type": "web"
+                        },
+                        "name": "this-is-my-pod"
+                    },
+                    "status": {"phase": "Running"}
+                }
+            ]
+        }
+
+        resp = requests.Response()
+        resp.status_code = 200
+        resp._content = json.dumps(data)
         return resp
 
     def _get_secret(self, namespace, name):

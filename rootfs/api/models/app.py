@@ -44,6 +44,10 @@ def validate_reserved_names(value):
         raise ValidationError('{} is a reserved name.'.format(value))
 
 
+class Pod(object):
+    pass
+
+
 class App(UuidAuditedModel):
     """
     Application used to service requests on behalf of end-users
@@ -428,3 +432,40 @@ class App(UuidAuditedModel):
         # SECURITY: shell-escape user input
         escaped_command = command.replace("'", "'\\''")
         return c.run(escaped_command)
+
+    def list_pods(self, *args, **kwargs):
+        """Used to list basic information about pods running for a given application"""
+        try:
+            labels = {'app': str(self)}
+
+            if 'release' in kwargs:
+                if kwargs['release'] is None:
+                    release = self.release_set.latest()
+
+                version = "v{}".format(release.version)
+                labels.update({'version': version})
+
+            if 'type' in kwargs:
+                labels.update({'type': kwargs['type']})
+
+            pods = self._scheduler._get_pods(str(self), labels=labels).json()
+
+            data = []
+            for pod in pods['items']:
+                # specifically ignore run pods
+                if pod['metadata']['labels']['type'] == 'run':
+                    continue
+
+                item = Pod()
+                item.name = pod['metadata']['name']
+                item.state = self._scheduler.resolve_state(pod).name
+                item.release = pod['metadata']['labels']['version']
+                item.type = pod['metadata']['labels']['type']
+
+                data.append(item)
+
+            return data
+        except Exception as e:
+            err = '(list pods): {}'.format(e)
+            log_event(self, err, logging.ERROR)
+            raise

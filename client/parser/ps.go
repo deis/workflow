@@ -48,23 +48,15 @@ Usage: deis ps:list [options]
 Options:
   -a --app=<app>
     the uniquely identifiable name for the application.
-  -l --limit=<num>
-    the maximum number of results to display, defaults to config setting
 `
 
 	args, err := docopt.Parse(usage, argv, true, "", false, true)
-
 	if err != nil {
 		return err
 	}
 
-	results, err := responseLimit(safeGetValue(args, "--limit"))
-
-	if err != nil {
-		return err
-	}
-
-	return cmd.PsList(safeGetValue(args, "--app"), results)
+	// The 1000 is fake for now until API understands limits
+	return cmd.PsList(safeGetValue(args, "--app"), 1000)
 }
 
 func psRestart(argv []string) error {

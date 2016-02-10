@@ -335,6 +335,23 @@ class ContainerViewSet(AppResourceViewSet):
             return Response({'detail': str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
 
+class PodViewSet(AppResourceViewSet):
+    model = models.App
+    serializer_class = serializers.PodSerializer
+
+    def list(self, *args, **kwargs):
+        app = self.get_app()
+
+        try:
+            pods = app.list_pods(*args, **kwargs)
+            data = self.get_serializer(pods, many=True).data
+            # fake out pagination for now
+            pagination = {'results': data, 'count': len(data)}
+            return Response(pagination, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+
 class DomainViewSet(AppResourceViewSet):
     """A viewset for interacting with Domain objects."""
     model = models.Domain

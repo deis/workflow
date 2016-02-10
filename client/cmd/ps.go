@@ -14,7 +14,6 @@ import (
 // PsList lists an app's processes.
 func PsList(appID string, results int) error {
 	c, appID, err := load(appID)
-
 	if err != nil {
 		return err
 	}
@@ -23,13 +22,12 @@ func PsList(appID string, results int) error {
 		results = c.ResponseLimit
 	}
 
-	processes, count, err := ps.List(c, appID, results)
-
+	processes, _, err := ps.List(c, appID, results)
 	if err != nil {
 		return err
 	}
 
-	printProcesses(appID, processes, count)
+	printProcesses(appID, processes)
 
 	return nil
 }
@@ -73,13 +71,12 @@ func PsScale(appID string, targets []string) error {
 
 	fmt.Printf("done in %ds\n", int(time.Since(startTime).Seconds()))
 
-	processes, count, err := ps.List(c, appID, c.ResponseLimit)
-
+	processes, _, err := ps.List(c, appID, c.ResponseLimit)
 	if err != nil {
 		return err
 	}
 
-	printProcesses(appID, processes, count)
+	printProcesses(appID, processes)
 	return nil
 }
 
@@ -123,26 +120,25 @@ func PsRestart(appID, target string) error {
 
 	fmt.Printf("done in %ds\n", int(time.Since(startTime).Seconds()))
 
-	processes, count, err := ps.List(c, appID, c.ResponseLimit)
-
+	processes, _, err := ps.List(c, appID, c.ResponseLimit)
 	if err != nil {
 		return err
 	}
 
-	printProcesses(appID, processes, count)
+	printProcesses(appID, processes)
 	return nil
 }
 
-func printProcesses(appID string, processes []api.Process, count int) {
+func printProcesses(appID string, processes []api.Pods) {
 	psMap := ps.ByType(processes)
 
-	fmt.Printf("=== %s Processes%s", appID, limitCount(len(processes), count))
+	fmt.Printf("=== %s Processes\n", appID)
 
 	for psType, procs := range psMap {
 		fmt.Printf("--- %s:\n", psType)
 
 		for _, proc := range procs {
-			fmt.Printf("%s.%d %s (%s)\n", proc.Type, proc.Num, proc.State, proc.Release)
+			fmt.Printf("%s %s (%s)\n", proc.Name, proc.State, proc.Release)
 		}
 	}
 }

@@ -361,8 +361,8 @@ class KubeHTTPClient(AbstractSchedulerClient):
         logger.debug("logs {}".format(name))
         app_name = name.split('_')[0]
         name = name.replace('.', '-').replace('_', '-')
-        status, data, reason = self._get_pods(app_name)
-        parsed_json = json.loads(data)
+        pods = self._get_pods(app_name)
+        parsed_json = pods.json()
         log_data = ''
         for pod in parsed_json['items']:
             # FIXME: a pod can be running without being in ready state
@@ -432,8 +432,26 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
     def state(self, name):
         """Display the state of a container."""
+        try:
+            appname = name.split('_')[0]
+            name = name.split('.')
+            name = name[0] + '-' + name[1]
+            name = name.replace('_', '-')
+            # FIXME fetch a singular pod instead of *all* pods
+            pods = self._get_pods(appname)
+            parsed_json = pods.json()
+            for pod in parsed_json["items"]:
+                if pod["metadata"]["generateName"] == name + "-":
+                    return self.resolve_state(pod)
+
+            return JobState.destroyed
+        except Exception as err:
+            logger.warn(err)
+            return JobState.error
+
+    def resolve_state(self, pod):
         # See "Pod Phase" at http://kubernetes.io/v1.1/docs/user-guide/pod-states.html
-        phase_states = {
+        states = {
             "Pending": JobState.initialized,
             "Running": JobState.up,
             "Succeeded": JobState.down,
@@ -441,22 +459,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             "Unknown": JobState.error,
         }
 
-        try:
-            appname = name.split('_')[0]
-            name = name.split('.')
-            name = name[0] + '-' + name[1]
-            name = name.replace('_', '-')
-            status, data, reason = self._get_pods(appname)
-            parsed_json = json.loads(data)
-            for pod in parsed_json["items"]:
-                if pod["metadata"]["generateName"] == name + "-":
-                    phase = pod["status"]["phase"]
-                    return phase_states[phase]
-
-            return JobState.destroyed
-        except Exception as err:
-            logger.warn(err)
-            return JobState.error
+        return states[pod["status"]["phase"]]
 
     def _api(self, tmpl, *args):
         """Return a fully-qualified Kubernetes API URL from a string template with args."""
@@ -532,9 +535,9 @@ class KubeHTTPClient(AbstractSchedulerClient):
         pods = []
         for _ in range(120):
             count = 0
+            pods = self._get_pods(namespace)
+            parsed_json = pods.json()
             pods = []
-            status, data, reason = self._get_pods(namespace)
-            parsed_json = json.loads(data)
             for pod in parsed_json['items']:
                 if pod['metadata']['generateName'] == name+'-':
                     count += 1
@@ -582,8 +585,8 @@ class KubeHTTPClient(AbstractSchedulerClient):
         self._get_schedule_status(name, num, namespace)
         for _ in range(120):
             count = 0
-            status, data, reason = self._get_pods(namespace)
-            parsed_json = json.loads(data)
+            pods = self._get_pods(namespace)
+            parsed_json = pods.json()
             for pod in parsed_json['items']:
                 if(pod['metadata']['generateName'] == name+'-' and
                    pod['status']['phase'] == 'Running'):
@@ -846,13 +849,28 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
         return resp.status_code, resp.reason, resp.text
 
-    def _get_pods(self, namespace):
-        url = self._api("/namespaces/{}/pods", namespace)
-        resp = self.session.get(url)
-        if unhealthy(resp.status_code):
-            error(resp, 'get Pods in Namespace "{}"', namespace)
+    def _get_pods(self, namespace, **kwargs):
+        path = "/namespaces/{}/pods"
+        query = {}
 
-        return resp.status_code, resp.text, resp.reason
+        # labels and fields are encoded slightly differently than python-requests can do
+        labels = kwargs.get('labels', {})
+        if labels:
+            # http://kubernetes.io/v1.1/docs/user-guide/labels.html#list-and-watch-filtering
+            labels = ['{}={}'.format(key, value) for key, value in labels.items()]
+            query['labelSelector'] = ','.join(labels)
+
+        fields = kwargs.get('fields', {})
+        if fields:
+            fields = ['{}={}'.format(key, value) for key, value in fields.items()]
+            query['fieldSelector'] = ','.join(fields)
+
+        url = self._api(path, namespace)
+        response = self.session.get(url, params=query)
+        if unhealthy(response.status_code):
+            error(response, 'get Pods in Namespace "{}"', namespace)
+
+        return response
 
     def _delete_pod(self, name, namespace):
         url = self._api("/namespaces/{}/pods/{}", namespace, name)

@@ -309,3 +309,18 @@ class PushSerializer(serializers.ModelSerializer):
         model = models.Push
         fields = ['owner', 'app', 'sha', 'fingerprint', 'receive_user', 'receive_repo',
                   'ssh_connection', 'ssh_original_command', 'created', 'updated']
+
+
+class PodSerializer(serializers.BaseSerializer):
+    name = serializers.CharField()
+    state = serializers.CharField()
+    type = serializers.CharField()
+    release = serializers.CharField()
+
+    def to_representation(self, obj):
+        return {
+            'name': obj.name,
+            'state': obj.state,
+            'type': obj.type,
+            'release': obj.release
+        }
