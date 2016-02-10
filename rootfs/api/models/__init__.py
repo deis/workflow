@@ -3,7 +3,6 @@
 """
 Data models for the Deis API.
 """
-import etcd
 import importlib
 import logging
 import uuid
@@ -16,8 +15,8 @@ from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from rest_framework.authtoken.models import Token
-from api.utils import fingerprint, dict_merge
 
+from api.utils import dict_merge
 
 logger = logging.getLogger(__name__)
 
@@ -40,20 +39,6 @@ def validate_label(value):
     match = re.match(r'^[a-z0-9-]+$', value)
     if not match:
         raise ValidationError("Can only contain a-z (lowercase), 0-9 and hypens")
-
-
-def get_etcd_client():
-    if not hasattr(get_etcd_client, "client"):
-        # wire up etcd publishing if we can connect
-        try:
-            get_etcd_client.client = etcd.Client(
-                host=settings.ETCD_HOST,
-                port=int(settings.ETCD_PORT))
-            get_etcd_client.client.get('/deis')
-        except etcd.EtcdException:
-            logger.log(logging.WARNING, 'Cannot synchronize with etcd cluster')
-            get_etcd_client.client = None
-    return get_etcd_client.client
 
 
 class AuditedModel(models.Model):
@@ -184,48 +169,6 @@ def _log_cert_removed(**kwargs):
     logger.info("cert {} removed".format(cert))
 
 
-def _etcd_publish_key(**kwargs):
-    key = kwargs['instance']
-    _etcd_client.write('/deis/builder/users/{}/{}'.format(
-        key.owner.username, fingerprint(key.public)), key.public)
-
-
-def _etcd_purge_key(**kwargs):
-    key = kwargs['instance']
-    try:
-        _etcd_client.delete('/deis/builder/users/{}/{}'.format(
-            key.owner.username, fingerprint(key.public)))
-    except KeyError:
-        pass
-
-
-def _etcd_purge_user(**kwargs):
-    username = kwargs['instance'].username
-    try:
-        _etcd_client.delete(
-            '/deis/builder/users/{}'.format(username), dir=True, recursive=True)
-    except KeyError:
-        # If _etcd_publish_key() wasn't called, there is no user dir to delete.
-        pass
-
-
-def _etcd_publish_app(**kwargs):
-    appname = kwargs['instance']
-    try:
-        _etcd_client.write('/deis/services/{}'.format(appname), None, dir=True)
-    except KeyError:
-        # Ignore error when the directory already exists.
-        pass
-
-
-def _etcd_purge_app(**kwargs):
-    appname = kwargs['instance']
-    try:
-        _etcd_client.delete('/deis/services/{}'.format(appname), dir=True, recursive=True)
-    except KeyError:
-        pass
-
-
 # Log significant app-related events
 post_save.connect(_log_build_created, sender=Build, dispatch_uid='api.models.log')
 post_save.connect(_log_release_created, sender=Release, dispatch_uid='api.models.log')
@@ -241,14 +184,3 @@ post_delete.connect(_log_cert_removed, sender=Certificate, dispatch_uid='api.mod
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
-
-
-_etcd_client = get_etcd_client()
-
-
-if _etcd_client:
-    post_save.connect(_etcd_publish_key, sender=Key, dispatch_uid='api.models')
-    post_delete.connect(_etcd_purge_key, sender=Key, dispatch_uid='api.models')
-    post_delete.connect(_etcd_purge_user, sender=settings.AUTH_USER_MODEL, dispatch_uid='api.models')  # noqa
-    post_save.connect(_etcd_publish_app, sender=App, dispatch_uid='api.models')
-    post_delete.connect(_etcd_purge_app, sender=App, dispatch_uid='api.models')

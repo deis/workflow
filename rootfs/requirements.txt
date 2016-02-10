@@ -10,7 +10,7 @@ jsonfield==1.0.3
 morph==0.1.2
 ndg-httpsclient==0.4.0
 psycopg2==2.6.1
-python-etcd==0.3.2
+PyOpenSSL==0.15.1
 PyYAML==3.11
 requests==2.9.1
 simpleflock==0.0.3

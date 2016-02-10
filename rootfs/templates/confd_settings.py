@@ -16,6 +16,8 @@ SCHEDULER_URL = "https://{}:{}".format(
 
 {{ if exists "/deis/controller/registrationMode" }}
 REGISTRATION_MODE = '{{ getv "/deis/controller/registrationMode" }}'
+{{ else }}
+REGISTRATION_MODE = 'enabled'
 {{ end }}
 
 {{ if exists "/deis/controller/subdomain" }}

@@ -248,10 +248,6 @@ LOGGING = {
 }
 TEST_RUNNER = 'api.tests.SilentDjangoTestSuiteRunner'
 
-# etcd settings
-ETCD_HOST = os.environ.get('DEIS_ETCD_1_SERVICE_HOST', '127.0.0.1')
-ETCD_PORT = os.environ.get('DEIS_ETCD_1_SERVICE_PORT_CLIENT', 4001)
-
 # default deis settings
 LOG_LINES = 100
 TEMPDIR = tempfile.mkdtemp(prefix='deis')
@@ -295,13 +291,6 @@ DATABASES = {
 }
 
 APP_URL_REGEX = '[a-z0-9-]+'
-
-# Unit Hostname handling.
-# Supports:
-#  default      - Docker generated hostname
-#  application  - Hostname based on application unit name (i.e. my-application.v2.web.1)
-#  server       - Hostname based on CoreOS server hostname
-UNIT_HOSTNAME = 'default'
 
 # Create a file named "local_settings.py" to contain sensitive settings data
 # such as database configuration, admin email, or passwords and keys. It
