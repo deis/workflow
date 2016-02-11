@@ -104,7 +104,7 @@ func Logs(c *client.Client, appID string, lines int) (string, error) {
 2) If you just installed the logger components via the chart, please make sure you restarted the workflow pod.
 3) The application is writing logs to the logger component.
 You can verify that logs are appearing in the logger component by issuing the following command:
-curl http://<log service ip>:8088/%s on a kubernetes host.
+curl http://<log service ip>:8088/logs/%s on a kubernetes host.
 To get the service ip you can do the following: kubectl get svc deis-logger --namespace=deis`, appID), nil
 	}
 
