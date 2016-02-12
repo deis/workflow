@@ -7,12 +7,15 @@ DEV_ENV_IMAGE := quay.io/deis/go-dev:0.5.0
 DEV_ENV_WORK_DIR := /go/src/${repo_path}
 DEV_ENV_PREFIX := docker run --rm -e GO15VENDOREXPERIMENT=1 -e CGO_ENABLED=0 -v ${CURDIR}:${DEV_ENV_WORK_DIR} -w ${DEV_ENV_WORK_DIR}
 DEV_ENV_CMD := ${DEV_ENV_PREFIX} ${DEV_ENV_IMAGE}
+DIST_DIR := _dist
 
 GO_FILES = $(wildcard *.go)
 GO_PACKAGES = cmd controller/api controller/client $(wildcard controller/models/*) parser $(wildcard pkg/*)
 GO_PACKAGES_REPO_PATH = $(addprefix $(repo_path)/,$(GO_PACKAGES))
 GOFMT = gofmt -e -l -s
 GOTEST = go test --cover --race -v
+
+VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null)+$(shell git rev-parse --short HEAD)
 
 define check-static-binary
   if file $(1) | egrep -q "(statically linked|Mach-O)"; then \
@@ -33,8 +36,16 @@ build:
 	${DEV_ENV_CMD} make binary-build
 	@$(call check-static-binary,deis)
 
+build-all:
+	gox -verbose \
+	-os="linux darwin " \
+	-arch="amd64 386" \
+	-output="$(DIST_DIR)/deis-${VERSION}-{{.OS}}-{{.Arch}}" .
+
 binary-build:
 	go build -a -installsuffix cgo -ldflags '-s' -o deis .
+
+dist: build-all
 
 install:
 	cp deis $$GOPATH/bin
