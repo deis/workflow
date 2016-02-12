@@ -8,8 +8,10 @@
     "name": "0.0.0"
   },
   "files": [
-    { "includePattern": "client/deis-linux-amd64", "uploadPattern": "deis-linux-amd64" },
-    { "includePattern": "client/deis-darwin-amd64", "uploadPattern": "deis-darwin-amd64" }
+    {
+      "includePattern": "_dist/(.*)",
+      "uploadPattern": "$1"
+    }
   ],
   "publish": true
 }

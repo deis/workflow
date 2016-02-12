@@ -36,10 +36,8 @@ install:
 script:
   - make test
   - make -C client/ bootstrap build test
-  - mv client/deis client/deis-linux-amd64
-  - GOOS=darwin GOARCH=amd64 make -C client build
-  - mv client/deis client/deis-darwin-amd64
   - make -C docs/ build test
+before_deploy: make dist prep-bintray-json
 deploy:
   - provider: script
     # ensure client/doc builds aren't removed
