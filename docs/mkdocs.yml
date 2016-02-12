@@ -74,6 +74,7 @@ pages:
     - Controller API v1.5: reference-guide/controller-api/v1.5.md
     - Controller API v1.6: reference-guide/controller-api/v1.6.md
     - Controller API v1.7: reference-guide/controller-api/v1.7.md
+    - Controller API v2.0: reference-guide/controller-api/v2.0.md
   - FAQ: faq.md
 theme_dir: themes/deis
 docs_dir: src
