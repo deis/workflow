@@ -27,7 +27,6 @@ define check-static-binary
 endef
 
 bootstrap:
-	go get -u github.com/mitchellh/gox
 	${DEV_ENV_CMD} glide install
 
 glideup:
