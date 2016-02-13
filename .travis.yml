@@ -37,7 +37,7 @@ script:
   - make test
   - make -C client/ bootstrap build test
   - make -C docs/ build test
-before_deploy: make dist prep-bintray-json
+before_deploy: make -C client/ dist prep-bintray-json
 deploy:
   - provider: script
     # ensure client/doc builds aren't removed
