@@ -12,3 +12,11 @@ type Process struct {
 	Num     int    `json:"num"`
 	State   string `json:"state"`
 }
+
+// Pods defines the structure of a process.
+type Pods struct {
+	Release string `json:"release"`
+	Type    string `json:"type"`
+	Name    string `json:"name"`
+	State   string `json:"state"`
+}

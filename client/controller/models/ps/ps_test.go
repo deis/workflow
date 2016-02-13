@@ -21,14 +21,9 @@ const processesFixture string = `
     "previous": null,
     "results": [
         {
-            "owner": "test",
-            "app": "example-go",
             "release": "v2",
-            "created": "2014-01-01T00:00:00UTC",
-            "updated": "2014-01-01T00:00:00UTC",
-            "uuid": "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
             "type": "web",
-            "num": 1,
+            "name": "example-go-v2-web-45678",
             "state": "up"
         }
     ]
@@ -86,7 +81,7 @@ type fakeHTTPServer struct{}
 func (fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	res.Header().Add("DEIS_API_VERSION", version.APIVersion)
 
-	if req.URL.Path == "/v2/apps/example-go/containers/" && req.Method == "GET" {
+	if req.URL.Path == "/v2/apps/example-go/pods/" && req.Method == "GET" {
 		res.Write([]byte(processesFixture))
 		return
 	}
@@ -135,16 +130,11 @@ func (fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 func TestProcessesList(t *testing.T) {
 	t.Parallel()
 
-	expected := []api.Process{
+	expected := []api.Pods{
 		{
-			Owner:   "test",
-			App:     "example-go",
 			Release: "v2",
-			Created: "2014-01-01T00:00:00UTC",
-			Updated: "2014-01-01T00:00:00UTC",
-			UUID:    "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
 			Type:    "web",
-			Num:     1,
+			Name:    "example-go-v2-web-45678",
 			State:   "up",
 		},
 	}

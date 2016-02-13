@@ -44,6 +44,14 @@ urlpatterns = [
         views.ContainerViewSet.as_view({'get': 'list'})),
     url(r"^apps/(?P<id>{})/containers/?".format(settings.APP_URL_REGEX),
         views.ContainerViewSet.as_view({'get': 'list'})),
+    # list pods
+    url(r"^apps/(?P<id>{})/pods/(?P<type>[-_\w]+)/(?P<name>[-_\w]+)/?".format(
+        settings.APP_URL_REGEX),
+        views.PodViewSet.as_view({'get': 'list'})),
+    url(r"^apps/(?P<id>{})/pods/(?P<type>[-_\w.]+)/?".format(settings.APP_URL_REGEX),
+        views.PodViewSet.as_view({'get': 'list'})),
+    url(r"^apps/(?P<id>{})/pods/?".format(settings.APP_URL_REGEX),
+        views.PodViewSet.as_view({'get': 'list'})),
     # application domains
     url(r"^apps/(?P<id>{})/domains/(?P<domain>\**\.?[-\._\w]+)/?".format(settings.APP_URL_REGEX),
         views.DomainViewSet.as_view({'delete': 'destroy'})),
