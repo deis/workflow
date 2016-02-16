@@ -132,10 +132,6 @@ RCB_TEMPLATE = """\
                 "value":"$image"
             },
             {
-                "name":"DEBUG",
-                "value":"1"
-            },
-            {
                 "name":"DEIS_APP",
                 "value":"$id"
             },
