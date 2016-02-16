@@ -1,2 +1,2 @@
-mkdocs==0.15.0
+mkdocs==0.15.2
 markdown-checklist==0.4.1
