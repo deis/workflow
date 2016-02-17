@@ -15,7 +15,7 @@ GO_PACKAGES_REPO_PATH = $(addprefix $(repo_path)/,$(GO_PACKAGES))
 GOFMT = gofmt -e -l -s
 GOTEST = go test --cover --race -v
 
-VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null)+$(shell git rev-parse --short HEAD)
+VERSION ?= $(shell git rev-parse --short HEAD)
 
 define check-static-binary
   if file $(1) | egrep -q "(statically linked|Mach-O)"; then \
