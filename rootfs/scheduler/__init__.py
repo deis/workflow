@@ -324,8 +324,12 @@ class KubeHTTPClient(AbstractSchedulerClient):
             self._create_namespace(app_name)
             self._create_minio_secret(app_name)
             self._create_service(name, app_name, app_type, data, image=image)
-            self._create_rc(name, image, command, **kwargs)
 
+            # Create RC with 0 pods and instead use scale to get polling
+            num = kwargs.pop('num')
+            kwargs['num'] = 0
+            self._create_rc(name, image, command, **kwargs)
+            self._scale_rc(name, app_name, num)
         except Exception as e:
             logger.debug(e)
             # TODO check if RC exists first
