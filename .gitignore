@@ -24,6 +24,7 @@ client/client
 client/deis.exe
 client/*.run
 client/makeself/
+_dist/
 docs/_build/
 docs/docs.zip
 docs/dummy.sqlite3
