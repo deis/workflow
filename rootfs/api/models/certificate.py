@@ -148,7 +148,6 @@ class Certificate(AuditedModel):
         if self.domains:
             for domain in self.domains:
                 kwargs['domain'] = domain
-                logger.critical(kwargs)
                 self.detach(*args, **kwargs)
                 del kwargs['domain']
 
