@@ -758,7 +758,6 @@ class KubeHTTPClient(AbstractSchedulerClient):
         return response
 
     def _create_secret(self, namespace, name, data):
-        logger.debug(data)
         template = json.loads(string.Template(SECRET_TEMPLATE).substitute({
             "version": self.apiversion,
             "id": namespace,
