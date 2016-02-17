@@ -370,7 +370,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
     def run(self, name, image, entrypoint, command):
         """Run a one-off command."""
-        logger.debug('run {}, img {}, entypoint {}, cmd "{}"'.format(
+        logger.debug('run {}, img {}, entrypoint {}, cmd "{}"'.format(
             name, image, entrypoint, command))
         appname = name.split('_')[0]
         name = name.replace('.', '-').replace('_', '-')

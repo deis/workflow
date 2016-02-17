@@ -64,7 +64,7 @@ To make it more formal, it looks something like this:
 The allowed `{types}` are as follows:
 
 * `feat` -> feature
-* `fix`` -> bug fix
+* `fix` -> bug fix
 * `docs` -> documentation
 * `style` -> formatting
 * `ref` -> refactoring code
