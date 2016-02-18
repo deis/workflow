@@ -652,7 +652,8 @@ class KubeHTTPClient(AbstractSchedulerClient):
             containers[0]["resources"]["limits"]["cpu"] = cpu
 
         # add in healtchecks
-        js_template = self._healthcheck(js_template, **kwargs['healthcheck'])
+        if kwargs.get('healthcheck'):
+            js_template = self._healthcheck(js_template, **kwargs['healthcheck'])
 
         url = self._api("/namespaces/{}/replicationcontrollers", app_name)
         resp = self.session.post(url, json=js_template)

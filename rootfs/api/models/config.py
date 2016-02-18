@@ -28,9 +28,11 @@ class Config(UuidAuditedModel):
 
     def healthcheck(self):
         # Update healthcheck - Scheduler determines the app type
+        if 'HEALTHCHECK_URL' not in self.values.keys():
+            return {}
         path = self.values.get('HEALTHCHECK_URL', '/')
-        timeout = int(self.values.get('HEALTHCHECK_TIMEOUT', 1))
-        delay = int(self.values.get('HEALTHCHECK_INITIAL_DELAY', 10))
+        timeout = int(self.values.get('HEALTHCHECK_TIMEOUT', 50))
+        delay = int(self.values.get('HEALTHCHECK_INITIAL_DELAY', 50))
         port = int(self.values.get('HEALTHCHECK_PORT', 8080))
 
         return {'path': path, 'timeout': timeout, 'delay': delay, 'port': port}
