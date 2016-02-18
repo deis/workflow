@@ -5,7 +5,6 @@ Django settings for the Deis project.
 import os.path
 import random
 import string
-import sys
 import tempfile
 
 # A boolean that turns on/off debug mode.
@@ -301,9 +300,3 @@ try:
     from .local_settings import *  # noqa
 except ImportError:
     pass
-
-# have confd_settings within container execution override all others
-# including local_settings (which may end up in the container)
-if os.path.exists('/templates/confd_settings.py'):
-    sys.path.append('/templates')
-    from confd_settings import *  # noqa
