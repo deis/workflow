@@ -1,6 +1,7 @@
 import logging
 import re
 import requests
+import time
 from threading import Thread
 
 from django.conf import settings
@@ -15,6 +16,8 @@ from api.models.release import Release
 from api.models.config import Config
 from api.models.container import Container
 from api.models.domain import Domain
+
+from scheduler import KubeException
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +47,7 @@ def validate_reserved_names(value):
         raise ValidationError('{} is a reserved name.'.format(value))
 
 
-class Pod(object):
+class Pod(dict):
     pass
 
 
@@ -129,7 +132,75 @@ class App(UuidAuditedModel):
         self._clean_app_logs()
         return super(App, self).delete(*args, **kwargs)
 
-    def restart(self, **kwargs):
+    def restart(self, **kwargs):  # noqa
+        """
+        Restart found pods by deleting them (RC will recreate).
+        Wait until they are all drained away and RC has gotten to a good state
+        """
+        try:
+            # Resolve single pod name if short form (worker-asdfg) is passed
+            if 'name' in kwargs and kwargs['name'].count('-') == 1:
+                if 'release' not in kwargs or kwargs['release'] is None:
+                    release = self.release_set.latest()
+                else:
+                    release = self.release_set.get(version=kwargs['release'])
+
+                version = "v{}".format(release.version)
+                kwargs['name'] = '{}-{}-{}'.format(kwargs['id'], version, kwargs['name'])
+
+            # Fetch the initial set of pods to work from
+            pods = self.list_pods(**kwargs)
+            desired = len(pods)
+        except KubeException:
+            # Nothing was found
+            return []
+
+        try:
+            for pod in pods:
+                # This function verifies the delete. Gives pod 30 seconds
+                self._scheduler._delete_pod(pod['name'], str(self))
+        except Exception as e:
+            err = "warning, some pods failed to stop:\n{}".format(str(e))
+            log_event(self, err, logging.WARNING)
+
+        # Wait for pods to start
+        try:
+            timeout = 300  # 5 minutes
+            elapsed = 0
+            while True:
+                # timed out
+                if elapsed >= timeout:
+                    raise RuntimeError('timeout - 5 minutes have passed and pods are not up')
+
+                # restarting a single pod behaves differently, fetch the *newest* pod
+                # and hope it is the right one. Comes back sorted
+                if 'name' in kwargs:
+                    del kwargs['name']
+                    pods = self.list_pods(**kwargs)
+                    # Add in the latest name
+                    kwargs['name'] = pods[0]['name']
+                    pods = pods[0]
+
+                actual = 0
+                for pod in self.list_pods(**kwargs):
+                    if pod['state'] == 'up':
+                        actual += 1
+
+                if desired == actual:
+                    break
+
+                elapsed += 5
+                time.sleep(5)
+
+        except Exception as e:
+            err = "warning, some pods failed to start:\n{}".format(str(e))
+            log_event(self, err, logging.WARNING)
+
+        # Return the new pods
+        pods = self.list_pods(**kwargs)
+        return pods
+
+    def restart_old(self, **kwargs):
         to_restart = self.container_set.all()
         if kwargs.get('type'):
             to_restart = to_restart.filter(type=kwargs.get('type'))
@@ -438,33 +509,45 @@ class App(UuidAuditedModel):
         try:
             labels = {'app': str(self)}
 
-            if 'release' in kwargs:
-                if kwargs['release'] is None:
-                    release = self.release_set.latest()
+            # always supply a version, either latest or a specific one
+            if 'release' not in kwargs or kwargs['release'] is None:
+                release = self.release_set.latest()
+            else:
+                release = self.release_set.get(version=kwargs['release'])
 
-                version = "v{}".format(release.version)
-                labels.update({'version': version})
+            version = "v{}".format(release.version)
+            labels.update({'version': version})
 
             if 'type' in kwargs:
                 labels.update({'type': kwargs['type']})
 
-            pods = self._scheduler._get_pods(str(self), labels=labels).json()
+            # in case a singular pod is requested
+            if 'name' in kwargs:
+                pods = [self._scheduler._get_pod(kwargs['name'], str(self), True).json()]
+            else:
+                pods = self._scheduler._get_pods(str(self), labels=labels).json()['items']
 
             data = []
-            for pod in pods['items']:
+            for p in pods:
                 # specifically ignore run pods
-                if pod['metadata']['labels']['type'] == 'run':
+                if p['metadata']['labels']['type'] == 'run':
                     continue
 
                 item = Pod()
-                item.name = pod['metadata']['name']
-                item.state = self._scheduler.resolve_state(pod).name
-                item.release = pod['metadata']['labels']['version']
-                item.type = pod['metadata']['labels']['type']
+                item['name'] = p['metadata']['name']
+                item['state'] = self._scheduler.resolve_state(p).name
+                item['release'] = p['metadata']['labels']['version']
+                item['type'] = p['metadata']['labels']['type']
+                item['started'] = p['status']['startTime']
 
                 data.append(item)
 
+            # sorting so latest start date is first
+            data.sort(key=lambda x: x['started'], reverse=True)
+
             return data
+        except KubeException as e:
+            pass
         except Exception as e:
             err = '(list pods): {}'.format(e)
             log_event(self, err, logging.ERROR)

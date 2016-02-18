@@ -3,7 +3,6 @@ package ps
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 
 	"github.com/deis/workflow/client/controller/api"
 	"github.com/deis/workflow/client/controller/client"
@@ -40,28 +39,28 @@ func Scale(c *client.Client, appID string, targets map[string]int) error {
 }
 
 // Restart an app's processes.
-func Restart(c *client.Client, appID string, procType string, num int) ([]api.Process, error) {
-	u := fmt.Sprintf("/v2/apps/%s/containers/", appID)
+func Restart(c *client.Client, appID string, procType string, name string) ([]api.Pods, error) {
+	u := fmt.Sprintf("/v2/apps/%s/pods/", appID)
 
 	if procType == "" {
 		u += "restart/"
 	} else {
-		if num == -1 {
+		if name == "" {
 			u += procType + "/restart/"
 		} else {
-			u += procType + "/" + strconv.Itoa(num) + "/restart/"
+			u += procType + "/" + name + "/restart/"
 		}
 	}
 
 	body, err := c.BasicRequest("POST", u, nil)
 
 	if err != nil {
-		return []api.Process{}, err
+		return []api.Pods{}, err
 	}
 
-	procs := []api.Process{}
+	procs := []api.Pods{}
 	if err = json.Unmarshal([]byte(body), &procs); err != nil {
-		return []api.Process{}, err
+		return []api.Pods{}, err
 	}
 
 	return procs, nil

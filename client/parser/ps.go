@@ -68,7 +68,7 @@ Usage: deis ps:restart [<type>] [options]
 Arguments:
   <type>
     the process name as defined in your Procfile, such as 'web' or 'worker'.
-    To restart a particular process, use 'web.1'.
+    To restart a particular process, use 'web-asdfg' or 'app-v2-web-asdfg'.
 
 Options:
   -a --app=<app>

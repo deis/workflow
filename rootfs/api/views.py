@@ -333,7 +333,7 @@ class ContainerViewSet(AppResourceViewSet):
 
     def restart(self, *args, **kwargs):
         try:
-            containers = self.get_app().restart(**kwargs)
+            containers = self.get_app().restart_old(**kwargs)
             serializer = self.get_serializer(containers, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
@@ -352,6 +352,19 @@ class PodViewSet(AppResourceViewSet):
             data = self.get_serializer(pods, many=True).data
             # fake out pagination for now
             pagination = {'results': data, 'count': len(data)}
+            return Response(pagination, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+    def restart(self, *args, **kwargs):
+        app = self.get_app()
+
+        try:
+            pods = app.restart(**kwargs)
+            data = self.get_serializer(pods, many=True).data
+            # fake out pagination for now
+            # pagination = {'results': data, 'count': len(data)}
+            pagination = data
             return Response(pagination, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'detail': str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)

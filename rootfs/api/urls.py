@@ -29,7 +29,7 @@ urlpatterns = [
         views.ReleaseViewSet.as_view({'post': 'rollback'})),
     url(r"^apps/(?P<id>{})/releases/?".format(settings.APP_URL_REGEX),
         views.ReleaseViewSet.as_view({'get': 'list'})),
-    # application infrastructure
+    # restart containers
     url(r"^apps/(?P<id>{})/containers/restart/?".format(settings.APP_URL_REGEX),
         views.ContainerViewSet.as_view({'post': 'restart'})),
     url(r"^apps/(?P<id>{})/containers/(?P<type>[-_\w.]+)/restart/?".format(settings.APP_URL_REGEX),
@@ -37,6 +37,7 @@ urlpatterns = [
     url(r"^apps/(?P<id>{})/containers/(?P<type>[-_\w]+)/(?P<num>[-_\w]+)/restart/?".format(
         settings.APP_URL_REGEX),
         views.ContainerViewSet.as_view({'post': 'restart'})),
+    # application infrastructure
     url(r"^apps/(?P<id>{})/containers/(?P<type>[-_\w]+)/(?P<num>[-_\w]+)/?".format(
         settings.APP_URL_REGEX),
         views.ContainerViewSet.as_view({'get': 'retrieve'})),
@@ -44,6 +45,14 @@ urlpatterns = [
         views.ContainerViewSet.as_view({'get': 'list'})),
     url(r"^apps/(?P<id>{})/containers/?".format(settings.APP_URL_REGEX),
         views.ContainerViewSet.as_view({'get': 'list'})),
+    # restart pods
+    url(r"^apps/(?P<id>{})/pods/restart/?".format(settings.APP_URL_REGEX),
+        views.PodViewSet.as_view({'post': 'restart'})),
+    url(r"^apps/(?P<id>{})/pods/(?P<type>[-_\w.]+)/restart/?".format(settings.APP_URL_REGEX),
+        views.PodViewSet.as_view({'post': 'restart'})),
+    url(r"^apps/(?P<id>{})/pods/(?P<type>[-_\w]+)/(?P<name>[-_\w]+)/restart/?".format(
+        settings.APP_URL_REGEX),
+        views.PodViewSet.as_view({'post': 'restart'})),
     # list pods
     url(r"^apps/(?P<id>{})/pods/(?P<type>[-_\w]+)/(?P<name>[-_\w]+)/?".format(
         settings.APP_URL_REGEX),

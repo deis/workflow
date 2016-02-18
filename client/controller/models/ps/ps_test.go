@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/deis/pkg/time"
 	"github.com/deis/workflow/client/controller/api"
 	"github.com/deis/workflow/client/controller/client"
 	"github.com/deis/workflow/client/version"
@@ -24,52 +25,41 @@ const processesFixture string = `
             "release": "v2",
             "type": "web",
             "name": "example-go-v2-web-45678",
-            "state": "up"
+            "state": "up",
+            "started": "2016-02-13T00:47:52"
         }
     ]
 }`
 
 const restartAllFixture string = `[
     {
-        "owner": "test",
-        "app": "example-go",
         "release": "v2",
-        "created": "2014-01-01T00:00:00UTC",
-        "updated": "2014-01-01T00:00:00UTC",
-        "uuid": "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
         "type": "web",
-        "num": 1,
-        "state": "up"
+        "name": "example-go-v2-web-45678",
+        "state": "up",
+        "started": "2016-02-13T00:47:52"
     }
 ]
 `
 
 const restartWorkerFixture string = `[
     {
-        "owner": "test",
-        "app": "example-go",
         "release": "v2",
-        "created": "2014-01-01T00:00:00UTC",
-        "updated": "2014-01-01T00:00:00UTC",
-        "uuid": "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
         "type": "worker",
-        "num": 1,
-        "state": "up"
+        "name": "example-go-v2-worker-45678",
+        "state": "up",
+        "started": "2016-02-13T00:47:52"
     }
 ]
 `
 
 const restartWebTwoFixture string = `[
     {
-        "owner": "test",
-        "app": "example-go",
         "release": "v2",
-        "created": "2014-01-01T00:00:00UTC",
-        "updated": "2014-01-01T00:00:00UTC",
-        "uuid": "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
         "type": "web",
-        "num": 2,
-        "state": "up"
+        "name": "example-go-v2-web-45678",
+        "state": "up",
+        "started": "2016-02-13T00:47:52"
     }
 ]
 `
@@ -86,18 +76,23 @@ func (fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if req.URL.Path == "/v2/apps/example-go/containers/restart/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/example-go/pods/restart/" && req.Method == "POST" {
 		res.Write([]byte(restartAllFixture))
 		return
 	}
 
-	if req.URL.Path == "/v2/apps/example-go/containers/worker/restart/" && req.Method == "POST" {
+	if req.URL.Path == "/v2/apps/example-go/pods/web/restart/" && req.Method == "POST" {
+		res.Write([]byte(restartWebTwoFixture))
+		return
+	}
+
+	if req.URL.Path == "/v2/apps/example-go/pods/worker/example-go-v2-worker-45678/restart/" && req.Method == "POST" {
 		res.Write([]byte(restartWorkerFixture))
 		return
 	}
 
-	if req.URL.Path == "/v2/apps/example-go/containers/web/2/restart/" && req.Method == "POST" {
-		res.Write([]byte(restartWebTwoFixture))
+	if req.URL.Path == "/v2/apps/example-go/pods/worker/worker-45678/restart/" && req.Method == "POST" {
+		res.Write([]byte(restartWorkerFixture))
 		return
 	}
 
@@ -130,12 +125,15 @@ func (fakeHTTPServer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 func TestProcessesList(t *testing.T) {
 	t.Parallel()
 
+	started := time.Time{}
+	started.UnmarshalText([]byte("2016-02-13T00:47:52"))
 	expected := []api.Pods{
 		{
 			Release: "v2",
 			Type:    "web",
 			Name:    "example-go-v2-web-45678",
 			State:   "up",
+			Started: started,
 		},
 	}
 
@@ -165,63 +163,66 @@ func TestProcessesList(t *testing.T) {
 }
 
 type testExpected struct {
-	Num      int
+	Name     string
 	Type     string
-	Expected []api.Process
+	Expected []api.Pods
 }
 
 func TestAppsRestart(t *testing.T) {
 	t.Parallel()
 
+	started := time.Time{}
+	started.UnmarshalText([]byte("2016-02-13T00:47:52"))
 	tests := []testExpected{
 		{
-			Num:  -1,
+			Name: "",
 			Type: "",
-			Expected: []api.Process{
+			Expected: []api.Pods{
 				{
-					Owner:   "test",
-					App:     "example-go",
 					Release: "v2",
-					Created: "2014-01-01T00:00:00UTC",
-					Updated: "2014-01-01T00:00:00UTC",
-					UUID:    "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
 					Type:    "web",
-					Num:     1,
+					Name:    "example-go-v2-web-45678",
 					State:   "up",
+					Started: started,
 				},
 			},
 		},
 		{
-			Num:  -1,
+			Name: "example-go-v2-worker-45678",
 			Type: "worker",
-			Expected: []api.Process{
+			Expected: []api.Pods{
 				{
-					Owner:   "test",
-					App:     "example-go",
 					Release: "v2",
-					Created: "2014-01-01T00:00:00UTC",
-					Updated: "2014-01-01T00:00:00UTC",
-					UUID:    "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
 					Type:    "worker",
-					Num:     1,
+					Name:    "example-go-v2-worker-45678",
 					State:   "up",
+					Started: started,
 				},
 			},
 		},
 		{
-			Num:  2,
-			Type: "web",
-			Expected: []api.Process{
+			Name: "worker-45678",
+			Type: "worker",
+			Expected: []api.Pods{
 				{
-					Owner:   "test",
-					App:     "example-go",
 					Release: "v2",
-					Created: "2014-01-01T00:00:00UTC",
-					Updated: "2014-01-01T00:00:00UTC",
-					UUID:    "de1bf5b5-4a72-4f94-a10c-d2a3741cdf75",
-					Type:    "web",
-					Num:     2,
+					Type:    "worker",
+					Name:    "example-go-v2-worker-45678",
 					State:   "up",
+					Started: started,
+				},
+			},
+		},
+		{
+			Name: "",
+			Type: "web",
+			Expected: []api.Pods{
+				{
+					Release: "v2",
+					Type:    "web",
+					Name:    "example-go-v2-web-45678",
+					State:   "up",
+					Started: started,
 				},
 			},
 		},
@@ -242,7 +243,7 @@ func TestAppsRestart(t *testing.T) {
 	client := client.Client{HTTPClient: httpClient, ControllerURL: *u, Token: "abc"}
 
 	for _, test := range tests {
-		actual, err := Restart(&client, "example-go", test.Type, test.Num)
+		actual, err := Restart(&client, "example-go", test.Type, test.Name)
 
 		if err != nil {
 			t.Error(err)

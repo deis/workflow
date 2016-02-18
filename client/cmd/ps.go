@@ -89,17 +89,15 @@ func PsRestart(appID, target string) error {
 	}
 
 	psType := ""
-	psNum := -1
+	psName := ""
 
 	if target != "" {
-		if strings.Contains(target, ".") {
-			parts := strings.Split(target, ".")
-			psType = parts[0]
-			psNum, err = strconv.Atoi(parts[1])
-
-			if err != nil {
-				return err
-			}
+		if strings.Contains(target, "-") {
+			parts := strings.Split(target, "-")
+			// the API requires the type, for now
+			psType = parts[len(parts)-2]
+			// process name is the full pod
+			psName = target
 		} else {
 			psType = target
 		}
@@ -109,7 +107,7 @@ func PsRestart(appID, target string) error {
 	startTime := time.Now()
 	quit := progress()
 
-	_, err = ps.Restart(c, appID, psType, psNum)
+	processes, err := ps.Restart(c, appID, psType, psName)
 
 	quit <- true
 	<-quit
@@ -118,14 +116,13 @@ func PsRestart(appID, target string) error {
 		return err
 	}
 
-	fmt.Printf("done in %ds\n", int(time.Since(startTime).Seconds()))
-
-	processes, _, err := ps.List(c, appID, c.ResponseLimit)
-	if err != nil {
-		return err
+	if len(processes) == 0 {
+		fmt.Println("Could not find any processes to restart")
+	} else {
+		fmt.Printf("done in %ds\n", int(time.Since(startTime).Seconds()))
+		printProcesses(appID, processes)
 	}
 
-	printProcesses(appID, processes)
 	return nil
 }
 
