@@ -17,16 +17,6 @@ check-docker:
 	  exit 2; \
 	fi
 
-prep-bintray-json:
-# TRAVIS_TAG is set to the tag name if the build is a tag
-ifdef TRAVIS_TAG
-	@jq '.version.name |= "$(VERSION)"' _scripts/ci/bintray-template.json | \
-		jq '.package.repo |= "deis"' > _scripts/ci/bintray-ci.json
-else
-	@jq '.version.name |= "$(VERSION)"' _scripts/ci/bintray-template.json \
-		> _scripts/ci/bintray-ci.json
-endif
-
 build: docker-build
 
 docker-build: check-docker

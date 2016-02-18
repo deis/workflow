@@ -26,6 +26,16 @@ define check-static-binary
   fi
 endef
 
+prep-bintray-json:
+# TRAVIS_TAG is set to the tag name if the build is a tag
+ifdef TRAVIS_TAG
+	@jq '.version.name |= "$(VERSION)"' _scripts/ci/bintray-template.json | \
+		jq '.package.repo |= "deis"' > _scripts/ci/bintray-ci.json
+else
+	@jq '.version.name |= "$(VERSION)"' _scripts/ci/bintray-template.json \
+		> _scripts/ci/bintray-ci.json
+endif
+
 bootstrap:
 	${DEV_ENV_CMD} glide install
 
