@@ -15,6 +15,8 @@ with open('/var/run/secrets/deis/database/creds/user') as f:
 with open('/var/run/secrets/deis/database/creds/password') as f:
     DATABASES['default']['PASSWORD'] = f.read().strip()
 
+DATABASES['default']['NAME'] = DATABASES['default']['USER']
+
 # scheduler settings
 SCHEDULER_MODULE = 'scheduler'
 SCHEDULER_URL = "https://{}:{}".format(
