@@ -44,4 +44,4 @@ venv/
 vendor/
 
 # generated bintray scripts during ci
-_scripts/ci/bintray-ci.json
+client/_scripts/ci/bintray-ci.json

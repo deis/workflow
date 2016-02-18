@@ -32,12 +32,10 @@ install:
   - pip install -r rootfs/dev_requirements.txt
   - make -C docs/ deps
   - GLIDE_HOME=/home/travis/.glide make -C client bootstrap
-  - make prep-bintray-json
 script:
   - make test
-  - make -C client/ bootstrap build test dist
+  - make -C client/ bootstrap build test dist prep-bintray-json
   - make -C docs/ build test
-  - make prep-bintray-json
 deploy:
   - provider: script
     # ensure client/doc builds aren't removed
