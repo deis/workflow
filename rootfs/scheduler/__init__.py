@@ -213,10 +213,16 @@ MATCH = re.compile(
     r'(?P<app>[a-z0-9-]+)_?(?P<version>v[0-9]+)?\.?(?P<c_type>[a-z-_]+)')
 
 
+class KubeException(Exception):
+    def __init__(self, *args, **kwargs):
+        self.response = kwargs.pop('response', object)
+        Exception.__init__(self, *args, **kwargs)
+
+
 def error(resp, errmsg, *args):
     errmsg = errmsg.format(*args)
     errmsg = "failed to {}: {} {}\n{}".format(errmsg, resp.status_code, resp.reason, resp.json())
-    raise RuntimeError(errmsg)
+    raise KubeException(errmsg, response=resp)
 
 
 def unhealthy(status_code):
@@ -841,11 +847,14 @@ class KubeHTTPClient(AbstractSchedulerClient):
 
     # PODS #
 
-    def _get_pod(self, name, namespace):
+    def _get_pod(self, name, namespace, return_response=False):
         url = self._api("/namespaces/{}/pods/{}", namespace, name)
         resp = self.session.get(url)
         if unhealthy(resp.status_code):
             error(resp, 'get Pod "{}" in Namespace "{}"', name, namespace)
+
+        if return_response:
+            return resp
 
         return resp.status_code, resp.reason, resp.text
 
@@ -878,17 +887,22 @@ class KubeHTTPClient(AbstractSchedulerClient):
         if unhealthy(resp.status_code):
             error(resp, 'delete Pod "{}" in Namespace "{}"', name, namespace)
 
-        # Verify the pod has been deleted. Give it 5 seconds.
-        for _ in range(5):
-            status, reason, data = self._get_pod(name, namespace)
-            if status == 404:
-                break
+        # Verify the pod has been deleted. Give it 30 seconds.
+        for _ in range(30):
+            try:
+                self._get_pod(name, namespace)
+            except KubeException as e:
+                if e.response.status_code == 404:
+                    break
 
             time.sleep(1)
 
         # Pod was not deleted within the grace period.
-        if status != 404:
-            error(resp, 'delete Pod "{}" in Namespace "{}"', name, namespace)
+        try:
+            self._get_pod(name, namespace)
+        except KubeException as e:
+            if e.response.status_code != 404:
+                error(e.response, 'delete Pod "{}" in Namespace "{}"', name, namespace)
 
     def _pod_log(self, name, namespace):
         url = self._api("/namespaces/{}/pods/{}/log", namespace, name)

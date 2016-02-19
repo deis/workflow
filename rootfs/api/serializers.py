@@ -316,11 +316,7 @@ class PodSerializer(serializers.BaseSerializer):
     state = serializers.CharField()
     type = serializers.CharField()
     release = serializers.CharField()
+    started = serializers.DateTimeField()
 
     def to_representation(self, obj):
-        return {
-            'name': obj.name,
-            'state': obj.state,
-            'type': obj.type,
-            'release': obj.release
-        }
+        return obj
