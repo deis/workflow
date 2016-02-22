@@ -17,6 +17,54 @@ from .utils import dict_merge
 logger = logging.getLogger(__name__)
 
 # Used for one off command runs on pods
+POD_BTEMPLATE = """\
+{
+  "kind": "Pod",
+  "apiVersion": "$version",
+  "metadata": {
+    "name": "$id"
+  },
+  "spec": {
+    "containers": [
+      {
+        "name": "$id",
+        "image": "quay.io/deisci/slugrunner:v2-beta",
+        "env": [
+        {
+            "name":"PORT",
+            "value":"5000"
+        },
+        {
+            "name":"SLUG_URL",
+            "value":"$image"
+        },
+        {
+            "name": "DOCKERIMAGE",
+            "value":"1"
+        }
+        ],
+        "volumeMounts":[
+        {
+            "name":"minio-user",
+            "mountPath":"/var/run/secrets/object/store",
+            "readOnly":true
+        }
+        ]
+      }
+    ],
+    "volumes":[
+    {
+        "name":"minio-user",
+        "secret":{
+        "secretName":"minio-user"
+        }
+    }
+    ],
+    "restartPolicy": "Never"
+  }
+}
+"""
+
 POD_TEMPLATE = """\
 {
   "kind": "Pod",
@@ -384,13 +432,17 @@ class KubeHTTPClient(AbstractSchedulerClient):
             name, image, entrypoint, command))
         appname = name.split('_')[0]
         name = name.replace('.', '-').replace('_', '-')
+        imgurl = self.registry + '/' + image
+        POD = POD_TEMPLATE
+        if image.startswith('http://') or image.startswith('https://'):
+            POD = POD_BTEMPLATE
+            imgurl = image
         l = {
             'id': name,
             'version': self.apiversion,
-            'image': self.registry + '/' + image,
+            'image': imgurl,
         }
-
-        template = string.Template(POD_TEMPLATE).substitute(l)
+        template = string.Template(POD).substitute(l)
         if command.startswith('-c '):
             args = command.split(' ', 1)
             args[1] = args[1][1:-1]
@@ -404,36 +456,36 @@ class KubeHTTPClient(AbstractSchedulerClient):
         resp = self.session.post(url, json=js_template)
         if unhealthy(resp.status_code):
             error(resp, 'create Pod in Namespace "{}"', appname)
-
-        while(1):
-            parsed_json = {}
-            status = 404
-            reason = ''
-            data = ''
-            for _ in range(5):
+        parsed_json = {}
+        status = 404
+        reason = ''
+        data = ''
+        duration = 30
+        iteration = 1
+        while(iteration < duration):
+            try:
                 status, reason, data = self._get_pod(name, appname)
-                if unhealthy(status):
-                    time.sleep(1)
-                    continue
-
                 parsed_json = json.loads(data)
+                if parsed_json['status']['phase'] == 'Succeeded':
+                    status, data, reason = self._pod_log(name, appname)
+                    self._delete_pod(name, appname)
+                    return 0, data
+                if parsed_json['status']['phase'] == 'Running':
+                    if iteration > 28:
+                        duration = duration + 1
+            except:
                 break
-
-            if unhealthy(status):
-                error(resp, 'create Pod in Namespace "{}"', appname)
-
-            if parsed_json['status']['phase'] == 'Succeeded':
-                status, data, reason = self._pod_log(name, appname)
-                self._delete_pod(name, appname)
-                return 0, data
-            elif parsed_json['status']['phase'] == 'Failed':
-                pod_state = parsed_json['status']['containerStatuses'][0]['state']
-                err_code = pod_state['terminated']['exitCode']
-                self._delete_pod(name, appname)
-                return err_code, data
-
+            iteration = iteration + 1
             time.sleep(1)
 
+        if iteration >= duration:
+            error(resp, 'Pod start took more than 30 seconds', appname)
+            return 0, data
+        if parsed_json['status']['phase'] == 'Failed':
+            pod_state = parsed_json['status']['containerStatuses'][0]['state']
+            err_code = pod_state['terminated']['exitCode']
+            self._delete_pod(name, appname)
+            return err_code, data
         return 0, data
 
     def state(self, name):
