@@ -11,8 +11,9 @@ The `deis` command-line client interacts with this component.
 
 ## Database
 
-The database component is a [PostgreSQL][] server used to store durable
-platform state. Backups and WAL logs are pushed to [Store][].
+The database component is a [PostgreSQL][] server used to store durable platform state. Backups and
+WAL logs are pushed to the [Store][] through [WAL-E][]. When the database is restarted, backups are
+fetched and replayed from Store so no data is lost.
 
 ## Builder
 
@@ -41,18 +42,23 @@ The router component uses [Nginx][] to route traffic to application containers.
 
 ## Store
 
-The store component uses [Ceph][] to store data for Deis components
-which need to store state, including [Registry][], [Database][].
+The Store component uses [Minio][] by default to store data for Deis components which need to store
+state, including the [Registry][] and the [Database][].
+
+If you are using Minio as the Store, it is highly recommended that the Store's data is backed by a
+persistent volume in the event of complete failure. See
+[Backing up and Restoring Data](../managing-deis/backing-up-and-restoring-data.md) for more
+information.
 
 [Amazon S3]: http://aws.amazon.com/s3/
 [Application]: ../reference-guide/terms.md#application
 [Celery]: http://www.celeryproject.org/
 [Config]: ../reference-guide/terms.md#config
 [controller]: #controller
-[Ceph]: http://ceph.com
 [database]: #database
 [Docker]: http://docker.io/
 [Git]: http://git-scm.com/
+[Minio]: https://www.minio.io/
 [Nginx]: http://nginx.org/
 [OpenStack Storage]: http://www.openstack.org/software/openstack-storage/
 [PostgreSQL]: http://www.postgresql.org/
@@ -61,3 +67,4 @@ which need to store state, including [Registry][], [Database][].
 [release]: ../reference-guide/terms.md#release
 [router]: #router
 [store]: #store
+[WAL-E]: https://github.com/wal-e/wal-e
