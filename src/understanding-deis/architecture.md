@@ -46,9 +46,10 @@ The platform scheduler is in charge of placing containers on hosts in the data p
 
 The Router Mesh publishes [Applications][] to consumers.
 
-Each [router][] in the mesh is a configurable software load balancer designed to expose
-[containers][] running in the data plane.
-Routers track healthy containers using a distributed, watchable store like `etcd`.
+Each [router][] in the mesh is a dynamically configured Nginx web server designed to route inbound
+traffic to the appropriate Kubernetes services for applications running in the data and control
+planes.  Additionally, routers perform typical web server responsibilities such as SSL termination
+and gzip compression.
 
 Any changes to router configuration or certificates are applied within seconds.
 
