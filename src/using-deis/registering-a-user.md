@@ -6,7 +6,8 @@ To use Deis, you must first register a user on the [Controller][].
 ## Register with a Controller
 
 Use `deis register` with the [Controller][] URL (supplied by your Deis administrator)
-to create a new account.  You will be logged in automatically.
+to create a new account.  When you have completed the registration process, you will be logged in
+automatically.
 
 The domain you use here should match the platform domain you selected when configuring the [Router][].
 Note that you always use `deis.<domain>` to communicate with the controller.
@@ -57,9 +58,6 @@ If you already have an account, use `deis login` to authenticate against the Dei
     username: deis
     password:
     Logged in as deis
-
-!!! note
-    For Vagrant clusters: `deis login http://deis.local3.deisapp.com`
 
 !!! note
     Deis session information is stored in your user's ~/.deis directory.
