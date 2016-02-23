@@ -335,7 +335,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
                 new_rc["metadata"]["name"], desired)
             )
             self._scale_rc(new_rc["metadata"]["name"], app_name, 0)
-            self._delete_rc(new_rc["metadata"]["name"], app_name)
+            self._delete_rc(app_name, new_rc["metadata"]["name"])
             if old_rc:
                 self._scale_rc(old_rc["metadata"]["name"], app_name, desired)
 
@@ -389,7 +389,7 @@ class KubeHTTPClient(AbstractSchedulerClient):
             # TODO check if RC exists first
             self._scale_rc(name, app_name, 0)
             # TODO check if RC exists first
-            self._delete_rc(name, app_name)
+            self._delete_rc(app_name, name)
             raise
 
     def start(self, name):
@@ -643,11 +643,17 @@ class KubeHTTPClient(AbstractSchedulerClient):
         self._get_schedule_status(name, num, namespace)
         for _ in range(120):
             count = 0
-            pods = self._get_pods(namespace)
-            parsed_json = pods.json()
-            for pod in parsed_json['items']:
-                if(pod['metadata']['generateName'] == name+'-' and
-                   pod['status']['phase'] == 'Running'):
+            pods = self._get_pods(namespace).json()
+            for pod in pods['items']:
+                # now that state is running time to see if probes are passing
+                if (
+                    pod['metadata']['generateName'] == name+'-' and
+                    pod['status']['phase'] == 'Running' and
+                    # is the readiness probe passing?
+                    self._pod_readiness_status(pod, name) and
+                    # is the pod ready to serve requests?
+                    self._pod_liveness_status(pod)
+                ):
                     count += 1
 
             if count == num:
@@ -963,6 +969,24 @@ class KubeHTTPClient(AbstractSchedulerClient):
             error(resp, 'get logs for Pod "{}" in Namespace "{}"', name, namespace)
 
         return resp.status_code, resp.text, resp.reason
+
+    def _pod_readiness_status(self, pod, name):
+        """Check if the pod container have passed the readiness probes"""
+        for container in pod['status']['containerStatuses']:
+            # find the right container in case there are many on the pod
+            if container['name'] == name and not container['ready']:
+                return False
+
+        return True
+
+    def _pod_liveness_status(self, pod):
+        """Check if the pods liveness probe status has passed all checks"""
+        for condition in pod['status']['conditions']:
+            # type = Ready is the only binary type right now
+            if condition['type'] == 'Ready' and condition['status'] != 'True':
+                return False
+
+        return True
 
     # NODES #
 
