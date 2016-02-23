@@ -13,20 +13,8 @@ Note that these estimates are for Deis and Kubernetes only, and there should be 
 
 Running smaller machines will likely result in increased system load and has been known to result in component failures and other problems.
 
-## Cluster Size
-
-For the [Scheduler][] and the [Store][] components to work properly, clusters must have at least three nodes. The etcd service must always be able to obtain a quorum, and the Ceph data store must maintain at least three replicas of persistent data.
-
-If running multiple (at least three) machines of an adequate size is unreasonable, it is recommended to investigate the [Dokku][] project instead. Dokku is [sponsored][] by Deis and is ideal for environments where a highly-available distributed system is not necessary (i.e. local development, testing, etc.).
-
 ## Network
 
 Due to changes introduced in Docker 1.3.1 related to insecure Docker registries, the hosts running Deis must be able to communicate via a private network procured by kubernetes in the `10.0.0.0/8` private address space. This allows the docker daemon used by the controller to communicate with the registry. Ensure that your hosts have the following entries in their respective DOCKER_OPTS:
 
 	EXTRA_DOCKER_OPTS="--insecure-registry 10.0.0.0/8"
-
-
-[dokku]: https://github.com/progrium/dokku
-[scheduler]: ../reference-guide/terms.md#scheduler
-[sponsored]: http://deis.io/deis-sponsors-dokku/
-[store]: ../understanding-deis/components.md#store
