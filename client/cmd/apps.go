@@ -175,9 +175,7 @@ func printLogs(logs string) error {
 	for _, log := range strings.Split(logs, `\\n\\n`) {
 		category := "unknown"
 		parts := strings.Split(strings.Split(log, " -- ")[0], " ")
-		if len(parts) >= 2 {
-			category = parts[1]
-		}
+		category = parts[0]
 		colorVars := map[string]string{
 			"Color": chooseColor(category),
 			"Log":   log,
