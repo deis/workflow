@@ -4,7 +4,7 @@ These steps will help you provision a Deis cluster.
 
 ## Check System Requirements
 
-The Deis provision scripts default to a machine size which should be adequate to run Deis, but this can be customized. Please refer to the [system requirements][] for resource considerations when choosing a machine size to run Deis.
+Please refer to the [system requirements][] for resource considerations when choosing a machine size to run Deis.
 
 ## Choose a Provider
 
