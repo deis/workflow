@@ -15,17 +15,15 @@ Fortunately, most modern applications feature a stateless application tier that 
 ## Login to the Controller
 
 !!! important
-	if you haven't yet, now is a good time to [install the client](installing-the-client.md).
+	if you haven't yet, now is a good time to [install the client](installing-the-client.md) and [register](registering-a-user.md).
 
-Before deploying an application, users must first authenticate against the Deis [Controller][].
+Before deploying an application, users must first authenticate against the Deis [Controller][]
+using the URL supplied by their Deis administrator.
 
     $ deis login http://deis.example.com
     username: deis
     password:
     Logged in as deis
-
-!!! note
-    For Vagrant clusters: `deis login http://deis.local3.deisapp.com`
 
 
 ## Select a Build Process
