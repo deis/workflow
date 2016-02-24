@@ -20,7 +20,6 @@ Our official support channels are:
   - builder: https://github.com/deis/builder/issues
   - chart: https://github.com/deis/charts/issues
   - database: https://github.com/deis/postgres/issues
-  - etcd: https://github.com/deis/etcd/issues
   - helm: https://github.com/helm/helm/issues
   - minio: https://github.com/deis/minio/issues
   - registry: https://github.com/deis/registry/issues
