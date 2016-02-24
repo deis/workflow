@@ -9,7 +9,6 @@ pages:
     - Architecture: understanding-deis/architecture.md
     - Concepts: understanding-deis/concepts.md
     - Components: understanding-deis/components.md
-    - Failover: understanding-deis/failover.md
   - Installing Deis:
     - Quick Start: installing-deis/quickstart.md
     - System Requirements: installing-deis/system-requirements.md
