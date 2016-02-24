@@ -9,9 +9,6 @@ Use `deis register` with the [Controller][] URL (supplied by your Deis administr
 to create a new account.  When you have completed the registration process, you will be logged in
 automatically.
 
-The domain you use here should match the platform domain you selected when configuring the [Router][].
-Note that you always use `deis.<domain>` to communicate with the controller.
-
     $ deis register http://deis.example.com
     username: myuser
     password:
