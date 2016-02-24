@@ -16,3 +16,5 @@ lib64
 
 # python virtual environments for testing
 venv/
+
+_build/
