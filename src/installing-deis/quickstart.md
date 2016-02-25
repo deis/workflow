@@ -14,6 +14,8 @@ Choose one of the following providers and deploy a new kubernetes cluster:
 - [Google Container Engine](https://cloud.google.com/container-engine/docs/before-you-begin)
 - [Vagrant](http://kubernetes.io/v1.1/docs/getting-started-guides/vagrant.html)
 
+Reference [this table](http://kubernetes.io/v1.1/docs/getting-started-guides/#table-of-solutions) in the official Kubernetes documentation for a more extensive (but still non-exhaustive) list of Kubernetes provisioning options supported by the project or the community.
+
 ## Prerequisites
 Please make sure you enable the Daemon Sets api if you are installing a pre-1.2 version of kubernetes. As it is not turned on by default. You can learn more about how to do that [here](http://kubernetes.io/v1.1/docs/api.html#enabling-resources-in-the-extensions-group).
 
