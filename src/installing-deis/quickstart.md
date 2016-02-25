@@ -14,6 +14,8 @@ Choose one of the following providers and deploy a new Kubernetes cluster:
 - [Google Container Engine](https://cloud.google.com/container-engine/docs/before-you-begin)
 - [Vagrant](http://kubernetes.io/v1.1/docs/getting-started-guides/vagrant.html)
 
+Reference [this table](http://kubernetes.io/v1.1/docs/getting-started-guides/#table-of-solutions) in the official Kubernetes documentation for a more extensive (but still non-exhaustive) list of Kubernetes provisioning options supported by the project or the community.
+
 ## Install Deis Platform
 
 Now that you've finished provisioning a cluster, please [Install the Deis Platform][install deis].
