@@ -24,7 +24,7 @@ Deis workflow has been tested with the Kubernetes v1.1 release line. While Kuber
 
 The logging components require Kubernetes Daemon Sets API. Daemon Sets are not enabled by default in the v1.1 release line. To enable these extensions, follow the instructions found [here](http://kubernetes.io/v1.1/docs/api.html#enabling-resources-in-the-extensions-group). If you are running Kubernetes v1.2, Daemon Sets are enabled by default.
 
-Specific steps to enable API extensions may vary based on your Kubernetes configuration. For example, to update a CoreOS Kubernetes cluster edit the API server unit file and add the following line to the `ExecStart` stanza: `--runtime_config=extensions/v1beta1=true,extensions/v1beta1/daemonsets=true`.
+Specific steps to enable API extensions may vary based on your Kubernetes configuration. For example, to update a CoreOS Kubernetes cluster, edit the API server unit file and add the following line to the `ExecStart` stanza: `--runtime_config=extensions/v1beta1=true,extensions/v1beta1/daemonsets=true`.
 
 Restart your API server and check that the extensions API is enabled by running:
 
