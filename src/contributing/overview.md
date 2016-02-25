@@ -16,9 +16,6 @@ We are always looking for help improving the core platform, other workloads, too
 
 When you're ready to begin writing code, review [Design Documents][dd] and get your [Development Environment][dev-environment] set up.
 
-!!! important
-    If you're a new contributor to Deis, your Pull Request could earn you [credit at DigitalOcean][do-credit]!
-
 ## Triage Issues
 
 If you don't have time to code, consider helping with triage. The community will thank you for saving them time by spending some of yours. See [Triaging Issues](triaging-issues.md) for more info.
@@ -30,6 +27,5 @@ Interact with the community on our user mailing list or live in our IRC channel,
 [workflow]: https://github.com/deis/workflow
 [dd]: design-documents.md
 [dev-environment]: development-environment.md
-[do-credit]: development-environment.md#digitalocean-credit
 [docs]: https://github.com/deis/workflow/tree/master/docs
 [easy-fix]: https://github.com/deis/workflow/labels/easy-fix

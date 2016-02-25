@@ -12,8 +12,6 @@ pages:
   - Installing Deis:
     - Quick Start: installing-deis/quickstart.md
     - System Requirements: installing-deis/system-requirements.md
-    - Bare Metal: installing-deis/bare-metal.md
-    - DigitalOcean: installing-deis/digitalocean.md
     - Installing the Deis Platform: installing-deis/installing-the-deis-platform.md
   - Using Deis:
     - Installing the Client: using-deis/installing-the-client.md

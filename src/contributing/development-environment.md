@@ -135,32 +135,7 @@ Although writing and executing tests are critical to ensuring code quality, most
 
 ### Running a Kubernetes Cluster for Development
 
-Before proceding further, it is imperative to understand that all Deis components, including the Deis PaaS ([deis/workflow][workflow]) run atop the [Kubernetes][k8s] container orchestration system.  Whether for production or development and testing, a healthy Kubernetes cluster (version 1.1 or greater) is the required starting point.
-
-All Deis components treat Kubernetes as the lowest common denominator and Deis components make no assumptions about:
-
-* Your hosts' underlying operating system(s).
-* The underlying physical or virtual infrastructure.  It makes no difference whether your hosts:
-  * Are physical machines (i.e. bare metal).
-  * Are virtual machines provisioned through a cloud provider.
-  * Are virtual machines running locally on your laptop.
-
-With Kubernetes used as a uniform interface between Deis components and the infrastructure below, it is also (largely) unimportant to Deis components _how_ your Kubernetes cluster was provisioned.  As such, the Deis team is also not strongly opinionated (at this time) about how best to provision a Kubernetes cluster.
-
-Any official options listed on Kubernetes own [Getting Started][k8s-getting-started] page should be sufficient.
-
-#### DigitalOcean
-
-In many cases, testing your changes to Deis components is accomplished most easily and economically on just a few Vagrant VMs - sometimes just one.  However, at times, if one wishes to conserve local resources, test changes at scale, or demonstrate changes to others, it is advisable to move these activities into a cloud environment. 
-
-[DigitalOcean][] is Deis' officially recommended provider for contributors wishing to extend their development and testing into the cloud.  See [Provision a new DO cluster](../installing-deis/digitalocean.md) for further details and then continue to follow the instructions below.
-
-!!! important
-    Are you a new contributor to Deis? Your first [Pull Request][pr] could earn you credit at [DigitalOcean][]! Submit your changes and then email <deis@engineyard.com>. When your PR is merged, the maintainer team will send you a DigitalOcean credit based on the value of your contribution.
-
-### Installing Deis Components
-
-With a functioning Kubernetes cluster, proceed with Deis installation using [these instructions](../installing-deis/digitalocean.md) and then continue to follow the instructions below.
+To run a Kubernetes cluster locally or elsewhere to support your development activities, refer to Deis installation instructions [here](../installing-deis/quickstart.md).
 
 ### Using a Development Registry
 
@@ -186,7 +161,7 @@ In non-Linux environments:
 export DEIS_REGISTRY=<IP of the docker-deis Docker Machine VM>:5000/
 ```
 
-If your development cluster runs on a cloud provider such as DigitalOcean, a local registry such as the one above will not be accessible to your Kubernetes nodes.  In such cases, a public registry such as [DockerHub][dh] or [quay.io][quay] will suffice.
+If your development cluster runs on a cloud provider such as Google Container Engine, a local registry such as the one above will not be accessible to your Kubernetes nodes.  In such cases, a public registry such as [DockerHub][dh] or [quay.io][quay] will suffice.
 
 To use DockerHub for this purpose, for instance:
 
@@ -275,7 +250,6 @@ things you should do when proposing a change to any Deis component.
 [testing]: testing.md
 [k8s]: http://kubernetes.io/
 [k8s-getting-started]: http://kubernetes.io/gettingstarted/
-[digitalocean]: https://www.digitalocean.com/
 [pr]: submitting-a-pull-request.md
 [dh]: https://hub.docker.com/
 [quay]: https://quay.io/
