@@ -16,11 +16,11 @@ Running smaller machines will likely result in increased system load and has bee
 
 # Kubernetes Requirements
 
-### Versions
+## Versions
 
 Deis workflow has been tested with the Kubernetes v1.1 release line. While Kubernetes 1.2 may work we haven't fully tested that release.
 
-### Daemon Sets
+## Daemon Sets
 
 The logging components require Kubernetes Daemon Sets API. DaemonSets are not enabled by default in the v1.1 release line, to enable these extensions follow the instructions found [here](http://kubernetes.io/v1.1/docs/api.html#enabling-resources-in-the-extensions-group). If you are running Kubernetes v1.2, DaemonSets are enabled by default.
 
@@ -34,6 +34,8 @@ extensions/v1beta1
 v1
 $
 ```
+
+# Docker Requirements
 
 ## Docker Version
 
