@@ -4,7 +4,7 @@ These steps will help you provision a Deis cluster.
 
 ## Check System Requirements
 
-Please refer to the prequisites and [system requirements][] for considerations when planning your Kubernetes environment.
+Please refer to the prerequisites and [system requirements][] for considerations when planning your Kubernetes environment.
 
 ## Choose a Provider
 
