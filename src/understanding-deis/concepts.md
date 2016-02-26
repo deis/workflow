@@ -84,10 +84,10 @@ app.
 
 ### Release Stage
 
-During the release stage, a [build][] is combined with [config][] to create a new numbered
-[release][]. This release is then pushed to a Docker registry for later execution.
-The release stage is triggered any time a new build is created or config is
-changed, making it easy to rollback code and configuration changes.
+During the release stage, a [build][] is combined with [application configuration][config]
+to create a new numbered [release][]. New releases are created any time a new
+build is created or application configuration is changed. Tracking releases
+makes it easy to rollback to any previous release.
 
 ### Run Stage
 
