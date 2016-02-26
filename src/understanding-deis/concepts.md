@@ -100,19 +100,20 @@ Note that during the deploy, your application will be running in a mixed mode.
 
 ## Backing Services
 
-Deis treats databases, caches, storage, messaging systems, and other
-[backing services][] as attached resources, in keeping with Twelve-Factor
+Workflow treats all persistent serivces such as databases, caches, storage,
+messaging systems, and other [backing services][] as resources managed
+separtely from your application. This philosophy aligns with Twelve-Factor
 best practices.
 
 Applications are attached to backing services using [environment variables][].
-Because applications are decoupled from backing services, apps are free to scale up independently,
-to swap services provided by other apps, or to switch to external or third-party vendor services.
+Because applications are decoupled from backing services, apps are free to
+scale up independently, to swap services provided by other apps, or to switch
+to external or third-party vendor services.
 
 ## See Also
 
 * [Architecture](architecture.md)
 * [Twelve-Factor App][]
-
 
 [Build and Run]: http://12factor.net/build-release-run
 [Docker]: https://www.docker.com/
