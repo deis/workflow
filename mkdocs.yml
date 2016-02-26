@@ -63,14 +63,6 @@ pages:
     - Terms: reference-guide/terms.md
     - Creating a Self-Signed SSL Certificate: reference-guide/creating-a-self-signed-ssl-certificate.md
     # FIXME (bacongobbler): our custom deis theme only supports a toctree depth of 2 due to css issues
-    - Controller API v1.0: reference-guide/controller-api/v1.0.md
-    - Controller API v1.1: reference-guide/controller-api/v1.1.md
-    - Controller API v1.2: reference-guide/controller-api/v1.2.md
-    - Controller API v1.3: reference-guide/controller-api/v1.3.md
-    - Controller API v1.4: reference-guide/controller-api/v1.4.md
-    - Controller API v1.5: reference-guide/controller-api/v1.5.md
-    - Controller API v1.6: reference-guide/controller-api/v1.6.md
-    - Controller API v1.7: reference-guide/controller-api/v1.7.md
     - Controller API v2.0: reference-guide/controller-api/v2.0.md
   - FAQ: faq.md
 theme_dir: themes/deis
