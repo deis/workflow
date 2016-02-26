@@ -34,13 +34,16 @@ For a detailed overview of Workflow components, see our [component][] break down
 
 ## Docker
 
-[Docker][] is an open source project to pack, ship and run any
+[Docker][] is an open source project to build, ship and run any
 application as a lightweight, portable, self-sufficient container.
 
-Deis curates your applications as Docker images, which are then
-distributed across your cluster as Docker containers.
+Workflow uses Docker Images and the Docker Engine (via Kubernetes) to package
+and run your application respectively.
 
-(Deis itself is also a set of coordinated Docker containers.)
+If you have not yet converted your application to containers, Workflow provides
+a simple and straightforward "source to Docker image" capability. Supporting
+multiple language runtimes via community buildpacks, building your application
+in a container can be as easy as `git push deis master`.
 
 ## Applications
 
