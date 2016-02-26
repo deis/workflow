@@ -1,6 +1,6 @@
 # Quick Start
 
-These steps will help you provision a Deis cluster.
+These steps will help you install and configure Deis Workflow on a Kubernetes cluster.
 
 ## Check System Requirements
 
@@ -16,9 +16,9 @@ Choose one of the following providers and deploy a new Kubernetes cluster:
 
 Reference [this table](http://kubernetes.io/v1.1/docs/getting-started-guides/#table-of-solutions) in the official Kubernetes documentation for a more extensive (but still non-exhaustive) list of Kubernetes provisioning options supported by the project or the community.
 
-## Install Deis Platform
+## Install Deis Workflow
 
-Now that you've finished provisioning a cluster, please [Install the Deis Platform][install deis].
+Now that you've finished provisioning a cluster, please [Install Deis Workflow][install deis].
 
 ## Configure DNS
 
@@ -26,13 +26,13 @@ See [Configuring DNS][] for more information on properly setting up your DNS rec
 
 ## Register a User
 
-Once your cluster has been provisioned and the Deis Platform has been installed, you can
+Once your cluster has been provisioned and Deis Workflow has been installed, you can
 [install the client][client] and [register your first user][register]!
 
 
 [client]: ../using-deis/installing-the-client.md
 [configuring object storage]: configuring-object-storage.md
 [configuring dns]: ../managing-deis/configuring-dns.md
-[install deis]: installing-the-deis-platform.md
+[install deis]: installing-deis-workflow.md
 [register]: ../using-deis/registering-a-user.md
 [system requirements]: system-requirements.md

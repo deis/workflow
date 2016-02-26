@@ -1,6 +1,6 @@
-# Installing the Deis Platform
+# Installing Deis Workflow
 
-We will use the `helm` utility to provision the Deis platform to a kubernetes cluster. If you don't
+We will use the `helm` utility to install Deis Workflow onto a Kubernetes cluster. If you don't
 have `helm` installed, see [installing helm][helm] for more info.
 
 ## Check Your Setup
@@ -10,9 +10,9 @@ First check that you have `helm` installed and the version is correct.
     $ helm --version
     0.2.0
 
-Ensure your kubectl client is installed and ensure it can connect to your kubernetes cluster. This
+Ensure your kubectl client is installed and ensure it can connect to your Kubernetes cluster. This
 is where `helm` will attempt to communicate with the cluster. You can test that it is working
-properly by running
+properly by running:
 
     $ helm target
     Kubernetes master is running at https://10.245.1.2
@@ -26,7 +26,7 @@ If you see a list of targets like the one above, helm can communicate with the k
 
 ## Get the Helm Chart
 
-The [Helm Deis Chart](https://github.com/deis/charts) contains everything you
+The [Deis Chart Repository](https://github.com/deis/charts) contains everything you
 need to install Deis onto your Kubernetes cluster, with a single `helm install` command.
 
 Run the following commands to set up your Helm environment and install the chart:
@@ -37,15 +37,15 @@ $ helm repo add deis https://github.com/deis/charts
 $ helm fetch deis/deis
 ```
 
-## Launch Your Deis Cluster
+## Install Deis Workflow
 
-Now that you have it prepared, launch the Deis cluster with:
+Now that you have Helm installed an the Deish Chart Repository added, install Workflow by running:
 
 ```
-$ helm install deis/deis
+$ helm install deis/deis --namespace=deis
 ```
 
-This command will launch a variety of Kubernetes resources in the `deis` namespace.
+Helm will install a variety of Kubernetes resources in the `deis` namespace.
 You'll need to wait for the pods that it launched to be ready. Monitor their status
 by running:
 
@@ -53,8 +53,9 @@ by running:
 $ kubectl get pods --namespace=deis
 ```
 
-Once you see all of the pods in the `READY` state, your Deis platform is running on a cluster!
+Once you see all of the pods in the `READY` state, Deis Workflow is up and running!
 
+Next, [configure dns][] so you can register your first user.
 
 [helm]: http://helm.sh
 [using deis]: ../using-deis/deploying-an-application.md

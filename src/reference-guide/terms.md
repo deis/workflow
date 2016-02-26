@@ -55,7 +55,7 @@ The Controller stack includes:
 
 - Django API Server for handling API calls
 
-Follow the [Installing Deis](../installing-deis/installing-the-deis-platform.md) guide to create your own private Deis controller.
+Follow the [Installing Deis](../installing-deis/installing-deis-workflow.md) guide to create your own private Deis controller.
 
 
 ## Key
