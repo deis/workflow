@@ -14,13 +14,15 @@ Ensure your kubectl client is installed and ensure it can connect to your Kubern
 is where `helm` will attempt to communicate with the cluster. You can test that it is working
 properly by running:
 
-    $ helm target
-    Kubernetes master is running at https://10.245.1.2
-    Heapster is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/heapster
-    KubeDNS is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-dns
-    KubeUI is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-ui
-    Grafana is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
-    InfluxDB is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
+```
+$ helm target
+Kubernetes master is running at https://10.245.1.2
+Heapster is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/heapster
+KubeDNS is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-dns
+KubeUI is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-ui
+Grafana is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
+InfluxDB is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
+```
 
 If you see a list of targets like the one above, helm can communicate with the kubernetes master.
 
