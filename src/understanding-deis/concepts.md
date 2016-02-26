@@ -97,18 +97,18 @@ to swap services provided by other apps, or to switch to external or third-party
 * [Twelve-Factor App][]
 
 
+[Build and Run]: http://12factor.net/build-release-run
+[Docker]: https://www.docker.com/
+[Kubernetes]: https://kubernetes.io
+[Twelve-Factor App]: http://12factor.net/
 [application]: ../reference-guide/terms.md#application
+[backing services]: http://12factor.net/backing-services
 [build]: ../reference-guide/terms.md#build
 [builder]: components.md#builder
-[config]: ../reference-guide/terms.md#config
-[Docker]: https://www.docker.com/
-[Build and Run]: http://12factor.net/build-release-run
-[backing services]: http://12factor.net/backing-services
-[environment variables]: http://12factor.net/config
-[release]: ../reference-guide/terms.md#release
-[Twelve-Factor App]: http://12factor.net/
-[Kubernetes]: https://kubernetes.io
-[cncf]: https://cncf.io/
-[helm]: https://helm.sh
-[components]: components.md
 [buildpacks]: ../using-deis/using-buildpacks.md
+[cncf]: https://cncf.io/
+[components]: components.md
+[config]: ../reference-guide/terms.md#config
+[environment variables]: http://12factor.net/config
+[helm]: https://helm.sh
+[release]: ../reference-guide/terms.md#release
