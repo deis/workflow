@@ -101,10 +101,13 @@ to swap services provided by other apps, or to switch to external or third-party
 [build]: ../reference-guide/terms.md#build
 [builder]: components.md#builder
 [config]: ../reference-guide/terms.md#config
-[containers]: ../reference-guide/terms.md#container
-[Docker]: http://docker.io/
+[Docker]: https://www.docker.com/
 [Build and Run]: http://12factor.net/build-release-run
 [backing services]: http://12factor.net/backing-services
 [environment variables]: http://12factor.net/config
 [release]: ../reference-guide/terms.md#release
 [Twelve-Factor App]: http://12factor.net/
+[Kubernetes]: https://kubernetes.io
+[cncf]: https://cncf.io/
+[helm]: https://helm.sh
+[components]: components.md
