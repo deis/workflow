@@ -57,6 +57,11 @@ by running:
 $ kubectl get pods --namespace=deis
 ```
 
+If you would like `kubectl` to automatically update as the pod states change, run (type Ctrl-C to stop the watch):
+```
+$ kubectl get pods --namespace=deis -w
+```
+
 Once you see all of the pods in the `READY` state, Deis Workflow is up and running!
 
 Next, [configure dns][] so you can register your first user.
