@@ -7,8 +7,10 @@ have `helm` installed, see [installing helm][helm] for more info.
 
 First check that you have `helm` installed and the version is correct.
 
-    $ helm --version
-    0.2.0
+```
+$ helm --version
+0.4.0
+```
 
 Ensure your kubectl client is installed and ensure it can connect to your Kubernetes cluster. This
 is where `helm` will attempt to communicate with the cluster. You can test that it is working
