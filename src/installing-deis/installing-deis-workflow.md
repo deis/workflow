@@ -1,0 +1,71 @@
+# Installing Deis Workflow
+
+We will use the `helm` utility to install Deis Workflow onto a Kubernetes cluster. If you don't
+have `helm` installed, see [installing helm][helm] for more info.
+
+## Check Your Setup
+
+First check that you have `helm` installed and the version is correct.
+
+```
+$ helm --version
+0.4.0
+```
+
+Ensure your kubectl client is installed and ensure it can connect to your Kubernetes cluster. This
+is where `helm` will attempt to communicate with the cluster. You can test that it is working
+properly by running:
+
+```
+$ helm target
+Kubernetes master is running at https://10.245.1.2
+Heapster is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/heapster
+KubeDNS is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-dns
+KubeUI is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-ui
+Grafana is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
+InfluxDB is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
+```
+
+If you see a list of targets like the one above, 'helm' can communicate with the kubernetes master.
+
+## Get the Helm Chart
+
+The [Deis Chart Repository](https://github.com/deis/charts) contains everything you
+need to install Deis onto your Kubernetes cluster, with a single `helm install` command.
+
+Run the following commands to set up your Helm environment and install the chart:
+
+```
+$ helm update
+$ helm repo add deis https://github.com/deis/charts
+$ helm fetch deis/deis
+```
+
+## Install Deis Workflow
+
+Now that you have Helm installed and added the Deis Chart Repository, install Workflow by running:
+
+```
+$ helm install deis/deis --namespace=deis
+```
+
+Helm will install a variety of Kubernetes resources in the `deis` namespace.
+You'll need to wait for the pods that it launched to be ready. Monitor their status
+by running:
+
+```
+$ kubectl get pods --namespace=deis
+```
+
+If you would like `kubectl` to automatically update as the pod states change, run (type Ctrl-C to stop the watch):
+```
+$ kubectl get pods --namespace=deis -w
+```
+
+Once you see all of the pods in the `READY` state, Deis Workflow is up and running!
+
+Next, [configure dns][] so you can register your first user.
+
+[helm]: http://helm.sh
+[using deis]: ../using-deis/deploying-an-application.md
+[configure dns]: ../managing-deis/configuring-dns.md
