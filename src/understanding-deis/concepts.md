@@ -91,10 +91,12 @@ makes it easy to rollback to any previous release.
 
 ### Run Stage
 
-The run stage dispatches containers to a scheduler and updates the router accordingly.
-The scheduler is in control of placing containers on hosts and balancing them evenly across the cluster.
-Containers are published to the router once they are healthy.  Old containers are only collected
-after the new containers are live and serving traffic -- providing zero-downtime deploys.
+The run stage is responsible for deploying the new release to the underlying
+Kubernetes cluster. The run stage launches a new Replication Controller which
+references the new release. By managing the desired replica count, Workflow
+orchestrates a zero-downtime, rolling update of your application. Once
+successfully updated, Workflow removes the last reference to the old release.
+Note that during the deploy, your application will be running in a mixed mode.
 
 ## Backing Services
 
