@@ -1,6 +1,7 @@
 # Concepts
 
-Deis is a lightweight application platform that deploys and scales Twelve-Factor apps as Docker containers across a cluster of Kubernetes minions.
+Deis is a lightweight application platform that deploys and scales
+Twelve-Factor apps as containers across a Kubernetes cluster.
 
 ## Twelve-Factor Applications
 
@@ -30,7 +31,7 @@ Workflow is shipped as a Kubernetes-native application, installable via
 [Helm][helm]. So operators familiar with Kubernetes will feel right at home
 running Workflow.
 
-For a detailed overview of Workflow components, see our [component][] break down.
+For a detailed overview of Workflow components, see our [component][components] break down.
 
 ## Docker
 
