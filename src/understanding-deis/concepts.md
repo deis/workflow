@@ -2,7 +2,7 @@
 
 Deis is a lightweight application platform that deploys and scales Twelve-Factor apps as Docker containers across a cluster of Kubernetes minions.
 
-## Twelve-Factor
+## Twelve-Factor Applications
 
 The [Twelve-Factor App][] is a methodology for building modern
 applications that can be scaled across a distributed system.
@@ -11,7 +11,7 @@ We consider it an invaluable synthesis of much experience with
 software-as-a-service apps in the wild, especially on the
 Heroku platform.
 
-Deis is designed to run applications that adhere to [Twelve-Factor App][]
+Workflow is designed to run applications that adhere to [Twelve-Factor App][]
 methodology and best practices.
 
 ## Docker
