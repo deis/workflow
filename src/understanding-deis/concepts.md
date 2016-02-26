@@ -14,6 +14,24 @@ Heroku platform.
 Workflow is designed to run applications that adhere to [Twelve-Factor App][]
 methodology and best practices.
 
+## Kubernetes
+
+[Kubernetes][] is an open-source cluster manager developed by Google and
+donated to the [Cloud Native Compute Foundation][cncf]. Kubernetes manages all
+the activity on your cluster. Including converging to a desired state,
+providing critical functions like stable service addresses, health monitoring,
+service discovery and DNS resolution.
+
+Workflow builds upon Kubernetes abstractions like Services, Replication
+Controllers and Pods to provide a developer-friendly UX, source to image, log
+aggregation, etc.
+
+Workflow is shipped as a Kubernetes-native application, installable via
+[Helm][helm]. So operators familiar with Kubernetes will feel right at home
+running Workflow.
+
+For a detailed overview of Workflow components, see our [component][] break down.
+
 ## Docker
 
 [Docker][] is an open source project to pack, ship and run any
