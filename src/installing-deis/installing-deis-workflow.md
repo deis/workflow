@@ -26,7 +26,7 @@ Grafana is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/ser
 InfluxDB is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
 ```
 
-If you see a list of targets like the one above, helm can communicate with the kubernetes master.
+If you see a list of targets like the one above, 'helm' can communicate with the kubernetes master.
 
 ## Get the Helm Chart
 
