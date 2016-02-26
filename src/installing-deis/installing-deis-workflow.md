@@ -41,7 +41,7 @@ $ helm fetch deis/deis
 
 ## Install Deis Workflow
 
-Now that you have Helm installed an the Deish Chart Repository added, install Workflow by running:
+Now that you have Helm installed and added the Deis Chart Repository, install Workflow by running:
 
 ```
 $ helm install deis/deis --namespace=deis
