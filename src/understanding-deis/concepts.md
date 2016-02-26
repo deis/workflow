@@ -64,8 +64,23 @@ names, SSL Certificates and developer provided configuration.
 
 ### Build Stage
 
-The [builder][] processes incoming `git push` requests and builds applications
-inside ephemeral Docker containers, resulting in a new Docker image.
+The [builder][] component processes incoming `git push deis master` requests
+manages your application packaging.
+
+If your application is using a [buildpack][] builder will launch an ephemeral
+job to extract and execute the packaging instructions. The resulting
+application artifact is stored by the platform for execution during the run
+stage.
+
+Instead, if you provide a [Dockerfile][dockerfile] builder will use the
+instructions you've provided to build a Docker Image. The resulting artifact is
+stored in a Deis-managed registry which will be referenced during the run
+stage.
+
+If you already have an external system building your application container you
+can simply reference that artifact. When using [external Docker
+images][dockerimage] the builder component doesn't attempt to repackage your
+app.
 
 ### Release Stage
 
@@ -109,6 +124,8 @@ to swap services provided by other apps, or to switch to external or third-party
 [cncf]: https://cncf.io/
 [components]: components.md
 [config]: ../reference-guide/terms.md#config
+[dockerfile]: ../using-deis/using-dockerfiles.md
+[dockerimage]: ../using-deis/using-docker-images.md
 [environment variables]: http://12factor.net/config
 [helm]: https://helm.sh
 [release]: ../reference-guide/terms.md#release
