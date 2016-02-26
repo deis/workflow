@@ -42,7 +42,7 @@ and run your application respectively.
 
 If you have not yet converted your application to containers, Workflow provides
 a simple and straightforward "source to Docker image" capability. Supporting
-multiple language runtimes via community buildpacks, building your application
+multiple language runtimes via community [buildpacks][], building your application
 in a container can be as easy as `git push deis master`.
 
 ## Applications
@@ -111,3 +111,4 @@ to swap services provided by other apps, or to switch to external or third-party
 [cncf]: https://cncf.io/
 [helm]: https://helm.sh
 [components]: components.md
+[buildpacks]: ../using-deis/using-buildpacks.md
