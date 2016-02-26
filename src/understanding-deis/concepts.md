@@ -47,12 +47,16 @@ in a container can be as easy as `git push deis master`.
 
 ## Applications
 
-Deis is designed around the concept of an [application][], or app.
-Applications live on a cluster where they use [Containers][]
-to service requests.
+Workflow is designed around the concept of an [application][], or app.
 
-Developers use applications to push code, change configuration, scale processes,
-view logs, run admin commands and much more.
+Applications can come in three forms. First, as collection of source files
+stored in a Git repository. Second, as a Dockerfile, which describes how to
+build your app. Third, a reference to an already built Docker Image, hosted on
+a remote repository.
+
+Applications are always given a unique name for easy reference. Workflow also
+tracks other related information for your application including any domain
+names, SSL Certificates and developer provided configuration.
 
 ## Build, Release, Run
 
