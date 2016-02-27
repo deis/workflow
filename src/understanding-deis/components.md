@@ -1,7 +1,14 @@
 # Components
 
-Deis consists of a number of components that combine to create a distributed PaaS.
-Each Deis component is deployed as a container or set of containers.
+Workflow is comprised of a number of small, independent services that combine
+to create a distributed PaaS. All Workflow components are deployed as services
+(and associated controllers) in your Kubernetes cluster. If you are interested
+we have a more detailed exploration of the [Workflow
+architecture][architecture.md].
+
+All of the componentry for Workflow is built with composability in mind. If you
+need to customize one of the components for your specific deployment or need
+the functionality in your own project we invite you to give it a shot!
 
 ## Controller
 
