@@ -76,24 +76,23 @@ configured for the cluster.
 
 The router component uses [Nginx][] to route traffic to application containers.
 
-
 [Amazon S3]: http://aws.amazon.com/s3/
 [Application]: ../reference-guide/terms.md#application
 [Celery]: http://www.celeryproject.org/
 [Config]: ../reference-guide/terms.md#config
-[controller]: #controller
-[database]: #database
 [Git]: http://git-scm.com/
 [Minio]: https://www.minio.io/
 [Nginx]: http://nginx.org/
 [OpenStack Storage]: http://www.openstack.org/software/openstack-storage/
 [PostgreSQL]: http://www.postgresql.org/
 [Redis]: http://redis.io/
-[registry]: #registry
-[release]: ../reference-guide/terms.md#release
-[router]: #router
-[store]: #store
 [WAL-E]: https://github.com/wal-e/wal-e
 [architecture]: architecture.md
 [backupandrestore]: ../managing-deis/backing-up-and-restoring-data.md
 [configure-objectstorage]: ../installing-deis/configuring-object-storage.md
+[controller]: #controller
+[database]: #database
+[registry]: #registry
+[release]: ../reference-guide/terms.md#release
+[router]: #router
+[store]: #store
