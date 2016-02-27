@@ -92,7 +92,17 @@ configured for the cluster.
 
 ## Router
 
-The router component uses [Nginx][] to route traffic to application containers.
+Project Location: [deis/router](https://github.com/deis/router)
+
+The router component is based on [Nginx][] and is responsible for routing
+inbound HTTP(S) traffic to your applications. The default workflow charts
+provision a Kubernetes service in the `deis` namespace with a service type of
+`LoadBalancer`. Depending on your Kubernetes configuration, this may provision
+a cloud-based loadbalancer automatically.
+
+The router component uses Kubernetes annotations for both Application discovery
+as well as router configuration. For more detailed documentation and possible
+configuration view the router [project documentation][router-documentation].
 
 [Amazon S3]: http://aws.amazon.com/s3/
 [Application]: ../reference-guide/terms.md#application
@@ -116,3 +126,4 @@ The router component uses [Nginx][] to route traffic to application containers.
 [store]: #store
 [using-buildpacks]: ../using-deis/using-buildpacks.md
 [using-dockerfiles]: ../using-deis/using-dockerfiles.md
+[router-documentation]: https://github.com/deis/router
