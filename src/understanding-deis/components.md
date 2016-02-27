@@ -12,9 +12,12 @@ the functionality in your own project we invite you to give it a shot!
 
 ## Controller
 
-The controller component is an HTTP API server. Among other functions, the
-controller contains the scheduler, which decides where to run app containers.
-The `deis` command-line client interacts with this component.
+Project Location: [deis/workflow](https://github.com/deis/workflow)
+
+The controller component is an HTTP API server which serves as the endpoint for
+the `deis` CLI. The controller provides all of the platform functionality as
+well as interfacing with your Kubernetes cluster. The controller persists all
+of its data to the database component.
 
 ## Database
 
