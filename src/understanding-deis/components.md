@@ -46,15 +46,6 @@ The builder component uses a [Git][] server to process
 !!! note
     The builder component does not incorporate [Config][] directly into the images it produces. A [Release][] is a pairing of an application image with application configuration maintained separately in the Deis [Database][]. Once a new [Release][] is generated, a new set of containers is deployed across the platform automatically.
 
-## Registry
-
-The registry component hosts [Docker][] images on behalf of the platform.
-Image data is stored by [Store][].
-
-## Router
-
-The router component uses [Nginx][] to route traffic to application containers.
-
 ## Store
 
 The Store component uses [Minio][] by default to store data for Deis components which need to store
@@ -64,6 +55,20 @@ If you are using Minio as the Store, it is highly recommended that the Store's d
 persistent volume in the event of complete failure. See
 [Backing up and Restoring Data](../managing-deis/backing-up-and-restoring-data.md) for more
 information.
+
+## Registry
+
+Project Location: [deis/registry](https://github.com/deis/registry)
+
+The registry component is a managed docker registry which holds application
+images generated from the builder component. Registry persists the Docker image
+iamges to either local storage (in development mode) or to object storage
+configured for the cluster.
+
+## Router
+
+The router component uses [Nginx][] to route traffic to application containers.
+
 
 [Amazon S3]: http://aws.amazon.com/s3/
 [Application]: ../reference-guide/terms.md#application
