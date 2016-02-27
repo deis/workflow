@@ -21,9 +21,14 @@ of its data to the database component.
 
 ## Database
 
-The database component is a [PostgreSQL][] server used to store durable platform state. Backups and
-WAL logs are pushed to the [Store][] through [WAL-E][]. When the database is restarted, backups are
-fetched and replayed from Store so no data is lost.
+Project Location: [deis/postgres](https://github.com/deis/postgres)
+
+The database component is a managed instance of [PostgreSQL][] which holds a
+majority of the platforms state. Backups and WAL logs are pushed to the
+[Store][] through [WAL-E][]. When the database is restarted, backups are
+fetched and replayed from Store so no data is lost. For more information
+on backup and restore read the documentation for
+[Backing up and Restoring Data][backupandrestore].
 
 ## Builder
 
