@@ -46,15 +46,22 @@ The builder component uses a [Git][] server to process
 !!! note
     The builder component does not incorporate [Config][] directly into the images it produces. A [Release][] is a pairing of an application image with application configuration maintained separately in the Deis [Database][]. Once a new [Release][] is generated, a new set of containers is deployed across the platform automatically.
 
-## Store
+## Object Storage
 
-The Store component uses [Minio][] by default to store data for Deis components which need to store
-state, including the [Registry][] and the [Database][].
+Project Location: [deis/minio](https://github.com/deis/mino)
 
-If you are using Minio as the Store, it is highly recommended that the Store's data is backed by a
-persistent volume in the event of complete failure. See
-[Backing up and Restoring Data](../managing-deis/backing-up-and-restoring-data.md) for more
-information.
+All of the Workflow components ship their persistent data to cluster configured
+S3 compatibile Object Storage. For example, database ships its WAL files,
+registry stores Docker images, and slugbuilder stores slugs.
+
+Workflow supports either on or off-cluster storage. For production deployments
+we highly recommend that you configure [off-cluster object storage][configure-objectstorage].
+
+To facilitate experimentation, development and test environments, the default charts for
+Workflow include on-cluster object storage via [minio](https://github.com/minio/minio).
+
+If you also feel comforatable using Kubernetes persistent volumes you may
+configure minio to use persistent storage available in your environment.
 
 ## Registry
 
