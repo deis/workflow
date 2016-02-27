@@ -30,21 +30,39 @@ fetched and replayed from Store so no data is lost. For more information
 on backup and restore read the documentation for
 [Backing up and Restoring Data][backupandrestore].
 
-## Builder
+## Builder: builder, slugbuilder, and dockerbuilder
 
-The builder component uses a [Git][] server to process
-[Application][] builds. The builder:
+Project Location: [deis/builder](https://github.com/deis/builder)
+
+
+The builder component is responsible for accepting code pushes via [Git][] and
+managing the build process of your [Application][]. The builder process is:
 
 1. Receives incoming `git push` requests over SSH
 2. Authenticates the user via SSH key fingerprint
-3. Authorizes the user's access to write to the Git repository
-4. Builds a new `Docker` image from the updated git repository
-5. Adds the latest [Config][] to the resulting Docker image
-6. Pushes the new Docker image to the platform's [Registry][]
-7. Triggers a new [Release][] through the [Controller][]
+3. Authorizes the user's access to push code to the Application
+4. Starts the Application Build phase (see below)
+5. Triggers a new [Release][] via the [Controller][]
 
-!!! note
-    The builder component does not incorporate [Config][] directly into the images it produces. A [Release][] is a pairing of an application image with application configuration maintained separately in the Deis [Database][]. Once a new [Release][] is generated, a new set of containers is deployed across the platform automatically.
+Builder currently supports both buildpack and Dockerfile based builds.
+
+Project Location: [deis/slugbuilder](https://github.com/deis/slugbuilder)
+
+For Buildpack-based deploys, the builder component will launch a one-shot Pod
+in the `deis` namespace. This pod runs `slugbuilder` component which handles
+default and custom buildpacks (specified by `BUILDPACK_URL`). The "compiled"
+application results in a slug, consisting of your application code and all of
+its depdencies as determined by the buildpack. The slug is pushed to the
+cluster-configured object storage for later execution. For more information
+about buildpacks see [using buildpacks][using-buildpacks].
+
+Project Location: [deis/dockerbuilder](https://github.com/deis/dockerbuilder)
+
+For Applications which contain a `Dockerfile` in the root of the repository,
+`builder` will instead launch the `dockerbuilder` to package your application.
+Instead of generating a slug, `dockerbuilder` generates a Docker image (using
+the underlying Docker engine). The completed image is pushed to the managed
+Docker registry on cluster. For more information see [using Dockerfiles][using-dockerfiles].
 
 ## Object Storage
 
@@ -96,3 +114,5 @@ The router component uses [Nginx][] to route traffic to application containers.
 [release]: ../reference-guide/terms.md#release
 [router]: #router
 [store]: #store
+[using-buildpacks]: ../using-deis/using-buildpacks.md
+[using-dockerfiles]: ../using-deis/using-dockerfiles.md
