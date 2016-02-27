@@ -24,7 +24,7 @@ of its data to the database component.
 Project Location: [deis/postgres](https://github.com/deis/postgres)
 
 The database component is a managed instance of [PostgreSQL][] which holds a
-majority of the platforms state. Backups and WAL logs are pushed to the
+majority of the platforms state. Backups and WAL files are pushed to the
 [Store][] through [WAL-E][]. When the database is restarted, backups are
 fetched and replayed from Store so no data is lost. For more information
 on backup and restore read the documentation for
@@ -76,7 +76,6 @@ The router component uses [Nginx][] to route traffic to application containers.
 [Config]: ../reference-guide/terms.md#config
 [controller]: #controller
 [database]: #database
-[Docker]: http://docker.io/
 [Git]: http://git-scm.com/
 [Minio]: https://www.minio.io/
 [Nginx]: http://nginx.org/
@@ -88,3 +87,6 @@ The router component uses [Nginx][] to route traffic to application containers.
 [router]: #router
 [store]: #store
 [WAL-E]: https://github.com/wal-e/wal-e
+[architecture]: architecture.md
+[backupandrestore]: ../managing-deis/backing-up-and-restoring-data.md
+[configure-objectstorage]: ../installing-deis/configuring-object-storage.md
