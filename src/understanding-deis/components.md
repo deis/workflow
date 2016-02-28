@@ -148,11 +148,11 @@ documentation][logger-documentation].
 [configure-objectstorage]: ../installing-deis/configuring-object-storage.md
 [controller]: #controller
 [database]: #database
+[logger-documentation]: https://github.com/deis/logger
 [registry]: #registry
 [release]: ../reference-guide/terms.md#release
+[router-documentation]: https://github.com/deis/router
 [router]: #router
 [store]: #store
 [using-buildpacks]: ../using-deis/using-buildpacks.md
 [using-dockerfiles]: ../using-deis/using-dockerfiles.md
-[router-documentation]: https://github.com/deis/router
-[logger-documentation]: https://github.com/deis/logger
