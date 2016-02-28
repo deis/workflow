@@ -113,6 +113,25 @@ The router component uses Kubernetes annotations for both Application discovery
 as well as router configuration. For more detailed documentation and possible
 configuration view the router [project documentation][router-documentation].
 
+## Logger: fluentd, logger
+
+The logging subystem consists of two compoents. Fluentd handles log shipping
+and logger maintains a ring-buffer of application logs.
+
+Project Location: [deis/fluentd](https://github.com/deis/fluentd)
+
+Fluentd is deployed to your Kubernetes cluster via Daemon Sets. Fluentd
+subscribes to all container logs, decorates the output with Kubernetes metadata
+and can be configured to drain logs to multiple destinations. By default,
+fluentd ships logs to the logger component, which powers `deis logs`.
+
+Project Location: [deis/logger](https://github.com/deis/logger)
+
+The `logger` compoent receives log streams from `fluentd`, collating by
+Application name. Logger does not persist logs to disk, instead maintaining an
+in-memory ring buffer. For more information on logger see the [project
+documentation][logger-documentation].
+
 [Amazon S3]: http://aws.amazon.com/s3/
 [Application]: ../reference-guide/terms.md#application
 [Celery]: http://www.celeryproject.org/
@@ -136,3 +155,4 @@ configuration view the router [project documentation][router-documentation].
 [using-buildpacks]: ../using-deis/using-buildpacks.md
 [using-dockerfiles]: ../using-deis/using-dockerfiles.md
 [router-documentation]: https://github.com/deis/router
+[logger-documentation]: https://github.com/deis/logger
