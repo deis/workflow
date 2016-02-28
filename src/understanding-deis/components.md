@@ -64,6 +64,15 @@ Instead of generating a slug, `dockerbuilder` generates a Docker image (using
 the underlying Docker engine). The completed image is pushed to the managed
 Docker registry on cluster. For more information see [using Dockerfiles][using-dockerfiles].
 
+## Slugrunner
+
+Project Location: [deis/slugrunner](https://github.com/deis/slugrunner)
+
+Slugrunner is the component responsible for executing buildpack-based
+Applications. Slugrunner receives slug information from the controller and
+downloads the application slug just before launching your application
+processes.
+
 ## Object Storage
 
 Project Location: [deis/minio](https://github.com/deis/mino)
