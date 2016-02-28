@@ -4,7 +4,7 @@ Workflow is comprised of a number of small, independent services that combine
 to create a distributed PaaS. All Workflow components are deployed as services
 (and associated controllers) in your Kubernetes cluster. If you are interested
 we have a more detailed exploration of the [Workflow
-architecture][architecture.md].
+architecture][architecture].
 
 All of the componentry for Workflow is built with composability in mind. If you
 need to customize one of the components for your specific deployment or need
@@ -42,7 +42,7 @@ managing the build process of your [Application][]. The builder process is:
 2. Authenticates the user via SSH key fingerprint
 3. Authorizes the user's access to push code to the Application
 4. Starts the Application Build phase (see below)
-5. Triggers a new [Release][] via the [Controller][]
+5. Triggers a new [Release][] via the Controller
 
 Builder currently supports both buildpack and Dockerfile based builds.
 
@@ -132,24 +132,16 @@ Application name. Logger does not persist logs to disk, instead maintaining an
 in-memory ring buffer. For more information on logger see the [project
 documentation][logger-documentation].
 
-[Amazon S3]: http://aws.amazon.com/s3/
 [Application]: ../reference-guide/terms.md#application
-[Celery]: http://www.celeryproject.org/
 [Config]: ../reference-guide/terms.md#config
 [Git]: http://git-scm.com/
-[Minio]: https://www.minio.io/
 [Nginx]: http://nginx.org/
-[OpenStack Storage]: http://www.openstack.org/software/openstack-storage/
 [PostgreSQL]: http://www.postgresql.org/
-[Redis]: http://redis.io/
 [WAL-E]: https://github.com/wal-e/wal-e
 [architecture]: architecture.md
 [backupandrestore]: ../managing-deis/backing-up-and-restoring-data.md
 [configure-objectstorage]: ../installing-deis/configuring-object-storage.md
-[controller]: #controller
-[database]: #database
 [logger-documentation]: https://github.com/deis/logger
-[registry]: #registry
 [release]: ../reference-guide/terms.md#release
 [router-documentation]: https://github.com/deis/router
 [router]: #router
