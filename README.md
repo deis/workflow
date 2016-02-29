@@ -1,5 +1,8 @@
 # Deis Workflow Documentation
 
+[![Build Status](https://travis-ci.org/deis/docs-v2.svg?branch=master)](https://travis-ci.org/deis/docs-v2)
+[![Latest Docs](http://img.shields.io/badge/docs-latest-fc1e5e.svg)](http://docs-v2.readthedocs.org/en/latest/)
+
 ## About
 
 Deis (pronounced DAY-iss) is an open source PaaS that makes it easy to deploy and manage
