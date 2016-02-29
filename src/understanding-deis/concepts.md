@@ -35,7 +35,7 @@ view logs, run admin commands and much more.
 
 ## Build, Release, Run
 
-![Deis Git Push Workflow](DeisGitPushWorkflow.png)
+![Git Push Workflow](../diagrams/Git_Push_Flow.png)
 
 ### Build Stage
 
