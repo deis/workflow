@@ -6,7 +6,7 @@ private and integral.
 
 To enable SSL for your cluster and all apps running upon it, you can add an SSL key to your load
 balancer. You must either provide an SSL certificate that was registered with a CA or provide
-[your own self-signed SSL certificate](../reference-guide/creating_self_signed_ssl.md).
+[your own self-signed SSL certificate](../reference-guide/creating-a-self-signed-ssl-certificate.md).
 
 ## Installing SSL on a Load Balancer
 
