@@ -46,7 +46,8 @@ $ helm fetch deis/deis
 Now that you have Helm installed and added the Deis Chart Repository, install Workflow by running:
 
 ```
-$ helm install deis/deis --namespace=deis
+$ helm generate -x manifests deis      # generates various secrets
+$ helm install deis                    # injects resources into your cluster
 ```
 
 Helm will install a variety of Kubernetes resources in the `deis` namespace.
