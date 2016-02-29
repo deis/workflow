@@ -28,24 +28,23 @@ InfluxDB is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/se
 
 If you see a list of targets like the one above, 'helm' can communicate with the kubernetes master.
 
-## Get the Helm Chart
+## Add the Deis Chart Repository
 
 The [Deis Chart Repository](https://github.com/deis/charts) contains everything you
 need to install Deis onto your Kubernetes cluster, with a single `helm install` command.
 
-Run the following commands to set up your Helm environment and install the chart:
+Run the following command to add this repository to Helm:
 
 ```
-$ helm update
 $ helm repo add deis https://github.com/deis/charts
-$ helm fetch deis/deis
 ```
 
 ## Install Deis Workflow
 
-Now that you have Helm installed and added the Deis Chart Repository, install Workflow by running:
+Now that you have Helm installed and have added the Deis Chart Repository, install Workflow by running:
 
 ```
+$ helm fetch deis/deis                 # fetches the chart into a local workspace
 $ helm generate -x manifests deis      # generates various secrets
 $ helm install deis                    # injects resources into your cluster
 ```
