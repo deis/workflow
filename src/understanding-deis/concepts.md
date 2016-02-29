@@ -37,13 +37,17 @@ For a detailed overview of Workflow components, see our [component][components] 
 [Docker][] is an open source project to build, ship and run any
 application as a lightweight, portable, self-sufficient container.
 
-Workflow uses Docker Images and the Docker Engine (via Kubernetes) to package
-and run your application respectively.
-
 If you have not yet converted your application to containers, Workflow provides
 a simple and straightforward "source to Docker image" capability. Supporting
 multiple language runtimes via community [buildpacks][], building your application
 in a container can be as easy as `git push deis master`.
+
+Applications which are packaged via a buildpack are run in Docker containers as
+part of the `slugrunner` process. View the [slugrunner compoent][slugrunner]
+for more information.
+
+Applications which use either a Dockerfile or reference an external Docker
+Image are launched unmodified.
 
 ## Applications
 
@@ -132,3 +136,4 @@ to external or third-party vendor services.
 [environment variables]: http://12factor.net/config
 [helm]: https://helm.sh
 [release]: ../reference-guide/terms.md#release
+[slugrunner]: concepts.md#slugrunner
