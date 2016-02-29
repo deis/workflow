@@ -1,6 +1,6 @@
 # Architecture Diagrams
 
-This is an OmniGraffle file which holds the source materials for the following
+This is an [OmniGraffle][] file which holds the source materials for the following
 images.
 
 To update a chart:
@@ -15,3 +15,5 @@ To update a chart:
 8. Click "Export"
 
 This should update all of the graphics in one go! Commit and pull-request.
+
+[omnigraffle]: https://www.omnigroup.com/omnigraffle
