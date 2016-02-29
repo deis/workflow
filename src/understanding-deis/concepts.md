@@ -43,7 +43,7 @@ multiple language runtimes via community [buildpacks][], building your applicati
 in a container can be as easy as `git push deis master`.
 
 Applications which are packaged via a buildpack are run in Docker containers as
-part of the `slugrunner` process. View the [slugrunner compoent][slugrunner]
+part of the `slugrunner` process. View the [slugrunner component][slugrunner]
 for more information.
 
 Applications which use either a Dockerfile or reference an external Docker
