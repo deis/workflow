@@ -27,7 +27,7 @@ Controllers and Pods to provide a developer-friendly UX, source to image, log
 aggregation, etc.
 
 Workflow is shipped as a Kubernetes-native application, installable via
-[Helm][helm]. So operators familiar with Kubernetes will feel right at home
+[Helm][helm], so operators familiar with Kubernetes will feel right at home
 running Workflow.
 
 For a detailed overview of Workflow components, see our [component][components] break down.
