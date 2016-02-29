@@ -59,9 +59,10 @@ Applications can come in three forms:
 2. as a Dockerfile, which describes how to build your app
 3. a reference to an already built Docker Image, hosted on a remote Docker repository
 
-Applications are always given a unique name for easy reference. Workflow also
-tracks other related information for your application including any domain
-names, SSL Certificates and developer provided configuration.
+Applications identified by a unique name for easy reference. If you do not
+specify a name when creating your application Workflow generates one for you.
+Workflow also tracks other related information for your application including
+any domain names, SSL Certificates and developer provided configuration.
 
 ## Build, Release, Run
 
@@ -70,15 +71,15 @@ names, SSL Certificates and developer provided configuration.
 ### Build Stage
 
 The [builder][] component processes incoming `git push deis master` requests
-manages your application packaging.
+and manages your application packaging.
 
 If your application is using a [buildpack][] builder will launch an ephemeral
 job to extract and execute the packaging instructions. The resulting
 application artifact is stored by the platform for execution during the run
 stage.
 
-Instead, if you provide a [Dockerfile][dockerfile] builder will use the
-instructions you've provided to build a Docker Image. The resulting artifact is
+If instead, you provide a [Dockerfile][dockerfile] builder will use the
+instructions you have provided to build a Docker Image. The resulting artifact is
 stored in a Deis-managed registry which will be referenced during the run
 stage.
 
@@ -105,14 +106,14 @@ Note that during the deploy, your application will be running in a mixed mode.
 
 ## Backing Services
 
-Workflow treats all persistent serivces such as databases, caches, storage,
+Workflow treats all persistent services such as databases, caches, storage,
 messaging systems, and other [backing services][] as resources managed
 separtely from your application. This philosophy aligns with Twelve-Factor
 best practices.
 
 Applications are attached to backing services using [environment variables][].
 Because applications are decoupled from backing services, apps are free to
-scale up independently, to swap services provided by other apps, or to switch
+scale up independently, to use services provided by other apps, or to switch
 to external or third-party vendor services.
 
 ## See Also
