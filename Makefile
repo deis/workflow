@@ -24,8 +24,6 @@ build:
 
 serve:
 	$(MKDOCSSERVE)
-	@echo
-	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
 clean:
 	rm -rf $(BUILDDIR)/*

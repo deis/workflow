@@ -1,66 +1,35 @@
-# Deis Workflow v2
+# Deis Workflow Documentation
 
-[![Build Status](https://travis-ci.org/deis/workflow.svg?branch=master)](https://travis-ci.org/deis/workflow) [![Go Report Card](http://goreportcard.com/badge/deis/workflow)](http://goreportcard.com/report/deis/workflow)
+## About
 
 Deis (pronounced DAY-iss) is an open source PaaS that makes it easy to deploy and manage
 applications on your own servers. Deis builds on [Kubernetes](http://kubernetes.io/) to provide
 a lightweight, [Heroku-inspired](http://heroku.com) workflow.
 
-## Work in Progress
+This repository represents the documentation for Deis Workflow which is the second major relase of the Platform.
 
-![Deis Graphic](https://s3-us-west-2.amazonaws.com/get-deis/deis-graphic-small.png)
+## Requirements
 
-Deis Workflow v2 is currently in alpha. Your feedback and participation are more than welcome, but be
-aware that this project is considered a work in progress.
+The documentation site requires either a local installation of [mkdocs][] or
+access to Docker.
 
-The following features are not ready in Alpha1, but will be coming
-soon.
+### Local Installation
 
-- Complete SSL support
-- Dockerfile builds
-- Backup and restore features
-- Persistent storage (though it can be manually configured)
+Install `mkdocs` and required dependencies:
 
-## Hacking Workflow
-
-First, [obtain a Kubernetes cluster][install-k8s]. Deis Workflow currently targets Kubernetes
-v1.1 with the following requirements:
-
-* Configure Docker's `insecure-registry` parameter to include the subnets used by your Kubernetes installation
-* If you are testing the logger components, you must enable `DaemonSet` experimental APIs via `--runtime-config=extensions/v1beta1/daemonsets=true`
-
-Next, install [helm](http://helm.sh). Next, add the deis repository to your chart list:
-
-```console
-$ helm repo add deis https://github.com/deis/charts
+```
+make deps
 ```
 
-Then, install Deis!
+## Building Documentation
 
-```console
-$ helm install deis/deis
-```
+To build the documentation run: `make build` or `make docker-build`
 
-Complete instructions for installing and managing a Deis cluster are
-available in the [docs folder](https://github.com/deis/workflow/tree/master/docs/src).
+## Serve Documentation
 
-If you want to retrieve the latest client dev build for OS X or Linux, download the client:
+To serve documenation run: `make serve` or `make docker-serve`
 
-```console
-$ curl -sSL http://deis.io/deis-cli/install-v2-alpha.sh | bash
-```
-
-If you want to hack on a new feature, build the deis/workflow image and push it to a Docker
-registry. The `$DEIS_REGISTRY` environment variable must point to a registry accessible to your
-Kubernetes cluster. You may need to configure the Docker engines on your Kubernetes nodes to allow
-`--insecure-registry 192.168.0.0/16` (or the appropriate address range).
-
-```console
-$ make docker-build docker-push
-```
-
-You'll want to modify the deis chart to use your custom image, then run `helm install` on the
-chart.
+Then view the documentation on [http://localhost:8000](http://localhost:8000) or [http://DOCKER_IP:8000](http://DOCKER_IP:8000)
 
 ## License
 
