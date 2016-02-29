@@ -1,6 +1,6 @@
 # Concepts
 
-Deis is a lightweight application platform that deploys and scales
+Deis Workflow is a lightweight application platform that deploys and scales
 Twelve-Factor apps as containers across a Kubernetes cluster.
 
 ## Twelve-Factor Applications
