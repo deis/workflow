@@ -30,7 +30,7 @@ To build the documentation run: `make build` or `make docker-build`
 
 To serve documenation run: `make serve` or `make docker-serve`
 
-Then view the documentation on [http://localhost:8000](http://localhost:8000) or [http://DOCKER_IP:8000](http://DOCKER_IP:8000)
+Then view the documentation on [http://localhost:8000](http://localhost:8000) or `http://DOCKER_IP:8000`.
 
 ## License
 
