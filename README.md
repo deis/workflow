@@ -11,12 +11,12 @@ second major release of the Platform.
 
 ## Requirements
 
-The documentation site requires either a local installation of [mkdocs][] or
+The documentation site requires either a local installation of [MkDocs][] or
 access to Docker.
 
 ### Local Installation
 
-Install `mkdocs` and required dependencies:
+Install [MkDocs][] and required dependencies:
 
 ```
 make deps
@@ -42,3 +42,4 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 
 [install-k8s]: http://kubernetes.io/gettingstarted/
+[mkdocs]: http://www.mkdocs.org/
