@@ -12,7 +12,7 @@ We consider it an invaluable synthesis of much experience with
 software-as-a-service apps in the wild, especially on the
 Heroku platform.
 
-Workflow is designed to run applications that adhere to [Twelve-Factor App][]
+Workflow is designed to run applications that adhere to the [Twelve-Factor App][]
 methodology and best practices.
 
 ## Kubernetes
