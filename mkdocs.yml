@@ -34,7 +34,6 @@ pages:
     - Platform Logging: managing-deis/platform-logging.md
     - Platform Monitoring: managing-deis/platform-monitoring.md
     - Production Deployments: managing-deis/production-deployments.md
-    - Isolating the Planes: managing-deis/isolating-the-planes.md
     - Security Considerations: managing-deis/security-considerations.md
     - Platform SSL: managing-deis/platform-ssl.md
     - Upgrading Deis: managing-deis/upgrading-deis.md
