@@ -53,10 +53,11 @@ Image are launched unmodified.
 
 Workflow is designed around the concept of an [application][], or app.
 
-Applications can come in three forms. First, as collection of source files
-stored in a Git repository. Second, as a Dockerfile, which describes how to
-build your app. Third, a reference to an already built Docker Image, hosted on
-a remote repository.
+Applications can come in three forms:
+
+1. as collection of source files stored in a Git repository
+2. as a Dockerfile, which describes how to build your app
+3. a reference to an already built Docker Image, hosted on a remote Docker repository
 
 Applications are always given a unique name for easy reference. Workflow also
 tracks other related information for your application including any domain
