@@ -1,76 +1,69 @@
 # Architecture
 
-Deis uses a service oriented architecture with [components][]
-grouped into a Control Plane, Data Plane and Router Mesh.
+Deis Workflow is built using a service oriented architecture. All components
+are published as a set of container images which can be deployed to any
+compliant Kubernetes cluster.
 
-## System Diagram
+## Overview
 
-![Deis System Diagram](DeisSystemDiagram.png)
+![System Overview](../diagrams/Ecosystem_Basic.png)
 
-Operators use [Helm][] to stand up the cluster's Control Plane, Data Plane and Router Mesh.
-End-users of the platform interact with the Control Plane using the `Deis API`.
+Operators use [Helm][] to configure and install the Workflow components which
+interface directly with the underlying Kubernetes cluster. Service discovery,
+container availability and networking are all delegated to Kubernetes, while
+Workflow provides a clean and simple developer experience.
 
-The Control Plane dispatches work to the Data Plane via a scheduler.
-The Router Mesh is used to route traffic to both the Control Plane and Data Plane.
-Because the router mesh is usually connected to the public Internet,
-it is often connected to a front-end load balancer.
+## Platform Services
 
-## Control Plane
+![Workflow Overview](../diagrams/Workflow_Overview.png)
 
-![Deis Control Plane Architecture](DeisControlPlane.png)
+Deis Workflow provides additional functionality to your Kubernetes cluster, including:
 
-The Control Plane performs management functions for the platform.
-Control plane components (in blue) are all implemented as Docker containers.
+* [Source to Image Builder][builder] which compiles your Application code via Buildpacks or Dockerfiles
+* [Cross-Pod Log Aggregation][logger] which gathers logs from all of your Application processes
+* [Simple REST API][controller] which powers the CLI and any external integrations
+* Application release and rollback
+* Authentication and Authorization to Application resources
+* [HTTP/HTTPS edge routing][router] for your Applications
 
-The [store][] component consists of a number of smaller components that represent a
-containerized Ceph cluster which provides a blob storage API and POSIX filesystem API
-for the control plane's stateful components:
+## Kubernetes-Native
 
- * [registry][] - a Docker registry used to hold images and configuration data
- * [database][] - a Postgres database used to store platform state
+Every platform component and applications deployed via Workflow expect to be
+running on an existing Kubernetes cluster. This means that you can happily run
+your Kubernetes-native workloads next to applications that are managed through
+Deis Workflow.
 
-End-users interact primarily with the [controller][] which exposes an
-HTTP API. They can also interact with the [builder][] via `git push`.
+![Workflow and Kubernetes](../diagrams/Workflow_Detail.png)
 
-## Data Plane
+## Application Layout and Edge Routing
 
-![Deis Data Plane Architecture](DeisDataPlane.png)
+By default Workflow creates per-application Namespaces and Services so you can
+easily connect your applications to other on-cluster services through standard
+Kubernetes mechanisms.
 
-The Data Plane is where [containers][] (in blue) are run on behalf of end-users.
+![Application Configuration](../diagrams/Application_Layout.png)
 
-The platform scheduler is in charge of placing containers on hosts in the data plane.
+The router component is responsible for routing HTTP/s traffic to your
+Applications as well as proxying `git push` and platform API traffic.
 
-## Router Mesh
+By default, the router component is deployed as a Kubernetes service with type
+`LoadBalancer`; which, depending on your configuration, will provision a
+cloud-native load balancer automatically.
 
-![Deis Router Mesh Architecture](DeisRouterMesh.png)
-
-The Router Mesh publishes [Applications][] to consumers.
-
-Each [router][] in the mesh is a dynamically configured Nginx web server designed to route inbound
-traffic to the appropriate Kubernetes services for applications running in the data and control
-planes.  Additionally, routers perform typical web server responsibilities such as SSL termination
-and gzip compression.
-
-Any changes to router configuration or certificates are applied within seconds.
+The router automatically discovers routeable Applications, SSL/TLS certificates
+and application-specific configurations through the use of Kubernetes
+annotations. Any changes to router configuration or certificates are applied
+within seconds.
 
 ## Topologies
 
-For small deployments you can run the entire platform
--- Control Plane, Data Plane and Router Mesh -- on just 3 servers.
+Deis Workflow no longer dictates a specific topology or server count for your
+deployment. The platform components will happily run on single-server
+configurations as well as multi-server production clusters.
 
-For larger deployments, you'll want to isolate the Control Plane and Router
-Mesh, then scale your Data Plane out to as many servers as you need.
-
-See [Isolating the Planes][isolating-planes] for further details.
-
-[applications]: ../reference-guide/terms.md#application
 [builder]: components.md#builder
 [components]: components.md
-[helm]: http://helm.sh
-[containers]: ../reference-guide/terms.md#container
 [controller]: components.md#controller
-[database]: components.md#database
-[isolating-planes]: ../managing-deis/isolating-the-planes.md
-[registry]: components.md#registry
+[helm]: http://helm.sh
+[logger]: components.md#logger
 [router]: components.md#router
-[store]: components.md#store
