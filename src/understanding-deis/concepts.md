@@ -19,9 +19,8 @@ methodology and best practices.
 
 [Kubernetes][] is an open-source cluster manager developed by Google and
 donated to the [Cloud Native Compute Foundation][cncf]. Kubernetes manages all
-the activity on your cluster. Including converging to a desired state,
-providing critical functions like stable service addresses, health monitoring,
-service discovery and DNS resolution.
+the activity on your cluster, including: desired state convergence, stable
+service addresses, health monitoring, service discovery, and DNS resolution.
 
 Workflow builds upon Kubernetes abstractions like Services, Replication
 Controllers and Pods to provide a developer-friendly UX, source to image, log
