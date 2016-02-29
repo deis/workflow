@@ -47,7 +47,7 @@ Now that you have Helm installed and added the Deis Chart Repository, install Wo
 
 ```
 $ helm generate -x manifests deis      # generates various secrets
-$ helm install deis --namespace=deis   # injects resources into your cluster
+$ helm install deis                    # injects resources into your cluster
 ```
 
 Helm will install a variety of Kubernetes resources in the `deis` namespace.
