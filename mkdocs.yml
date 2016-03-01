@@ -5,6 +5,7 @@
 site_name: Deis Documentation
 pages:
   - Welcome: index.md
+  - Quick Start: installing-deis/quickstart.md
   - Understanding Deis:
     - Concepts: understanding-deis/concepts.md
     - Architecture: understanding-deis/architecture.md
