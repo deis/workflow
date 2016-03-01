@@ -77,34 +77,47 @@ appname to the old one:
 
 ## Custom Health Checks
 
-By default, Deis only checks that a container is running. You can add a healthcheck by configuring a
-URL, port, initial delay, and timeout value:
+By default, Workflow only checks that your application containers start in
+their Pod. If you would like Kubernetes to respond to appliation health, you
+may add a health check by configuring URL, port, initial delay, and timeout
+values. The health checks are implemented as [Kubernetes container probes][kubernetes-probes].
 
-    $ deis config:set HEALTHCHECK_URL=/200.html
-    === peachy-waxworks
-    HEALTHCHECK_URL: /200.html
-    $ deis config:set HEALTHCHECK_INITIAL_DELAY=5
-    === peachy-waxworks
-    HEALTHCHECK_INITIAL_DELAY: 5
-    HEALTHCHECK_URL: /200.html
-    $ deis config:set HEALTHCHECK_TIMEOUT=5
-    === peachy-waxworks
-    HEALTHCHECK_TIMEOUT: 5
-    HEALTHCHECK_INITIAL_DELAY: 5
-    HEALTHCHECK_URL: /200.html
-    $ deis config:set HEALTHCHECK_PORT=5000
-    === peachy-waxworks
-    HEALTHCHECK_TIMEOUT: 5
-    HEALTHCHECK_INITIAL_DELAY: 5
-    HEALTHCHECK_URL: /200.html
-    HEALTHCHECK_PORT: 5000
+* `HEALTHCHECK_URL`: the URL to visit for the health check (String, Default: `/`)
+* `HEALTHCHECK_PORT`: the TCP port to use for the health check (Integer, Default: `80` or `5000`)
+* `HEALTHCHECK_INITIAL_DELAY`: number of seconds to wait before sending health checks (Integer, Default: `50`)
+* `HEALTHCHECK_TIMEOUT`: number of seconds to wait before assuming the application is unhealthy (Integer, Default: `50`)
 
-If a new release does not pass the healthcheck, the application will be rolled back to the previous
-release. Beyond that, if an application container responds to a heartbeat check with a different
-status than a 200-399, the [router][] will mark that container as down and stop sending
-requests to that container.
+Configure these health checks on a per-application basis using `deis config:set`:
+```
+$ deis config:set HEALTHCHECK_URL=/200.html
+=== peachy-waxworks
+HEALTHCHECK_URL: /200.html
+$ deis config:set HEALTHCHECK_INITIAL_DELAY=5
+=== peachy-waxworks
+HEALTHCHECK_INITIAL_DELAY: 5
+HEALTHCHECK_URL: /200.html
+$ deis config:set HEALTHCHECK_TIMEOUT=5
+=== peachy-waxworks
+HEALTHCHECK_TIMEOUT: 5
+HEALTHCHECK_INITIAL_DELAY: 5
+HEALTHCHECK_URL: /200.html
+$ deis config:set HEALTHCHECK_PORT=5000
+=== peachy-waxworks
+HEALTHCHECK_TIMEOUT: 5
+HEALTHCHECK_INITIAL_DELAY: 5
+HEALTHCHECK_URL: /200.html
+HEALTHCHECK_PORT: 5000
+```
 
-The health checks are provided by [kubernetes health checks][]. Currently only HTTP GET is supported.
+Only HTTP-based health checks using the GET method are supported at this time.
+
+If an application times out, or responds to a health check with a response code
+outside the 200-399 range, Kubernetes will stop sending requests to the
+application and re-schedule the pod to another node.
+
+Configured health checks also modify the default application deploy behavior.
+When starting a new pod, Workflow will wait for the health check to pass before
+moving onto the next pod.
 
 ## Track Changes
 
@@ -142,4 +155,4 @@ Use `deis rollback` to revert to a previous release.
 [stores config in environment variables]: http://12factor.net/config
 [release]: ../reference-guide/terms.md#release
 [router]:  ../understanding-deis/components.md#router
-[kubernetes health checks]: http://kubernetes.io/v1.1/docs/user-guide/pod-states.html#container-probes
+[kubernetes-probes]: http://kubernetes.io/v1.1/docs/user-guide/pod-states.html#container-probes
