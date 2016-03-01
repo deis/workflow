@@ -13,6 +13,7 @@ pages:
     - Quick Start: installing-deis/quickstart.md
     - System Requirements: installing-deis/system-requirements.md
     - Installing Deis Workflow: installing-deis/installing-deis-workflow.md
+    - Configuring Object Storage: installing-deis/configuring-object-storage.md
   - Using Deis:
     - Installing the Client: using-deis/installing-the-client.md
     - Registering a User: using-deis/registering-a-user.md
