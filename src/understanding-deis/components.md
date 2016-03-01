@@ -30,7 +30,7 @@ replayed from object storage so no data is lost. For more information on backup
 and restore read the documentation for
 [Backing up and Restoring Data][backupandrestore].
 
-## Builder: builder, slugbuilder, and dockerbuilder
+## <a name="builder"></a>Builder: builder, slugbuilder, and dockerbuilder
 
 Project Location: [deis/builder](https://github.com/deis/builder)
 
@@ -113,7 +113,7 @@ The router component uses Kubernetes annotations for both Application discovery
 as well as router configuration. For more detailed documentation and possible
 configuration view the router [project documentation][router-documentation].
 
-## Logger: fluentd, logger
+## <a name="logger"></a>Logger: fluentd, logger
 
 The logging subystem consists of two compoents. Fluentd handles log shipping
 and logger maintains a ring-buffer of application logs.
