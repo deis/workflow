@@ -28,7 +28,7 @@ Deis Workflow provides additional functionality to your Kubernetes cluster, incl
 
 ## Kubernetes-Native
 
-Every platform component and applications deployed via Workflow expect to be
+All platform components and applications deployed via Workflow expect to be
 running on an existing Kubernetes cluster. This means that you can happily run
 your Kubernetes-native workloads next to applications that are managed through
 Deis Workflow.
