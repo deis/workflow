@@ -29,10 +29,14 @@ See [Configuring DNS][] for more information on properly setting up your DNS rec
 Once your cluster has been provisioned and Deis Workflow has been installed, you can
 [install the client][client] and [register your first user][register]!
 
+## Deploy your first Application
+
+Last but not least, select your build process and [deploy your first application][deploy].
 
 [client]: ../using-deis/installing-the-client.md
 [configuring object storage]: configuring-object-storage.md
 [configuring dns]: ../managing-deis/configuring-dns.md
+[deploy]: ../using-deis/deploying-an-application.md
 [install deis]: installing-deis-workflow.md
 [register]: ../using-deis/registering-a-user.md
 [system requirements]: system-requirements.md

@@ -12,7 +12,7 @@ the functionality in your own project we invite you to give it a shot!
 
 ## Controller
 
-Project Location: [deis/workflow](https://github.com/deis/workflow)
+**Project Location:** [deis/workflow](https://github.com/deis/workflow)
 
 The controller component is an HTTP API server which serves as the endpoint for
 the `deis` CLI. The controller provides all of the platform functionality as
@@ -21,7 +21,7 @@ of its data to the database component.
 
 ## Database
 
-Project Location: [deis/postgres](https://github.com/deis/postgres)
+**Project Location:** [deis/postgres](https://github.com/deis/postgres)
 
 The database component is a managed instance of [PostgreSQL][] which holds a
 majority of the platforms state. Backups and WAL files are pushed to the object
@@ -32,7 +32,7 @@ and restore read the documentation for
 
 ## <a name="builder"></a>Builder: builder, slugbuilder, and dockerbuilder
 
-Project Location: [deis/builder](https://github.com/deis/builder)
+**Project Location:** [deis/builder](https://github.com/deis/builder)
 
 
 The builder component is responsible for accepting code pushes via [Git][] and
@@ -46,7 +46,7 @@ managing the build process of your [Application][]. The builder process is:
 
 Builder currently supports both buildpack and Dockerfile based builds.
 
-Project Location: [deis/slugbuilder](https://github.com/deis/slugbuilder)
+**Project Location:** [deis/slugbuilder](https://github.com/deis/slugbuilder)
 
 For Buildpack-based deploys, the builder component will launch a one-shot Pod
 in the `deis` namespace. This pod runs `slugbuilder` component which handles
@@ -56,7 +56,7 @@ its depdencies as determined by the buildpack. The slug is pushed to the
 cluster-configured object storage for later execution. For more information
 about buildpacks see [using buildpacks][using-buildpacks].
 
-Project Location: [deis/dockerbuilder](https://github.com/deis/dockerbuilder)
+**Project Location:** [deis/dockerbuilder](https://github.com/deis/dockerbuilder)
 
 For Applications which contain a `Dockerfile` in the root of the repository,
 `builder` will instead launch the `dockerbuilder` to package your application.
@@ -66,7 +66,7 @@ Docker registry on cluster. For more information see [using Dockerfiles][using-d
 
 ## Slugrunner
 
-Project Location: [deis/slugrunner](https://github.com/deis/slugrunner)
+**Project Location:** [deis/slugrunner](https://github.com/deis/slugrunner)
 
 Slugrunner is the component responsible for executing buildpack-based
 Applications. Slugrunner receives slug information from the controller and
@@ -75,7 +75,7 @@ processes.
 
 ## Object Storage
 
-Project Location: [deis/minio](https://github.com/deis/mino)
+**Project Location:** [deis/minio](https://github.com/deis/mino)
 
 All of the Workflow components ship their persistent data to cluster configured
 S3 compatibile Object Storage. For example, database ships its WAL files,
@@ -92,7 +92,7 @@ configure minio to use persistent storage available in your environment.
 
 ## Registry
 
-Project Location: [deis/registry](https://github.com/deis/registry)
+**Project Location:** [deis/registry](https://github.com/deis/registry)
 
 The registry component is a managed docker registry which holds application
 images generated from the builder component. Registry persists the Docker image
@@ -101,7 +101,7 @@ configured for the cluster.
 
 ## Router
 
-Project Location: [deis/router](https://github.com/deis/router)
+**Project Location:** [deis/router](https://github.com/deis/router)
 
 The router component is based on [Nginx][] and is responsible for routing
 inbound HTTP(S) traffic to your applications. The default workflow charts
@@ -118,19 +118,25 @@ configuration view the router [project documentation][router-documentation].
 The logging subystem consists of two compoents. Fluentd handles log shipping
 and logger maintains a ring-buffer of application logs.
 
-Project Location: [deis/fluentd](https://github.com/deis/fluentd)
+
+**Project Location:** [deis/fluentd](https://github.com/deis/fluentd)
 
 Fluentd is deployed to your Kubernetes cluster via Daemon Sets. Fluentd
 subscribes to all container logs, decorates the output with Kubernetes metadata
 and can be configured to drain logs to multiple destinations. By default,
 fluentd ships logs to the logger component, which powers `deis logs`.
 
-Project Location: [deis/logger](https://github.com/deis/logger)
+**Project Location:** [deis/logger](https://github.com/deis/logger)
 
 The `logger` compoent receives log streams from `fluentd`, collating by
 Application name. Logger does not persist logs to disk, instead maintaining an
 in-memory ring buffer. For more information on logger see the [project
 documentation][logger-documentation].
+
+## See Also
+
+* [Workflow Concepts][concepts]
+* [Workflow Components][components]
 
 [Application]: ../reference-guide/terms.md#application
 [Config]: ../reference-guide/terms.md#config
@@ -140,6 +146,8 @@ documentation][logger-documentation].
 [WAL-E]: https://github.com/wal-e/wal-e
 [architecture]: architecture.md
 [backupandrestore]: ../managing-deis/backing-up-and-restoring-data.md
+[components]: components.md
+[concepts]: concepts.md
 [configure-objectstorage]: ../installing-deis/configuring-object-storage.md
 [logger-documentation]: https://github.com/deis/logger
 [release]: ../reference-guide/terms.md#release

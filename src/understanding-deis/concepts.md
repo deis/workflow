@@ -118,14 +118,15 @@ to external or third-party vendor services.
 
 ## See Also
 
-* [Architecture](architecture.md)
-* [Twelve-Factor App][]
+* [Workflow Architecture][architecture]
+* [Workflow Components][components]
 
 [Build and Run]: http://12factor.net/build-release-run
 [Docker]: https://www.docker.com/
 [Kubernetes]: https://kubernetes.io
 [Twelve-Factor App]: http://12factor.net/
 [application]: ../reference-guide/terms.md#application
+[architecture]: architecture.md
 [backing services]: http://12factor.net/backing-services
 [build]: ../reference-guide/terms.md#build
 [builder]: components.md#builder
