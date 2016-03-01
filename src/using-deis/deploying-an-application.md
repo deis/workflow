@@ -30,23 +30,18 @@ using the URL supplied by their Deis administrator.
 
 Deis supports three different ways of building applications:
 
- 1. [Heroku Buildpacks][]
- 2. [Dockerfiles][]
- 3. [Docker Images][]
-
-
 ### Buildpacks
 
 Heroku buildpacks are useful if you want to follow Heroku's best practices for building applications or if you are porting an application from Heroku.
 
-Learn how to deploy applications on Deis [using Buildpacks](using-buildpacks.md).
+Learn how to deploy applications [using Buildpacks](using-buildpacks.md).
 
 
 ### Dockerfiles
 
 Dockerfiles are a powerful way to define a portable execution environment built on a base OS of your choosing.
 
-Learn how to deploy applications on Deis [using Dockerfiles](using-dockerfiles.md).
+Learn how to deploy applications [using Dockerfiles](using-dockerfiles.md).
 
 
 ### Docker Image
@@ -55,11 +50,8 @@ Deploying a Docker image onto Deis allows you to take a Docker image from either
 or a private registry and copy it over bit-for-bit, ensuring that you are running the same
 image in development or in your CI pipeline as you are in production.
 
-Learn how to deploy applications on Deis [using Docker images](using-docker-images.md).
+Learn how to deploy applications [using Docker images](using-docker-images.md).
 
 [application]: ../reference-guide/terms.md#application
 [controller]: ../understanding-deis/components.md#controller
 [twelve-factor methodology]: http://12factor.net/
-[Heroku Buildpacks]: https://devcenter.heroku.com/articles/buildpacks
-[Dockerfiles]: https://docs.docker.com/reference/builder/
-[Docker Images]: https://docs.docker.com/engine/userguide/containers/dockerimages/
