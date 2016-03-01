@@ -4,7 +4,7 @@ Deis (pronounced DAY-iss) Workflow is an open source Platform as a Service (PaaS
 
 To get started with Workflow, follow our [Quick Start][quickstart] guide.
 
-For more detailed information about Workflow view the [Architecture][arch] and [Concepts][concepts] sections.
+For more detailed information about Workflow view the [Concepts][concepts] and [Architecture][arch] sections.
 
 [arch]: understanding-deis/architecture.md
 [concepts]: understanding-deis/concepts.md
