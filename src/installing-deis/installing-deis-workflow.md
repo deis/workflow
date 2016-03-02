@@ -1,7 +1,6 @@
 # Installing Deis Workflow
 
-We will use the `helm` utility to install Deis Workflow onto a Kubernetes cluster. If you don't
-have `helm` installed, see [installing helm][helm] for more info.
+We will use the Helm package manager for Kubernetes to install Deis Workflow onto a Kubernetes cluster. If you don't have Helm installed, see [Helm's own documentation][helm] for more info.
 
 ## Check Your Setup
 
@@ -13,7 +12,7 @@ $ helm --version
 ```
 
 Ensure your kubectl client is installed and ensure it can connect to your Kubernetes cluster. This
-is where `helm` will attempt to communicate with the cluster. You can test that it is working
+is where Helm will attempt to communicate with the cluster. You can test that it is working
 properly by running:
 
 ```
