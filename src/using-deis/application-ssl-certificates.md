@@ -143,7 +143,7 @@ signifies the expiry year. This allows for `example-com-2018` when a new certifi
 Assuming all applications are already using `example-com-2017` the following commands can be ran,
 chained together or otherwise:
 
-    $ deis certs:deatch example-com-2017 example.com
+    $ deis certs:detach example-com-2017 example.com
     $ deis certs:attach example-com-2018 example.com
 
 This will take care of a singular domain which allows the operator to verify everything went
