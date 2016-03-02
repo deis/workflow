@@ -5,7 +5,7 @@ An [Application][] is deployed to Deis using `git push` or the `deis` client.
 
 ## Supported Applications
 
-Deis can deploy any application or service that can run inside a Docker container.  In order to be scaled horizontally, applications must follow Heroku's [twelve-factor methodology][] and store state in external backing services.
+Deis can deploy any application or service that can run inside a Docker container.  In order to be scaled horizontally, applications must follow the [Twelve-Factor App][] methodology and store any application state in external backing services.
 
 For example, if your application persists state to the local filesystem -- common with content management systems like Wordpress and Drupal -- it cannot be scaled horizontally using `deis scale`.
 
@@ -54,4 +54,4 @@ Learn how to deploy applications [using Docker images](using-docker-images.md).
 
 [application]: ../reference-guide/terms.md#application
 [controller]: ../understanding-deis/components.md#controller
-[twelve-factor methodology]: http://12factor.net/
+[Twelve-Factor App]: http://12factor.net/
