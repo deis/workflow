@@ -2,7 +2,6 @@
 
 A variety of Deis components rely on an object storage system to do their work. These components are:
 
-- [workflow](https://github.com/deis/workflow)
 - [builder](https://github.com/deis/builder)
 - [slugbuilder](https://github.com/deis/slugbuilder)
 - [slugrunner](https://github.com/deis/slugrunner)
