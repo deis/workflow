@@ -66,7 +66,7 @@ create and deploy more applications to the cluster.
 ## Testing
 
 To test that traffic reaches its intended destination, a request can be
-sent to the Deis controller like so:
+sent to the Deis controller like so (do not forget the trailing slash!):
 
 ```
 curl http://deis.example.com/v2/
