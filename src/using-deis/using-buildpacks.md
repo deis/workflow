@@ -122,6 +122,7 @@ and set `BUILDPACK_URL` to the URL:
 
 [pods]: http://kubernetes.io/v1.1/docs/user-guide/pods.html
 [controller]: ../understanding-deis/components.md#controller
+[builder]: ../understanding-deis/components.md#builder
 [Ruby Buildpack]: https://github.com/heroku/heroku-buildpack-ruby
 [Nodejs Buildpack]: https://github.com/heroku/heroku-buildpack-nodejs
 [Java Buildpack]: https://github.com/heroku/heroku-buildpack-java
