@@ -16,9 +16,9 @@ If you do not have an existing application, you can clone an example application
 
 In order to deploy Dockerfile applications, they must conform to the following requirements:
 
-* The Dockerfile must EXPOSE only one port
-* The port must be listening for a HTTP connection
-* A default CMD must be specified for running the container
+* The Dockerfile must use the `EXPOSE` directive to expose exactly one port.
+* That port must be listening for an HTTP connection.
+* The Dockerfile must use the `CMD` directive to define the default process that will run within the container.
 
 
 ## Create an Application
