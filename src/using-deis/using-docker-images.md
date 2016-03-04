@@ -23,9 +23,9 @@ it to [DockerHub][].
 
 In order to deploy Docker images, they must conform to the following requirements:
 
- * The Docker image must EXPOSE only one port
- * The port must be listening for a HTTP connection
- * A default CMD must be specified for running the container
+* The Dockerfile must use the `EXPOSE` directive to expose exactly one port.
+* That port must be listening for an HTTP connection.
+* The Dockerfile must use the `CMD` directive to define the default process that will run within the container.
 
 
 ## Create an Application
