@@ -5,16 +5,16 @@
 site_name: Deis Documentation
 pages:
   - Welcome: index.md
-  - Quick Start: installing-deis/quickstart.md
+  - Quick Start: installing-workflow/quickstart.md
   - Understanding Deis:
     - Concepts: understanding-deis/concepts.md
     - Architecture: understanding-deis/architecture.md
     - Components: understanding-deis/components.md
-  - Installing Deis:
-    - Quick Start: installing-deis/quickstart.md
-    - System Requirements: installing-deis/system-requirements.md
-    - Installing Deis Workflow: installing-deis/installing-deis-workflow.md
-    - Configuring Object Storage: installing-deis/configuring-object-storage.md
+  - Installing Workflow:
+    - Quick Start: installing-workflow/quickstart.md
+    - System Requirements: installing-workflow/system-requirements.md
+    - Installing Workflow: installing-workflow/installing-deis-workflow.md
+    - Configuring Object Storage: installing-workflow/configuring-object-storage.md
   - Using Deis:
     - Installing the Client: using-deis/installing-the-client.md
     - Registering a User: using-deis/registering-a-user.md

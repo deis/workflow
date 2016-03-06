@@ -8,4 +8,4 @@ To get started with Workflow, follow our [Quick Start][quickstart] guide.
 
 [arch]: understanding-deis/architecture.md
 [concepts]: understanding-deis/concepts.md
-[quickstart]: installing-deis/quickstart.md
+[quickstart]: installing-workflow/quickstart.md

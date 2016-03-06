@@ -18,7 +18,7 @@ Reference [this table](http://kubernetes.io/v1.1/docs/getting-started-guides/#ta
 
 ## Install Deis Workflow
 
-Now that you've finished provisioning a cluster, please [Install Deis Workflow][install deis].
+Now that you've finished provisioning a cluster, please [Install Deis Workflow][install workflow].
 
 ## Configure DNS
 
@@ -37,6 +37,6 @@ Last but not least, select your build process and [deploy your first application
 [configuring object storage]: configuring-object-storage.md
 [configuring dns]: ../managing-workflow/configuring-dns.md
 [deploy]: ../using-deis/deploying-an-application.md
-[install deis]: installing-deis-workflow.md
+[install workflow]: installing-workflow-workflow.md
 [register]: ../using-deis/registering-a-user.md
 [system requirements]: system-requirements.md

@@ -148,7 +148,7 @@ documentation][logger-documentation].
 [backupandrestore]: ../managing-workflow/backing-up-and-restoring-data.md
 [components]: components.md
 [concepts]: concepts.md
-[configure-objectstorage]: ../installing-deis/configuring-object-storage.md
+[configure-objectstorage]: ../installing-workflow/configuring-object-storage.md
 [logger-documentation]: https://github.com/deis/logger
 [release]: ../reference-guide/terms.md#release
 [router-documentation]: https://github.com/deis/router
