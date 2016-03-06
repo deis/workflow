@@ -77,4 +77,4 @@ of running the ps command against an app with the same name from two profiles:
     $ DEIS_PROFILE=staging deis ps -a helloworld
 
 
-[controller]: ../understanding-deis/components.md#controller
+[controller]: ../understanding-workflow/components.md#controller

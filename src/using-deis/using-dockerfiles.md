@@ -104,7 +104,7 @@ process type directly changes the number of [containers][container]
 running that process.
 
 [container]: ../reference-guide/terms.md#container
-[controller]: ../understanding-deis/components.md#controller
+[controller]: ../understanding-workflow/components.md#controller
 [Dockerfile]: https://docs.docker.com/reference/builder/
 [Docker Image]: https://docs.docker.com/introduction/understanding-docker/
 [CMD instruction]:  https://docs.docker.com/reference/builder/#cmd

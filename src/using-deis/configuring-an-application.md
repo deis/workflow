@@ -154,5 +154,5 @@ Use `deis rollback` to revert to a previous release.
 [attached resources]: http://12factor.net/backing-services
 [stores config in environment variables]: http://12factor.net/config
 [release]: ../reference-guide/terms.md#release
-[router]:  ../understanding-deis/components.md#router
+[router]:  ../understanding-workflow/components.md#router
 [kubernetes-probes]: http://kubernetes.io/v1.1/docs/user-guide/pod-states.html#container-probes

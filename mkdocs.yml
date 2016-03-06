@@ -7,9 +7,9 @@ pages:
   - Welcome: index.md
   - Quick Start: installing-workflow/quickstart.md
   - Understanding Deis:
-    - Concepts: understanding-deis/concepts.md
-    - Architecture: understanding-deis/architecture.md
-    - Components: understanding-deis/components.md
+    - Concepts: understanding-workflow/concepts.md
+    - Architecture: understanding-workflow/architecture.md
+    - Components: understanding-workflow/components.md
   - Installing Workflow:
     - Quick Start: installing-workflow/quickstart.md
     - System Requirements: installing-workflow/system-requirements.md

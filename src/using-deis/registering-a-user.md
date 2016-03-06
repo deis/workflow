@@ -60,5 +60,5 @@ If you already have an account, use `deis login` to authenticate against the Dei
     Deis session information is stored in your user's ~/.deis directory.
 
 
-[controller]: ../understanding-deis/components.md#controller
-[router]: ../understanding-deis/components.md#router
+[controller]: ../understanding-workflow/components.md#controller
+[router]: ../understanding-workflow/components.md#router
