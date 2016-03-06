@@ -26,7 +26,7 @@ pages:
     - Configuring an Application: using-workflow/configuring-an-application.md
     - Managing an Application: using-workflow/managing-an-application.md
     - Application SSL Certificates: using-workflow/application-ssl-certificates.md
-  - Managing Worfklow:
+  - Managing Workflow:
     - Adding/Removing Hosts: managing-workflow/adding-or-removing-hosts.md
     - Backing up and Restoring Data: managing-workflow/backing-up-and-restoring-data.md
     - Configuring DNS: managing-workflow/configuring-dns.md
