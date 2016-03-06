@@ -40,8 +40,8 @@ pages:
     - Platform SSL: managing-workflow/platform-ssl.md
     - Upgrading Deis: managing-workflow/upgrading-deis.md
     - Using a Proxy Server: managing-workflow/using-a-proxy-server.md
-  - Customizing Deis:
-    - CLI Plugins: customizing-deis/cli-plugins.md
+  - Customizing Workflow:
+    - CLI Plugins: customizing-workflow/cli-plugins.md
   - Troubleshooting:
     - Troubleshooting with kubectl: troubleshooting/troubleshooting.md
   - Roadmap:
