@@ -35,7 +35,7 @@ Last but not least, select your build process and [deploy your first application
 
 [client]: ../using-deis/installing-the-client.md
 [configuring object storage]: configuring-object-storage.md
-[configuring dns]: ../managing-deis/configuring-dns.md
+[configuring dns]: ../managing-workflow/configuring-dns.md
 [deploy]: ../using-deis/deploying-an-application.md
 [install deis]: installing-deis-workflow.md
 [register]: ../using-deis/registering-a-user.md

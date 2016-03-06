@@ -145,7 +145,7 @@ documentation][logger-documentation].
 [PostgreSQL]: http://www.postgresql.org/
 [WAL-E]: https://github.com/wal-e/wal-e
 [architecture]: architecture.md
-[backupandrestore]: ../managing-deis/backing-up-and-restoring-data.md
+[backupandrestore]: ../managing-workflow/backing-up-and-restoring-data.md
 [components]: components.md
 [concepts]: concepts.md
 [configure-objectstorage]: ../installing-deis/configuring-object-storage.md

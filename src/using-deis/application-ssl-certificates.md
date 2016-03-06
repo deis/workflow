@@ -168,6 +168,6 @@ remove the certificate from Deis and re-run the `certs:add` command.
 
 [RapidSSL]: https://www.rapidssl.com/
 [buy an SSL certificate with RapidSSL]: https://www.rapidssl.com/buy-ssl/
-[platform-ssl]: ../managing-deis/platform-ssl.md
+[platform-ssl]: ../managing-workflow/platform-ssl.md
 [root CAs]: https://www.mozilla.org/en-US/about/governance/policies/security-group/certs/included/
 [intermediary certificates]: http://en.wikipedia.org/wiki/Intermediate_certificate_authorities
