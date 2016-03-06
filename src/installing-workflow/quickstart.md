@@ -37,6 +37,6 @@ Last but not least, select your build process and [deploy your first application
 [configuring object storage]: configuring-object-storage.md
 [configuring dns]: ../managing-workflow/configuring-dns.md
 [deploy]: ../using-workflow/deploying-an-application.md
-[install workflow]: installing-workflow-workflow.md
+[install workflow]: installing-deis-workflow.md
 [register]: ../using-workflow/registering-a-user.md
 [system requirements]: system-requirements.md

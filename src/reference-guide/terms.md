@@ -55,7 +55,7 @@ The Controller stack includes:
 
 - Django API Server for handling API calls
 
-Follow the [Installing Deis Workflow](../installing-workflow/installing-workflow-workflow.md) guide to create your own private controller.
+Follow the [Installing Deis Workflow](../installing-workflow/installing-deis-workflow.md) guide to create your own private controller.
 
 
 ## Key
