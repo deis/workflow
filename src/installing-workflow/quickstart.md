@@ -33,10 +33,10 @@ Once your cluster has been provisioned and Deis Workflow has been installed, you
 
 Last but not least, select your build process and [deploy your first application][deploy].
 
-[client]: ../using-deis/installing-the-client.md
+[client]: ../using-workflow/installing-the-client.md
 [configuring object storage]: configuring-object-storage.md
 [configuring dns]: ../managing-workflow/configuring-dns.md
-[deploy]: ../using-deis/deploying-an-application.md
+[deploy]: ../using-workflow/deploying-an-application.md
 [install workflow]: installing-workflow-workflow.md
-[register]: ../using-deis/registering-a-user.md
+[register]: ../using-workflow/registering-a-user.md
 [system requirements]: system-requirements.md

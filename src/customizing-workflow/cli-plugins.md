@@ -20,4 +20,4 @@ But flags preceding the command will not:
     $ deis --debug accounts:list
     $ deis-accounts list
 
-[deis client]: ../using-deis/installing-the-client.md
+[deis client]: ../using-workflow/installing-the-client.md

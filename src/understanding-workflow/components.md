@@ -153,5 +153,5 @@ documentation][logger-documentation].
 [release]: ../reference-guide/terms.md#release
 [router-documentation]: https://github.com/deis/router
 [router]: #router
-[using-buildpacks]: ../using-deis/using-buildpacks.md
-[using-dockerfiles]: ../using-deis/using-dockerfiles.md
+[using-buildpacks]: ../using-workflow/using-buildpacks.md
+[using-dockerfiles]: ../using-workflow/using-dockerfiles.md
