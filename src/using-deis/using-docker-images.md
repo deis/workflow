@@ -44,7 +44,7 @@ Use `deis create` to create an application on the [controller][].
 ## Deploy the Application
 
 Use `deis pull` to deploy your application from [DockerHub][] or
-a private registry.
+a public registry.
 
     $ deis pull gabrtv/example-go:latest
     Creating build...  done, v2
