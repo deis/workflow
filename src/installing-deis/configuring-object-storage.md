@@ -23,6 +23,10 @@ The Deis components determine what object storage system to use via environment 
   - `storage.googleapis.com` for Google Cloud Storage
 - `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT` - The in-cluster Minio service. Note that these will be set automatically by Kubernetes if you run [Minio](http://minio.io) as a service in the cluster. See [the Minio service from the Deis Minio Chart](https://github.com/deis/charts/blob/master/deis-dev/manifests/deis-minio-service.yaml) for an example service.
 
+## Specifying the Bucket
+
+[deis/builder](https://github.com/deis/builder) uses an additional environment variable, `BUCKET` to determine the name of the bucket (in the specified object storage system) to use. It uses `git` as the default bucket name, but if your credentials (see below) don't have read and write access to it, you'll have to specify a different bucket. To do so, simply set the `BUCKET` environment variable to another value (`deis-builds`, for example).
+
 # Storing Credentials
 
 In the Deis V2 Beta release, all components read credentials from the filesystem, and we suggest that credentials are stored in [Kubernetes secrets](http://kubernetes.io/v1.1/docs/user-guide/secrets.html) and mounted to the appropriate location for the component. See the below list for the expected location for each component, and see [the deis-dev chart](https://github.com/deis/charts/tree/master/deis-dev) for examples of using and mounting secrets.
