@@ -16,10 +16,12 @@ Additionally, Deis ships with a [Minio](http://minio.io) [component](https://git
 
 # Telling Deis What to Use
 
-The Deis components determine what object storage system to use via environment variables that you set up:
+The Deis components determine what object storage system to use via environment variables that you set up. The below list is the lookup order for all Deis components.
 
-- `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT` - The in-cluster Minio service
-- `DEIS_OUTSIDE_STORAGE_HOST` and `DEIS_OUTSIDE_STORAGE_PORT` - The external S3-compatible object storage system
+- `DEIS_OUTSIDE_STORAGE` - The external S3-compatible object storage system. Commonly used URLs:
+  - `s3.amazonaws.com` for Amazon S3
+  - `storage.googleapis.com` for Google Cloud Storage
+- `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT` - The in-cluster Minio service. Note that these will be set automatically by Kubernetes if you run [Minio](http://minio.io) as a service in the cluster. See [the Minio service from the Deis Minio Chart](https://github.com/deis/charts/blob/master/deis-dev/manifests/deis-minio-service.yaml) for an example service.
 
 # Storing Credentials
 
