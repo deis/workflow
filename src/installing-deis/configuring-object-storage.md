@@ -95,7 +95,7 @@ The registry looks for a `REGISTRY_STORAGE` environment variable, which it then 
 
 ### Credentials
 
-The registry reads the credential information from a `/var/run/secrets/deis/registry/creds/objectstorage-keyfile` file. This is generated automatically during helm generate based on the configuration options given in the https://github.com/deis/charts/blob/master/deis-dev/tpl/objectstorage.toml.
+The registry reads the credential information from a `/var/run/secrets/deis/registry/creds/objectstorage-keyfile` file. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the https://github.com/deis/charts/blob/master/deis-dev/tpl/objectstorage.toml file.
 
 ## [deis/database](https://github.com/deis/postgres)
 
