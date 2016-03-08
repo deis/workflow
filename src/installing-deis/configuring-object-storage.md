@@ -85,42 +85,27 @@ The slugrunner reads credentials from the below locations on the filesystem.
 
 ## [deis/registry](https://github.com/deis/registry)
 
+The registry is configured slightly differently from most of the other components. Read on for details.
+
 ### Environment Variables
 
-TODO
+The registry looks for a `REGISTRY_STORAGE` environment variable, which it then uses as a key to look up the object storage location and authentication information in a configuration file. See below for details on that file.
 
 ### Credentials
 
-The registry reads credentials from the below locations on the filesystem.
-
-- Key: `/var/run/secrets/deis/registry/creds/accesskey`
-- Secret: `/var/run/secrets/deis/registry/creds/secretkey`
+The registry reads the credential information from a `/var/run/secrets/deis/registry/creds/objectstorage-keyfile` file. See https://github.com/deis/charts/blob/master/deis-dev/tpl/deis-objectstorage-secret.yaml for an example of what that file should look like.
 
 ## [deis/database](https://github.com/deis/postgres)
 
-The database is configured slightly differently from the other components. It looks for an environment variable which it then uses as a key to look up the object storage configuration in a config file.
+The database is configured slightly differently from the other components. Read the two sections below for details.
 
 ### Environment Variables
 
-The database looks for the `DATABASE_STORAGE` environment variable to determine what object storage system to use. Valid values are listed below and the [Helm chart for Deis](https://github.com/deis/charts/tree/master/deis-dev) defaults to `minio`:
+The database looks for a `DATABASE_STORAGE` environment variable, which it then uses as a key to look up the object storage location and authentication information in a configuration file. See below for the details on that file.
 
-- filesystem: Store persistent data on ephemeral disk
-- s3: Store persistent data in AWS S3 (configure in S3 section)
-- azure: Store persistent data in Azure's object storage
-- gcs: Store persistent data in Google Cloud Storage
-- minio: Store persistent data on in-cluster Minio server
+## Credentials
 
-(TODO: is this correct?)
-
-### Credentials
-
-The database reads credentials from the below locations on the filesystem.
-
-- Key: `/etc/wal-e.d/env/access-key-id`
-- Secret: `/etc/wal-e.d/env/access-key-secret`
-
-(TODO: is this still correct?)
-
+The database reads the credentials information from a `/var/run/secrets/deis/objectstore/creds/objectstorage-keyfile` file. See https://github.com/deis/charts/blob/master/deis-dev/tpl/deis-objectstorage-secret.yaml for an example of what that file should look like.
 
 # Limitations
 
