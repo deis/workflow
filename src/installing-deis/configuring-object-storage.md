@@ -105,4 +105,4 @@ The database looks for a `DATABASE_STORAGE` environment variable, which it then 
 
 ## Credentials
 
-The database reads the credentials information from a `/var/run/secrets/deis/objectstore/creds/objectstorage-keyfile` file. See https://github.com/deis/charts/blob/master/deis-dev/tpl/deis-objectstorage-secret.yaml for an example of what that file should look like.
+The database reads the credentials information from a `/var/run/secrets/deis/objectstore/creds/objectstorage-keyfile` file. This is generated automatically during helm generate based on the configuration options given in the https://github.com/deis/charts/blob/master/deis-dev/tpl/objectstorage.toml.
