@@ -38,7 +38,7 @@ The builder looks for the below environment variables to determine where the obj
   - They are set automatically by Kubernetes if you run [Minio](http://minio.io) as a service in the cluster
   - The [Helm chart for Deis](https://github.com/deis/charts/tree/master/deis-dev) installs Minio by default, so the Builder will use Minio by default.
 
-The builder also uses an environment variable to determine the name of the bucket it should store build artifacts in. It uses `git` by default, but if your credentials (see below) don't have read and write access to it, you'll have to specify a different bucket. To do so, simply set the `BUCKET` environment variable to another value (`deis-builds`, for example).
+The builder also uses an environment variable to determine the name of the bucket it should store build artifacts in. It uses `git` by default, but if your credentials (see below) don't have read and write access to that bucket, you'll have to specify a different one. To do so, simply set the `BUCKET` environment variable to another value (`deis-builds`, for example).
 
 ### Credentials
 
