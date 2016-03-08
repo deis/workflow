@@ -49,9 +49,11 @@ The builder reads credentials from the below locations on the filesystem.
 
 ### A Note on Google Cloud Storage
 
-As you may know, Google Cloud Storage (GCS) can [interoperate with the S3 API](https://cloud.google.com/storage/docs/interoperability), and, if you choose to use Google Cloud Storage for object storage, you'll have to turn on this interoperability mode.
+Google Cloud Storage (GCS) can interoperate with the S3 API using a feature called [interoperability](https://cloud.google.com/storage/docs/interoperability). If you choose to use GCS for object storage, you'll have to turn on this interoperability mode. In order to do so, please follow the steps at https://cloud.google.com/storage/docs/migrating?hl=en_US#migration-simple.
 
-If you choose to use Google Cloud Storage, set your `DEIS_OUTSIDE_STORAGE` environment variable to `storage.googleapis.com`, and follow [these instructions](https://cloud.google.com/storage/docs/migrating?hl=en_US#keys) to generate an S3 compatible access key ID and access key secret. Store these credentials just as you would if they were AWS S3 or Minio credentials. As mentioned above, we recommend storing these as Kubernetes secrets. See the "Configuring Deis Components" section above for more details and examples.
+When you're done, please set the `DEIS_OUTSIDE_STORAGE` environment variable to `storage.googleapis.com`, and ensure the keys that you created (as part of the previous paragraph) are in the correct locations on the filesystem.
+
+Reminder: We recommend storing these and all other credentials as Kubernetes secrets. See the "Configuring Deis Components" section above for more details and examples.
 
 ## [deis/slugbuilder](https://github.com/deis/slugbuilder)
 
