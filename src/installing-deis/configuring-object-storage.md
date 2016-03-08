@@ -106,9 +106,3 @@ The database looks for a `DATABASE_STORAGE` environment variable, which it then 
 ## Credentials
 
 The database reads the credentials information from a `/var/run/secrets/deis/objectstore/creds/objectstorage-keyfile` file. See https://github.com/deis/charts/blob/master/deis-dev/tpl/deis-objectstorage-secret.yaml for an example of what that file should look like.
-
-# Limitations
-
-Below is a list of known limitations of our components' ability to interact with object storage systems.
-
-- [The Deis registry component](https://github.com/deis/registry) will not automatically look up the Kubernetes Minio service, nor will it look for other storage env vars. That fix is being tracked in a [GitHub issue](https://github.com/deis/registry/issues/7) and is planned for our beta release.
