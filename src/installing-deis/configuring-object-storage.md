@@ -98,9 +98,19 @@ The registry reads credentials from the below locations on the filesystem.
 
 ## [deis/database](https://github.com/deis/postgres)
 
+The database is configured slightly differently from the other components. It looks for an environment variable which it then uses as a key to look up the object storage configuration in a config file.
+
 ### Environment Variables
 
-TODO
+The database looks for the `DATABASE_STORAGE` environment variable to determine what object storage system to use. Valid values are listed below and the [Helm chart for Deis](https://github.com/deis/charts/tree/master/deis-dev) defaults to `minio`:
+
+- filesystem: Store persistent data on ephemeral disk
+- s3: Store persistent data in AWS S3 (configure in S3 section)
+- azure: Store persistent data in Azure's object storage
+- gcs: Store persistent data in Google Cloud Storage
+- minio: Store persistent data on in-cluster Minio server
+
+(TODO: is this correct?)
 
 ### Credentials
 
@@ -108,6 +118,8 @@ The database reads credentials from the below locations on the filesystem.
 
 - Key: `/etc/wal-e.d/env/access-key-id`
 - Secret: `/etc/wal-e.d/env/access-key-secret`
+
+(TODO: is this still correct?)
 
 
 # Limitations
