@@ -6,6 +6,6 @@ For more detailed information about Workflow view the [Concepts][concepts] and [
 
 To get started with Workflow, follow our [Quick Start][quickstart] guide.
 
-[arch]: understanding-deis/architecture.md
-[concepts]: understanding-deis/concepts.md
-[quickstart]: installing-deis/quickstart.md
+[arch]: understanding-workflow/architecture.md
+[concepts]: understanding-workflow/concepts.md
+[quickstart]: installing-workflow/quickstart.md

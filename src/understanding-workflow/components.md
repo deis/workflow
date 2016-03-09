@@ -145,13 +145,13 @@ documentation][logger-documentation].
 [PostgreSQL]: http://www.postgresql.org/
 [WAL-E]: https://github.com/wal-e/wal-e
 [architecture]: architecture.md
-[backupandrestore]: ../managing-deis/backing-up-and-restoring-data.md
+[backupandrestore]: ../managing-workflow/backing-up-and-restoring-data.md
 [components]: components.md
 [concepts]: concepts.md
-[configure-objectstorage]: ../installing-deis/configuring-object-storage.md
+[configure-objectstorage]: ../installing-workflow/configuring-object-storage.md
 [logger-documentation]: https://github.com/deis/logger
 [release]: ../reference-guide/terms.md#release
 [router-documentation]: https://github.com/deis/router
 [router]: #router
-[using-buildpacks]: ../using-deis/using-buildpacks.md
-[using-dockerfiles]: ../using-deis/using-dockerfiles.md
+[using-buildpacks]: ../using-workflow/using-buildpacks.md
+[using-dockerfiles]: ../using-workflow/using-dockerfiles.md

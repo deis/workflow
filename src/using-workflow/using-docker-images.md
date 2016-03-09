@@ -63,7 +63,7 @@ running that process.
 
 
 [container]: ../reference-guide/terms.md#container
-[controller]: ../understanding-deis/components.md#controller
+[controller]: ../understanding-workflow/components.md#controller
 [Docker Image]: https://docs.docker.com/introduction/understanding-docker/
 [DockerHub]: https://registry.hub.docker.com/
 [CMD instruction]: https://docs.docker.com/reference/builder/#cmd

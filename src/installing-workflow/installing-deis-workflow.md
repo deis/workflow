@@ -66,5 +66,5 @@ Once you see all of the pods in the `READY` state, Deis Workflow is up and runni
 Next, [configure dns][] so you can register your first user.
 
 [helm]: http://helm.sh
-[using deis]: ../using-deis/deploying-an-application.md
-[configure dns]: ../managing-deis/configuring-dns.md
+[using deis]: ../using-workflow/deploying-an-application.md
+[configure dns]: ../managing-workflow/configuring-dns.md

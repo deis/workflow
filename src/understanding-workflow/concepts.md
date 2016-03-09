@@ -130,12 +130,12 @@ to external or third-party vendor services.
 [backing services]: http://12factor.net/backing-services
 [build]: ../reference-guide/terms.md#build
 [builder]: components.md#builder
-[buildpacks]: ../using-deis/using-buildpacks.md
+[buildpacks]: ../using-workflow/using-buildpacks.md
 [cncf]: https://cncf.io/
 [components]: components.md
 [config]: ../reference-guide/terms.md#config
-[dockerfile]: ../using-deis/using-dockerfiles.md
-[dockerimage]: ../using-deis/using-docker-images.md
+[dockerfile]: ../using-workflow/using-dockerfiles.md
+[dockerimage]: ../using-workflow/using-docker-images.md
 [environment variables]: http://12factor.net/config
 [helm]: https://helm.sh
 [release]: ../reference-guide/terms.md#release

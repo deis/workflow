@@ -5,43 +5,43 @@
 site_name: Deis Documentation
 pages:
   - Welcome: index.md
-  - Quick Start: installing-deis/quickstart.md
-  - Understanding Deis:
-    - Concepts: understanding-deis/concepts.md
-    - Architecture: understanding-deis/architecture.md
-    - Components: understanding-deis/components.md
-  - Installing Deis:
-    - Quick Start: installing-deis/quickstart.md
-    - System Requirements: installing-deis/system-requirements.md
-    - Installing Deis Workflow: installing-deis/installing-deis-workflow.md
-    - Configuring Object Storage: installing-deis/configuring-object-storage.md
-  - Using Deis:
-    - Installing the Client: using-deis/installing-the-client.md
-    - Registering a User: using-deis/registering-a-user.md
-    - Deploying an Application: using-deis/deploying-an-application.md
-    - Process Types and the Procfile: using-deis/process-types-and-the-procfile.md
-    - Using Buildpacks: using-deis/using-buildpacks.md
-    - Using Dockerfiles: using-deis/using-dockerfiles.md
-    - Using Docker Images: using-deis/using-docker-images.md
-    - Configuring an Application: using-deis/configuring-an-application.md
-    - Managing an Application: using-deis/managing-an-application.md
-    - Application SSL Certificates: using-deis/application-ssl-certificates.md
-  - Managing Deis:
-    - Adding/Removing Hosts: managing-deis/adding-or-removing-hosts.md
-    - Backing up and Restoring Data: managing-deis/backing-up-and-restoring-data.md
-    - Configuring DNS: managing-deis/configuring-dns.md
-    - Configuring Load Balancers: managing-deis/configuring-load-balancers.md
-    - Managing Disk Usage: managing-deis/managing-disk-usage.md
-    - Operational Tasks: managing-deis/operational-tasks.md
-    - Platform Logging: managing-deis/platform-logging.md
-    - Platform Monitoring: managing-deis/platform-monitoring.md
-    - Production Deployments: managing-deis/production-deployments.md
-    - Security Considerations: managing-deis/security-considerations.md
-    - Platform SSL: managing-deis/platform-ssl.md
-    - Upgrading Deis: managing-deis/upgrading-deis.md
-    - Using a Proxy Server: managing-deis/using-a-proxy-server.md
-  - Customizing Deis:
-    - CLI Plugins: customizing-deis/cli-plugins.md
+  - Quick Start: installing-workflow/quickstart.md
+  - Understanding Workflow:
+    - Concepts: understanding-workflow/concepts.md
+    - Architecture: understanding-workflow/architecture.md
+    - Components: understanding-workflow/components.md
+  - Installing Workflow:
+    - Quick Start: installing-workflow/quickstart.md
+    - System Requirements: installing-workflow/system-requirements.md
+    - Installing Workflow: installing-workflow/installing-deis-workflow.md
+    - Configuring Object Storage: installing-workflow/configuring-object-storage.md
+  - Using Workflow:
+    - Installing the Client: using-workflow/installing-the-client.md
+    - Registering a User: using-workflow/registering-a-user.md
+    - Deploying an Application: using-workflow/deploying-an-application.md
+    - Process Types and the Procfile: using-workflow/process-types-and-the-procfile.md
+    - Using Buildpacks: using-workflow/using-buildpacks.md
+    - Using Dockerfiles: using-workflow/using-dockerfiles.md
+    - Using Docker Images: using-workflow/using-docker-images.md
+    - Configuring an Application: using-workflow/configuring-an-application.md
+    - Managing an Application: using-workflow/managing-an-application.md
+    - Application SSL Certificates: using-workflow/application-ssl-certificates.md
+  - Managing Workflow:
+    - Adding/Removing Hosts: managing-workflow/adding-or-removing-hosts.md
+    - Backing up and Restoring Data: managing-workflow/backing-up-and-restoring-data.md
+    - Configuring DNS: managing-workflow/configuring-dns.md
+    - Configuring Load Balancers: managing-workflow/configuring-load-balancers.md
+    - Managing Disk Usage: managing-workflow/managing-disk-usage.md
+    - Operational Tasks: managing-workflow/operational-tasks.md
+    - Platform Logging: managing-workflow/platform-logging.md
+    - Platform Monitoring: managing-workflow/platform-monitoring.md
+    - Production Deployments: managing-workflow/production-deployments.md
+    - Security Considerations: managing-workflow/security-considerations.md
+    - Platform SSL: managing-workflow/platform-ssl.md
+    - Upgrading Deis: managing-workflow/upgrading-deis.md
+    - Using a Proxy Server: managing-workflow/using-a-proxy-server.md
+  - Customizing Workflow:
+    - CLI Plugins: customizing-workflow/cli-plugins.md
   - Troubleshooting:
     - Troubleshooting with kubectl: troubleshooting/troubleshooting.md
   - Roadmap:

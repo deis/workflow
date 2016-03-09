@@ -53,5 +53,5 @@ image in development or in your CI pipeline as you are in production.
 Learn how to deploy applications [using Docker images](using-docker-images.md).
 
 [application]: ../reference-guide/terms.md#application
-[controller]: ../understanding-deis/components.md#controller
+[controller]: ../understanding-workflow/components.md#controller
 [Twelve-Factor App]: http://12factor.net/
