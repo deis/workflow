@@ -1,67 +1,64 @@
 # Configure DNS
 
-For Deis clusters, DNS records must be created. The Deis cluster runs multiple routers infront of the Deis controller and apps you deploy, so a [load balancer][] is recommended.
+The Deis Workflow controller and all applications deployed via Workflow are intended (by default) to be accessible as subdomains of the Workflow cluster's domain.  For example, assuming `example.com` were a cluster's domain:
 
-You can find the IP addresses of your Kubernetes cluster nodes by
-running `kubectl get nodes`.
+* The controller should be accessible at `deis.example.com`
+* Applications should be accessible (by default) at `<application name>.example.com`
 
-## Necessary DNS records
+Given that this is the case, the primary objective in configuring DNS is that traffic for all subdomains of a cluster's domain be directed to the cluster node(s) hosting the platform's router component, which is capable of directing traffic within the cluster to the correct endpoints.
 
-Deis requires a wildcard DNS record. Assuming `myapps.com` is the top-level domain
-apps will live under:
 
-* `*.myapps.com` should have "A" record entries for each of the load balancer's IP addresses
+## With a Load Balancer
 
-Apps can then be accessed by browsers at `appname.myapps.com`, and the controller will be available to the Deis client at `deis.myapps.com`.
+Generally, it is recommended that a [load balancer][] be used to direct inbound traffic to one or more routers.  In such a case, configuring DNS is as simple as defining a wildcard record in DNS that points to the load balancer.
 
-[AWS recommends][] against creating "A" record entries; instead, create a wildcard "CNAME" record entry for the load balancer's DNS name, or use Amazon [Route 53][].
+For example, assuming a domain of `example.com`:
 
-These records are necessary for all deployments of Deis other than Vagrant clusters.
+* An `A` record enumerating each of your load balancer(s) IPs (i.e. DNS round-robining)
+* A `CNAME` record referencing an existing fully-qualified domain name for the load balancer
+    * Per [AWS' own documentation][AWS recommends], this is the recommended strategy when using AWS Elastic Load Balancers, as ELB IPs may change over time.
 
-## DNS without a Load Balancer
+DNS for any applications using a "custom domain" (a fully-qualified domain name that is not a subdomain of the cluster's own domain) can be configured by creating a `CNAME` record that references the wildcard record described above.
 
-On some platforms (Vagrant, for instance), a load balancer is not an easy or practical thing to
-provision. In these cases, one can directly identify the public IP of a Kubernetes node that is
-hosting a router pod and use that information to configure DNS or the local `/etc/hosts` file.
-
-You can find the IP address of a node using `kubectl`:
+Although it is dependent upon your distribution of Kubernetes and your underlying infrastructure, in many cases, the IP(s) or existing fully-qualified domain name of a load balancer can be determined directly using the `kubectl` tool:
 
 ```
-$ kubectl get pods --namespace=deis | grep deis-router
-deis-router-ih25q           1/1       Running   0          2h
+$ kubectl describe service deis-router --namespace=deis | grep "LoadBalancer Ingress"
+LoadBalancer Ingress:	a493e4e58ea0511e5bb390686bc85da3-1558404688.us-west-2.elb.amazonaws.com
 ```
 
-Using the pod name determined through the above, one can
-use `kubectl` to determine what node the pod is running on:
+The `LoadBalancer Ingress` field typically describes an existing domain name or public IP(s).  Note that if Kubernetes is able to automatically provision a load balancer for you, it does so asynchronously.  If the command shown above is issued very soon after Workflow installation, the load balancer may not exist yet.
+
+
+## Without a Load Balancer
+
+On some platforms (Vagrant, for instance), a load balancer is not an easy or practical thing to provision. In these cases, one can directly identify the public IP of a Kubernetes node that is hosting a router pod and use that information to configure the local `/etc/hosts` file.
+
+Because wildcard entries do not work in a local `/etc/hosts` file, using this strategy may result in frequent editing of that file to add fully-qualified subdomains of a cluster for each application added to that cluster.  Because of this a more viable option may be to utilize the [xip.io][xip] service.
+
+In general, for any IP, `a.b.c.d`, the fully-qualified domain name `any-subdomain.a.b.c.d.xip.io` will resolve to the IP `a.b.c.d`.  This can be enormously useful.
+
+To begin, find the node(s) hosting router instances using `kubectl`:
 
 ```
-$ kubectl describe pod deis-router-ih25q --namespace=deis
+$ kubectl describe pod deis-router --namespace=deis | grep Node
+Node:       ip-10-0-0-199.us-west-2.compute.internal/10.0.0.199
+Node:       ip-10-0-0-198.us-west-2.compute.internal/10.0.0.198
 ```
 
-The `Node` field of the response should provide an IP:
+The command will display information for every router pod.  For each, a node name and IP are displayed in the `Node` field.  If the IPs appearing in these fields are public, any of these may be used to configure your local `/etc/hosts` file or may be used with [xip.io][xip].  If the IPs shown are not public, further investigation may be needed.
+
+You can list the IP addresses of a node using `kubectl`:
 
 ```
-Node:				10.245.1.3/
+$ kubectl describe node ip-10-0-0-199.us-west-2.compute.internal
+# ...
+Addresses:	10.0.0.199,10.0.0.199,54.218.85.175
+# ...
 ```
 
-If the IP is public, this can be used to configure DNS or the
-local `/etc/hosts` file.
+Here, the `Addresses` field lists all the node's IPs.  If any of them are public, again, they may be used to configure your local `/etc/hosts` file or may be used with [xip.io][xip].
 
-An easy way to configure wildcard DNS is to use [xip.io][] to reference the IP of the node running
-your router. For example:
-
-    $ deis register http://deis.10.245.1.3.xip.io
-
-Note that xip does not seem to work for AWS ELBs - you will have to use an actual DNS record.
-
-Alternatively, in your `/etc/hosts` file, add an entry like this:
-
-```
-10.245.1.3    example.com deis.example.com
-```
-
-This will get you started, though you may find that you have to manually maintain this file as you
-create and deploy more applications to the cluster.
 
 ## Testing
 
@@ -72,8 +69,14 @@ sent to the Deis controller like so (do not forget the trailing slash!):
 curl http://deis.example.com/v2/
 ```
 
-Since such requests require authentication, a response such as
-the following is an indicator of success:
+Or:
+
+```
+curl http://deis.54.218.85.175.xip.io/v2/
+```
+
+
+Since such requests require authentication, a response such as the following should be considered an indicator of success:
 
 ```
 {"detail":"Authentication credentials were not provided."}
@@ -81,5 +84,4 @@ the following is an indicator of success:
 
 [AWS recommends]: https://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/using-domain-names-with-elb.html
 [load balancer]: configuring-load-balancers.md
-[Route 53]: http://aws.amazon.com/route53/
 [xip]: http://xip.io/
