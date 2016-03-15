@@ -43,3 +43,10 @@ Any Kubernetes 1.1 cluster should also use a Docker version < 1.10.0 so that `ku
 ## Docker Insecure Registry
 
 The on-cluster, Deis-managed Docker registry is not deployed with TLS by default. As such, all Kubernetes worker nodes must have their Docker daemons configured to use an insecure registry. The subnet should encompase any private networks used by your worker nodes including any overlay networks. Depending on your Kubernetes and Docker configuration, setting `EXTRA_DOCKER_OPTS="--insecure-registry=10.0.0.0/8"` may be sufficient.
+
+## SELinux + OverlayFS
+
+If you are using Docker with OverlayFS you must disable SELinux by adding `--selinux-enabled=false` to `EXTRA_DOCKER_OPTS`. For more background information see:
+
+* [https://github.com/docker/docker/issues/7952](https://github.com/docker/docker/issues/7952)
+* [https://github.com/deis/postgres/issues/63](https://github.com/deis/postgres/issues/63)
