@@ -24,11 +24,9 @@ of its data to the database component.
 **Project Location:** [deis/postgres](https://github.com/deis/postgres)
 
 The database component is a managed instance of [PostgreSQL][] which holds a
-majority of the platforms state. Backups and WAL files are pushed to the object
+majority of the platforms state. Backups and WAL files are pushed to object
 storage via [WAL-E][]. When the database is restarted, backups are fetched and
-replayed from object storage so no data is lost. For more information on backup
-and restore read the documentation for
-[Backing up and Restoring Data][backupandrestore].
+replayed from object storage so no data is lost.
 
 ## <a name="builder"></a>Builder: builder, slugbuilder, and dockerbuilder
 
@@ -145,7 +143,6 @@ documentation][logger-documentation].
 [PostgreSQL]: http://www.postgresql.org/
 [WAL-E]: https://github.com/wal-e/wal-e
 [architecture]: architecture.md
-[backupandrestore]: ../managing-workflow/backing-up-and-restoring-data.md
 [components]: components.md
 [concepts]: concepts.md
 [configure-objectstorage]: ../installing-workflow/configuring-object-storage.md
