@@ -17,18 +17,14 @@ Most pull requests will reference a GitHub issue. In the PR description - not in
 
 ## Include Tests
 
-If you alter or add functionality to any Deis component, your changes should include the necessary tests to prove that it works. Unit tests may be written with the component's implementation language (usually Go or Python), and functional and integration tests are written in Go.
-
-Integration test code spanning multiple Deis components can be found in the `tests/` directory of the [deis/workflow][workflow] project.
-
-While working on local code changes, always run the tests.  Be sure your proposed changes pass all of `./tests/bin/test-integration` on your workstation before submitting a PR.
+If you significantly alter or add functionality to a component that impacts the broader Deis Workflow PaaS, you should submit a complementary PR to modify or amend end-to-end integration tests.  These integration tests can be found in the [deis/workflow-e2e][workflow-e2e] repository.
 
 See [testing](testing.md) for more information.
 
 
 ## Include Docs
 
-Changes to any Deis component that could affect a user's experience also require a change or addition to the relevant documentation. For most Deis components, this involves updating the component's _own_ documentation. In some cases where a component is tightly integrated into [deis/workflow][workflow], its documentation must also be updated.
+Changes to any Deis Workflow component that could affect a user's experience also require a change or addition to the relevant documentation. For most Deis components, this involves updating the component's _own_ documentation. In some cases where a component is tightly integrated into [deis/workflow][workflow], its documentation must also be updated.
 
 
 ## Code Standards
@@ -103,3 +99,4 @@ If the PR is from a Deis maintainer, then he or she should be the one to close i
 [python]: http://www.python.org/
 [zen]: http://www.python.org/dev/peps/pep-0020/
 [workflow]: https://github.com/deis/workflow
+[workflow-e2e]: https://github.com/deis/workflow-e2e

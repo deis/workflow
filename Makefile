@@ -8,7 +8,7 @@ MKDOCSBUILDOPTS = --clean --strict --verbose
 MKDOCSBUILD     = $(MKDOCS) build $(MKDOCSBUILDOPTS)
 MKDOCSSERVE     = $(MKDOCS) serve -a 0.0.0.0:8000
 
-SHORT_NAME ?= docs-v2
+SHORT_NAME ?= workflow
 VERSION ?= git-$(shell git rev-parse --short HEAD)
 IMAGE := ${SHORT_NAME}:${VERSION}
 

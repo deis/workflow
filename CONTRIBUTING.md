@@ -19,13 +19,14 @@ Our official support channels are:
 - GitHub issue queues:
   - builder: https://github.com/deis/builder/issues
   - chart: https://github.com/deis/charts/issues
+  - controller: https://github.com/deis/controller/issues
   - database: https://github.com/deis/postgres/issues
+  - documentation: https://github.com/deis/workflow/issues
   - helm: https://github.com/helm/helm/issues
   - minio: https://github.com/deis/minio/issues
   - registry: https://github.com/deis/registry/issues
   - router: https://github.com/deis/router/issues
-  - workflow: https://github.com/deis/workflow/issues
-	- All other public [Deis repositories][repos]
+  - All other public [Deis repositories][repos]
 - IRC: #[deis](irc://irc.freenode.org:6667/#deis) IRC channel on freenode.org
 
 ## Getting Started

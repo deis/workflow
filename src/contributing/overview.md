@@ -8,7 +8,7 @@ Find a bug? Want to see a new feature? Have a request for the maintainers? Open 
 
 ## Write Documentation
 
-We are always looking to improve and expand our documentation. Most docs reside in the [deis/workflow][workflow] repository under the [docs/][docs] directory. Simply fork the project, update docs and send us a pull request.
+We are always looking to improve and expand our documentation. Most docs reside in the [deis/workflow][workflow] repository. Simply fork the project, update docs and send us a pull request.
 
 ## Contribute Code
 
@@ -27,5 +27,4 @@ Interact with the community on our user mailing list or live in our IRC channel,
 [workflow]: https://github.com/deis/workflow
 [dd]: design-documents.md
 [dev-environment]: development-environment.md
-[docs]: https://github.com/deis/workflow/tree/master/docs
-[easy-fix]: https://github.com/deis/workflow/labels/easy-fix
+[easy-fix]: https://github.com/issues?q=user%3Adeis+label%3Aeasy-fix+is%3Aopen
