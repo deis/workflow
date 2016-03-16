@@ -20,7 +20,7 @@ In order to successfully compile and test Deis binaries and build Docker images 
 - [shellcheck][shellcheck]
 - [Docker][docker] (in a non-Linux environment, you will additionally want [Docker Machine][machine])
 
-For [deis/workflow][workflow], in particular, you will also need:
+For [deis/controller][controller], in particular, you will also need:
 
 - Python 2.7 or later (with `pip`)
 - virtualenv (`sudo pip install virtualenv`)
@@ -222,7 +222,7 @@ $ kubectl logs -f <pod name> --namespace=deis
 
 ### Django Shell
 
-Specific to [deis/workflow][workflow]
+Specific to [deis/controller][controller]
 
 ```
 $ kubectl exec -it <pod name> --namespace=deis -- python manage.py shell
@@ -245,7 +245,7 @@ things you should do when proposing a change to any Deis component.
 [shellcheck]: https://github.com/koalaman/shellcheck
 [docker]: https://www.docker.com/
 [machine]: http://docs.docker.com/machine/install-machine/
-[workflow]: https://github.com/deis/workflow
+[controller]: https://github.com/deis/controller
 [vbox]: https://www.virtualbox.org/
 [testing]: testing.md
 [k8s]: http://kubernetes.io/

@@ -12,7 +12,7 @@ the functionality in your own project we invite you to give it a shot!
 
 ## Controller
 
-**Project Location:** [deis/workflow](https://github.com/deis/workflow)
+**Project Location:** [deis/controller](https://github.com/deis/controller)
 
 The controller component is an HTTP API server which serves as the endpoint for
 the `deis` CLI. The controller provides all of the platform functionality as
