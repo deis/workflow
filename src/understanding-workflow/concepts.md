@@ -8,8 +8,8 @@ Twelve-Factor apps as containers across a Kubernetes cluster.
 The [Twelve-Factor App][] is a methodology for building modern
 applications that can be scaled across a distributed system.
 
-We consider it an invaluable synthesis of much experience with
-software-as-a-service apps in the wild, especially on the
+Twelve-factor is a valuable synthesis of years of experience with
+software-as-a-service apps in the wild, particularly on the
 Heroku platform.
 
 Workflow is designed to run applications that adhere to the [Twelve-Factor App][]
@@ -23,14 +23,15 @@ the activity on your cluster, including: desired state convergence, stable
 service addresses, health monitoring, service discovery, and DNS resolution.
 
 Workflow builds upon Kubernetes abstractions like Services, Replication
-Controllers and Pods to provide a developer-friendly UX, source to image, log
-aggregation, etc.
+Controllers, and Pods to provide a developer-friendly experience. Building containers
+directly from application source code, aggregating logs, and managing deployment
+configurations and app releases are just some of the features Workflow adds.
 
-Workflow is shipped as a Kubernetes-native application, installable via
-[Helm][helm], so operators familiar with Kubernetes will feel right at home
-running Workflow.
+Deis Workflow is a set of Kubernetes-native components, installable via
+[Helm][helm]. Systems engineers who are familiar with Kubernetes will feel right
+at home running Workflow.
 
-For a detailed overview of Workflow components, see our [component][components] break down.
+See the [components][components] overview for more detail.
 
 ## Docker
 
@@ -46,23 +47,23 @@ Applications which are packaged via a buildpack are run in Docker containers as
 part of the `slugrunner` process. View the [slugrunner component][slugrunner]
 for more information.
 
-Applications which use either a Dockerfile or reference an external Docker
-Image are launched unmodified.
+Applications which use either a Dockerfile or reference external Docker
+images are launched unmodified.
 
 ## Applications
 
 Workflow is designed around the concept of an [application][], or app.
 
-Applications can come in three forms:
+Applications come in one of three forms:
 
-1. as collection of source files stored in a Git repository
-2. as a Dockerfile, which describes how to build your app
-3. a reference to an already built Docker Image, hosted on a remote Docker repository
+1. a collection of source files stored in a `git` repository
+2. a Dockerfile and associated source files stored in a `git` repository
+3. a reference to an existing image at a Docker repository
 
-Applications identified by a unique name for easy reference. If you do not
-specify a name when creating your application Workflow generates one for you.
-Workflow also tracks other related information for your application including
-any domain names, SSL Certificates and developer provided configuration.
+Applications are identified by a unique name for easy reference. If you do not
+specify a name when creating your application, Workflow generates one for you.
+Workflow also manages related information, including domain names, SSL
+certificates, and developer-provided configuration.
 
 ## Build, Release, Run
 
@@ -73,33 +74,32 @@ any domain names, SSL Certificates and developer provided configuration.
 The [builder][] component processes incoming `git push deis master` requests
 and manages your application packaging.
 
-If your application is using a [buildpack][buildpacks] builder will launch an ephemeral
+If your application is using a [buildpack][buildpacks], builder will launch an ephemeral
 job to extract and execute the packaging instructions. The resulting
 application artifact is stored by the platform for execution during the run
 stage.
 
-If instead, you provide a [Dockerfile][dockerfile] builder will use the
-instructions you have provided to build a Docker Image. The resulting artifact is
-stored in a Deis-managed registry which will be referenced during the run
-stage.
+If instead builder finds a [Dockerfile][dockerfile], it follows those instructions to
+create a Docker image. The resulting artifact is stored in a Deis-managed registry which
+will be referenced during the run stage.
 
-If you already have an external system building your application container you
-can simply reference that artifact. When using [external Docker
-images][dockerimage] the builder component doesn't attempt to repackage your
+If another system already builds and packages your application, that container
+artifact can be used directly. When referencing an [external Docker
+image][dockerimage], the builder component doesn't attempt to repackage your
 app.
 
 ### Release Stage
 
 During the release stage, a [build][] is combined with [application configuration][config]
-to create a new numbered [release][]. New releases are created any time a new
-build is created or application configuration is changed. Tracking releases
-makes it easy to rollback to any previous release.
+to create a new, numbered [release][]. New releases are created any time a new
+build is created or application configuration is changed. Tracking releases as a
+"write-only ledger" this way makes it easy to rollback to any previous release.
 
 ### Run Stage
 
-The run stage is responsible for deploying the new release to the underlying
-Kubernetes cluster. The run stage launches a new Replication Controller which
-references the new release. By managing the desired replica count, Workflow
+The run stage deploys the new release to the underlying Kubernetes cluster by
+launching a new Replication Controller which references the new release.
+By managing the desired replica count, Workflow
 orchestrates a zero-downtime, rolling update of your application. Once
 successfully updated, Workflow removes the last reference to the old release.
 Note that during the deploy, your application will be running in a mixed mode.
@@ -108,11 +108,11 @@ Note that during the deploy, your application will be running in a mixed mode.
 
 Workflow treats all persistent services such as databases, caches, storage,
 messaging systems, and other [backing services][] as resources managed
-separtely from your application. This philosophy aligns with Twelve-Factor
+separately from your application. This philosophy aligns with Twelve-Factor
 best practices.
 
-Applications are attached to backing services using [environment variables][].
-Because applications are decoupled from backing services, apps are free to
+Applications attach to backing services using [environment variables][].
+Because apps are decoupled from backing services, they are free to
 scale up independently, to use services provided by other apps, or to switch
 to external or third-party vendor services.
 
