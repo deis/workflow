@@ -12,7 +12,7 @@ We are always looking to improve and expand our documentation. Most docs reside 
 
 ## Contribute Code
 
-We are always looking for help improving the core platform, other workloads, tooling, and test coverage. Interested in contributing code? Let’s chat in IRC. Make sure to check out issues tagged [easy-fix][].
+We are always looking for help improving the core platform, other workloads, tooling, and test coverage. Interested in contributing code? Let’s chat in the [Deis #community Slack channel](https://slack.deis.io). Make sure to check out issues tagged [easy-fix][].
 
 When you're ready to begin writing code, review [Design Documents][dd] and get your [Development Environment][dev-environment] set up.
 
@@ -22,7 +22,7 @@ If you don't have time to code, consider helping with triage. The community will
 
 ## Share your Experience
 
-Interact with the community on our user mailing list or live in our IRC channel, \#deis on Freenode, where you can chat with other Deis users any time of day.
+Interact with the community on our user mailing list or live in our [Deis #community Slack channel](https://slack.deis.io), where you can chat with other Deis Workflow users any time of day.
 
 [workflow]: https://github.com/deis/workflow
 [dd]: design-documents.md

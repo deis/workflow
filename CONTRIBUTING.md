@@ -27,7 +27,7 @@ Our official support channels are:
   - registry: https://github.com/deis/registry/issues
   - router: https://github.com/deis/router/issues
   - All other public [Deis repositories][repos]
-- IRC: #[deis](irc://irc.freenode.org:6667/#deis) IRC channel on freenode.org
+- The [Deis #community Slack channel](https://slack.deis.io)
 
 ## Getting Started
 
