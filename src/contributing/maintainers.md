@@ -43,7 +43,7 @@ The duties of a core maintainer include:
 * Classify and respond to GitHub issues and review pull requests
 * Help to shape the Deis roadmap and lead efforts to accomplish roadmap milestones
 * Participate actively in feature development and bug fixing
-* Answer questions and help users in IRC
+* Answer questions and help users in the [Deis #community Slack channel](https://slack.deis.io)
 
 The current core maintainers of Deis:
 * Chris Armstrong - <carmstrong@engineyard.com> ([@carmstrong](https://github.com/carmstrong))
@@ -81,7 +81,7 @@ core maintainers in guiding the future of Deis.
 Generally, potential contributing maintainers are selected by the Deis core maintainers based in
 part on the following criteria:
 * Sustained contributions to the project over a period of time (usually months)
-* A willingness to help Deis users on GitHub and in IRC
+* A willingness to help Deis users on GitHub and in the [Deis #community Slack channel](https://slack.deis.io)
 * A friendly attitude :)
 
 The Deis core maintainers must unanimously agree before inviting a community member to join as a
