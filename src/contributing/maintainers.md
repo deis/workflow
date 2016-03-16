@@ -40,17 +40,13 @@ Core maintainers are exceptionally knowledgeable about all areas of Deis. Some m
 full-time, although this is not a requirement.
 
 The duties of a core maintainer include:
+
 * Classify and respond to GitHub issues and review pull requests
 * Help to shape the Deis roadmap and lead efforts to accomplish roadmap milestones
 * Participate actively in feature development and bug fixing
 * Answer questions and help users in IRC
 
-The current core maintainers of Deis:
-* Chris Armstrong - <carmstrong@engineyard.com> ([@carmstrong](https://github.com/carmstrong))
-* Kent Rancourt - <krancourt@engineyard.com> ([@krancour](https://github.com/krancour))
-* Matt Boersma - <mboersma@engineyard.com> ([@mboersma](https://github.com/mboersma))
-* Matt Butcher - <mbutcher@engineyard.com> ([@technosophos](https://github.com/technosophos))
-* Matthew Fisher - <mfisher@engineyard.com> ([@bacongobbler](https://github.com/bacongobbler))
+The current list of core maintainers can be seen [here](https://github.com/orgs/deis/teams/core-maintainers).
 
 No pull requests can be merged until at least one core maintainer signs off with an
 [LGTM](http://docs.deis.io/en/latest/contributing/standards/#merge-approval). The other LGTM can
@@ -80,6 +76,7 @@ core maintainers in guiding the future of Deis.
 
 Generally, potential contributing maintainers are selected by the Deis core maintainers based in
 part on the following criteria:
+
 * Sustained contributions to the project over a period of time (usually months)
 * A willingness to help Deis users on GitHub and in IRC
 * A friendly attitude :)
