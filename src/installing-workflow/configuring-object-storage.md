@@ -11,6 +11,8 @@ A variety of Deis components rely on an object storage system to do their work. 
 
 These components are flexible and can work out of the box with almost any system that is compatible with the [S3 API](http://docs.aws.amazon.com/AmazonS3/latest/API/APIRest.html).
 
+Note: object storage configuration has not been standardized across all components in our beta release. As such, configuration instructions differ for each component. We plan to remediate this problem in our next release. Please see our [deis/deis#4966](https://github.com/deis/deis/issues/4966) for our progress on that work.
+
 # Minio
 
 Additionally, Deis ships with a [Minio](http://minio.io) [component](https://github.com/deis/minio). This component runs as a Kubernetes service, and the components listed above are configured to automatically look for that service and use it as object storage if it's available.
