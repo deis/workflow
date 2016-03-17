@@ -92,7 +92,7 @@ The slugrunner reads credentials from the below locations on the filesystem.
 
 ## [deis/controller](https://github.com/deis/controller)
 
-When the controller needs to launch a new buildpack application or scale one up, it uses a [replication controller](http://kubernetes.io/docs/user-guide/replication-controller/). Since the slugrunner needs to download the slug to run, it needs the object storage location of the slug and the object storage credentials.
+When the controller needs to launch or scale a new buildpack application, it uses a [replication controller](http://kubernetes.io/docs/user-guide/replication-controller/). Since the slugrunner needs to download the slug to run, it needs the object storage location of the slug and the object storage credentials.
 
 ### Environment Variables
 
