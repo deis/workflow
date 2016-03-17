@@ -177,13 +177,7 @@ The registry reads the credential information from a `/var/run/secrets/deis/regi
 
 ### Helm Chart
 
-If you are using the [Helm Chart for Workflow][helm-chart], put your base64-encoded credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
-
-Note - to base64 encode your credentials, you can use the `base64` tool on most systems. Here's an example usage:
-
-```console
-echo $MY_ACCESS_KEY | base64
-```
+If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. Note that you don't need to base64-encode the credentials, as Helm will do that for you. For more information, see the [installation instructions][helm-install] for more details on using Helm.
 
 ## [deis/database](https://github.com/deis/postgres)
 
@@ -222,9 +216,12 @@ You'll also need to add two environment variables to the https://github.com/deis
 
 ### Helm Chart
 
-If you are using the [Helm Chart for Workflow][helm-chart], put your base64-encoded credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+If you are using the [Helm Chart for Workflow][helm-chart], you'll have to put your credentials into the below two places before you run `helm generate`. For more details on using Helm, see the [installation instructions][helm-install].
 
-Note - to base64 encode your credentials, you can use the `base64` tool on most systems. Here's an example usage:
+- The [minio secret file][minio-user-secret] (under `access-key-id` and `access-secret-key`). Ensure your credentials are base64-encoded
+- The [objectstorage.toml][objectstorage-toml] file. Your credentials need not be base64-encoded in this file
+
+Note - to base64 encode your credentials for use in the [minio secret file][minio-user-secret], you can use the `base64` tool on most systems. Here's an example usage:
 
 ```console
 echo $MY_ACCESS_KEY | base64
