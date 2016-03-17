@@ -5,13 +5,13 @@
 
 Deis (pronounced DAY-iss) Workflow is an open source Platform as a Service (PaaS) that adds a developer-friendly layer to any [Kubernetes][k8s-home] cluster, making it easy to deploy and manage applications on your own servers.
 
-# About
-
-This repository contains the documentation for Deis Workflow which is the second major release of the Platform.
-
 ## Beta Status
 
 Many Deis components are currently in beta status, as are these docs, and we welcome your input! If you have feedback, please [submit an issue][issues]. If you'd like to participate in development, please read the "Development" section below and [submit a pull request][prs].
+
+# About
+
+This repository contains the documentation for Deis Workflow which is the second major release of the Platform.
 
 # Development
 
