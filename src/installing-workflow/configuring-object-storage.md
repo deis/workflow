@@ -147,6 +147,10 @@ The registry looks for a `REGISTRY_STORAGE` environment variable, which it then 
 
 The registry reads the credential information from a `/var/run/secrets/deis/registry/creds/objectstorage-keyfile` file. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the https://github.com/deis/charts/blob/master/workflow-dev/tpl/objectstorage.toml file.
 
+### Helm Chart
+
+If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+
 ## [deis/database](https://github.com/deis/postgres)
 
 The database is configured slightly differently from the other components. Read the two sections below for details.
@@ -182,6 +186,11 @@ You'll also need to add two environment variables to the https://github.com/deis
   value: "443"
 ```
 
+### Helm Chart
+
+If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+
 [helm-chart]: https://github.com/deis/charts/tree/master/workflow-dev
 [minio-user-secret]: https://github.com/deis/charts/blob/master/workflow-dev/manifests/deis-minio-secret-user.yaml
 [helm-install]: https://github.com/deis/workflow/blob/master/src/installing-workflow/installing-deis-workflow.md
+[objectstorage-toml]: https://github.com/deis/charts/blob/master/workflow-dev/tpl/objectstorage.toml
