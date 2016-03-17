@@ -21,9 +21,7 @@ Additionally, Deis ships with a [Minio](http://minio.io) [component](https://git
 
 [Google Cloud Storage](https://cloud.google.com/storage/) (GCS) can interoperate with the S3 API using a feature called [interoperability](https://cloud.google.com/storage/docs/interoperability). If you choose to use GCS for object storage, you'll have to turn on this interoperability mode. In order to do so, please follow the steps in the [GCS migration documentation](https://cloud.google.com/storage/docs/migrating?hl=en_US#migration-simple).
 
-When you're done, please set the `DEIS_OUTSIDE_STORAGE` environment variable to `storage.googleapis.com`, and ensure the keys that you created (as part of the previous paragraph) are in the correct locations on the filesystem.
-
-Reminder: We recommend storing these and all other credentials as Kubernetes secrets. See the "Configuring Deis Components" section above for more details and examples.
+We recommend storing these and all other credentials as Kubernetes secrets. See the below sections for details on configuring each component for details.
 
 # Configuring the Deis Components
 
