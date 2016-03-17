@@ -153,6 +153,16 @@ Since the object storage location information comes from the builder, the contro
 
 No paths need to be mounted into the pod. Simply ensure that the secret exists in your Kubernetes cluster with the correct credentials.
 
+### Helm Chart
+
+If you are using the [Helm Chart for Workflow][helm-chart], put your base64-encoded credentials in the [`minio-user` secret][minio-user-secret] (under `access-key-id` and `access-secret-key`) before you `helm install`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+
+Note - to base64 encode your credentials, you can use the `base64` tool on most systems. Here's an example usage:
+
+```console
+echo $MY_ACCESS_KEY | base64
+```
+
 ## [deis/registry](https://github.com/deis/registry)
 
 The registry is configured slightly differently from most of the other components. Read on for details.
