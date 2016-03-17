@@ -21,7 +21,7 @@ Every Deis component that relies on object storage relies on the following two i
 - One or more environment variables with host and port to describe where the object storage system is
 - One or more files to provide access credentials for the object storage system.
 	- We suggest storing these values in [Kubernetes secrets](http://kubernetes.io/v1.1/docs/user-guide/secrets.html) and mounting them as volumes to each pod
-	- See [the deis-dev chart](https://github.com/deis/charts/tree/master/deis-dev) for examples of using and mounting secrets.
+	- See [the workflow-dev chart](https://github.com/deis/charts/tree/master/workflow-dev) for examples of using and mounting secrets.
 
 The subsections herein explain how to configure these two inputs for each applicable component.
 
@@ -36,11 +36,11 @@ The builder looks for the below environment variables to determine where the obj
   - `storage.googleapis.com` for Google Cloud Storage
 - `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT` - The in-cluster Minio service. Additional notes about these variables:
   - They are set automatically by Kubernetes if you run [Minio](http://minio.io) as a service in the cluster
-  - The [Helm chart for Deis](https://github.com/deis/charts/tree/master/deis-dev) installs Minio by default, so the Builder will use Minio by default.
+  - The [Helm chart for Deis](https://github.com/deis/charts/tree/master/workflow-dev) installs Minio by default, so the Builder will use Minio by default.
 
 Note that if the builder finds a `DEIS_OUTSIDE_STORAGE_HOST` environment variable, it will ignore `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT`. This behavior means that external object storage takes precedence over Minio.
 
-The builder also uses an environment variable to determine the name of the bucket it should store build artifacts in. It uses `git` by default, but if your credentials (see below for how credentials are configured) don't have read and write access to that bucket, you'll have to specify a different one. 
+The builder also uses an environment variable to determine the name of the bucket it should store build artifacts in. It uses `git` by default, but if your credentials (see below for how credentials are configured) don't have read and write access to that bucket, you'll have to specify a different one.
 
 To do so, simply set the `BUCKET` environment variable to another value (`deis-builds`, for example).
 
@@ -99,7 +99,7 @@ The registry looks for a `REGISTRY_STORAGE` environment variable, which it then 
 
 ### Credentials
 
-The registry reads the credential information from a `/var/run/secrets/deis/registry/creds/objectstorage-keyfile` file. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the https://github.com/deis/charts/blob/master/deis-dev/tpl/objectstorage.toml file.
+The registry reads the credential information from a `/var/run/secrets/deis/registry/creds/objectstorage-keyfile` file. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the https://github.com/deis/charts/blob/master/workflow-dev/tpl/objectstorage.toml file.
 
 ## [deis/database](https://github.com/deis/postgres)
 
@@ -111,4 +111,27 @@ The database looks for a `DATABASE_STORAGE` environment variable, which it then 
 
 ## Credentials
 
-The database reads the credentials information from a `/var/run/secrets/deis/objectstore/creds/objectstorage-keyfile` file. This is generated automatically during helm generate based on the configuration options given in the https://github.com/deis/charts/blob/master/deis-dev/tpl/objectstorage.toml.
+Depending on the value of `DATABASE_STORAGE`, the database will either read the credentials from a generic objectstore secret or from a minio-user secret.in `/var/run/secrets/deis/objectstore/creds/` or from `/var/run/secrets/deis/database/creds/`. The following ways to configure the database are listed below.
+
+### Minio
+
+If the `DATABASE_STORAGE` backend is configured as anything else other than "s3", the database will receive its credentials from `/var/run/secrets/deis/database/creds/`. This is generated based on the configuration options given in the https://github.com/deis/charts/blob/master/workflow-dev/manifests/deis-minio-secret-user.yaml file. The access key and secret key must be `base64` encoded.
+
+Connection details to minio are configured via `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT`, both of which are provided by the `deis-minio` service.
+
+### Amazon Simple Storage Service (S3)
+
+If the `DATABASE_STORAGE` backend is configured as "s3", the database will receive its credentials from `/var/run/secrets/deis/objectstore/creds/`. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the https://github.com/deis/charts/blob/master/workflow-dev/tpl/objectstorage.toml file.
+
+### Google Cloud Storage (S3 Compatibility Mode)
+
+If the `DATABASE_STORAGE` backend is configured as "gcs", the database will receive its credentials from `/var/run/secrets/deis/database/creds/`. This is generated based on the configuration options given in the https://github.com/deis/charts/blob/master/workflow-dev/manifests/deis-minio-secret-user.yaml file. The access key and secret key must be `base64` encoded.
+
+You'll also need to add two environment variables to the https://github.com/deis/charts/blob/master/workflow-dev/tpl/deis-database-rc.yaml file so the database can communicate with Google Cloud Storage instead of minio. Add these values to your `spec.template.spec.containers[0].env` section, then run `helm generate` for the settings to take effect the next time you install workflow:
+
+```yaml
+- name: DEIS_MINIO_SERVICE_HOST
+  value: storage.googleapis.com
+- name: DEIS_MINIO_SERVICE_PORT
+  value: "443"
+```
