@@ -54,7 +54,13 @@ The builder reads credentials from the below locations on the filesystem.
 
 ### Helm Chart
 
-If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [`minio-user` secret][minio-user-secret] (under `access-key-id` and `access-secret-key`) before you `helm install`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+If you are using the [Helm Chart for Workflow][helm-chart], put your base64-encoded credentials in the [`minio-user` secret][minio-user-secret] (under `access-key-id` and `access-secret-key`) before you `helm install`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+
+Note - to base64 encode your credentials, you can use the `base64` tool on most systems. Here's an example usage:
+
+```console
+echo $MY_ACCESS_KEY | base64
+```
 
 ### A Note on Google Cloud Storage
 
@@ -82,7 +88,13 @@ The slugbuilder reads credentials from the below locations on the filesystem.
 
 ### Helm Chart
 
-If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [`minio-user` secret][minio-user-secret] (under `access-key-id` and `access-secret-key`) before you `helm install`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+If you are using the [Helm Chart for Workflow][helm-chart], put your base64-encoded credentials in the [`minio-user` secret][minio-user-secret] (under `access-key-id` and `access-secret-key`) before you `helm install`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+
+Note - to base64 encode your credentials, you can use the `base64` tool on most systems. Here's an example usage:
+
+```console
+echo $MY_ACCESS_KEY | base64
+```
 
 ## [deis/slugrunner](https://github.com/deis/slugrunner)
 
@@ -103,7 +115,7 @@ The slugrunner reads credentials from the below locations on the filesystem.
 
 The [Helm Chart for Workflow][helm-chart] contains no manifest for the slugrunner. As noted above, the controller handles all configuration and lifecycle management for you.
 
-If, however, you wish to run the slugrunner as a standalone component, you can use the [`minio-user` secret][minio-user-secret] to easily provide your pods with the credentials information they need. To do so, put your credentials information into the `access-key-id` and `access-secret-key` fields, and mount the secret like this:
+If, however, you wish to run the slugrunner as a standalone component, you can use the [`minio-user` secret][minio-user-secret] to easily provide your pods with the credentials information they need. To do so, put your base64-encoded credentials information into the `access-key-id` and `access-secret-key` fields, and mount the secret like this:
 
 Under the `spec.template.spec.volumes` section:
 
@@ -119,6 +131,12 @@ Under the `spec.template.spec.containers[0].volumeMounts` section:
 - name: minio-user
   mountPath: /var/run/secrets/object/store
   readOnly: true
+```
+
+Note - to base64 encode your credentials, you can use the `base64` tool on most systems. Here's an example usage:
+
+```console
+echo $MY_ACCESS_KEY | base64
 ```
 
 ## [deis/controller](https://github.com/deis/controller)
@@ -149,7 +167,13 @@ The registry reads the credential information from a `/var/run/secrets/deis/regi
 
 ### Helm Chart
 
-If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+If you are using the [Helm Chart for Workflow][helm-chart], put your base64-encoded credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+
+Note - to base64 encode your credentials, you can use the `base64` tool on most systems. Here's an example usage:
+
+```console
+echo $MY_ACCESS_KEY | base64
+```
 
 ## [deis/database](https://github.com/deis/postgres)
 
@@ -188,7 +212,13 @@ You'll also need to add two environment variables to the https://github.com/deis
 
 ### Helm Chart
 
-If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+If you are using the [Helm Chart for Workflow][helm-chart], put your base64-encoded credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+
+Note - to base64 encode your credentials, you can use the `base64` tool on most systems. Here's an example usage:
+
+```console
+echo $MY_ACCESS_KEY | base64
+```
 
 [helm-chart]: https://github.com/deis/charts/tree/master/workflow-dev
 [minio-user-secret]: https://github.com/deis/charts/blob/master/workflow-dev/manifests/deis-minio-secret-user.yaml
