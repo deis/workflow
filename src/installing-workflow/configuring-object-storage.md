@@ -5,6 +5,7 @@ A variety of Deis components rely on an object storage system to do their work. 
 - [builder](https://github.com/deis/builder)
 - [slugbuilder](https://github.com/deis/slugbuilder)
 - [slugrunner](https://github.com/deis/slugrunner)
+- [controller](https://github.com/deis/controller)
 - [registry](https://github.com/deis/registry)
 - [database](https://github.com/deis/postgres)
 
@@ -88,6 +89,20 @@ The slugrunner reads credentials from the below locations on the filesystem.
 
 - Key: `/var/run/secrets/object/store/access-key-id`
 - Secret: `/var/run/secrets/object/store/access-key-secret`
+
+## [deis/controller](https://github.com/deis/controller)
+
+When the controller needs to launch a new buildpack application or scale one up, it uses a [replication controller](http://kubernetes.io/docs/user-guide/replication-controller/). Since the slugrunner needs to download the slug to run, it needs the object storage location of the slug and the object storage credentials.
+
+### Environment Variables
+
+The controller needs no environment variables for object storage configuration.
+
+### Credentials
+
+Since the object storage location information comes from the builder, the controller only needs access to the credentials information. The controller gets this information by accessing the `minio-user` secret directly from the Kubernetes API.
+
+No paths need to be mounted into the pod. Simply ensure that the secret exists in your Kubernetes cluster with the correct credentials.
 
 ## [deis/registry](https://github.com/deis/registry)
 
