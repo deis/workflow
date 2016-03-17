@@ -3,19 +3,29 @@
 [![Build Status](https://travis-ci.org/deis/workflow.svg?branch=master)](https://travis-ci.org/deis/workflow)
 [![Latest Docs](http://img.shields.io/badge/docs-latest-fc1e5e.svg)](http://docs-v2.readthedocs.org/en/latest/)
 
-## About
+Deis (pronounced DAY-iss) Workflow is an open source Platform as a Service (PaaS) that adds a developer-friendly layer to any [Kubernetes][k8s-home] cluster, making it easy to deploy and manage applications on your own servers.
 
-Deis (pronounced DAY-iss) is an open source PaaS that makes it easy to deploy and manage
-applications on your own servers. Deis builds on [Kubernetes](http://kubernetes.io/) to provide
-a lightweight, [Heroku-inspired](http://heroku.com) workflow.
+# About
 
-This repository represents the documentation for Deis Workflow which is the
-second major release of the Platform.
+This repository contains the documentation for Deis Workflow which is the second major release of the Platform.
+
+## Beta Status
+
+Many Deis components are currently in beta status, as are these docs, and we welcome your input! If you have feedback, please [submit an issue][issues]. If you'd like to participate in development, please read the "Development" section below and [submit a pull request][prs].
+
+# Development
+
+The Deis project welcomes contributions from all developers. The high level process for development matches many other open source projects. See below for an outline.
+
+* Fork this repository
+* Make your changes
+* [Submit a pull request][prs] (PR) to this repository with your changes, and unit tests whenever possible
+	* If your PR fixes any [issues][issues], make sure you write `Fixes #1234` in your PR description (where `#1234` is the number of the issue you're closing)
+* The Deis core contributors will review your code. After each of them sign off on your code, they'll label your PR with `LGTM1` and `LGTM2` (respectively). Once that happens, a contributor will merge it
 
 ## Requirements
 
-The documentation site requires either a local installation of [MkDocs][] or
-access to Docker.
+The documentation site requires either a local installation of [MkDocs][] or access to Docker.
 
 ### Local Installation
 
@@ -43,6 +53,8 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-
+[k8s-home]: [k8s-home]: http://kubernetes.io
 [install-k8s]: http://kubernetes.io/gettingstarted/
 [mkdocs]: http://www.mkdocs.org/
+[issues]: https://github.com/deis/workflow/issues
+[prs]: https://github.com/deis/workflow/pulls
