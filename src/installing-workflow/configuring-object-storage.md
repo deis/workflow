@@ -52,7 +52,7 @@ The builder looks for the below environment variables to determine where the obj
 A few additional notes:
 
 - If the builder finds a `DEIS_OUTSIDE_STORAGE` environment variable, it will ignore `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT`. This behavior means that external object storage takes precedence over Minio.
-- The builder only supports the default Amazon S3 region (`us-east-1a`) and the default Google Cloud Storage location (`us`)
+- The builder only supports the default Amazon S3 region (`us-east-1a`) and the default Google Cloud Storage location (`us`). This is a known limitation that we plan to fix in an upcoming release
 - The builder uses an environment variable to determine the name of the bucket it should store build artifacts in. It uses `git` by default, but if your credentials (see below for how credentials are configured) don't have read and write access to that bucket, you'll have to specify a different one. To do so, simply set the `BUCKET` environment variable to another value (`deis-builds`, for example)
 
 ### Credentials
