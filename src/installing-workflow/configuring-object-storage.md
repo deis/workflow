@@ -43,17 +43,17 @@ The subsections herein explain how to configure these two inputs for each applic
 The builder looks for the below environment variables to determine where the object storage system is.
 
 - `DEIS_OUTSIDE_STORAGE` - The external S3-compatible object storage system. Commonly used URLs:
-  - `s3.amazonaws.com` for Amazon S3's `us-east-1a` region
-  - `storage.googleapis.com` for Google Cloud Storage
+  - `s3.amazonaws.com` for [Amazon S3](https://aws.amazon.com/s3/)
+  - `storage.googleapis.com` for [Google Cloud Storage](https://cloud.google.com/storage/)
 - `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT` - The in-cluster Minio service. Additional notes about these variables:
   - They are set automatically by Kubernetes if you run [Minio](http://minio.io) as a service in the cluster
   - The [Helm chart for Deis](https://github.com/deis/charts/tree/master/workflow-dev) installs Minio by default, so the Builder will use Minio by default.
 
-Note that if the builder finds a `DEIS_OUTSIDE_STORAGE` environment variable, it will ignore `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT`. This behavior means that external object storage takes precedence over Minio.
+A few additional notes:
 
-The builder also uses an environment variable to determine the name of the bucket it should store build artifacts in. It uses `git` by default, but if your credentials (see below for how credentials are configured) don't have read and write access to that bucket, you'll have to specify a different one.
-
-To do so, simply set the `BUCKET` environment variable to another value (`deis-builds`, for example).
+- If the builder finds a `DEIS_OUTSIDE_STORAGE` environment variable, it will ignore `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT`. This behavior means that external object storage takes precedence over Minio.
+- The builder only supports the default Amazon S3 region (`us-east-1a`) and the default Google Cloud Storage location (`us`). This is a known limitation that we plan to fix in an upcoming release
+- The builder uses an environment variable to determine the name of the bucket it should store build artifacts in. It uses `git` by default, but if your credentials (see below for how credentials are configured) don't have read and write access to that bucket, you'll have to specify a different one. To do so, simply set the `BUCKET` environment variable to another value (`deis-builds`, for example)
 
 ### Credentials
 
