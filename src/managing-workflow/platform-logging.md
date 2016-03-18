@@ -13,8 +13,8 @@ Logger acts like a syslog server and receives all log messages that are occurrin
 Installation of the logging components is separate from the installation of the Deis platform because of the requirement of Daemon Sets. You will need to follow these steps to get the logging components running on your kubernetes cluster.
 
 ```
-$ helm fetch deis/deis-logger
-$ helm install deis-logger
+$ helm fetch deis/deis-logger-beta1-test
+$ helm install deis-logger-beta1-test
 ```
 
 You will then need to watch the components come up and verify they are in a running state by executing the following command:
@@ -25,23 +25,25 @@ $ kubectl get pods --namespace=deis
 
 You should see output similar to this:
 ```
-NAME                        READY     STATUS    RESTARTS   AGE
-deis-builder-m68z9          1/1       Running   0          18h
-deis-database-y765n         1/1       Running   0          1d
-deis-logger-fluentd-pcndf   1/1       Running   0          20h
-deis-logger-iwos5           1/1       Running   0          20h
-deis-minio-zlmk8            1/1       Running   0          1d
-deis-registry-bys9n         1/1       Running   0          1d
-deis-router-h5f0i           1/1       Running   0          1d
-deis-workflow-2v84b         1/1       Running   0          20h
+NAME                          READY     STATUS    RESTARTS   AGE
+deis-builder-2qgil            1/1       Running   2          17h
+deis-controller-6rivh         1/1       Running   3          17h
+deis-database-iou5f           1/1       Running   0          17h
+deis-logger-6er1f             1/1       Running   0          1h
+deis-logger-fluentd-4asyw     1/1       Running   0          1h
+deis-logger-fluentd-tbhvf     1/1       Running   0          1h
+deis-minio-2jnr7              1/1       Running   0          17h
+deis-registry-terrk           1/1       Running   4          17h
+deis-router-jakw6             1/1       Running   0          17h
+deis-workflow-manager-f1ige   1/1       Running   0          33m
 ```
 
 There should be a fluentd pod per worker node of your Kubernetes cluster. So if you are running a 3 node cluster with 1 master and 2 workers you will have 2 fluentd pods running.
 
-Once you have verified that the pods have started correctly you will need to restart your workflow pod so that it can capture the correct information about how to talk to the logger pod.
+Once you have verified that the pods have started correctly you will need to restart your controller pod so that it can capture the correct information about how to talk to the logger pod.
 
 ```
-kubectl delete pod <deis-workflow-pod>
+kubectl delete pod <deis-controller-pod>
 ```
 
 The replication controller will restart a new pod with all of the correct information.
@@ -51,7 +53,7 @@ Once the pod has restarted, you can verify the logging system is working by goin
 ```
 Error: There are currently no log messages. Please check the following things:
 1) Logger and fluentd pods are running.
-2) If you just installed the logger components via the chart, please make sure you restarted the workflow pod.
+2) If you just installed the logger components via the chart, please make sure you restarted the controller pod.
 3) The application is writing logs to the logger component.
 You can verify that logs are appearing in the logger component by issuing the following command:
 curl http://<log service ip>:8088/logs/myapp on a kubernetes host.
