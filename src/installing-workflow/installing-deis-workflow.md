@@ -43,9 +43,11 @@ $ helm repo add deis https://github.com/deis/charts
 Now that you have Helm installed and have added the Deis Chart Repository, install Workflow by running:
 
 ```
-$ helm fetch deis/deis                 # fetches the chart into a local workspace
-$ helm generate -x manifests deis      # generates various secrets
-$ helm install deis                    # injects resources into your cluster
+$ helm fetch deis/workflow-beta1             # fetches the chart into a
+                                             # local workspace
+$ helm generate -x manifests workflow-beta1  # generates various secrets
+$ helm install workflow-beta1                # injects resources into
+                                             # your cluster
 ```
 
 Helm will install a variety of Kubernetes resources in the `deis` namespace.
