@@ -15,7 +15,7 @@ Note: object storage configuration has not been standardized across all componen
 
 ## Minio
 
-Additionally, Deis ships with a [Minio](http://minio.io) [component](https://github.com/deis/minio) by default, which provides in-cluster, ephemeral object storage. This means that _if the Minio server crashes, all data will be lost forever_. Therefore, **Minio should be used for development or testing only**.
+Additionally, Deis ships with a [Minio](http://minio.io) [component](https://github.com/deis/minio) by default, which provides in-cluster, ephemeral object storage. This means that _if the Minio server crashes, all data will be lost_. Therefore, **Minio should be used for development or testing only**.
 
 In our beta release, the components listed above are configured by default to automatically use the Minio [service][k8s-service] for object storage.
 
