@@ -72,6 +72,8 @@ echo $MY_ACCESS_KEY | base64
 
 ## [deis/slugbuilder](https://github.com/deis/slugbuilder)
 
+The slugbuilder is configured and launched by the builder inside a Deis cluster, so this section only applies if you intend to run it as a standalone component.
+
 ### Environment Variables
 
 The slugbuilder looks for the below environment variables to determine where to download code from and upload slugs to.
@@ -98,11 +100,11 @@ echo $MY_ACCESS_KEY | base64
 
 ## [deis/slugrunner](https://github.com/deis/slugrunner)
 
+The slugrunner is configured and launched by the controller inside a Deis cluster, so this section only applies if you intend to run it as a standlone component.
+
 ### Environment Variables
 
 The slugrunner uses the `SLUG_URL` environment variable to determine where to download the slug (that it will run) from.
-
-Note that if you are using slugrunner inside a Deis cluster, the [controller](https://github.com/deis/controller) handles all configuration and lifecycle management for you. The remainder of this section only applies if you intend to run the slugrunner as a standalone component.
 
 ### Credentials
 
