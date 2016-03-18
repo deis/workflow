@@ -11,11 +11,13 @@ A variety of Deis components rely on an object storage system to do their work. 
 
 These components are flexible and can work out of the box with almost any system that is compatible with the [S3 API](http://docs.aws.amazon.com/AmazonS3/latest/API/APIRest.html).
 
-Note: object storage configuration has not been standardized across all components in our beta release. As such, configuration instructions differ for each component. We plan to remediate this problem in our next release. Please see our [deis/deis#4966](https://github.com/deis/deis/issues/4966) for our progress on that work.
+Note: object storage configuration has not been standardized across all components in our beta release. As such, configuration instructions differ for each component. We plan to remediate this problem in our next release. Please see [deis/deis#4966](https://github.com/deis/deis/issues/4966) for our progress on that work.
 
 ## Minio
 
-Additionally, Deis ships with a [Minio](http://minio.io) [component](https://github.com/deis/minio). This component runs as a Kubernetes service, and the components listed above are configured to automatically look for that service and use it as object storage if it's available.
+Additionally, Deis ships with a [Minio](http://minio.io) [component](https://github.com/deis/minio) by default, which provides in-cluster, ephemeral object storage. This means that _if the Minio server crashes, all data will be lost forever_. Therefore, **Minio should be used for development or testing only**.
+
+In our beta release, the components listed above are configured by default to automatically use the Minio [service][k8s-service] for object storage.
 
 ## Google Cloud Storage
 
@@ -27,9 +29,9 @@ We recommend storing these and all other credentials as Kubernetes secrets. See 
 
 Every Deis component that relies on object storage relies on the following two inputs for configuration:
 
-- One or more environment variables with host and port to describe where the object storage system is
+- One or more environment variables that describe what object storage system to use
 - One or more files to provide access credentials for the object storage system.
-	- We suggest storing these values in [Kubernetes secrets](http://kubernetes.io/v1.1/docs/user-guide/secrets.html) and mounting them as volumes to each pod
+	- We suggest storing the contents of these files in [Kubernetes secrets][k8s-secret] and mounting them as volumes to each pod
 	- See [the workflow-dev chart](https://github.com/deis/charts/tree/master/workflow-dev) for examples of using and mounting secrets.
 
 The subsections herein explain how to configure these two inputs for each applicable component.
@@ -81,6 +83,8 @@ The slugbuilder looks for the below environment variables to determine where to 
 - `TAR_URL` - The location of the `.tar` archive (which it will build)
 - `put_url` - The location this component will upload the finished slug to
 
+Note that these environment variables are case-sensitive.
+
 ### Credentials
 
 The slugbuilder reads credentials from the below locations on the filesystem.
@@ -90,7 +94,9 @@ The slugbuilder reads credentials from the below locations on the filesystem.
 
 ### Helm Chart
 
-If you are using the [Helm Chart for Workflow][helm-chart], put your base64-encoded credentials in the [`minio-user` secret][minio-user-secret] (under `access-key-id` and `access-secret-key`) before you `helm install`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+The [Helm Chart for Workflow][helm-chart] contains no manifest for the slugbuilder. As noted above, the builder handles all configuration and lifecycle management for you.
+
+If, however, you wish to run the slugbuilder as a standalone component, you can use the [`minio-user` secret][minio-user-secret] to easily provide your pods with the credentials information they need. To do so, put your base64-encoded credentials in the [`minio-user` secret][minio-user-secret] (under `access-key-id` and `access-secret-key`) before you `helm install`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
 
 Note - to base64 encode your credentials, you can use the `base64` tool on most systems. Here's an example usage:
 
@@ -175,7 +181,7 @@ The registry looks for a `REGISTRY_STORAGE` environment variable, which it then 
 
 ### Credentials
 
-The registry reads the credential information from a `/var/run/secrets/deis/registry/creds/objectstorage-keyfile` file. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the https://github.com/deis/charts/blob/master/workflow-dev/tpl/objectstorage.toml file.
+The registry reads the credential information from a `/var/run/secrets/deis/registry/creds/objectstorage-keyfile` file. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
 
 ### Helm Chart
 
@@ -233,3 +239,5 @@ echo $MY_ACCESS_KEY | base64
 [minio-user-secret]: https://github.com/deis/charts/blob/master/workflow-dev/manifests/deis-minio-secret-user.yaml
 [helm-install]: https://github.com/deis/workflow/blob/master/src/installing-workflow/installing-deis-workflow.md
 [objectstorage-toml]: https://github.com/deis/charts/blob/master/workflow-dev/tpl/objectstorage.toml
+[k8s-service]: http://kubernetes.io/docs/user-guide/services/
+[k8s-secret]: http://kubernetes.io/docs/user-guide/secrets/
