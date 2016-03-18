@@ -11,7 +11,7 @@ Many Deis components are currently in beta status, as are these docs, and we wel
 
 # About
 
-This repository contains the documentation for Deis Workflow which is the second major release of the Platform. If you're looking for the Deis components themselves, each is in its own repository. Please refer to the below list for links and descriptons for each.
+This repository contains the documentation for Deis Workflow which is the second major release of the Platform. If you're looking for the Deis components themselves, each is in its own repository. Please refer to the below list for links and descriptions for each.
 
 - [controller](https://github.com/deis/controller) - The central API
 - [builder](https://github.com/deis/builder) - The git server
