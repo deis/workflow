@@ -47,7 +47,7 @@ The builder looks for the below environment variables to determine where the obj
   - They are set automatically by Kubernetes if you run [Minio](http://minio.io) as a service in the cluster
   - The [Helm chart for Deis](https://github.com/deis/charts/tree/master/workflow-dev) installs Minio by default, so the Builder will use Minio by default.
 
-Note that if the builder finds a `DEIS_OUTSIDE_STORAGE_HOST` environment variable, it will ignore `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT`. This behavior means that external object storage takes precedence over Minio.
+Note that if the builder finds a `DEIS_OUTSIDE_STORAGE` environment variable, it will ignore `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT`. This behavior means that external object storage takes precedence over Minio.
 
 The builder also uses an environment variable to determine the name of the bucket it should store build artifacts in. It uses `git` by default, but if your credentials (see below for how credentials are configured) don't have read and write access to that bucket, you'll have to specify a different one.
 
