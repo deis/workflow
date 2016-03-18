@@ -5,7 +5,7 @@
 ## Description
 The logging platform is made up of 2 components - [Fluentd](https://github.com/deis/fluentd) and [Logger](https://github.com/deis/logger).
 
-[Fluentd](https://github.com/deis/fluentd) runs on every minion node of the cluster and is deployed as a [Daemons Set](http://kubernetes.io/v1.1/docs/admin/daemons.html). The Fluentd pods capture all of the stderr and stdout streams of every container running on the host (even those not hosted directly by kubernetes). It then sends this data via the Syslog UDP port (514) to the Logger component.
+[Fluentd](https://github.com/deis/fluentd) runs on every worker node of the cluster and is deployed as a [Daemons Set](http://kubernetes.io/v1.1/docs/admin/daemons.html). The Fluentd pods capture all of the stderr and stdout streams of every container running on the host (even those not hosted directly by kubernetes). It then sends this data via the Syslog UDP port (514) to the Logger component.
 
 Logger acts like a syslog server and receives all log messages that are occurring on the cluster. It then filters this data to only Deis deploy applications and stores those log messages in a ring buffer where they can be fetched via the Deis CLI.
 
@@ -36,7 +36,7 @@ deis-router-h5f0i           1/1       Running   0          1d
 deis-workflow-2v84b         1/1       Running   0          20h
 ```
 
-There should be a fluentd pod per minion node of your Kubernetes cluster. So if you are running a 3 node cluster with 1 master and 2 minions you will have 2 fluentd pods running.
+There should be a fluentd pod per worker node of your Kubernetes cluster. So if you are running a 3 node cluster with 1 master and 2 workers you will have 2 fluentd pods running.
 
 Once you have verified that the pods have started correctly you will need to restart your workflow pod so that it can capture the correct information about how to talk to the logger pod.
 
