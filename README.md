@@ -11,7 +11,22 @@ Many Deis components are currently in beta status, as are these docs, and we wel
 
 # About
 
-This repository contains the documentation for Deis Workflow which is the second major release of the Platform.
+This repository contains the documentation for Deis Workflow which is the second major release of the Platform. If you're looking for the Deis components themselves, each is in its own repository. Please refer to the below list for links and descriptions for each.
+
+- [controller](https://github.com/deis/controller) - The central API
+- [builder](https://github.com/deis/builder) - The git server
+- [dockerbuilder](https://github.com/deis/dockerbuilder) - The builder for [Docker](https://www.docker.com/) based applications
+- [slugbuilder](https://github.com/deis/slugbuilder) - The builder for [slug](https://devcenter.heroku.com/articles/slug-compiler) based applications
+- [slugrunner](https://github.com/deis/slugrunner) - The runner for slug based applications
+- [fluentd](https://github.com/deis/fluentd) - The log shipping mechanism
+- [postgres](https://github.com/deis/postgres) - The central database
+- [registry](https://github.com/deis/registry) - The Docker registry
+- [logger](https://github.com/deis/logger) - The (in-memory) log buffer
+- [monitor](https://github.com/deis/monitor) - The monitoring mechanism
+- [router](https://github.com/deis/router) - The edge router
+- [minio](https://github.com/deis/minio) - The in-cluster, ephemeral, development-only object storage system
+- [workflow-cli](https://github.com/deis/workflow-cli) - The command line interface (CLI)
+- [workflow-e2e](https://github.com/deis/workflow-e2e) - End-to-end tests for the entire platform
 
 # Development
 
