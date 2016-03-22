@@ -69,6 +69,8 @@ markdown_extensions:
   - markdown_checklist.extension
   - admonition
   - codehilite
+  - toc:
+      permalink: True
 extra_javascript:
   - static/js/adjustments.js
   - static/js/bootstrap.min.js
