@@ -3,6 +3,7 @@
 # names
 #
 site_name: Deis Workflow Documentation
+site_url: https://deis.com/docs/workflow
 pages:
   - Home: index.md
   - Quick Start:
