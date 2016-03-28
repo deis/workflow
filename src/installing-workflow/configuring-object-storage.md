@@ -11,27 +11,19 @@ A variety of Deis components rely on an object storage system to do their work. 
 
 These components are flexible and can work out of the box with almost any system that is compatible with the [S3 API](http://docs.aws.amazon.com/AmazonS3/latest/API/APIRest.html).
 
-Note: object storage configuration has not been standardized across all components in our beta release. As such, configuration instructions differ for each component. We plan to remediate this problem in our next release. Please see [deis/deis#4966](https://github.com/deis/deis/issues/4966) for our progress on that work.
-
 ## Minio
 
 Additionally, Deis ships with a [Minio](http://minio.io) [component](https://github.com/deis/minio) by default, which provides in-cluster, ephemeral object storage. This means that _if the Minio server crashes, all data will be lost_. Therefore, **Minio should be used for development or testing only**.
 
 In our beta release, the components listed above are configured by default to automatically use the Minio [service][k8s-service] for object storage.
 
-## Google Cloud Storage
-
-[Google Cloud Storage](https://cloud.google.com/storage/) (GCS) can interoperate with the S3 API using a feature called [interoperability](https://cloud.google.com/storage/docs/interoperability). If you choose to use GCS for object storage, you'll have to turn on this interoperability mode. In order to do so, please follow the steps in the [GCS migration documentation](https://cloud.google.com/storage/docs/migrating?hl=en_US#migration-simple).
-
-We recommend storing these and all other credentials as Kubernetes secrets. See the below sections for details on configuring each component for details.
-
 # Configuring the Deis Components
 
 Every Deis component that relies on object storage relies on the following two inputs for configuration:
 
-- One or more environment variables that describe what object storage system to use
-- One or more files to provide access credentials for the object storage system.
-	- We suggest storing the contents of these files in [Kubernetes secrets][k8s-secret] and mounting them as volumes to each pod
+- An environment variable that describe what object storage system to use.
+- A configuration file ([objectstorage.toml][objectstorage-toml]) to provide access credentials for the object storage system.
+	- We suggest storing the contents of these files in [Kubernetes secrets][k8s-secret] and mounting them as volumes to each pod.
 	- See [the workflow-dev chart](https://github.com/deis/charts/tree/master/workflow-dev) for examples of using and mounting secrets.
 
 The subsections herein explain how to configure these two inputs for each applicable component.
@@ -40,37 +32,15 @@ The subsections herein explain how to configure these two inputs for each applic
 
 ### Environment Variables
 
-The builder looks for the below environment variables to determine where the object storage system is.
-
-- `DEIS_OUTSIDE_STORAGE` - The external S3-compatible object storage system. Commonly used URLs:
-  - `s3.amazonaws.com` for [Amazon S3](https://aws.amazon.com/s3/)
-  - `storage.googleapis.com` for [Google Cloud Storage](https://cloud.google.com/storage/)
-- `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT` - The in-cluster Minio service. Additional notes about these variables:
-  - They are set automatically by Kubernetes if you run [Minio](http://minio.io) as a service in the cluster
-  - The [Helm chart for Deis](https://github.com/deis/charts/tree/master/workflow-dev) installs Minio by default, so the Builder will use Minio by default.
-
-A few additional notes:
-
-- If the builder finds a `DEIS_OUTSIDE_STORAGE` environment variable, it will ignore `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT`. This behavior means that external object storage takes precedence over Minio.
-- The builder only supports the default Amazon S3 region (`us-east-1a`) and the default Google Cloud Storage location (`us`). This is a known limitation that we plan to fix in an upcoming release
-- The builder uses an environment variable to determine the name of the bucket it should store build artifacts in. It uses `git` by default, but if your credentials (see below for how credentials are configured) don't have read and write access to that bucket, you'll have to specify a different one. To do so, simply set the `BUCKET` environment variable to another value (`deis-builds`, for example)
+The builder looks for a `BUILDER_STORAGE` environment variable, which it then uses as a key to look up the object storage location and authentication information in a configuration file. See below for details on that file.
 
 ### Credentials
 
-The builder reads credentials from the below locations on the filesystem.
-
-- Key: `/var/run/secrets/object/store/access-key-id`
-- Secret `/var/run/secrets/object/store/access-key-secret`
+The builder reads the credential information from a `objectstorage-keyfile` secret. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
 
 ### Helm Chart
 
-If you are using the [Helm Chart for Workflow][helm-chart], put your base64-encoded credentials in the [`minio-user` secret][minio-user-secret] (under `access-key-id` and `access-secret-key`) before you `helm install`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
-
-Note - to base64 encode your credentials, you can use the `base64` tool on most systems. Here's an example usage:
-
-```console
-echo $MY_ACCESS_KEY | base64
-```
+If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. Note that you don't need to base64-encode the credentials, as Helm will do that for you. For more information, see the [installation instructions][helm-install] for more details on using Helm.
 
 ## [deis/slugbuilder](https://github.com/deis/slugbuilder)
 
@@ -80,33 +50,24 @@ The slugbuilder is configured and launched by the builder inside a Deis cluster,
 
 The slugbuilder looks for the below environment variables to determine where to download code from and upload slugs to.
 
-- `TAR_URL` - The location of the `.tar` archive (which it will build)
-- `put_url` - The location this component will upload the finished slug to
+- `TAR_PATH` - The location of the `.tar` archive (which it will build)
+- `PUT_PATH` - The location this component will upload the finished slug to
 
 Note that these environment variables are case-sensitive.
 
 ### Credentials
 
-The slugbuilder reads credentials from the below locations on the filesystem.
-
-- Key: `/var/run/secrets/object/store/access-key-id`
-- Secret `/var/run/secrets/object/store/access-key-secret`
+The slugbuilder reads the credential information from a `objectstorage-keyfile` secret. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
 
 ### Helm Chart
 
 The [Helm Chart for Workflow][helm-chart] contains no manifest for the slugbuilder. As noted above, the builder handles all configuration and lifecycle management for you.
 
-If, however, you wish to run the slugbuilder as a standalone component, you can use the [`minio-user` secret][minio-user-secret] to easily provide your pods with the credentials information they need. To do so, put your base64-encoded credentials in the [`minio-user` secret][minio-user-secret] (under `access-key-id` and `access-secret-key`) before you `helm install`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
-
-Note - to base64 encode your credentials, you can use the `base64` tool on most systems. Here's an example usage:
-
-```console
-echo $MY_ACCESS_KEY | base64
-```
+If, however, you wish to run the slugbuilder as a standalone component, you can use the `objectstorage-keyfile` secret to easily provide your pods with the credentials information they need. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
 
 ## [deis/slugrunner](https://github.com/deis/slugrunner)
 
-The slugrunner is configured and launched by the controller inside a Deis cluster, so this section only applies if you intend to run it as a standlone component.
+The slugrunner is configured and launched by the controller inside a Deis cluster, so this section only applies if you intend to run it as a standalone component.
 
 ### Environment Variables
 
@@ -114,38 +75,13 @@ The slugrunner uses the `SLUG_URL` environment variable to determine where to do
 
 ### Credentials
 
-The slugrunner reads credentials from the below locations on the filesystem.
-
-- Key: `/var/run/secrets/object/store/access-key-id`
-- Secret: `/var/run/secrets/object/store/access-key-secret`
+The slugrunner reads the credential information from a `objectstorage-keyfile` secret. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
 
 ### Helm Chart
 
 The [Helm Chart for Workflow][helm-chart] contains no manifest for the slugrunner. As noted above, the controller handles all configuration and lifecycle management for you.
 
-If, however, you wish to run the slugrunner as a standalone component, you can use the [`minio-user` secret][minio-user-secret] to easily provide your pods with the credentials information they need. To do so, put your base64-encoded credentials information into the `access-key-id` and `access-secret-key` fields, and mount the secret like this:
-
-Under the `spec.template.spec.volumes` section:
-
-```yaml
-- name: minio-user
-  secret:
-    secretName: minio-user
-```
-
-Under the `spec.template.spec.containers[0].volumeMounts` section:
-
-```yaml
-- name: minio-user
-  mountPath: /var/run/secrets/object/store
-  readOnly: true
-```
-
-Note - to base64 encode your credentials, you can use the `base64` tool on most systems. Here's an example usage:
-
-```console
-echo $MY_ACCESS_KEY | base64
-```
+If, however, you wish to run the slugrunner as a standalone component, you can use the `objectstorage-keyfile` secret to easily provide your pods with the credentials information they need. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
 
 ## [deis/controller](https://github.com/deis/controller)
 
@@ -163,13 +99,7 @@ No paths need to be mounted into the pod. Simply ensure that the secret exists i
 
 ### Helm Chart
 
-If you are using the [Helm Chart for Workflow][helm-chart], put your base64-encoded credentials in the [`minio-user` secret][minio-user-secret] (under `access-key-id` and `access-secret-key`) before you `helm install`. For more information, see the [installation instructions][helm-install] for more details on using Helm.
-
-Note - to base64 encode your credentials, you can use the `base64` tool on most systems. Here's an example usage:
-
-```console
-echo $MY_ACCESS_KEY | base64
-```
+If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. Note that you don't need to base64-encode the credentials, as Helm will do that for you. For more information, see the [installation instructions][helm-install] for more details on using Helm.
 
 ## [deis/registry](https://github.com/deis/registry)
 
@@ -210,6 +140,8 @@ Connection details to minio are configured via `DEIS_MINIO_SERVICE_HOST` and `DE
 If the `DATABASE_STORAGE` backend is configured as "s3", the database will receive its credentials from `/var/run/secrets/deis/objectstore/creds/`. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the https://github.com/deis/charts/blob/master/workflow-dev/tpl/objectstorage.toml file.
 
 ### Google Cloud Storage (Interoperability Mode)
+
+[Google Cloud Storage](https://cloud.google.com/storage/) (GCS) can interoperate with the S3 API using a feature called [interoperability](https://cloud.google.com/storage/docs/interoperability). If you choose to use GCS for object storage for database, you'll have to turn on this interoperability mode. In order to do so, please follow the steps in the [GCS migration documentation](https://cloud.google.com/storage/docs/migrating?hl=en_US#migration-simple).
 
 If the `DATABASE_STORAGE` backend is configured as "gcs", the database will receive its credentials from `/var/run/secrets/deis/database/creds/`. This is generated based on the configuration options given in the https://github.com/deis/charts/blob/master/workflow-dev/manifests/deis-minio-secret-user.yaml file. The access key and secret key must be `base64` encoded.
 
