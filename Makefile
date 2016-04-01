@@ -2,7 +2,7 @@
 #
 
 # You can set these variables from the command line.
-BUILDDIR        = _build
+BUILDDIR        ?= _build/html
 MKDOCS          = mkdocs
 MKDOCSBUILDOPTS = --clean --strict --verbose
 MKDOCSBUILD     = $(MKDOCS) build $(MKDOCSBUILDOPTS)
@@ -18,9 +18,9 @@ DEV_ENV_PREFIX := docker run --rm -v ${CURDIR}:${DEV_ENV_WORK_DIR} -w ${DEV_ENV_
 DEV_ENV_CMD := ${DEV_ENV_PREFIX} ${DEV_ENV_IMAGE}
 
 build:
-	$(MKDOCSBUILD) --site-dir $(BUILDDIR)/html
+	$(MKDOCSBUILD) --site-dir $(BUILDDIR)
 	@echo
-	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)."
 
 serve:
 	$(MKDOCSSERVE)
