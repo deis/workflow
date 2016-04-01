@@ -28,7 +28,7 @@ majority of the platforms state. Backups and WAL files are pushed to object
 storage via [WAL-E][]. When the database is restarted, backups are fetched and
 replayed from object storage so no data is lost.
 
-## <a name="builder"></a>Builder: builder, slugbuilder, and dockerbuilder
+## Builder: builder, slugbuilder, and dockerbuilder
 
 **Project Location:** [deis/builder](https://github.com/deis/builder)
 
@@ -111,7 +111,7 @@ The router component uses Kubernetes annotations for both Application discovery
 as well as router configuration. For more detailed documentation and possible
 configuration view the router [project documentation][router-documentation].
 
-## <a name="logger"></a>Logger: fluentd, logger
+## Logger: fluentd, logger
 
 The logging subystem consists of two compoents. Fluentd handles log shipping
 and logger maintains a ring-buffer of application logs.
