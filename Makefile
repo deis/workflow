@@ -34,7 +34,7 @@ deps:
 test: build
 	grep -q '<title>Deis Documentation</title>' _build/html/index.html
 	@echo
-	@echo "Test finished. The HTML pages are in $(BUILDDIR)/html."
+	@echo "Test finished. The HTML pages are in $(BUILDDIR)."
 
 docker-build:
 	docker build --rm -t ${IMAGE} .
