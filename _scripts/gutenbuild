@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+set -x
+
+build_dest=$1
+
+PATH=$HOME/.local/bin:$PATH BUILDDIR=${build_dest} make deps build
