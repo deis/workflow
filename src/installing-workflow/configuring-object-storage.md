@@ -1,4 +1,4 @@
-# Configure Object Storage
+# Configuring Object Storage
 
 A variety of Deis components rely on an object storage system to do their work. These components are:
 
