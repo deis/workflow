@@ -80,12 +80,44 @@ appname to the old one:
 By default, Workflow only checks that your application containers start in
 their Pod. If you would like Kubernetes to respond to appliation health, you
 may add a health check by configuring URL, port, initial delay, and timeout
-values. The health checks are implemented as [Kubernetes container probes][kubernetes-probes].
+values.
 
-* `HEALTHCHECK_URL`: the URL to visit for the health check (String, Default: `/`)
-* `HEALTHCHECK_PORT`: the TCP port to use for the health check (Integer, Default: `80` or `5000`)
-* `HEALTHCHECK_INITIAL_DELAY`: number of seconds to wait before sending health checks (Integer, Default: `50`)
-* `HEALTHCHECK_TIMEOUT`: number of seconds to wait before assuming the application is unhealthy (Integer, Default: `50`)
+The health checks are implemented as [Kubernetes container probes][kubernetes-probes]. Currently only HTTP GET is supported.
+
+Available configuration options for health checks are the following, including defaults:
+
+**HEALTHCHECK_URL**
+
+Path in the application to use for health check, such as /healthz - This value needs to be set for any health check to happen. Needs to accept a HTTP GET request and return a HTTP status between 200-399.
+
+**HEALTHCHCK_PORT**
+
+TCP port to use for health check. Defaults to using same port as the application
+
+**HEALTHCHECK_TIMEOUT**
+
+Number of seconds after which the health check times out. Defaults to 50 seconds
+
+**HEALTHCHECK\_INITIAL_DELAY**
+
+Number of seconds before health checks starts checking the application after the start of the pod.
+
+This is useful to set if the application takes a while to get setup, due to migrations, cache warming or otherwise. Prevents Kubernetes (and Deis Workflow) from replacing an application pod in its setup phase.
+
+Defaults to 50 seconds
+
+**HEALTHCHECK\_PERIOD_SECONDS**
+
+How often (in seconds) to perform the health check. Defaults every 10 seconds
+
+**HEALTHCHECK\_SUCCESS_THRESHOLD**
+
+Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1 success
+
+**HEALTHCHECK\_FAILURE_THRESHOLD**
+
+Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3 failures
+
 
 Configure these health checks on a per-application basis using `deis config:set`:
 ```
@@ -108,8 +140,6 @@ HEALTHCHECK_INITIAL_DELAY: 5
 HEALTHCHECK_URL: /200.html
 HEALTHCHECK_PORT: 5000
 ```
-
-Only HTTP-based health checks using the GET method are supported at this time.
 
 If an application times out, or responds to a health check with a response code
 outside the 200-399 range, Kubernetes will stop sending requests to the
@@ -155,4 +185,4 @@ Use `deis rollback` to revert to a previous release.
 [stores config in environment variables]: http://12factor.net/config
 [release]: ../reference-guide/terms.md#release
 [router]:  ../understanding-workflow/components.md#router
-[kubernetes-probes]: http://kubernetes.io/v1.1/docs/user-guide/pod-states.html#container-probes
+[kubernetes-probes]: http://kubernetes.io/docs/user-guide/pod-states/#container-probes
