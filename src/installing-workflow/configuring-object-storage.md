@@ -119,53 +119,18 @@ If you are using the [Helm Chart for Workflow][helm-chart], put your credentials
 
 ## [deis/database](https://github.com/deis/postgres)
 
-The database is configured slightly differently from the other components. Read the two sections below for details.
-
 ### Environment Variables
 
-The database looks for a `DATABASE_STORAGE` environment variable, which it then uses as a key to look up the object storage location and authentication information in a configuration file. See below for the details on that file.
+The database looks for a `DATABASE_STORAGE` environment variable, which it then uses as a key to look up the object storage location and authentication information in a configuration file. See below for details on that file.
 
-## Credentials
+### Credentials
 
-Depending on the value of `DATABASE_STORAGE`, the database will either read the credentials from a generic objectstore secret or from a minio-user secret.in `/var/run/secrets/deis/objectstore/creds/` or from `/var/run/secrets/deis/database/creds/`. The following ways to configure the database are listed below.
-
-### Minio
-
-If the `DATABASE_STORAGE` backend is configured as anything else other than "s3", the database will receive its credentials from `/var/run/secrets/deis/database/creds/`. This is generated based on the configuration options given in the https://github.com/deis/charts/blob/master/workflow-dev/manifests/deis-minio-secret-user.yaml file. The access key and secret key must be `base64` encoded.
-
-Connection details to minio are configured via `DEIS_MINIO_SERVICE_HOST` and `DEIS_MINIO_SERVICE_PORT`, both of which are provided by the `deis-minio` service.
-
-### Amazon Simple Storage Service (S3)
-
-If the `DATABASE_STORAGE` backend is configured as "s3", the database will receive its credentials from `/var/run/secrets/deis/objectstore/creds/`. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the https://github.com/deis/charts/blob/master/workflow-dev/tpl/objectstorage.toml file.
-
-### Google Cloud Storage (Interoperability Mode)
-
-[Google Cloud Storage](https://cloud.google.com/storage/) (GCS) can interoperate with the S3 API using a feature called [interoperability](https://cloud.google.com/storage/docs/interoperability). If you choose to use GCS for object storage for database, you'll have to turn on this interoperability mode. In order to do so, please follow the steps in the [GCS migration documentation](https://cloud.google.com/storage/docs/migrating?hl=en_US#migration-simple).
-
-If the `DATABASE_STORAGE` backend is configured as "gcs", the database will receive its credentials from `/var/run/secrets/deis/database/creds/`. This is generated based on the configuration options given in the https://github.com/deis/charts/blob/master/workflow-dev/manifests/deis-minio-secret-user.yaml file. The access key and secret key must be `base64` encoded.
-
-You'll also need to add two environment variables to the https://github.com/deis/charts/blob/master/workflow-dev/tpl/deis-database-rc.yaml file so the database can communicate with Google Cloud Storage instead of minio. Add these values to your `spec.template.spec.containers[0].env` section, then run `helm generate` for the settings to take effect the next time you install workflow:
-
-```yaml
-- name: DEIS_MINIO_SERVICE_HOST
-  value: storage.googleapis.com
-- name: DEIS_MINIO_SERVICE_PORT
-  value: "443"
-```
+The database reads the credential information from a `objectstorage-keyfile` secret. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
 
 ### Helm Chart
 
-If you are using the [Helm Chart for Workflow][helm-chart], you'll have to put your credentials into the below two places before you run `helm generate`. For more details on using Helm, see the [installation instructions][helm-install].
+If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. Note that you don't need to base64-encode the credentials, as Helm will do that for you. For more information, see the [installation instructions][helm-install] for more details on using Helm.
 
-- The [minio secret file][minio-user-secret] (under `access-key-id` and `access-secret-key`). Ensure your credentials are base64-encoded
-- The [objectstorage.toml][objectstorage-toml] file. Your credentials need not be base64-encoded in this file
-
-Note - to base64 encode your credentials for use in the [minio secret file][minio-user-secret], you can use the `base64` tool on most systems. Here's an example usage:
-
-```console
-echo $MY_ACCESS_KEY | base64
-```
 
 [helm-chart]: https://github.com/deis/charts/tree/master/workflow-dev
 [minio-user-secret]: https://github.com/deis/charts/blob/master/workflow-dev/manifests/deis-minio-secret-user.yaml
