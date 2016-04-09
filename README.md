@@ -1,34 +1,38 @@
-# Deis Workflow Documentation
+![](https://deis.com/images/deis-logo.png)
 
-[![Build Status](https://travis-ci.org/deis/workflow.svg?branch=master)](https://travis-ci.org/deis/workflow)
-[![Latest Docs](http://img.shields.io/badge/docs-latest-fc1e5e.svg)](http://docs-v2.readthedocs.org/en/latest/)
+**Deis Workflow** is an open source Platform as a Service (PaaS) that adds a developer-friendly layer to any [Kubernetes][k8s-home] cluster, making it easy to deploy and manage applications.
 
-Deis (pronounced DAY-iss) Workflow is an open source Platform as a Service (PaaS) that adds a developer-friendly layer to any [Kubernetes][k8s-home] cluster, making it easy to deploy and manage applications on your own servers.
+If you are looking to **get started** with **Deis Workflow** read the [Quick Start Guide](src/installing-workflow/quickstart.md) in this repository or on [Read the Docs](https://docs-v2.readthedocs.org/en/latest/).
+
+Visit [https://deis.com](https://deis.com) for more information on [why you should use Deis Workflow](https://deis.com/why-deis/) or [its features](https://deis.com/how-it-works/).
+
+This repository contains the source code for Deis Workflow documentation. If you're looking for individual components, they live in their own repositories.
+
+Please see below for links and descriptions of each component:
+
+- [controller](https://github.com/deis/controller) - Workflow API server
+- [builder](https://github.com/deis/builder) - Git server and source-to-image component
+- [dockerbuilder](https://github.com/deis/dockerbuilder) - The builder for [Docker](https://www.docker.com/) based applications
+- [slugbuilder](https://github.com/deis/slugbuilder) - The builder for [slug/buildpack](https://devcenter.heroku.com/articles/slug-compiler) based applications
+- [slugrunner](https://github.com/deis/slugrunner) - The runner for slug/buildpack based applications
+- [fluentd](https://github.com/deis/fluentd) - Backend log shipping mechanism for `deis logs`
+- [postgres](https://github.com/deis/postgres) - The central database
+- [registry](https://github.com/deis/registry) - The Docker registry
+- [logger](https://github.com/deis/logger) - The (in-memory) log buffer for `deis logs`
+- [monitor](https://github.com/deis/monitor) - The platform monitoring components
+- [router](https://github.com/deis/router) - The HTTP/s edge router
+- [minio](https://github.com/deis/minio) - The in-cluster, ephemeral, development-only object storage system
+- [workflow-cli](https://github.com/deis/workflow-cli) - Workflow CLI `deis`
+- [workflow-e2e](https://github.com/deis/workflow-e2e) - End-to-end tests for the entire platform
 
 ## Beta Status
 
-Many Deis components are currently in beta status, as are these docs, and we welcome your input! If you have feedback, please [submit an issue][issues]. If you'd like to participate in development, please read the "Development" section below and [submit a pull request][prs].
+Many Deis components are currently in beta status and we welcome your input! If you have feedback, please [submit an issue][issues]. If you'd like to participate in development, please read the "Working on Documentation" section below and [submit a pull request][prs].
 
-# About
+# Working on Documentation
 
-This repository contains the documentation for Deis Workflow which is the second major release of the Platform. If you're looking for the Deis components themselves, each is in its own repository. Please refer to the below list for links and descriptions for each.
-
-- [controller](https://github.com/deis/controller) - The central API
-- [builder](https://github.com/deis/builder) - The git server
-- [dockerbuilder](https://github.com/deis/dockerbuilder) - The builder for [Docker](https://www.docker.com/) based applications
-- [slugbuilder](https://github.com/deis/slugbuilder) - The builder for [slug](https://devcenter.heroku.com/articles/slug-compiler) based applications
-- [slugrunner](https://github.com/deis/slugrunner) - The runner for slug based applications
-- [fluentd](https://github.com/deis/fluentd) - The log shipping mechanism
-- [postgres](https://github.com/deis/postgres) - The central database
-- [registry](https://github.com/deis/registry) - The Docker registry
-- [logger](https://github.com/deis/logger) - The (in-memory) log buffer
-- [monitor](https://github.com/deis/monitor) - The monitoring mechanism
-- [router](https://github.com/deis/router) - The edge router
-- [minio](https://github.com/deis/minio) - The in-cluster, ephemeral, development-only object storage system
-- [workflow-cli](https://github.com/deis/workflow-cli) - The command line interface (CLI)
-- [workflow-e2e](https://github.com/deis/workflow-e2e) - End-to-end tests for the entire platform
-
-# Development
+[![Build Status](https://travis-ci.org/deis/workflow.svg?branch=master)](https://travis-ci.org/deis/workflow)
+[![Latest Docs](http://img.shields.io/badge/docs-latest-fc1e5e.svg)](http://docs-v2.readthedocs.org/en/latest/)
 
 The Deis project welcomes contributions from all developers. The high level process for development matches many other open source projects. See below for an outline.
 
@@ -54,7 +58,7 @@ make deps
 
 To build the documentation run: `make build` or `make docker-build`
 
-## Serve Documentation
+## Serve Documentation Locally
 
 To serve documenation run: `make serve` or `make docker-serve`
 
