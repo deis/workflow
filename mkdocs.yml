@@ -36,7 +36,6 @@ pages:
     - Security Considerations: managing-workflow/security-considerations.md
     - Platform SSL: managing-workflow/platform-ssl.md
     - Upgrading Workflow: managing-workflow/upgrading-workflow.md
-    - Using a Proxy Server: managing-workflow/using-a-proxy-server.md
   - Customizing Workflow:
     - CLI Plugins: customizing-workflow/cli-plugins.md
   - Troubleshooting:
