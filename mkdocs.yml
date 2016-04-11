@@ -35,7 +35,7 @@ pages:
     - Production Deployments: managing-workflow/production-deployments.md
     - Security Considerations: managing-workflow/security-considerations.md
     - Platform SSL: managing-workflow/platform-ssl.md
-    - Upgrading Deis: managing-workflow/upgrading-deis.md
+    - Upgrading Workflow: managing-workflow/upgrading-workflow.md
     - Using a Proxy Server: managing-workflow/using-a-proxy-server.md
   - Customizing Workflow:
     - CLI Plugins: customizing-workflow/cli-plugins.md
