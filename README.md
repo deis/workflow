@@ -2,9 +2,11 @@
 
 **Deis Workflow** is an open source Platform as a Service (PaaS) that adds a developer-friendly layer to any [Kubernetes][k8s-home] cluster, making it easy to deploy and manage applications.
 
+Deis Workflow is the second major release (v2) of the Deis PaaS. If you are looking for the CoreOS-based PaaS visit [https://github.com/deis/deis](https://github.com/deis/deis).
+
 If you are looking to **get started** with **Deis Workflow** read the [Quick Start Guide](src/installing-workflow/quickstart.md) in this repository or on [Read the Docs](https://docs-v2.readthedocs.org/en/latest/).
 
-Visit [https://deis.com](https://deis.com) for more information on [why you should use Deis Workflow](https://deis.com/why-deis/) or [its features](https://deis.com/how-it-works/).
+Visit [https://deis.com](https://deis.com) for more information on [why you should use Deis Workflow](https://deis.com/why-deis/) or [learn about its features](https://deis.com/how-it-works/).
 
 This repository contains the source code for Deis Workflow documentation. If you're looking for individual components, they live in their own repositories.
 
