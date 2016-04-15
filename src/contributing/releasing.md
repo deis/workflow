@@ -87,9 +87,10 @@ Amazon S3                           |
 
 # Step 4: Tag and push Docker images
 
-TODO
+After everyone has tested and determined that there are no showstopping problems for this release,
+it's time to tag each individual Docker image with `$DEIS_RELEASE`.
 
-Tag docker images for each component, from the Docker tags that you set in step 2 to ``$DEIS_RELEASE`
+TODO
 
 # Step 5: Update Changelogs
 
