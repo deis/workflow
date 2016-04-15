@@ -1,24 +1,25 @@
 #!/usr/bin/env bash
 # vim: et tw=0 sw=4 ts=4
 
+REPOROOT=${REPOROOT:=https://github.com/deis/workflow}
+TYPES=${TYPES:=feat(;Features fix(;Fixes docs(;Documentation chore(;Maintenance}
+
 usage() {
-    echo "Usage: $0 <from> [to]"
-    echo "The REPOROOT and TYPES variables may be used to customize"
-    echo "what is scraped from the commit logs. Current settings are:"
-    echo
-    echo "   REPOROOT = $REPOROOT"
-    echo "   TYPES = $TYPES"
-    echo
+    echo "Usage: $0 <from> [to]
+The REPOROOT and TYPES variables may be used to customize what links are
+generated and what is scraped from the commit logs. Current settings are:
+    REPOROOT=$REPOROOT
+    TYPES=$TYPES
+"
 }
 
 # Print the information scraped from git
 retrieve() {
-    while read commit hash message
-    do
+    while read -r commit hash message; do
         # Extract the subsystem where type(subsystem): message
-        SUBSYSTEM=$(echo $message | cut -d'(' -f2 | cut -d')' -f1 | sed 's/\*/\(all\)/g')
+        SUBSYSTEM=$(echo "$message" | cut -d'(' -f2 | cut -d')' -f1 | sed 's/\*/\(all\)/g')
         # Extract the message where type(subsystem): message
-        MESSAGE=$(echo $message | awk -F ")" '{ print $2}' | sed 's/://' | cut -f2- -d' ')
+        MESSAGE=$(echo "$message" | awk -F ")" '{ print $2}' | sed 's/://' | cut -f2- -d' ')
         # Generate a link to the full legal commit on GitHub
         LINK="$REPOROOT/commit/$hash"
         # Echo all this in a way that makes the commit hash and message a link
@@ -37,23 +38,8 @@ subheading() {
 }
 
 main() {
-    # if REPOROOT is already in the environment, don't overload it and use that
-    if [ -z "$REPOROOT" ];
-    then
-        REPOROOT="https://github.com/deis/deis"
-    fi
-
-    # if TYPES is already in the environment, don't overload it and use that
-    if [ -z "$TYPES" ];
-    then
-        # Based on https://github.com/deis/deis/blob/master/CONTRIBUTING.md
-        # The format is in the form of $shortname;$longname $shortname;longname.
-        TYPES="feat(;Features fix(;Fixes docs(;Documentation chore(;Maintenance"
-    fi
-
     # Print usage summary if user didn't specify a beginning
-    if [ -z "$1" ];
-    then
+    if [ -z "$1" ]; then
         usage
         exit 1
     fi
@@ -61,23 +47,19 @@ main() {
     FROM=$1
     TO=${2:-"HEAD"}
 
-    printf "### $FROM -> $TO\n\n"
+    printf "### %s -> %s\n\n" "$FROM" "$TO"
 
     # Iterate over the types of messages specified
-    for LEGALTYPE in $TYPES
-    do
+    for LEGALTYPE in $TYPES; do
         SHORT=$(echo "$LEGALTYPE" | cut -f1 -d';')
         LONG=$(echo "$LEGALTYPE" | cut -f2 -d';')
-
-        subheading $LONG $SHORT
+        subheading "$LONG" "$SHORT"
     done
 }
 
-if (( $SHLVL == 2 ))
-then
+if [ $SHLVL -eq 2 ]; then
     # If this is being run as a command
-    main $*
-    exit
+    main "$@"
 else
     # Otherwise this is being sourced
     unset -f main
