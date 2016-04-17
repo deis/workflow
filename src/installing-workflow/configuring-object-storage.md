@@ -1,140 +1,116 @@
 # Configuring Object Storage
 
-A variety of Deis components rely on an object storage system to do their work. These components are:
+A variety of Deis Workflow components rely on an object storage system to do their work including storing application slugs, Docker images and database logs.
 
-- [builder](https://github.com/deis/builder)
-- [slugbuilder](https://github.com/deis/slugbuilder)
-- [slugrunner](https://github.com/deis/slugrunner)
-- [controller](https://github.com/deis/controller)
-- [registry](https://github.com/deis/registry)
-- [database](https://github.com/deis/postgres)
+Deis Workflow ships with [Minio][minio] by default, which provides in-cluster, ephemeral object storage. This means that _if the Minio server crashes, all data will be lost_. Therefore, **Minio should be used for development or testing only**.
 
-These components are flexible and can work out of the box with almost any system that is compatible with the [S3 API](http://docs.aws.amazon.com/AmazonS3/latest/API/APIRest.html).
+## Configuring off-cluster Object Storage
 
-## Minio
+Every component that relies on object storage uses two inputs for configuration:
 
-Additionally, Deis ships with a [Minio](http://minio.io) [component](https://github.com/deis/minio) by default, which provides in-cluster, ephemeral object storage. This means that _if the Minio server crashes, all data will be lost_. Therefore, **Minio should be used for development or testing only**.
+1. Component-specific environment variables (e.g. `BUILDER_STORAGE` and `REGISTRY_STORAGE`)
+2. Access credentials stored as a Kubernetes secret named `objectstorage-keyfile`
 
-In our beta release, the components listed above are configured by default to automatically use the Minio [service][k8s-service] for object storage.
+The helm chart for Deis Workflow can be easily configured to connect Workflow components to off-cluster object storage. Deis Workflow currently supports Google Compute Storage, Amazon S3 and Azure Blob Storage.
 
-# Configuring the Deis Components
+* **Step 1:** Create storage buckets for each of the Workflow subsystems: builder, registry and database
+    * Note: Depending on your chosen object storage you may need to provide globally unique bucket names.
+    * Note: If you provide credentials with sufficient access to the underlying storage, Workflow components will create the buckets if they do not exist.
+* **Step 2:** If applicable, generate credentials that have write access to the storage buckets created in Step 1
+* **Step 3:** If you haven't already fetched the helm chart, do so with `helm fetch deis/workflow-beta2`
+* **Step 4:** Open the helm chart with `helm edit workflow-beta2` and look for the template file `tpl/generate_params.toml`
+* **Step 5:** Update the `storage` parameter to reference the storage platform you are using: `s3`, `azure`, `gcs`
+* **Step 6:** Update the values in the section which corresponds to your storage type, including region, bucket names and access credentials
+    * Note: you do not need to base64 encode any of these values as Helm will handle encoding automatically
+* **Step 7:** Save your changes and re-generate the helm chart by running `helm generate -x manifests workflow-beta2`
+* **Step 8:** Check the generated file in your manifests directory, you should see `deis-objectstorage-secret.yaml`
 
-Every Deis component that relies on object storage relies on the following two inputs for configuration:
+You are now ready to `helm install workflow-beta2` using your desired object storage.
 
-- An environment variable that describe what object storage system to use.
-- A configuration file ([objectstorage.toml][objectstorage-toml]) to provide access credentials for the object storage system.
-	- We suggest storing the contents of these files in [Kubernetes secrets][k8s-secret] and mounting them as volumes to each pod.
-	- See [the workflow-dev chart](https://github.com/deis/charts/tree/master/workflow-dev) for examples of using and mounting secrets.
+## Object Storage Configuration and Credentials
 
-The subsections herein explain how to configure these two inputs for each applicable component.
+During the `helm generate` step, Helm creates a Kubernetes secret in the Deis namespace named `objectstorage-keyfile`. The exact structure of the file depends on storage backend specified in `tpl/generate_params.toml`.
 
-## [deis/builder](https://github.com/deis/builder)
+```
+# Set the storage backend
+#
+# Valid values are:
+# - s3: Store persistent data in AWS S3 (configure in S3 section)
+# - azure: Store persistent data in Azure's object storage
+# - gcs: Store persistent data in Google Cloud Storage
+# - minio: Store persistent data on in-cluster Minio server
+storage = "minio"
+```
 
-### Environment Variables
+Individual components map the master credential secret to either secret-backed environment variables or volumes. See below for the component-by-component locations.
 
-The builder looks for a `BUILDER_STORAGE` environment variable, which it then uses as a key to look up the object storage location and authentication information in a configuration file. See below for details on that file.
+## Component Details
 
-### Credentials
+### [deis/builder](https://github.com/deis/builder)
 
-The builder reads the credential information from a `objectstorage-keyfile` secret. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
+The builder looks for a `BUILDER_STORAGE` environment variable, which it then uses as a key to look up the object storage location and authentication information from the `objectstore-creds` volume.
 
-### Helm Chart
+### [deis/slugbuilder](https://github.com/deis/slugbuilder)
 
-If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. Note that you don't need to base64-encode the credentials, as Helm will do that for you. For more information, see the [installation instructions][helm-install] for more details on using Helm.
+Slugbuilder is configured and launched by the builder component. Slugbuilder reads credential information from the standard `objectstorage-keyfile` secret.
 
-## [deis/slugbuilder](https://github.com/deis/slugbuilder)
+If you are using slugbuilder as a standalone component the following configuration is important:
 
-The slugbuilder is configured and launched by the builder inside a Deis cluster, so this section only applies if you intend to run it as a standalone component.
+- `TAR_PATH` - The location of the application `.tar` archive, relative to the configured bucket for builder e.g. `home/burley-yeomanry:git-3865c987/tar`
+- `PUT_PATH` - The location to upload the finished slug, relative to the configured bucket fof builder e.g. `home/burley-yeomanry:git-3865c987/push`
 
-### Environment Variables
+**Note: these environment variables are case-sensitive**
 
-The slugbuilder looks for the below environment variables to determine where to download code from and upload slugs to.
+### [deis/slugrunner](https://github.com/deis/slugrunner)
 
-- `TAR_PATH` - The location of the `.tar` archive (which it will build)
-- `PUT_PATH` - The location this component will upload the finished slug to
+Slugrunner is configured and launched by the controller inside a Workflow cluster. If you are using slugrunner as a standalone component the following configuration is important:
 
-Note that these environment variables are case-sensitive.
+- `SLUG_URL` - environment variable containing the path of the slug, relative to the builder storage location, e.g. `home/burley-yeomanry:git-3865c987/push/slug.tgz`
 
-### Credentials
+Slugrunner reads credential information from a `objectstorage-keyfile` secret in the current Kubernetes namespace.
 
-The slugbuilder reads the credential information from a `objectstorage-keyfile` secret. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
+### [deis/controller](https://github.com/deis/controller)
 
-### Helm Chart
+The controller is responsible for configuring the execution environment for buildpack-based applications. Controller copies `objectstorage-keyfile` into the application namespace so slugrunner can fetch the application slug.
 
-The [Helm Chart for Workflow][helm-chart] contains no manifest for the slugbuilder. As noted above, the builder handles all configuration and lifecycle management for you.
+The controller interacts through Kubernetes APIs and does not use any environment variables for object storage configuration.
 
-If, however, you wish to run the slugbuilder as a standalone component, you can use the `objectstorage-keyfile` secret to easily provide your pods with the credentials information they need. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
+### [deis/registry](https://github.com/deis/registry)
 
-## [deis/slugrunner](https://github.com/deis/slugrunner)
+The registry looks for a `REGISTRY_STORAGE` environment variable which it then uses as a key to look up the object storage location and authentication information.
 
-The slugrunner is configured and launched by the controller inside a Deis cluster, so this section only applies if you intend to run it as a standalone component.
+The registry reads credential information by reading `/var/run/secrets/deis/registry/creds/objectstorage-keyfile`.
 
-### Environment Variables
+This is the file location for the `objectstorage-keyfile` secret on the Pod filesystem.
 
-The slugrunner uses the `SLUG_URL` environment variable to determine where to download the slug (that it will run) from.
+### [deis/database](https://github.com/deis/postgres)
 
-### Credentials
+The database looks for a `DATABASE_STORAGE` environment variable, which it then uses as a key to look up the object storage location and authentication information
 
-The slugrunner reads the credential information from a `objectstorage-keyfile` secret. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
+Minio (`DATABASE_STORAGE=minio`):
 
-### Helm Chart
+* `AWS_ACCESS_KEY_ID` via /var/run/secrets/deis/objectstore/creds/accesskey
+* `AWS_SECRET_ACCESS_KEY` via /var/run/secrets/deis/objectstore/creds/secretkey
+* `AWS_DEFAULT_REGION` is the Minio default of "us-east-1"
+* `BUCKET_NAME` is the on-cluster default of "dbwal"
 
-The [Helm Chart for Workflow][helm-chart] contains no manifest for the slugrunner. As noted above, the controller handles all configuration and lifecycle management for you.
+AWS (`DATABASE_STORAGE=s3`):
 
-If, however, you wish to run the slugrunner as a standalone component, you can use the `objectstorage-keyfile` secret to easily provide your pods with the credentials information they need. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
+* `AWS_ACCESS_KEY_ID` via /var/run/secrets/deis/objectstore/creds/accesskey
+* `AWS_SECRET_ACCESS_KEY` via /var/run/secrets/deis/objectstore/creds/secretkey
+* `AWS_DEFAULT_REGION` via /var/run/secrets/deis/objectstore/creds/region
+* `BUCKET_NAME` via /var/run/secrets/deis/objectstore/creds/database-bucket
 
-## [deis/controller](https://github.com/deis/controller)
+GCS (`DATABASE_STORAGE=gcs`):
 
-When the controller needs to launch or scale a new buildpack application, it uses a [replication controller](http://kubernetes.io/docs/user-guide/replication-controller/). Since the slugrunner needs to download the slug to run, it needs the object storage location of the slug and the object storage credentials.
+* `GS_APPLICATION_CREDS` via /var/run/secrets/deis/objectstore/creds/key.json
+* `BUCKET_NAME` via /var/run/secrets/deis/objectstore/creds/database-bucket
 
-### Environment Variables
+Azure (`DATABASE_STORAGE=azure`):
 
-The controller needs no environment variables for object storage configuration.
+* `WABS_ACCOUNT_NAME` via /var/run/secrets/deis/objectstore/creds/accountname
+* `WABS_ACCESS_KEY` via /var/run/secrets/deis/objectstore/creds/accountkey
+* `BUCKET_NAME` via /var/run/secrets/deis/objectstore/creds/database-container
 
-### Credentials
-
-Since the object storage location information comes from the builder, the controller only needs access to the credentials information. The controller gets this information by accessing the `minio-user` secret (even if it's not using Minio as the object storage system) directly from the Kubernetes API.
-
-No paths need to be mounted into the pod. Simply ensure that the secret exists in your Kubernetes cluster with the correct credentials.
-
-### Helm Chart
-
-If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. Note that you don't need to base64-encode the credentials, as Helm will do that for you. For more information, see the [installation instructions][helm-install] for more details on using Helm.
-
-## [deis/registry](https://github.com/deis/registry)
-
-The registry is configured slightly differently from most of the other components. Read on for details.
-
-### Environment Variables
-
-The registry looks for a `REGISTRY_STORAGE` environment variable, which it then uses as a key to look up the object storage location and authentication information in a configuration file. See below for details on that file.
-
-### Credentials
-
-The registry reads the credential information from a `/var/run/secrets/deis/registry/creds/objectstorage-keyfile` file. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
-
-### Helm Chart
-
-If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. Note that you don't need to base64-encode the credentials, as Helm will do that for you. For more information, see the [installation instructions][helm-install] for more details on using Helm.
-
-## [deis/database](https://github.com/deis/postgres)
-
-### Environment Variables
-
-The database looks for a `DATABASE_STORAGE` environment variable, which it then uses as a key to look up the object storage location and authentication information in a configuration file. See below for details on that file.
-
-### Credentials
-
-The database reads the credential information from a `objectstorage-keyfile` secret. This is generated automatically (as part of the `helm generate` command) based on the configuration options given in the [objectstorage.toml file][objectstorage-toml] file.
-
-### Helm Chart
-
-If you are using the [Helm Chart for Workflow][helm-chart], put your credentials in the [objectstorage.toml][objectstorage-toml] file before you run `helm generate`. Note that you don't need to base64-encode the credentials, as Helm will do that for you. For more information, see the [installation instructions][helm-install] for more details on using Helm.
-
-
-[helm-chart]: https://github.com/deis/charts/tree/master/workflow-dev
-[minio-user-secret]: https://github.com/deis/charts/blob/master/workflow-dev/manifests/deis-minio-secret-user.yaml
-[helm-install]: https://github.com/deis/workflow/blob/master/src/installing-workflow/installing-deis-workflow.md
-[objectstorage-toml]: https://github.com/deis/charts/blob/master/workflow-dev/tpl/objectstorage.toml
-[k8s-service]: http://kubernetes.io/docs/user-guide/services/
-[k8s-secret]: http://kubernetes.io/docs/user-guide/secrets/
+[minio]: ../understanding-workflow/components.md#object-storage
+[generate-params-toml]: https://github.com/deis/charts/blob/master/workflow-dev/tpl/generate_params.toml
