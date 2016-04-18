@@ -90,7 +90,13 @@ Amazon S3                           |
 After everyone has tested and determined that there are no showstopping problems for this release,
 it's time to tag each individual Docker image with `$DEIS_RELEASE`.
 
-TODO
+To do so, simply go back to the directory where you checked out the `deis-workflow-group` repo
+and run the following two commands to tag and push updated docker images:
+
+```console
+TAG=$DEIS_RELEASE make docker-tag
+make docker-push
+```
 
 # Step 5: Update Changelogs
 
