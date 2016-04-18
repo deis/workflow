@@ -99,17 +99,59 @@ TAG=$DEIS_RELEASE make docker-tag
 make docker-push
 ```
 
-# Step 5: Update Changelogs
+# Step 5: Update Helm chart
 
-TODO
+Now that new Docker images are on public Docker repositories, it's time to update the Helm chart
+to reference the official images. To do so, simply modify all `dockerTag` entries in the
+`generate_params.toml` files in the `workflow-$DEIS_RELEASE_SHORT` and
+`workflow-$DEIS_RELEASE_SHORT-e2e` to be `$DEIS_RELEASE` (instead of the ones based on git tags).
 
-Update changelogs for each repository
+When you're done, commit and push your changes. You should get your pull request reviewed and
+merged before continuing.
 
-# Step 6: Tag and push git repos
+# Step 6: Update Changelogs
 
-Inside the deis-workflow-group directory, run:
+At this point, part of the first part and all of the second part of the release is complete.
+That is, the Helm chart for the new Deis version is done, and new Docker versions for all
+components are done.
+
+The remaining work is simply generating changelogs and tagging each component's GitHub repository.
+
+First, create a branch for the new changelog:
+
+```console
+git checkout -b release-$DEIS_RELEASE_SHORT
+```
+
+To generate changelogs, run the below command in each repository. Ensure that `$PREVIOUS_TAG` is
+the previous tag that was generated in the repository.
+
+```console
+_scripts/generate_changelog.sh $PREVIOUS_TAG
+```
+
+This command will output the new changelog entry to STDOUT. Copy it and prepend it to the
+existing `CHANGELOG.md` file, and make sure to change `HEAD` in the header of the entry
+to `$DEIS_RELEASE`.
+
+Finally, commit, push and submit a Pull Request for your changes:
+
+```console
+git commit CHANGELOG.md -m "doc(CHANGELOG.md): add entry for $DEIS_RELEASE_SHORT"
+git push -u $YOUR_FORK_REMOTE $DEIS_RELEASE_SHORT
+```
+
+Before you continue, ensure pull requests in all applicable repositories are reviewed, and merge
+them.
+
+# Step 7: Tag and push git repos
+
+The final step of the release process is to tag each git repository, and push the tag to each
+GitHub project. To do so, simply run the below command in the `deis-workflow-group` repository:
 
 ```console
 TAG=$DEIS_RELEASE TAG_MESSAGE="releasing workflow $DEIS_RELEASE" make git-tag
 make git-tag-push
 ```
+
+You are now done with the release
