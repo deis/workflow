@@ -66,7 +66,8 @@ version of our release for testing. The process is fairly simple:
 4. Commit your changes: `git commit -a -m "chore(workflow-$DEIS_RELEASE_SHORT): releasing workflow-$DEIS_RELEASE_SHORT"`
 5. Push your changes to your fork: `git push -u $YOUR_FORK_REMOTE release-$DEIS_RELEASE`. Note that
 `$YOUR_FORK_REMOTE` is the git URI to the remote of your `deis/charts` fork. Mine is `git@github.com:arschles/deis-charts.git`, for example.
-6. Open a pull request from your branch to merge into `master` on https://github.com/deis/charts
+6. Do steps 2-5 with the `workflow-beta2-e2e` directory
+7. Open a pull request from your branch to merge into `master` on https://github.com/deis/charts
 
 # Step 3: Manual Testing
 
