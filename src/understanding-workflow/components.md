@@ -73,7 +73,7 @@ processes.
 
 ## Object Storage
 
-**Project Location:** [deis/minio](https://github.com/deis/mino)
+**Project Location:** [deis/minio](https://github.com/deis/minio)
 
 All of the Workflow components ship their persistent data to cluster configured
 S3 compatibile Object Storage. For example, database ships its WAL files,
