@@ -10,14 +10,7 @@ The logging platform is made up of 2 components - [Fluentd](https://github.com/d
 Logger acts like a syslog server and receives all log messages that are occurring on the cluster. It then filters this data to only Deis deploy applications and stores those log messages in a ring buffer where they can be fetched via the Deis CLI.
 
 ## Installation
-Installation of the logging components is separate from the installation of the Deis platform because of the requirement of Daemon Sets. You will need to follow these steps to get the logging components running on your kubernetes cluster.
-
-```
-$ helm fetch deis/deis-logger-beta1-test
-$ helm install deis-logger-beta1-test
-```
-
-You will then need to watch the components come up and verify they are in a running state by executing the following command:
+With the release of workflow-beta2 chart the logging system is part of the main installation of Workflow. You will then need to watch the components come up and verify they are in a running state by executing the following command:
 
 ```
 $ kubectl get pods --namespace=deis
@@ -53,11 +46,8 @@ Once the pod has restarted, you can verify the logging system is working by goin
 ```
 Error: There are currently no log messages. Please check the following things:
 1) Logger and fluentd pods are running.
-2) If you just installed the logger components via the chart, please make sure you restarted the controller pod.
-3) The application is writing logs to the logger component.
-You can verify that logs are appearing in the logger component by issuing the following command:
-curl http://<log service ip>:8088/logs/myapp on a kubernetes host.
-To get the service ip you can do the following: kubectl get svc deis-logger --namespace=deis
+2) The application is writing logs to the logger component by checking that an entry in the ring buffer was created: kubectl logs <logger pod> --namespace=deis
+3) Making sure that the container logs were mounted properly into the fluentd pod: kubectl exec <fluentd pod> --namespace=deis ls /var/log/containers
 ```
 
 ## Architecture Diagram
