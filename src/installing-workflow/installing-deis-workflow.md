@@ -78,4 +78,3 @@ Next, [configure dns][] so you can register your first user.
 [configure dns]: ../managing-workflow/configuring-dns.md
 [helm]: http://helm.sh
 [lb]: ../managing-workflow/configuring-load-balancers.md
-[using deis]: ../using-workflow/deploying-an-application.md
