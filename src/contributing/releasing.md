@@ -134,6 +134,11 @@ This command will output the new changelog entry to STDOUT. Copy it and prepend 
 existing `CHANGELOG.md` file, and make sure to change `HEAD` in the header of the entry
 to `$DEIS_RELEASE`.
 
+Also copy the component changelog to a global release changelog, organized by component.
+This will only live on your local machine while doing the release. Once changelogs for all
+the components have been collected, publish the combined release notes as a gist so folks
+in Step 9 can start preparing supporting content for the release.
+
 Finally, commit, push and submit a Pull Request for your changes:
 
 ```console
@@ -154,4 +159,18 @@ TAG=$DEIS_RELEASE TAG_MESSAGE="releasing workflow $DEIS_RELEASE" make git-tag
 make git-tag-push
 ```
 
-You are now done with the release
+# Step 8: Check documentation
+
+Now that the chart has been merged, artifacts pushed, and changelogs prepared.
+Check the documentation for any out of date references, e.g. `helm install workflow-betaX`.
+
+If you find any references that should be bumped, open a pull-request against the documentation.
+
+# Step 9: Let everyone know
+
+Jump in #company on slack and let folks know that the release has been cut! This will let
+folks in supporting functions know that they should start the release support process including
+summary blog posts, tweets, notes for the monthly newsletter updates, etc. Providing a
+gist to the aggregated release notes would be super-fly.
+
+You are now done with the release.
