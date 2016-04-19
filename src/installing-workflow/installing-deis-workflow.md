@@ -65,8 +65,17 @@ $ kubectl get pods --namespace=deis -w
 
 Once you see all of the pods in the `READY` state, Deis Workflow is up and running!
 
+## Configure your Load Balancer
+
+After installing Workflow on your cluster, you'll need to [configure your load balancer][lb].
+Following this step is especially important on AWS because the default idle timeout for connections
+on the Elastic Load Balancer is too low for the [Builder][] to finish a `git push` operation.
+
 Next, [configure dns][] so you can register your first user.
 
-[helm]: http://helm.sh
-[using deis]: ../using-workflow/deploying-an-application.md
+
+[builder]: ../understanding-workflow/components.md#builder-builder-slugbuilder-and-dockerbuilder
 [configure dns]: ../managing-workflow/configuring-dns.md
+[helm]: http://helm.sh
+[lb]: ../managing-workflow/configuring-load-balancers.md
+[using deis]: ../using-workflow/deploying-an-application.md
