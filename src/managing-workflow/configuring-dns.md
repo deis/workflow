@@ -29,7 +29,6 @@ LoadBalancer Ingress:	a493e4e58ea0511e5bb390686bc85da3-1558404688.us-west-2.elb.
 
 The `LoadBalancer Ingress` field typically describes an existing domain name or public IP(s).  Note that if Kubernetes is able to automatically provision a load balancer for you, it does so asynchronously.  If the command shown above is issued very soon after Workflow installation, the load balancer may not exist yet.
 
-
 ## Without a Load Balancer
 
 On some platforms (Vagrant, for instance), a load balancer is not an easy or practical thing to provision. In these cases, one can directly identify the public IP of a Kubernetes node that is hosting a router pod and use that information to configure the local `/etc/hosts` file.
@@ -59,6 +58,50 @@ Addresses:	10.0.0.199,10.0.0.199,54.218.85.175
 
 Here, the `Addresses` field lists all the node's IPs.  If any of them are public, again, they may be used to configure your local `/etc/hosts` file or may be used with [xip.io][xip].
 
+## Tutorial: Configuring DNS with [Google Cloud DNS][cloud dns]
+
+In this section, we'll describe how to configure Google Cloud DNS for routing your domain name to your Deis cluster.
+
+We'll assume the following in this section:
+
+- Your Deis router service has a load balancer in front of it.
+  - The load balancer need not be cloud based, it just needs to provide a stable IP address or a stable domain name
+- You have the `mystuff.com` domain name registered with a registrar
+  - Replace your domain name with `mystuff.com` in the instructions to follow
+- Your registrar lets you alter the nameservers for your domain name (most registrars do)
+
+Here are the steps for configuring cloud DNS to route to your deis cluster:
+
+1. Get the load balancer IP or domain name
+  - If you are on Google Container Engine, you can run `kubectl get svc deis-router` and look for the `LoadBalancer Ingress` column to get the IP address
+2. Create a new Cloud DNS Zone (on the console: `Networking` => `Cloud DNS`, then click on `Create Zone`)
+3. Name your zone, and set the DNS name to `mystuff.com.` (note the `.` at the end
+4. Click on the `Create` button
+5. Click on the `Add Record Set` button on the resulting page
+6. If your load balancer provides a stable IP address, enter the following fields in the resulting form:
+  1. `DNS Name`: `*`
+  2. `Resource Record Type`: `A`
+  3. `TTL`: the DNS TTL of your choosing. If you're testing or you anticipate that you'll tear down and rebuild many deis clusters over time, we recommend a low TTL
+  4. `IPv4 Address`: The IP that you got in the very first step
+  5. Click the `Create` button
+7. If your load balancer provides the stable domain name `lbdomain.com`, enter the following fields in the resulting form:
+  1. `DNS Name`: `*`
+  2. `Resource Record Type`: `CNAME`
+  3. `TTL`: the DNS TTL of your choosing. If you're testing or you anticipate that you'll tear down and rebuild many deis clusters over time, we recommend a low TTL
+  4. `Canonical name`: `lbdomain.com.` (note the `.` a the end)
+  5. Click on the `Create` button
+8. In your domain registrar, set the nameservers for your `mystuff.com` domain to the ones under the `data` column in the `NS` record on the same page. They'll often be something like the below (note the trailing `.` characters).
+
+  ```
+  ns-cloud-b1.googledomains.com.
+  ns-cloud-b2.googledomains.com.
+  ns-cloud-b3.googledomains.com.
+  ns-cloud-b4.googledomains.com.
+  ```
+
+
+Note: If you ever have to re-create your deis cluster, simply go back to step 6.4 or 7.4 (depending on your load balancer) and change the IP address or domain name to the new value. You may have to wait for the TTL you set to expire.
+
 
 ## Testing
 
@@ -85,3 +128,4 @@ Since such requests require authentication, a response such as the following sho
 [AWS recommends]: https://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/using-domain-names-with-elb.html
 [load balancer]: configuring-load-balancers.md
 [xip]: http://xip.io/
+[cloud dns]: https://cloud.google.com/dns/docs
