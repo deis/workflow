@@ -73,7 +73,7 @@ any domain names, SSL Certificates and developer provided configuration.
 The [builder][] component processes incoming `git push deis master` requests
 and manages your application packaging.
 
-If your application is using a [buildpack][] builder will launch an ephemeral
+If your application is using a [buildpack][buildpacks] builder will launch an ephemeral
 job to extract and execute the packaging instructions. The resulting
 application artifact is stored by the platform for execution during the run
 stage.
