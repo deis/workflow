@@ -33,12 +33,8 @@ In order to deploy Docker images, they must conform to the following requirement
 Use `deis create` to create an application on the [controller][].
 
     $ mkdir -p /tmp/example-go && cd /tmp/example-go
-    $ deis create
+    $ deis create example-go --no-remote
     Creating application... done, created example-go
-
-!!! note
-    The `deis` client uses the name of the current directory as the
-    default app name.
 
 
 ## Deploy the Application
