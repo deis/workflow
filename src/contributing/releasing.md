@@ -28,7 +28,8 @@ A release consists of the following artifacts:
   - [slugrunner](https://github.com/deis/slugrunner)
   - [workflow](https://github.com/deis/worflow)
   - [workflow-e2e](https://github.com/deis/workflow-e2e)
-  - [workflow-manager](https://github.com/deis/workflow-manager) (v2.0.0-beta1-8-g9ba6db7)
+  - [workflow-manager](https://github.com/deis/workflow-manager)
+  - [workflow-cli](https://github.com/deis/workflow-cli)
 2. A new [Helm chart for Deis](https://github.com/deis/charts) that references all of the new
 images referenced above. For example, if `$DEIS_RELEASE` is `2.0.0-beta2`, the new chart would
 be in a new directory called `workflow-beta2`.
