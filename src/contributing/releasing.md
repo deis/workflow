@@ -78,7 +78,7 @@ should be manually tested by as many people as possible. Special attention shoul
 user experience, both from an operator and developer perspective.
 
 Our goal is to test with as many object storage and Kubernetes installation configurations as
-possible, to ensure there are no gaps in configuration or functionality. See below for a testing
+possible, to ensure there are no gaps in configuration or functionality. See below for a sample testing
 matrix.
 
 Object Storage / Kubernetes Install | Kube-Solo | Google Container Engine | AWS | Micro-Kube | Vagrant |
@@ -86,6 +86,11 @@ Object Storage / Kubernetes Install | Kube-Solo | Google Container Engine | AWS 
 Default (Minio)                     |
 Google Cloud Storage                |
 Amazon S3                           |
+
+_Note_: If bugs are found and fixes are made, do the following:
+
+- Update the appropriate docker tag(s) in the `generate_params.toml` file
+- Run `make git-update` in the aforementioned `deis-workflow-group` repository
 
 # Step 4: Tag and push Docker images
 
