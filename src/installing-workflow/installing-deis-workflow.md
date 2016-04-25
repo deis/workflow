@@ -27,6 +27,14 @@ InfluxDB is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/se
 
 If you see a list of targets like the one above, 'helm' can communicate with the kubernetes master.
 
+Deis Workflow requires Kubernetes 1.2 or higher. You can test that by running:
+
+```
+$ kubectl version
+Client Version: version.Info{Major:"1", Minor:"2", GitVersion:"v1.2.3", GitCommit:"882d296a99218da8f6b2a340eb0e81c69e66ecc7", GitTreeState:"clean"}
+Server Version: version.Info{Major:"1", Minor:"2", GitVersion:"v1.2.3", GitCommit:"882d296a99218da8f6b2a340eb0e81c69e66ecc7", GitTreeState:"clean"}
+```
+
 ## Add the Deis Chart Repository
 
 The [Deis Chart Repository](https://github.com/deis/charts) contains everything you
