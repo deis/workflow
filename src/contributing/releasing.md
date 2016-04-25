@@ -95,8 +95,7 @@ To do so, simply go back to the directory where you checked out the `deis-workfl
 and run the following two commands to tag and push updated docker images:
 
 ```console
-TAG=$DEIS_RELEASE make docker-tag
-make docker-push
+TAG=$DEIS_RELEASE make docker-tag docker-push
 ```
 
 # Step 5: Update Helm chart
@@ -155,8 +154,7 @@ The final step of the release process is to tag each git repository, and push th
 GitHub project. To do so, simply run the below command in the `deis-workflow-group` repository:
 
 ```console
-TAG=$DEIS_RELEASE TAG_MESSAGE="releasing workflow $DEIS_RELEASE" make git-tag
-make git-tag-push
+TAG=$DEIS_RELEASE TAG_MESSAGE="releasing workflow $DEIS_RELEASE" make git-tag git-tag-push
 ```
 
 # Step 8: Check documentation
