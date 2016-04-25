@@ -111,8 +111,11 @@ to reference the official images. To do so, simply modify all `dockerTag` entrie
 `generate_params.toml` files in the `workflow-$DEIS_RELEASE_SHORT` and
 `workflow-$DEIS_RELEASE_SHORT-e2e` to be `$DEIS_RELEASE` (instead of the ones based on git tags).
 
-When you're done, commit and push your changes. You should get your pull request reviewed and
-merged before continuing.
+Also, ensure that the `README.md` and `Chart.yaml` files in the new helm chart have updated references to the chart. For example, references to `helm install workflow-betaX` should become `helm install workflow-$DEIS_RELEASE_SHORT`
+
+If you find any references that should be bumped, open a pull-request against the documentation.
+
+When you're done, commit and push your changes. You should get your pull request reviewed and merged before continuing.
 
 # Step 6: Update Changelogs
 
@@ -163,14 +166,7 @@ GitHub project. To do so, simply run the below command in the `deis-workflow-gro
 TAG=$DEIS_RELEASE TAG_MESSAGE="releasing workflow $DEIS_RELEASE" make git-tag git-tag-push
 ```
 
-# Step 8: Check documentation
-
-Now that the chart has been merged, artifacts pushed, and changelogs prepared.
-Check the documentation for any out of date references, e.g. `helm install workflow-betaX`.
-
-If you find any references that should be bumped, open a pull-request against the documentation.
-
-# Step 9: Let everyone know
+# Step 8: Let everyone know
 
 Jump in #company on slack and let folks know that the release has been cut! This will let
 folks in supporting functions know that they should start the release support process including
