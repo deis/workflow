@@ -58,12 +58,29 @@ Use `deis scale cmd=3` to increase `cmd` processes to 3, for example. Scaling a
 process type directly changes the number of [Containers][container]
 running that process.
 
-!!! attention
-    Support for Docker registry authentication is coming soon.
+## Private Registry
 
+To deploy Docker images from a private registry or even from a private repository within a public registry, take the following steps:
+
+* Gather the username and password for the registry, such as a [Quay.io Robot Accounts][] or [GCR.io Long Lived Token][]
+* Run `deis registry:set username=<the-user> password=<secret> -a <application-name>`
+* Now perform `deis pull` as normal, against an image in the private registry
+
+When using a [GCR.io Long Lived Token][] the JSON blob will have to be compacted first using a tool like [jq][]
+and then used in the password field in `deis registry:set`.
+
+`cat serviceaccount.json | jq -c .` will compact the JSON blob using [jq][]. 
+
+**NOTE:**
+    Currently [GCR.io][] and [ECR][] in short lived auth token mode are not supported
 
 [container]: ../reference-guide/terms.md#container
 [controller]: ../understanding-workflow/components.md#controller
 [Docker Image]: https://docs.docker.com/introduction/understanding-docker/
 [DockerHub]: https://registry.hub.docker.com/
 [CMD instruction]: https://docs.docker.com/reference/builder/#cmd
+[Quay.io Robot Accounts]: https://docs.quay.io/glossary/robot-accounts.html
+[GCR.io Long Lived Token]: https://cloud.google.com/container-registry/docs/auth#using_a_json_key_file
+[jq]: https://stedolan.github.io/jq/
+[GCR.io]: https://gcr.io
+[ECR]: https://aws.amazon.com/ecr/
