@@ -30,23 +30,23 @@ documentation on [installing an SSL cert for load balancing](http://docs.aws.ama
 You can also use the Deis routers to terminate SSL connections. Use `kubectl` to install the
 certificate and private keys. Open your favorite text editor and create the Kubernetes manifest:
 
-	$ $EDITOR deis-router-default-cert.yaml
+	$ $EDITOR deis-router-platform-cert.yaml
 
 At this point, you'll want to create a new Kubernetes secret bearing the wildcard certificate.
 The following criteria must be met:
 
- - The name must be deis-router-default-cert
+ - The name must be deis-router-platform-cert
  - The certificate's public key must be supplied as the value of the `cert` key
  - The certificate's private key must be supplied as the value of the `key` key
  - Both the certificate and private key must be base64 encoded
 
 For example:
 
-	$ cat deis-router-default-cert.yaml
+	$ cat deis-router-platform-cert.yaml
 	apiVersion: v1
 	kind: Secret
 	metadata:
-	  name: deis-router-default-cert
+	  name: deis-router-platform-cert
 	  namespace: deis
 	type: Opaque
 	data:
@@ -58,5 +58,5 @@ chain, append the intermediate certs to the bottom of the `cert` value before ba
 cert chain.
 
 Once you've created the certificate manifest, you can then install the certificate with
-`kubectl create -f deis-router-default-cert.yaml`. The router will pick this up and update its
+`kubectl create -f deis-router-platform-cert.yaml`. The router will pick this up and update its
 configuration on-the-fly.
