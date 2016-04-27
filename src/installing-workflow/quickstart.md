@@ -8,13 +8,9 @@ Please refer to the [system requirements][] for considerations when planning you
 
 ## Choose a Provider
 
-Choose one of the following providers and deploy a new Kubernetes cluster:
-
-- [Amazon AWS](http://kubernetes.io/v1.1/docs/getting-started-guides/aws.html)
-- [Google Container Engine](https://cloud.google.com/container-engine/docs/before-you-begin)
-- [Vagrant](http://kubernetes.io/v1.1/docs/getting-started-guides/vagrant.html)
-
-Reference [this table](http://kubernetes.io/v1.1/docs/getting-started-guides/#table-of-solutions) in the official Kubernetes documentation for a more extensive (but still non-exhaustive) list of Kubernetes provisioning options supported by the project or the community.
+Choose one of the providers on the [Getting Started Guide](http://kubernetes.io/docs/getting-started-guides)
+in the official Kubernetes documentation for a more extensive (but still non-exhaustive) list of
+Kubernetes provisioning options supported by the project or the community.
 
 ## Install Deis Workflow
 
