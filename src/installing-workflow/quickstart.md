@@ -4,7 +4,7 @@ These steps will help you install and configure Deis Workflow on a Kubernetes cl
 
 ## Check System Requirements
 
-Please refer to the prerequisites and [system requirements][] for considerations when planning your Kubernetes environment.
+Please refer to the [system requirements][] for considerations when planning your Kubernetes environment.
 
 ## Choose a Provider
 

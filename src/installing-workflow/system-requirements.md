@@ -22,13 +22,9 @@ Deis workflow has been tested with the Kubernetes v1.2 release line. It is incom
 
 # Docker Requirements
 
-## Docker Version
-
-Any Kubernetes 1.1 cluster should also use a Docker version < 1.10.0 so that `kubectl exec` and Deis database health checks work properly (Refs: [fsouza/go-dockerclient#455](https://github.com/fsouza/go-dockerclient/issues/455) and [kubernetes/kubernetes#19720](https://github.com/kubernetes/kubernetes/issues/19720)).
-
 ## Docker Insecure Registry
 
-The on-cluster, Deis-managed Docker registry is not deployed with TLS by default. As such, all Kubernetes worker nodes must have their Docker daemons configured to use an insecure registry. The subnet should encompass any private networks used by your worker nodes including any overlay networks. Depending on your Kubernetes and Docker configuration, setting `EXTRA_DOCKER_OPTS="--insecure-registry=10.0.0.0/8"` may be sufficient.
+The on-cluster, Deis-managed Docker registry is not deployed with TLS by default. As such, all Kubernetes worker nodes must have their Docker daemons configured to use an insecure registry. The subnet should encompass any private networks used by your worker nodes, including any overlay networks. Depending on your Kubernetes and Docker configuration, setting `EXTRA_DOCKER_OPTS="--insecure-registry=10.0.0.0/8"` may be sufficient.
 
 ## SELinux + OverlayFS
 

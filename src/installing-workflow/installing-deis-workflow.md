@@ -4,16 +4,15 @@ We will use the Helm package manager for Kubernetes to install Deis Workflow ont
 
 ## Check Your Setup
 
-First check that you have `helm` installed and the version is correct.
+First check that the `helm` command is available and the version is 0.6 or newer.
 
 ```
 $ helm --version
-0.4.0
+helm version 0.6.0+1c8688e
 ```
 
-Ensure your kubectl client is installed and ensure it can connect to your Kubernetes cluster. This
-is where Helm will attempt to communicate with the cluster. You can test that it is working
-properly by running:
+Ensure the `kubectl` client is installed and can connect to your Kubernetes cluster. `helm` will
+use it to communicate. You can test that it is working properly by running:
 
 ```
 $ helm target
@@ -25,7 +24,7 @@ Grafana is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/ser
 InfluxDB is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
 ```
 
-If you see a list of targets like the one above, 'helm' can communicate with the kubernetes master.
+If you see a list of targets like the one above, `helm` can communicate with the Kubernetes master.
 
 Deis Workflow requires Kubernetes 1.2 or higher. You can test that by running:
 
