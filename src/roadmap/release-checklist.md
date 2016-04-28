@@ -7,8 +7,8 @@ The below sections present a step by step guide to releasing a new Deis Workflow
 examples, we'll be assuming that the below two environment variables are present in wherever
 you're working. Make sure to set them (e.g. by `export`ing them) before you get started.
 
-- `$DEIS_RELEASE` - the full name of this version. For example, `v2.0.0-beta2`
-- `$DEIS_RELEASE_SHORT` - The short name of this version. For example, `beta2`
+- `$DEIS_RELEASE` - the full name of this version. For example, `v2.0.0-beta3`
+- `$DEIS_RELEASE_SHORT` - The short name of this version. For example, `beta3`
 
 # What's a release?
 
@@ -31,8 +31,8 @@ A release consists of the following artifacts:
   - [workflow-manager](https://github.com/deis/workflow-manager)
   - [workflow-cli](https://github.com/deis/workflow-cli)
 2. A new [Helm chart for Deis](https://github.com/deis/charts) that references all of the new
-images referenced above. For example, if `$DEIS_RELEASE` is `2.0.0-beta2`, the new chart would
-be in a new directory called `workflow-beta2`.
+images referenced above. For example, if `$DEIS_RELEASE` is `2.0.0-beta3`, the new chart would
+be in a new directory called `workflow-beta3`.
 
 # Step 1: Get the status of all components
 
@@ -60,7 +60,7 @@ Next, we'll create a new [Helm](https://github.com/helm/helm) chart so that we c
 version of our release for testing. The process is fairly simple:
 
 1. Create a new branch: `git checkout -b release-$DEIS_RELEASE`
-2. Copy an existing chart: `cp -r workflow-beta2 workflow-$DEIS_RELEASE_SHORT`
+2. Copy an existing chart: `cp -r workflow-beta3 workflow-$DEIS_RELEASE_SHORT`
 3. Modify the `workflow-$DEIS_RELEASE_SHORT/tpl/generate_params.toml` file to ensure that all
 `dockerTag` values look like `git-$COMPONENT_SHA_SHORT`, where `$COMPONENT_SHA_SHORT` is the first
 7 characters of the applicable SHA that you got in the previous step.
@@ -68,13 +68,13 @@ version of our release for testing. The process is fairly simple:
 5. Commit your changes: `git commit -a -m "chore(workflow-$DEIS_RELEASE_SHORT): releasing workflow-$DEIS_RELEASE_SHORT"`
 6. Push your changes to your fork: `git push -u $YOUR_FORK_REMOTE release-$DEIS_RELEASE`. Note that
 `$YOUR_FORK_REMOTE` is the git URI to the remote of your `deis/charts` fork. Mine is `git@github.com:arschles/deis-charts.git`, for example.
-7. Do steps 2-5 with the `workflow-beta2-e2e` directory
+7. Do steps 2-5 with the `workflow-beta3-e2e` directory
 8. Open a pull request from your branch to merge into `master` on https://github.com/deis/charts
 
 # Step 3: Manual Testing
 
 After the chart is created with the immutable Docker image tags that represent the final images
-(i.e. the ones that will be re-tagged to the immutable release tag, such as `2.0.0-beta2`), it
+(i.e. the ones that will be re-tagged to the immutable release tag, such as `2.0.0-beta3`), it
 should be manually tested by as many people as possible. Special attention should be paid to the
 user experience, both from an operator and developer perspective.
 

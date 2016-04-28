@@ -50,10 +50,10 @@ $ helm repo add deis https://github.com/deis/charts
 Now that you have Helm installed and have added the Deis Chart Repository, install Workflow by running:
 
 ```
-$ helm fetch deis/workflow-beta2             # fetches the chart into a
+$ helm fetch deis/workflow-beta3             # fetches the chart into a
                                              # local workspace
-$ helm generate -x manifests workflow-beta2  # generates various secrets
-$ helm install workflow-beta2                # injects resources into
+$ helm generate -x manifests workflow-beta3  # generates various secrets
+$ helm install workflow-beta3                # injects resources into
                                              # your cluster
 ```
 
