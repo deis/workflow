@@ -26,7 +26,7 @@ A release consists of the following artifacts:
   - [router](https://github.com/deis/router)
   - [slugbuilder](https://github.com/deis/slugbuilder)
   - [slugrunner](https://github.com/deis/slugrunner)
-  - [workflow](https://github.com/deis/worflow)
+  - [workflow](https://github.com/deis/workflow)
   - [workflow-e2e](https://github.com/deis/workflow-e2e)
   - [workflow-manager](https://github.com/deis/workflow-manager)
   - [workflow-cli](https://github.com/deis/workflow-cli)
@@ -167,7 +167,14 @@ GitHub project. To do so, simply run the below command in the `deis-workflow-gro
 TAG=$DEIS_RELEASE TAG_MESSAGE="releasing workflow $DEIS_RELEASE" make git-tag git-tag-push
 ```
 
-# Step 8: Let everyone know
+# Step 8: Close GitHub milestones
+
+For each of the component projects listed at the top of this document, as well as for
+[workflow-cli](https://github.com/deis/workflow-cli), visit its GitHub repository and close
+the appropriate milestone. If there are still open issues attached to it, move them to
+the next upcoming milestone before closing.
+
+# Step 9: Let everyone know
 
 Jump in #company on slack and let folks know that the release has been cut! This will let
 folks in supporting functions know that they should start the release support process including
