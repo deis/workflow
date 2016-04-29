@@ -10,7 +10,7 @@ The logging platform is made up of 2 components - [Fluentd](https://github.com/d
 Logger acts like a syslog server and receives all log messages that are occurring on the cluster. It then filters this data to only Deis deploy applications and stores those log messages in a ring buffer where they can be fetched via the Deis CLI.
 
 ## Installation
-With the release of workflow-beta2 chart the logging system is part of the main installation of Workflow. You will then need to watch the components come up and verify they are in a running state by executing the following command:
+With the release of workflow-beta3 chart the logging system is part of the main installation of Workflow. You will then need to watch the components come up and verify they are in a running state by executing the following command:
 
 ```
 $ kubectl get pods --namespace=deis
@@ -52,22 +52,22 @@ Error: There are currently no log messages. Please check the following things:
 
 ## Architecture Diagram
 ```
-┌──────────────┐                            
-│              │                            
-│     Host     ├─────┐                      
-│       Fluentd│     │                      
-└──────────────┘   UDP                      
-                     │                      
+┌──────────────┐
+│              │
+│     Host     ├─────┐
+│       Fluentd│     │
+└──────────────┘   UDP
+                     │
 ┌──────────────┐     │      ┌──────────────┐
 │              │     │      │ Logger       │
 │     Host     │─UDP─┼─────▶│     Host     │
 │       Fluentd│     │      │ Fluentd      │
 └──────────────┘     │      └──────────────┘
-┌──────────────┐     │                      
-│              │   UDP                      
-│     Host     │─────┘                      
-│       Fluentd│                            
-└──────────────┘                            
+┌──────────────┐     │
+│              │   UDP
+│     Host     │─────┘
+│       Fluentd│
+└──────────────┘
 ```
 
 ## Default Configuration

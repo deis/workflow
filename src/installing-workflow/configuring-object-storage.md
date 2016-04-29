@@ -17,15 +17,15 @@ The helm chart for Deis Workflow can be easily configured to connect Workflow co
     * Note: Depending on your chosen object storage you may need to provide globally unique bucket names.
     * Note: If you provide credentials with sufficient access to the underlying storage, Workflow components will create the buckets if they do not exist.
 * **Step 2:** If applicable, generate credentials that have write access to the storage buckets created in Step 1
-* **Step 3:** If you haven't already fetched the helm chart, do so with `helm fetch deis/workflow-beta2`
-* **Step 4:** Open the helm chart with `helm edit workflow-beta2` and look for the template file `tpl/generate_params.toml`
+* **Step 3:** If you haven't already fetched the helm chart, do so with `helm fetch deis/workflow-beta3`
+* **Step 4:** Open the helm chart with `helm edit workflow-beta3` and look for the template file `tpl/generate_params.toml`
 * **Step 5:** Update the `storage` parameter to reference the storage platform you are using: `s3`, `azure`, `gcs`
 * **Step 6:** Update the values in the section which corresponds to your storage type, including region, bucket names and access credentials
     * Note: you do not need to base64 encode any of these values as Helm will handle encoding automatically
-* **Step 7:** Save your changes and re-generate the helm chart by running `helm generate -x manifests workflow-beta2`
+* **Step 7:** Save your changes and re-generate the helm chart by running `helm generate -x manifests workflow-beta3`
 * **Step 8:** Check the generated file in your manifests directory, you should see `deis-objectstorage-secret.yaml`
 
-You are now ready to `helm install workflow-beta2` using your desired object storage.
+You are now ready to `helm install workflow-beta3` using your desired object storage.
 
 ## Object Storage Configuration and Credentials
 
