@@ -1,5 +1,7 @@
 ![](https://deis.com/images/deis-logo.png)
 
+[![Slack Status](https://slack.deis.io/badge.svg)](https://slack.deis.io/)
+
 **Deis Workflow** is an open source Platform as a Service (PaaS) that adds a developer-friendly layer to any [Kubernetes][k8s-home] cluster, making it easy to deploy and manage applications.
 
 Deis Workflow is the second major release (v2) of the Deis PaaS. If you are looking for the CoreOS-based PaaS visit [https://github.com/deis/deis](https://github.com/deis/deis).
