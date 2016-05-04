@@ -60,7 +60,7 @@ Next, we'll create a new [Helm](https://github.com/helm/helm) chart so that we c
 version of our release for testing. The process is fairly simple:
 
 1. Create a new branch: `git checkout -b release-$DEIS_RELEASE`
-2. Copy an existing chart: `cp -r workflow-beta3 workflow-$DEIS_RELEASE_SHORT`
+2. Copy the existing `dev` chart: `cp -r workflow-dev workflow-$DEIS_RELEASE_SHORT`
 3. Modify the `workflow-$DEIS_RELEASE_SHORT/tpl/generate_params.toml` file to ensure that all
 `dockerTag` values look like `git-$COMPONENT_SHA_SHORT`, where `$COMPONENT_SHA_SHORT` is the first
 7 characters of the applicable SHA that you got in the previous step.
@@ -117,6 +117,8 @@ Also, ensure that the `README.md` and `Chart.yaml` files in the new helm chart h
 If you find any references that should be bumped, open a pull-request against the documentation.
 
 When you're done, commit and push your changes. You should get your pull request reviewed and merged before continuing.
+
+**Note:** If non-release-specific amendments have been made to the release chart that do not exist in the `workflow-dev`, be sure to PR said changes for this chart as well.
 
 # Step 6: Update Changelogs
 
