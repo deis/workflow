@@ -10,4 +10,4 @@ To get started with Workflow, follow our [Quick Start][quickstart] guide.
 
 [arch]: understanding-workflow/architecture.md
 [concepts]: understanding-workflow/concepts.md
-[quickstart]: installing-workflow/quickstart.md
+[quickstart]: quickstart/index.md

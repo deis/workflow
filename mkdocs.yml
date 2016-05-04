@@ -4,16 +4,29 @@
 #
 site_name: Deis Documentation
 pages:
-  - Welcome: index.md
-  - Quick Start: installing-workflow/quickstart.md
+  - Home: index.md
+  - Quick Start:
+    - Overview: quickstart/index.md
+    - Install CLI Tools: quickstart/install-cli-tools.md
+    - AWS:
+      - Boot: quickstart/provider/aws/boot.md
+      - DNS: quickstart/provider/aws/dns.md
+      - Install Workflow: quickstart/provider/aws/install-aws.md
+    - GKE:
+      - Boot: quickstart/provider/gke/boot.md
+      - DNS: quickstart/provider/gke/dns.md
+      - Install Workflow: quickstart/provider/gke/install-gke.md
+    - Vagrant:
+      - Boot: quickstart/provider/vagrant/boot.md
+      - DNS: quickstart/provider/vagrant/dns.md
+      - Install Workflow: quickstart/provider/vagrant/install-vagrant.md
+    - Deploy Your First App: quickstart/deploy-an-app.md
   - Understanding Workflow:
     - Concepts: understanding-workflow/concepts.md
     - Architecture: understanding-workflow/architecture.md
     - Components: understanding-workflow/components.md
   - Installing Workflow:
-    - Quick Start: installing-workflow/quickstart.md
     - System Requirements: installing-workflow/system-requirements.md
-    - Installing Workflow: installing-workflow/installing-deis-workflow.md
     - Configuring Object Storage: installing-workflow/configuring-object-storage.md
   - Using Workflow:
     - Installing the Client: using-workflow/installing-the-client.md

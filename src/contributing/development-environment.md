@@ -135,7 +135,7 @@ Although writing and executing tests are critical to ensuring code quality, most
 
 ### Running a Kubernetes Cluster for Development
 
-To run a Kubernetes cluster locally or elsewhere to support your development activities, refer to Deis installation instructions [here](../installing-workflow/quickstart.md).
+To run a Kubernetes cluster locally or elsewhere to support your development activities, refer to Deis installation instructions [here](../quickstart/index.md).
 
 ### Using a Development Registry
 

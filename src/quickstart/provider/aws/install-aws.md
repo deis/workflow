@@ -1,7 +1,5 @@
 # Installing Deis Workflow
 
-We will use the Helm Classic package manager for Kubernetes to install Deis Workflow onto a Kubernetes cluster. If you don't have Helm Classic installed, see [Helm Classic's own documentation][helm] for more info.
-
 ## Check Your Setup
 
 First check that the `helmc` command is available and the version is 0.7 or newer.
@@ -72,16 +70,13 @@ $ kubectl get pods --namespace=deis -w
 
 Once you see all of the pods in the `READY` state, Deis Workflow is up and running!
 
-## Configure your Load Balancer
+## Configure your AWS Load Balancer
 
 After installing Workflow on your cluster, you'll need to [configure your load balancer][lb].
 Following this step is especially important on AWS because the default idle timeout for connections
 on the Elastic Load Balancer is too low for the [Builder][] to finish a `git push` operation.
 
-Next, [configure dns][] so you can register your first user.
+Next, [configure dns](dns.md) so you can register your first user.
 
-
-[builder]: ../understanding-workflow/components.md#builder-builder-slugbuilder-and-dockerbuilder
-[configure dns]: ../managing-workflow/configuring-dns.md
-[helm]: http://helm.sh
-[lb]: ../managing-workflow/configuring-load-balancers.md
+[builder]: ../../../understanding-workflow/components.md#builder-builder-slugbuilder-and-dockerbuilder
+[lb]: ../../../managing-workflow/configuring-load-balancers.md
