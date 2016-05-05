@@ -1,21 +1,21 @@
 # Installing Deis Workflow
 
-We will use the Helm package manager for Kubernetes to install Deis Workflow onto a Kubernetes cluster. If you don't have Helm installed, see [Helm's own documentation][helm] for more info.
+We will use the Helm Classic package manager for Kubernetes to install Deis Workflow onto a Kubernetes cluster. If you don't have Helm Classic installed, see [Helm Classic's own documentation][helm] for more info.
 
 ## Check Your Setup
 
-First check that the `helm` command is available and the version is 0.6 or newer.
+First check that the `helmc` command is available and the version is 0.6 or newer.
 
 ```
-$ helm --version
-helm version 0.6.0+1c8688e
+$ helmc --version
+helmc version 0.6.0+1c8688e
 ```
 
-Ensure the `kubectl` client is installed and can connect to your Kubernetes cluster. `helm` will
+Ensure the `kubectl` client is installed and can connect to your Kubernetes cluster. `helmc` will
 use it to communicate. You can test that it is working properly by running:
 
 ```
-$ helm target
+$ helmc target
 Kubernetes master is running at https://10.245.1.2
 Heapster is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/heapster
 KubeDNS is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-dns
@@ -24,7 +24,7 @@ Grafana is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/ser
 InfluxDB is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
 ```
 
-If you see a list of targets like the one above, `helm` can communicate with the Kubernetes master.
+If you see a list of targets like the one above, `helmc` can communicate with the Kubernetes master.
 
 Deis Workflow requires Kubernetes 1.2 or higher. You can test that by running:
 
@@ -37,27 +37,27 @@ Server Version: version.Info{Major:"1", Minor:"2", GitVersion:"v1.2.3", GitCommi
 ## Add the Deis Chart Repository
 
 The [Deis Chart Repository](https://github.com/deis/charts) contains everything you
-need to install Deis onto your Kubernetes cluster, with a single `helm install` command.
+need to install Deis onto your Kubernetes cluster, with a single `helmc install` command.
 
-Run the following command to add this repository to Helm:
+Run the following command to add this repository to Helm Classic:
 
 ```
-$ helm repo add deis https://github.com/deis/charts
+$ helmc repo add deis https://github.com/deis/charts
 ```
 
 ## Install Deis Workflow
 
-Now that you have Helm installed and have added the Deis Chart Repository, install Workflow by running:
+Now that you have Helm Classic installed and have added the Deis Chart Repository, install Workflow by running:
 
 ```
-$ helm fetch deis/workflow-beta3             # fetches the chart into a
+$ helmc fetch deis/workflow-beta3             # fetches the chart into a
                                              # local workspace
-$ helm generate -x manifests workflow-beta3  # generates various secrets
-$ helm install workflow-beta3                # injects resources into
+$ helmc generate -x manifests workflow-beta3  # generates various secrets
+$ helmc install workflow-beta3                # injects resources into
                                              # your cluster
 ```
 
-Helm will install a variety of Kubernetes resources in the `deis` namespace.
+Helm Classic will install a variety of Kubernetes resources in the `deis` namespace.
 You'll need to wait for the pods that it launched to be ready. Monitor their status
 by running:
 

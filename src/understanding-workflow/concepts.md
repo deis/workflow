@@ -28,7 +28,7 @@ directly from application source code, aggregating logs, and managing deployment
 configurations and app releases are just some of the features Workflow adds.
 
 Deis Workflow is a set of Kubernetes-native components, installable via
-[Helm][helm]. Systems engineers who are familiar with Kubernetes will feel right
+[Helm Classic][helm]. Systems engineers who are familiar with Kubernetes will feel right
 at home running Workflow.
 
 See the [components][components] overview for more detail.

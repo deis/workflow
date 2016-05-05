@@ -11,25 +11,25 @@ Every component that relies on object storage uses two inputs for configuration:
 1. Component-specific environment variables (e.g. `BUILDER_STORAGE` and `REGISTRY_STORAGE`)
 2. Access credentials stored as a Kubernetes secret named `objectstorage-keyfile`
 
-The helm chart for Deis Workflow can be easily configured to connect Workflow components to off-cluster object storage. Deis Workflow currently supports Google Compute Storage, Amazon S3 and Azure Blob Storage.
+The helm classic chart for Deis Workflow can be easily configured to connect Workflow components to off-cluster object storage. Deis Workflow currently supports Google Compute Storage, Amazon S3 and Azure Blob Storage.
 
 * **Step 1:** Create storage buckets for each of the Workflow subsystems: builder, registry and database
     * Note: Depending on your chosen object storage you may need to provide globally unique bucket names.
     * Note: If you provide credentials with sufficient access to the underlying storage, Workflow components will create the buckets if they do not exist.
 * **Step 2:** If applicable, generate credentials that have write access to the storage buckets created in Step 1
-* **Step 3:** If you haven't already fetched the helm chart, do so with `helm fetch deis/workflow-beta3`
-* **Step 4:** Open the helm chart with `helm edit workflow-beta3` and look for the template file `tpl/generate_params.toml`
+* **Step 3:** If you haven't already fetched the helm classic chart, do so with `helmc fetch deis/workflow-beta3`
+* **Step 4:** Open the helm classic chart with `helmc edit workflow-beta3` and look for the template file `tpl/generate_params.toml`
 * **Step 5:** Update the `storage` parameter to reference the storage platform you are using: `s3`, `azure`, `gcs`
 * **Step 6:** Update the values in the section which corresponds to your storage type, including region, bucket names and access credentials
-    * Note: you do not need to base64 encode any of these values as Helm will handle encoding automatically
-* **Step 7:** Save your changes and re-generate the helm chart by running `helm generate -x manifests workflow-beta3`
+    * Note: you do not need to base64 encode any of these values as Helm Classic will handle encoding automatically
+* **Step 7:** Save your changes and re-generate the helm classic chart by running `helmc generate -x manifests workflow-beta3`
 * **Step 8:** Check the generated file in your manifests directory, you should see `deis-objectstorage-secret.yaml`
 
-You are now ready to `helm install workflow-beta3` using your desired object storage.
+You are now ready to `helmc install workflow-beta3` using your desired object storage.
 
 ## Object Storage Configuration and Credentials
 
-During the `helm generate` step, Helm creates a Kubernetes secret in the Deis namespace named `objectstorage-keyfile`. The exact structure of the file depends on storage backend specified in `tpl/generate_params.toml`.
+During the `helmc generate` step, Helm Classic creates a Kubernetes secret in the Deis namespace named `objectstorage-keyfile`. The exact structure of the file depends on storage backend specified in `tpl/generate_params.toml`.
 
 ```
 # Set the storage backend

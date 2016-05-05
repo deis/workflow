@@ -30,7 +30,7 @@ A release consists of the following artifacts:
   - [workflow-e2e](https://github.com/deis/workflow-e2e)
   - [workflow-manager](https://github.com/deis/workflow-manager)
   - [workflow-cli](https://github.com/deis/workflow-cli)
-2. A new [Helm chart for Deis](https://github.com/deis/charts) that references all of the new
+2. A new [Helm Classic chart for Deis](https://github.com/deis/charts) that references all of the new
 images referenced above. For example, if `$DEIS_RELEASE` is `2.0.0-beta3`, the new chart would
 be in a new directory called `workflow-beta3`.
 
@@ -54,9 +54,9 @@ git submodule status
 
 Keep the list of commit SHAs handy - you'll need it for later.
 
-# Step 2: Create a new Helm chart
+# Step 2: Create a new Helm Classic chart
 
-Next, we'll create a new [Helm](https://github.com/helm/helm) chart so that we can "stage" a
+Next, we'll create a new [Helm Classic](https://github.com/helm/helm) chart so that we can "stage" a
 version of our release for testing. The process is fairly simple:
 
 1. Create a new branch: `git checkout -b release-$DEIS_RELEASE`
@@ -105,14 +105,14 @@ and run the following two commands to tag and push updated docker images:
 TAG=$DEIS_RELEASE make docker-tag docker-push
 ```
 
-# Step 5: Update Helm chart
+# Step 5: Update Helm Classic chart
 
-Now that new Docker images are on public Docker repositories, it's time to update the Helm chart
+Now that new Docker images are on public Docker repositories, it's time to update the Helm Classic chart
 to reference the official images. To do so, simply modify all `dockerTag` entries in the
 `generate_params.toml` files in the `workflow-$DEIS_RELEASE_SHORT` and
 `workflow-$DEIS_RELEASE_SHORT-e2e` to be `$DEIS_RELEASE` (instead of the ones based on git tags).
 
-Also, ensure that the `README.md` and `Chart.yaml` files in the new helm chart have updated references to the chart. For example, references to `helm install workflow-betaX` should become `helm install workflow-$DEIS_RELEASE_SHORT`
+Also, ensure that the `README.md` and `Chart.yaml` files in the new helm classic chart have updated references to the chart. For example, references to `helmc install workflow-betaX` should become `helmc install workflow-$DEIS_RELEASE_SHORT`
 
 If you find any references that should be bumped, open a pull-request against the documentation.
 
@@ -123,7 +123,7 @@ When you're done, commit and push your changes. You should get your pull request
 # Step 6: Update Changelogs
 
 At this point, part of the first part and all of the second part of the release is complete.
-That is, the Helm chart for the new Deis version is done, and new Docker versions for all
+That is, the Helm Classic chart for the new Deis version is done, and new Docker versions for all
 components are done.
 
 The remaining work is simply generating changelogs and tagging each component's GitHub repository.
