@@ -56,7 +56,7 @@ Keep the list of commit SHAs handy - you'll need it for later.
 
 # Step 2: Create a new Helm Classic chart
 
-Next, we'll create a new [Helm Classic](https://github.com/helm/helm) chart so that we can "stage" a
+Next, we'll create a new [Helm Classic](https://github.com/helm/helm-classic) chart so that we can "stage" a
 version of our release for testing. The process is fairly simple:
 
 1. Create a new branch: `git checkout -b release-$DEIS_RELEASE`
