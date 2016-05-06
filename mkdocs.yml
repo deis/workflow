@@ -59,7 +59,6 @@ pages:
     - Roadmap: roadmap/roadmap.md
     - Release Schedule: roadmap/release-schedule.md
     - Release Checklist: roadmap/release-checklist.md
-    - Test Plan: roadmap/test-plan.md
   - Contributing:
     - Overview: contributing/overview.md
     - Design Documents: contributing/design-documents.md
