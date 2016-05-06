@@ -87,7 +87,7 @@ Scaling a process type directly changes the number of [Containers][container] ru
 
 When deploying to Deis Workflow using a Heroku Buildpack, Workflow boots the `web` process type to
 boot the application server. When you deploy an application that has a Dockerfile or uses [Docker
-images](using-docker-images.md), Workflow boots the `cmd` process type. Both act similarly in that
+images][docker image], Workflow boots the `cmd` process type. Both act similarly in that
 they are exposed to the router as web applications. However, the `cmd` process type is special
 because, if left undefined, it is equivalent to running the [container][] without any additional
 arguments.  (i.e. The process specified by the Dockerfile or Docker image's `CMD` directive will
@@ -99,6 +99,6 @@ down the old process type and scale the new process type up.
 
 [container]: ../reference-guide/terms.md#container
 [process model]: https://devcenter.heroku.com/articles/process-model
-[buildpacks]: using-buildpacks.md
-[dockerfile]: using-dockerfiles.md
-[docker image]: using-docker-images.md
+[buildpacks]: ../applications/using-buildpacks.md
+[dockerfile]: ../applications/using-dockerfiles.md
+[docker image]: ../applications/using-docker-images.md
