@@ -32,9 +32,9 @@ pages:
     - Buildpacks: applications/using-buildpacks.md
     - Dockerfiles: applications/using-dockerfiles.md
     - Docker Images: applications/using-docker-images.md
+    - Managing App Processes: applications/managing-app-processes.md
   - Using Workflow:
     - Installing the Client: using-workflow/installing-the-client.md
-    - Process Types and the Procfile: using-workflow/process-types-and-the-procfile.md
     - Registering a User: using-workflow/registering-a-user.md
     - Deploying an Application: using-workflow/deploying-an-application.md
     - Configuring an Application: using-workflow/configuring-an-application.md

@@ -18,14 +18,14 @@ deis.com/docs/workflow/learn/
 
 deis.com/docs/workflow/applications/
 	deploy
-	buildpacks
-	configuration
-	dockerfiles
+	using-buildpacks
+	using-dockerfiles
 	docker-images
+	managing-app-proccesses
+	configuration
 	limits-and-tags
 	logs
 	permissions
-	process-types
 	scaling
 
 deis.com/docs/workflow/{management,administration}

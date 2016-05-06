@@ -77,7 +77,7 @@ Given the `Procfile` above, the `web` process could be scaled out:
 
 And the `worker` process could be left alone, or scaled out independently, to whatever extent is
 required:
- 
+
     $ deis scale worker=3
 
 Scaling a process type directly changes the number of [Containers][container] running that process.
