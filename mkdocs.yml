@@ -75,7 +75,6 @@ pages:
     - Creating a Self-Signed SSL Certificate: reference-guide/creating-a-self-signed-ssl-certificate.md
     # FIXME (bacongobbler): our custom deis theme only supports a toctree depth of 2 due to css issues
     - Controller API v2.0: reference-guide/controller-api/v2.0.md
-  - FAQ: faq.md
 theme_dir: themes/deis
 docs_dir: src
 markdown_extensions:
