@@ -2,7 +2,6 @@
 
 An [Application][] is deployed to Deis using `git push` or the `deis` client.
 
-
 ## Supported Applications
 
 Deis can deploy any application or service that can run inside a Docker container.  In order to be scaled horizontally, applications must follow the [Twelve-Factor App][] methodology and store any application state in external backing services.
@@ -25,6 +24,20 @@ using the URL supplied by their Deis administrator.
     password:
     Logged in as deis
 
+## Upload Your SSH Public Key
+
+If you plan on using `git push` to deploy applications to Deis, you must provide your SSH public key.  Use the `deis keys:add` command to upload your default SSH public key, usually one of:
+
+* ~/.ssh/id_rsa.pub
+* ~/.ssh/id_dsa.pub
+
+```
+    $ deis keys:add
+    Found the following SSH public keys:
+    1) id_rsa.pub
+    Which would you like to use with Deis? 1
+    Uploading /Users/myuser/.ssh/id_rsa.pub to Deis... done
+```
 
 ## Select a Build Process
 

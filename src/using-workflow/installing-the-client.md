@@ -16,18 +16,6 @@ somewhere in your $PATH:
     $ ln -fs $PWD/deis /usr/local/bin/deis
 
 
-## Proxy Support
-
-If your workstation uses a proxy to reach the network where the cluster lies,
-set the `http_proxy` or `https_proxy` environment variable to enable proxy support:
-
-    $ export http_proxy="http://proxyip:port"
-    $ export https_proxy="http://proxyip:port"
-
-!!! note
-    Configuring a proxy is generally not necessary for local Vagrant clusters.
-
-
 ## Integrated Help
 
 The Deis client comes with comprehensive documentation for every command.
@@ -65,7 +53,6 @@ To get help on subcommands, use `deis help [subcommand]`:
 
 ## Multiple Profile Support
 
-
 The Deis client supports running commands against multiple installations
 and/or accounts by setting the `$DEIS_PROFILE` environment variable
 before logging in and running any subsequent commands. If not set, all
@@ -76,5 +63,15 @@ of running the ps command against an app with the same name from two profiles:
     $ DEIS_PROFILE=production deis ps -a helloworld
     $ DEIS_PROFILE=staging deis ps -a helloworld
 
+## Proxy Support
+
+If your workstation uses a proxy to reach the network where the cluster lies,
+set the `http_proxy` or `https_proxy` environment variable to enable proxy support:
+
+    $ export http_proxy="http://proxyip:port"
+    $ export https_proxy="http://proxyip:port"
+
+!!! note
+    Configuring a proxy is generally not necessary for local Vagrant clusters.
 
 [controller]: ../understanding-workflow/components.md#controller
