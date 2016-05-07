@@ -29,15 +29,16 @@ pages:
     - System Requirements: installing-workflow/system-requirements.md
     - Configuring Object Storage: installing-workflow/configuring-object-storage.md
   - Applications:
+    - Deploying Apps: applications/deploying-apps.md
     - Buildpacks: applications/using-buildpacks.md
     - Dockerfiles: applications/using-dockerfiles.md
     - Docker Images: applications/using-docker-images.md
     - Managing App Processes: applications/managing-app-processes.md
+    - Managing App Configuration: applications/managing-app-configuration.md
   - Using Workflow:
     - Installing the Client: using-workflow/installing-the-client.md
     - Registering a User: using-workflow/registering-a-user.md
     - Deploying an Application: using-workflow/deploying-an-application.md
-    - Configuring an Application: using-workflow/configuring-an-application.md
     - Managing an Application: using-workflow/managing-an-application.md
     - Application SSL Certificates: using-workflow/application-ssl-certificates.md
   - Managing Workflow:
