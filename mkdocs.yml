@@ -31,7 +31,6 @@ pages:
   - Using Workflow:
     - Installing the Client: using-workflow/installing-the-client.md
     - Registering a User: using-workflow/registering-a-user.md
-    - Managing an Application: using-workflow/managing-an-application.md
   - Applications:
     - Deploying Apps: applications/deploying-apps.md
     - Buildpacks: applications/using-buildpacks.md
@@ -39,6 +38,7 @@ pages:
     - Docker Images: applications/using-docker-images.md
     - Managing App Processes: applications/managing-app-processes.md
     - Managing App Configuration: applications/managing-app-configuration.md
+    - Managing App Lifecycle: applications/managing-app-lifecycle.md
     - SSL Certificates: applications/ssl-certificates.md
   - Managing Workflow:
     - Configuring Load Balancers: managing-workflow/configuring-load-balancers.md
