@@ -1,10 +1,9 @@
-# Install the Client
+## Deis Workflow  CLI
 
-The Deis command-line interface (CLI), or client, allows you to interact
-with a Deis [Controller][]. You must install the client to use Deis.
+The Deis Workflow command-line interface (CLI), or client, allows you to interact
+with Deis Workflow.
 
-
-## Install the Deis Client
+## Installation
 
 Install the latest `deis` client for Linux or Mac OS X with:
 
@@ -15,8 +14,7 @@ somewhere in your $PATH:
 
     $ ln -fs $PWD/deis /usr/local/bin/deis
 
-
-## Integrated Help
+## Getting Help
 
 The Deis client comes with comprehensive documentation for every command.
 Use `deis help` to explore the commands available to you:
@@ -51,17 +49,23 @@ To get help on subcommands, use `deis help [subcommand]`:
     Use `deis help [command]` to learn more
 
 
-## Multiple Profile Support
+## Support for Multiple Profiles
 
-The Deis client supports running commands against multiple installations
-and/or accounts by setting the `$DEIS_PROFILE` environment variable
-before logging in and running any subsequent commands. If not set, all
-commands will default to the `client` profile which maps to
-a configuration file at `$HOME/.deis/client.json`. Here's an example
-of running the ps command against an app with the same name from two profiles:
+The CLI reads from the default `client` profile which is located on your
+workstation at `$HOME/.deis/client.json`.
 
-    $ DEIS_PROFILE=production deis ps -a helloworld
-    $ DEIS_PROFILE=staging deis ps -a helloworld
+Easily switch between multiple Deis Workflow installations or users by setting
+the `$DEIS_PROFILE` environment variable.
+
+    $ cat ~/.deis/production.json && echo
+    {"username":"deis","controller":"http://deis-prod.example.com","token":"37de3...8776"}
+    $ DEIS_PROFILE=production deis whoami
+    You are deis at http://deis-prod.example.com
+
+    $ cat ~/.deis/staging.json && echo
+    {"username":"deis","controller":"http://deis-prod.example.com","token":"67bdc...196a"}
+    $ DEIS_PROFILE=staging deis whoami
+    You are deis at http://deis-staging.example.com
 
 ## Proxy Support
 
@@ -73,5 +77,27 @@ set the `http_proxy` or `https_proxy` environment variable to enable proxy suppo
 
 !!! note
     Configuring a proxy is generally not necessary for local Vagrant clusters.
+
+# CLI Plugins
+
+Plugins allow developers to extend the functionality of the [Deis Client][], adding new commands or features.
+
+If an unknown command is specified, the client will attempt to execute the command as a dash-separated command. In this case, `deis resource:command` will execute `deis-resource` with the argument list `command`. In full form:
+
+    $ # these two are identical
+    $ deis accounts:list
+    $ deis-accounts list
+
+Any flags after the command will also be sent to the plugin as an argument:
+
+    $ # these two are identical
+    $ deis accounts:list --debug
+    $ deis-accounts list --debug
+
+But flags preceding the command will not:
+
+    $ # these two are identical
+    $ deis --debug accounts:list
+    $ deis-accounts list
 
 [controller]: ../understanding-workflow/components.md#controller

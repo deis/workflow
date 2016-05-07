@@ -65,7 +65,7 @@ image in development or in your CI pipeline as you are in production.
 
 Learn how to deploy applications [using Docker images](../applications/using-docker-images.md).
 
-[install client]: ../using-workflow/installing-the-client.md
+[install client]: ../using-workflow/cli.md#installation
 [application]: ../reference-guide/terms.md#application
 [controller]: ../understanding-workflow/components.md#controller
 [Twelve-Factor App]: http://12factor.net/

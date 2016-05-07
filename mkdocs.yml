@@ -29,7 +29,7 @@ pages:
     - System Requirements: installing-workflow/system-requirements.md
     - Configuring Object Storage: installing-workflow/configuring-object-storage.md
   - Using Workflow:
-    - Installing the Client: using-workflow/installing-the-client.md
+    - Command Line Interface: using-workflow/cli.md
     - Registering a User: using-workflow/registering-a-user.md
   - Applications:
     - Deploying Apps: applications/deploying-apps.md
@@ -50,9 +50,6 @@ pages:
     - Security Considerations: managing-workflow/security-considerations.md
     - Platform SSL: managing-workflow/platform-ssl.md
     - Upgrading Workflow: managing-workflow/upgrading-workflow.md
-  - Customizing Workflow:
-    - CLI Plugins: customizing-workflow/cli-plugins.md
-    - Tuning Component Settings: customizing-workflow/tuning-component-settings.md
   - Troubleshooting:
     - Troubleshooting with kubectl: troubleshooting/troubleshooting.md
   - Roadmap:
