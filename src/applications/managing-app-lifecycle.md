@@ -1,8 +1,5 @@
 # Managing an Application
 
-Deis includes many tools for managing deployed [Applications][application].
-
-
 ## Scale the Application
 
 Applications deployed on Deis [scale out via the process model][].
@@ -30,8 +27,37 @@ Scaling is managed by process types like `web` or `worker` defined in a
 !!! note
     Docker applications can use the `cmd` process type to scale the default container command.
 
+## Rollback a Release
 
-## Administer the Application
+Use `deis rollback` to revert to a previous release.
+
+    $ deis rollback v2
+    Rolled back to v2
+
+    $ deis releases
+    === folksy-offshoot Releases
+    v5      Just now                          gabrtv rolled back to v2
+    v4      4 minutes ago                     gabrtv deployed d3ccc05
+    v3      1 hour 18 minutes ago             gabrtv added DATABASE_URL
+    v2      6 hours 2 minutes ago             gabrtv deployed 7cb3321
+    v1      6 hours 3 minutes ago             gabrtv deployed deis/helloworld
+
+!!! note
+    All releases (including rollbacks) append to the release ledger.
+
+## Track Application Changes
+
+Each time a build or config change is made to your application, a new [release][] is created.
+Track changes to your application using `deis releases`.
+
+    $ deis releases
+    === peachy-waxworks Releases
+    v4      3 minutes ago                     gabrtv deployed d3ccc05
+    v3      1 hour 17 minutes ago             gabrtv added DATABASE_URL
+    v2      6 hours 2 minutes ago             gabrtv deployed 7cb3321
+    v1      6 hours 2 minutes ago             gabrtv deployed deis/helloworld
+
+## Run One-off Administration Tasks
 
 Deis applications [use one-off processes for admin tasks][] like database migrations and other commands that must run against the live application.
 
@@ -50,7 +76,32 @@ Use `deis run` to execute commands on the deployed application.
     drwxr-xr-x 6 root root 4096 Dec  3 00:00 target
 
 
-## Share the Application
+## Limit Resource Usage
+
+Deis supports restricting memory and CPU shares of each [Container][].
+
+Use `deis limits:set` to restrict memory by process type:
+
+    $ deis limits:set web=512M
+    Applying limits... done, v3
+
+    === peachy-waxworks Limits
+
+    --- Memory
+    web      512M
+
+    --- CPU
+    Unlimited
+
+You can also use `deis limits:set -c` to restrict CPU shares.
+CPU shares are on a scale of 0 to 1024, with 1024 being all CPU resources on the host.
+
+!!! important
+    If you restrict resources to the point where containers do not start,
+    the `limits:set` command will hang.  If this happens, use CTRL-C
+    to break out of `limits:set` and use `limits:unset` to revert.
+
+## Share an Application
 
 Use `deis perms:create` to allow another Deis user to collaborate on your application.
 
@@ -75,7 +126,7 @@ When working with an application that has been shared with you, clone the origin
      * [new branch]      master     -> deis/master
 
 
-## Troubleshoot the Application
+## Application Troubleshooting
 
 Applications deployed on Deis [treat logs as event streams][]. Deis aggregates `stdout` and `stderr` from every [Container][] making it easy to troubleshoot problems with your application.
 
@@ -91,32 +142,6 @@ Use `deis logs` to view the log output from your deployed application.
     Dec  3 00:30:31 ip-10-250-15-201 peachy-waxworks[web.8]: INFO:oejsh.ContextHandler:started o.e.j.s.ServletContextHandler{/,null}
     Dec  3 00:30:31 ip-10-250-15-201 peachy-waxworks[web.7]: INFO:oejs.AbstractConnector:Started SelectChannelConnector@0.0.0.0:10007
     Dec  3 00:30:31 ip-10-250-15-201 peachy-waxworks[web.8]: INFO:oejs.AbstractConnector:Started SelectChannelConnector@0.0.0.0:10008
-
-
-## Limit the Application
-
-Deis supports restricting memory and CPU shares of each [Container][].
-
-Use `deis limits:set` to restrict memory by process type:
-
-    $ deis limits:set web=512M
-    Applying limits... done, v3
-
-    === peachy-waxworks Limits
-
-    --- Memory
-    web      512M
-
-    --- CPU
-    Unlimited
-
-You can also use `deis limits:set -c` to restrict CPU shares.
-CPU shares are on a scale of 0 to 1024, with 1024 being all CPU resources on the host.
-
-!!! important
-    If you restrict resources to the point where containers do not start,
-    the `limits:set` command will hang.  If this happens, use CTRL-C
-    to break out of `limits:set` and use `limits:unset` to revert.
 
 [application]: ../reference-guide/terms.md#application
 [container]: ../reference-guide/terms.md#container
