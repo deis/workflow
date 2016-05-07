@@ -28,6 +28,10 @@ pages:
   - Installing Workflow:
     - System Requirements: installing-workflow/system-requirements.md
     - Configuring Object Storage: installing-workflow/configuring-object-storage.md
+  - Using Workflow:
+    - Installing the Client: using-workflow/installing-the-client.md
+    - Registering a User: using-workflow/registering-a-user.md
+    - Managing an Application: using-workflow/managing-an-application.md
   - Applications:
     - Deploying Apps: applications/deploying-apps.md
     - Buildpacks: applications/using-buildpacks.md
@@ -36,10 +40,6 @@ pages:
     - Managing App Processes: applications/managing-app-processes.md
     - Managing App Configuration: applications/managing-app-configuration.md
     - SSL Certificates: applications/ssl-certificates.md
-  - Using Workflow:
-    - Installing the Client: using-workflow/installing-the-client.md
-    - Registering a User: using-workflow/registering-a-user.md
-    - Managing an Application: using-workflow/managing-an-application.md
   - Managing Workflow:
     - Configuring Load Balancers: managing-workflow/configuring-load-balancers.md
     - Configuring DNS: managing-workflow/configuring-dns.md
