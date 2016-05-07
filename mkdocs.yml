@@ -38,7 +38,6 @@ pages:
   - Using Workflow:
     - Installing the Client: using-workflow/installing-the-client.md
     - Registering a User: using-workflow/registering-a-user.md
-    - Deploying an Application: using-workflow/deploying-an-application.md
     - Managing an Application: using-workflow/managing-an-application.md
     - Application SSL Certificates: using-workflow/application-ssl-certificates.md
   - Managing Workflow:

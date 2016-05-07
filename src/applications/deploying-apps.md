@@ -15,7 +15,7 @@ Fortunately, most modern applications feature a stateless application tier that 
 ## Login to the Controller
 
 !!! important
-	if you haven't yet, now is a good time to [install the client](installing-the-client.md) and [register](registering-a-user.md).
+	if you haven't yet, now is a good time to [install the client][install client] and [register](../using-workflow/registering-a-user.md).
 
 Before deploying an application, users must first authenticate against the Deis [Controller][]
 using the URL supplied by their Deis administrator.
@@ -52,6 +52,7 @@ image in development or in your CI pipeline as you are in production.
 
 Learn how to deploy applications [using Docker images](../applications/using-docker-images.md).
 
+[install client]: ../using-workflow/installing-the-client.md
 [application]: ../reference-guide/terms.md#application
 [controller]: ../understanding-workflow/components.md#controller
 [Twelve-Factor App]: http://12factor.net/
