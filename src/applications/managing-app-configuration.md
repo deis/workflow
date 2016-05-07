@@ -2,7 +2,7 @@
 
 A Deis application [stores config in environment variables][].
 
-## Configure the Application
+## Setting Environment Variables
 
 Use `deis config` to modify environment variables for a deployed application.
 
