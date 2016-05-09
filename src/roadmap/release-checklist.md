@@ -65,11 +65,12 @@ version of our release for testing. The process is fairly simple:
 `dockerTag` values look like `git-$COMPONENT_SHA_SHORT`, where `$COMPONENT_SHA_SHORT` is the first
 7 characters of the applicable SHA that you got in the previous step.
 4. Ensure that all `DEBUG` variables in manifests are `false`.
-5. Commit your changes: `git commit -a -m "chore(workflow-$DEIS_RELEASE_SHORT): releasing workflow-$DEIS_RELEASE_SHORT"`
-6. Push your changes to your fork: `git push -u $YOUR_FORK_REMOTE release-$DEIS_RELEASE`. Note that
+5. Delete the `KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS` env var from `tpl/deis-controller-rc.yaml`
+6. Commit your changes: `git commit -a -m "chore(workflow-$DEIS_RELEASE_SHORT): releasing workflow-$DEIS_RELEASE_SHORT"`
+7. Push your changes to your fork: `git push -u $YOUR_FORK_REMOTE release-$DEIS_RELEASE`. Note that
 `$YOUR_FORK_REMOTE` is the git URI to the remote of your `deis/charts` fork. Mine is `git@github.com:arschles/deis-charts.git`, for example.
-7. Do steps 2-5 with the `workflow-beta3-e2e` directory
-8. Open a pull request from your branch to merge into `master` on https://github.com/deis/charts
+8. Do steps 2-5 with the `workflow-beta3-e2e` directory
+9. Open a pull request from your branch to merge into `master` on https://github.com/deis/charts
 
 # Step 3: Manual Testing
 
