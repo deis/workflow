@@ -22,7 +22,7 @@ Our official support channels are:
   - controller: https://github.com/deis/controller/issues
   - database: https://github.com/deis/postgres/issues
   - documentation: https://github.com/deis/workflow/issues
-  - helm: https://github.com/helm/helm/issues
+  - helm classic: https://github.com/helm/helm-classic/issues
   - minio: https://github.com/deis/minio/issues
   - registry: https://github.com/deis/registry/issues
   - router: https://github.com/deis/router/issues
