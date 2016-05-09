@@ -112,6 +112,8 @@ to reference the official images. To do so, simply modify all `dockerTag` entrie
 `generate_params.toml` files in the `workflow-$DEIS_RELEASE_SHORT` and
 `workflow-$DEIS_RELEASE_SHORT-e2e` to be `$DEIS_RELEASE` (instead of the ones based on git tags).
 
+Additionally, we want the official release chart to reference the production `versions.deis.com` API. Also in `generate_params.toml`, modify the `versionsApiURL` entry under `workflowManager` to have the value `https://versions.deis.com`.
+
 Also, ensure that the `README.md` and `Chart.yaml` files in the new helm classic chart have updated references to the chart. For example, references to `helmc install workflow-betaX` should become `helmc install workflow-$DEIS_RELEASE_SHORT`
 
 If you find any references that should be bumped, open a pull-request against the documentation.
