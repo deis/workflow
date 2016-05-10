@@ -176,10 +176,10 @@ TAG=$WORKFLOW_RELEASE TAG_MESSAGE="releasing workflow $WORKFLOW_RELEASE" make gi
 
 # Step 8: Close GitHub Milestones
 
-For each of the component projects listed at the top of this document, as well as for
-[workflow-cli](https://github.com/deis/workflow-cli), visit its GitHub repository and close
-the appropriate milestone. If there are still open issues attached to it, move them to
-the next upcoming milestone before closing.
+Close the github milestone by creating a new pull request at
+[seed-repo](https://github.com/deis/seed-repo). Any changes merged to master on that repository
+will be applied to all of the component projects. If there are open issues attached to the
+milestone, move them to the next upcoming milestone before merging the pull request.
 
 # Step 9: Let Everyone Know
 
