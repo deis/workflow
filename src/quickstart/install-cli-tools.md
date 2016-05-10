@@ -32,11 +32,11 @@ Install the latest `helm` cli for Linux or Mac OS X with:
   - the CI build pipeline: [ ![Download](https://api.bintray.com/packages/deis/helm-ci/helm/images/download.svg) ](https://bintray.com/deis/helm-ci/helm/_latestVersion#files)
 2. Unzip the package and make sure `helm` is available on the PATH.
 
-Check your work by running `helm version`:
+Check your work by running `helmc version`:
 
-    $ helm version
-    helm version 0.6.0+1c8688e
+    $ helmc version
+    helmc version 0.7.0+20a7ed7
 
-Make sure you are running at least version 0.6.0 or newer.
+Make sure you are running at least version 0.7.0 or newer.
 
 [Next: (Step 2) boot a kubernetes cluster](index.md#step-2-boot-a-kubernetes-cluster)

@@ -5,15 +5,15 @@
 First check that the `helm` command is available and the version is 0.6 or newer.
 
 ```
-$ helm --version
-helm version 0.6.0+1c8688e
+$ helmc --version
+helmc version 0.7.0+20a7ed7
 ```
 
 Ensure the `kubectl` client is installed and can connect to your Kubernetes cluster. `helm` will
 use it to communicate. You can test that it is working properly by running:
 
 ```
-$ helm target
+$ helmc target
 Kubernetes master is running at https://104.154.234.246
 GLBCDefaultBackend is running at https://104.154.234.246/api/v1/proxy/namespaces/kube-system/services/default-http-backend
 Heapster is running at https://104.154.234.246/api/v1/proxy/namespaces/kube-system/services/heapster
@@ -34,12 +34,12 @@ Server Version: version.Info{Major:"1", Minor:"2", GitVersion:"v1.2.3", GitCommi
 ## Add the Deis Chart Repository
 
 The [Deis Chart Repository](https://github.com/deis/charts) contains everything you
-need to install Deis onto your Kubernetes cluster, with a single `helm install` command.
+need to install Deis onto your Kubernetes cluster, with a single `helmc install` command.
 
 Run the following command to add this repository to Helm:
 
 ```
-$ helm repo add deis https://github.com/deis/charts
+$ helmc repo add deis https://github.com/deis/charts
 ```
 
 ## Install Deis Workflow
@@ -47,11 +47,11 @@ $ helm repo add deis https://github.com/deis/charts
 Now that you have Helm installed and have added the Deis Chart Repository, install Workflow by running:
 
 ```
-$ helm fetch deis/workflow-beta3             # fetches the chart into a
-                                             # local workspace
-$ helm generate -x manifests workflow-beta3  # generates various secrets
-$ helm install workflow-beta3                # injects resources into
-                                             # your cluster
+$ helmc fetch deis/workflow-beta3             # fetches the chart into a
+                                              # local workspace
+$ helmc generate -x manifests workflow-beta3  # generates various secrets
+$ helmc install workflow-beta3                # injects resources into
+                                              # your cluster
 ```
 
 Helm will install a variety of Kubernetes resources in the `deis` namespace.
