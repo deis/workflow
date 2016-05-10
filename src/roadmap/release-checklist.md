@@ -34,43 +34,53 @@ A release consists of the following artifacts:
 images referenced above. For example, if `$WORKFLOW_RELEASE` is `2.0.0-beta3`, the new chart would
 be in a new directory called `workflow-beta3`.
 
-# Step 1: Get the Status of all Components
+# Step 1: Create New Helm Classic Charts
 
-First, we'll need to get the statuses of all repositories that house the components we're
-interested in upgrading. We'll use
-[sgoings/deis-workflow-group](https://github.com/sgoings/deis-workflow-group) to do that in one
-place. That repository is a group of git submodules with all of the applicable repositories in it,
-so that we can manage everything from one place.
-
-Clone that repository to any location on your local machine, update all submodules and list
-the latest commit for each submodule:
-
-```console
-git clone https://github.com/sgoings/deis-workflow-group
-cd deis-workflow-group
-make git-update
-git submodule status
+First, export necessary values for `WORKFLOW_RELEASE` and `WORKFLOW_RELEASE_SHORT`:
+```
+export WORKFLOW_RELEASE=<full release name>
+export WORKFLOW_RELEASE_SHORT=<short form of above>
 ```
 
-Keep the list of commit SHAs handy - you'll need it for later.
+Next, we'll create new [Helm Classic](https://github.com/helm/helm-classic) charts so that we can "stage" a
+version of our release for testing. Here is the current process to do so:
 
-# Step 2: Create a New Helm Classic Chart
+1. Create a new branch in [deis/charts](https://github.com/deis/charts): `git checkout -b release-$WORKFLOW_RELEASE origin/master`
+2. Copy the existing `dev` charts:
+  ```
+  cp -r workflow-dev workflow-$WORKFLOW_RELEASE_SHORT
+  cp -r workflow-dev-e2e workflow-$WORKFLOW_RELEASE_SHORT-e2e
+  ```
+3. For the next few steps, we'll work with [deisrel](https://github.com/deis/deisrel):
+  * Download the binary from the link in the project's `README` and place it in your `$PATH`
+  * Stage copies of the `tpl/generate_params.toml` for each chart into staging.  `deisrel` will automatically populate the latest commit sha values for each component's `dockerTag`:
+  ```
+  deisrel helm-params --stage workflow
+  deisrel helm-params --stage e2e
+  ```
+  * Stage copies of the additional files in `workflow-dev(-e2e)` charts needing release value updates into staging (i.e., `Chart.yaml`, `README.md`, etc.)
+  ```
+  deisrel helm-stage workflow
+  deisrel helm-stage e2e
+  ```
+  * Copy these staged files back to the correlating chart directories created in step 2 above:
+  ```
+  cp -r staging/workflow-dev/* workflow-$WORKFLOW_RELEASE_SHORT
+  cp -r staging/workflow-dev-e2e/* workflow-$WORKFLOW_RELEASE_SHORT-e2e
+  ```
+4. Delete the `KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS` env var from `workflow-$WORKFLOW_RELEASE_SHORT/tpl/deis-controller-rc.yaml`
+5. Commit your changes:
+  ```
+  git commit -a -m "chore(workflow-$WORKFLOW_RELEASE_SHORT): releasing workflow-$WORKFLOW_RELEASE_SHORT(-e2e)"
+  ```
+6. Push your changes: `git push origin HEAD:release-$WORKFLOW_RELEASE`.
+7. Open a pull request from your branch to merge into `master` on https://github.com/deis/charts
 
-Next, we'll create a new [Helm Classic](https://github.com/helm/helm-classic) chart so that we can "stage" a
-version of our release for testing. The process is fairly simple:
+# Step 2: Kick off Jenkins Job
 
-1. Create a new branch: `git checkout -b release-$WORKFLOW_RELEASE`
-2. Copy the existing `dev` chart: `cp -r workflow-dev workflow-$WORKFLOW_RELEASE_SHORT`
-3. Modify the `workflow-$WORKFLOW_RELEASE_SHORT/tpl/generate_params.toml` file to ensure that all
-`dockerTag` values look like `git-$COMPONENT_SHA_SHORT`, where `$COMPONENT_SHA_SHORT` is the first
-7 characters of the applicable SHA that you got in the previous step.
-4. Ensure that all `DEBUG` variables in manifests are `false`.
-5. Delete the `KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS` env var from `tpl/deis-controller-rc.yaml`
-6. Commit your changes: `git commit -a -m "chore(workflow-$WORKFLOW_RELEASE_SHORT): releasing workflow-$WORKFLOW_RELEASE_SHORT"`
-7. Push your changes to your fork: `git push -u $YOUR_FORK_REMOTE release-$DEIS_RELEASE`. Note that
-`$YOUR_FORK_REMOTE` is the git URI to the remote of your `deis/charts` fork. Mine is `git@github.com:arschles/deis-charts.git`, for example.
-8. Do steps 2-5 with the `workflow-beta3-e2e` directory
-9. Open a pull request from your branch to merge into `master` on https://github.com/deis/charts
+Navigate to https://ci.deis.io/job/workflow-test-release/ and kick off a new job with appropriate build parameters filled out, i.e. `HELM_REMOTE_BRANCH=$WORKFLOW_RELEASE` and `RELEASE=$WORKFLOW_RELEASE_SHORT`
+
+As of this writing, the e2e tests in this job are run on a GKE cluster using default (minio) external storage.
 
 # Step 3: Manual Testing
 
@@ -94,7 +104,7 @@ Amazon S3                           |
     If bugs are found and fixes are made, do the following:
 
       - Update the appropriate docker tag(s) in the `generate_params.toml` file
-      - Run `make git-update` in the aforementioned `deis-workflow-group` repository
+      - Push this change to the release branch
 
 # Step 4: Tag and Push Docker Images
 
@@ -105,21 +115,28 @@ To do so, simply go back to the directory where you checked out the `deis-workfl
 and run the following two commands to tag and push updated docker images:
 
 ```console
+make git-update
 TAG=$WORKFLOW_RELEASE make docker-tag docker-push
 ```
 
 # Step 5: Update Helm Classic Chart
 
 Now that new Docker images are on public Docker repositories, it's time to update the Helm Classic chart
-to reference the official images. To do so, simply modify all `dockerTag` entries in the
-`generate_params.toml` files in the `workflow-$WORKFLOW_RELEASE_SHORT` and
-`workflow-$WORKFLOW_RELEASE_SHORT-e2e` to be `$WORKFLOW_RELEASE` (instead of the ones based on git tags).
+to reference the official images. We will use `deisrel` to do this.  The following will change every `dockerTag` value
+to the same `$WORKFLOW_RELEASE` as well as now pointing to the `deis` quay org.
 
-Additionally, we want the official release chart to reference the production `versions.deis.com` API. Also in `generate_params.toml`, modify the `versionsApiURL` entry under `workflowManager` to have the value `https://versions.deis.com`.
+```
+deisrel helm-params --stage --tag $WORKFLOW_RELEASE --org deis workflow
+deisrel helm-params --stage --tag $WORKFLOW_RELEASE --org deis e2e
+```
 
-Also, ensure that the `README.md` and `Chart.yaml` files in the new helm classic chart have updated references to the chart. For example, references to `helmc install workflow-betaX` should become `helmc install workflow-$WORKFLOW_RELEASE_SHORT`
+Copy the updated files back into charts:
+```
+cp -r staging/workflow-dev/* workflow-$WORKFLOW_RELEASE_SHORT
+cp -r staging/workflow-dev-e2e/* workflow-$WORKFLOW_RELEASE_SHORT-e2e
+```
 
-If you find any references that should be bumped, open a pull-request against the documentation.
+Double-check that `workflow-dev/tpl/generate_params.toml`, has the value `https://versions.deis.com` for `versionsApiURL` entry under `workflowManager`.
 
 When you're done, commit and push your changes. You should get your pull request reviewed and merged before continuing.
 
@@ -143,7 +160,8 @@ To generate changelogs, run the below command in each repository. Ensure that `$
 the previous tag that was generated in the repository.
 
 ```console
-_scripts/generate_changelog.sh $PREVIOUS_TAG
+$PREVIOUS_TAG=<previous release tag> make update-changelog # if make recipe exists (as in builder)
+_scripts/generate_changelog.sh $PREVIOUS_TAG # if make recipe doesn't exist (as in most repos)
 ```
 
 This command will output the new changelog entry to STDOUT. Copy it and prepend it to the
@@ -158,8 +176,8 @@ in Step 9 can start preparing supporting content for the release.
 Finally, commit, push and submit a pull request for your changes:
 
 ```console
-git commit CHANGELOG.md -m "doc(CHANGELOG.md): add entry for $WORKFLOW_RELEASE_SHORT"
-git push -u $YOUR_FORK_REMOTE $WORKFLOW_RELEASE_SHORT
+git commit CHANGELOG.md -m "doc(CHANGELOG.md): add entry for $WORKFLOW_RELEASE"
+git push -u $YOUR_FORK_REMOTE release-$WORKFLOW_RELEASE_SHORT
 ```
 
 Before you continue, ensure pull requests in all applicable repositories are reviewed, and merge
@@ -168,10 +186,10 @@ them.
 # Step 7: Tag and Push Git Repositories
 
 The final step of the release process is to tag each git repository, and push the tag to each
-GitHub project. To do so, simply run the below command in the `deis-workflow-group` repository:
+GitHub project. To do so, simply run the below command in the `deisrel` repository:
 
 ```console
-TAG=$WORKFLOW_RELEASE TAG_MESSAGE="releasing workflow $WORKFLOW_RELEASE" make git-tag git-tag-push
+deisrel git tag $WORKFLOW_RELEASE
 ```
 
 # Step 8: Close GitHub Milestones
@@ -185,7 +203,12 @@ milestone, move them to the next upcoming milestone before merging the pull requ
 
 Jump in #company on slack and let folks know that the release has been cut! This will let
 folks in supporting functions know that they should start the release support process including
-summary blog posts, tweets, notes for the monthly newsletter updates, etc. Providing a
-gist to the aggregated release notes would be super-fly.
+summary blog posts, tweets, notes for the monthly newsletter updates, etc.
+
+Provide a gist to the aggregated release notes.  We can generate the aggregated changelog data from `deisrel`:
+
+```console
+deisrel generate-changelog $PREVIOUS_TAG $WORKFLOW_RELEASE
+```
 
 You are now done with the release.
