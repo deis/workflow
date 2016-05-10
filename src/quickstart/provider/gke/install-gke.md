@@ -14,12 +14,11 @@ use it to communicate. You can test that it is working properly by running:
 
 ```
 $ helm target
-Kubernetes master is running at https://10.245.1.2
-Heapster is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/heapster
-KubeDNS is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-dns
-KubeUI is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-ui
-Grafana is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
-InfluxDB is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
+Kubernetes master is running at https://104.154.234.246
+GLBCDefaultBackend is running at https://104.154.234.246/api/v1/proxy/namespaces/kube-system/services/default-http-backend
+Heapster is running at https://104.154.234.246/api/v1/proxy/namespaces/kube-system/services/heapster
+KubeDNS is running at https://104.154.234.246/api/v1/proxy/namespaces/kube-system/services/kube-dns
+kubernetes-dashboard is running at https://104.154.234.246/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
 ```
 
 If you see a list of targets like the one above, `helm` can communicate with the Kubernetes master.
