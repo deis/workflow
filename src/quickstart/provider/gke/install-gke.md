@@ -1,4 +1,4 @@
-# Installing Deis Workflow
+# Install Deis Workflow on Google Compute Engine
 
 ## Check Your Setup
 
@@ -67,6 +67,24 @@ If you would like `kubectl` to automatically update as the pod states change, ru
 $ kubectl get pods --namespace=deis -w
 ```
 
+Depending on the order in which the Workflow components start, you may see a few components restart. This is common during the installation process, if a component's dependencies are not yet available the component will exit and Kubernetes will automatically restart the containers.
+
+Here, you can see that controller, builder and registry all took a few loops before there were able to star:
+```
+workflow [refactor-docs*]$ kubectl get pods --namespace=deis
+NAME                          READY     STATUS    RESTARTS   AGE
+deis-builder-miekp            1/1       Running   1          2m
+deis-controller-egu7x         1/1       Running   3          2m
+deis-database-ok3ev           1/1       Running   0          2m
+deis-logger-fluentd-d5cb9     1/1       Running   0          2m
+deis-logger-fluentd-u6azj     1/1       Running   0          2m
+deis-logger-rf3z9             1/1       Running   0          2m
+deis-minio-sdfyz              1/1       Running   0          2m
+deis-registry-f534k           1/1       Running   4          2m
+deis-router-t3qb2             1/1       Running   0          2m
+deis-workflow-manager-kbpw3   1/1       Running   0          2m
+```
+
 Once you see all of the pods in the `READY` state, Deis Workflow is up and running!
 
-Next, [configure dns](dns) so you can register your first user.
+Next, [configure dns](dns.md) so you can register your first user and deploy an application.
