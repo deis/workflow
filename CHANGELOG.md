@@ -1,3 +1,25 @@
+### v2.0.0-beta3 -> v2.0.0-beta4
+
+#### Features
+
+ - [`77a924c`](https://github.com/deis/workflow/commit/77a924c14948994c484d38937172e0115d2dba14) monitoring: Add platform-monitoring docs
+
+#### Fixes
+
+ - [`76f4c8f`](https://github.com/deis/workflow/commit/76f4c8ff69edd5e71eb26c764901e9d4ca8c1863) installing-workflow: fix getting started guide links
+
+#### Documentation
+
+ - [`54a251f`](https://github.com/deis/workflow/commit/54a251f0918a3a8abdda7d6427a0d535a62d1162) release-checklist: add minor adjustments and reminder
+ - [`e37e5f2`](https://github.com/deis/workflow/commit/e37e5f21a37562f5363f534a64e644d395f87e69) README.md: add slack signup & status badge
+ - [`9ca4973`](https://github.com/deis/workflow/commit/9ca4973dc0db386cbe7196da41a64a13d3c21a86) release-checklist: note that milestones should be closed
+ - [`c702592`](https://github.com/deis/workflow/commit/c702592383efff8b90a699e9348826e428f42909) CHANGELOG.md: update for v2.0.0-beta3
+
+#### Maintenance
+
+ - [`464bb6d`](https://github.com/deis/workflow/commit/464bb6d1591c28b6d26b7d8c7744e87d6bd1775b) release: add a new removal step for release-checklist
+ - [`5c78f72`](https://github.com/deis/workflow/commit/5c78f72bc0e7dc4d3f84aec4ed8ad52f5c8696a6) src: bump documentation to reference v2.0.0-beta3
+
 ### v2.0.0-beta2 -> v2.0.0-beta3
 
 #### Features
