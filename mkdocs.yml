@@ -38,6 +38,7 @@ pages:
     - Upgrading Workflow: managing-workflow/upgrading-workflow.md
   - Customizing Workflow:
     - CLI Plugins: customizing-workflow/cli-plugins.md
+    - Tuning Component Settings: customizing-workflow/tuning-component-settings.md
   - Troubleshooting:
     - Troubleshooting with kubectl: troubleshooting/troubleshooting.md
   - Roadmap:
