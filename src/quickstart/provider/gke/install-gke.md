@@ -23,13 +23,6 @@ kubernetes-dashboard is running at https://104.154.234.246/api/v1/proxy/namespac
 
 If you see a list of targets like the one above, `helm` can communicate with the Kubernetes master.
 
-Deis Workflow requires Kubernetes 1.2 or higher. You can test that by running:
-
-```
-$ kubectl version
-Client Version: version.Info{Major:"1", Minor:"2", GitVersion:"v1.2.3", GitCommit:"882d296a99218da8f6b2a340eb0e81c69e66ecc7", GitTreeState:"clean"}
-Server Version: version.Info{Major:"1", Minor:"2", GitVersion:"v1.2.3", GitCommit:"882d296a99218da8f6b2a340eb0e81c69e66ecc7", GitTreeState:"clean"}
-```
 
 ## Add the Deis Chart Repository
 
