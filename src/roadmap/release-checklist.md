@@ -160,18 +160,10 @@ To generate changelogs, run the below command in each repository. Ensure that `$
 the previous tag that was generated in the repository.
 
 ```console
-$PREVIOUS_TAG=<previous release tag> make update-changelog # if make recipe exists (as in builder)
-_scripts/generate_changelog.sh $PREVIOUS_TAG # if make recipe doesn't exist (as in most repos)
+deisrel changelog individual $REPO_NAME $PREVIOUS_TAG $CURRENT_SHA $WORKFLOW_RELEASE
 ```
 
-This command will output the new changelog entry to STDOUT. Copy it and prepend it to the
-existing `CHANGELOG.md` file, and make sure to change `HEAD` in the header of the entry
-to `$WORKFLOW_RELEASE`.
-
-Also copy the component changelog to a global release changelog, organized by component.
-This will only live on your local machine while doing the release. Once changelogs for all
-the components have been collected, publish the combined release notes as a gist so folks
-in Step 9 can start preparing supporting content for the release.
+This command will output the new changelog entry to STDOUT. Copy it and prepend it to the existing `CHANGELOG.md` file.
 
 Finally, commit, push and submit a pull request for your changes:
 
@@ -180,8 +172,7 @@ git commit CHANGELOG.md -m "doc(CHANGELOG.md): add entry for $WORKFLOW_RELEASE"
 git push -u $YOUR_FORK_REMOTE release-$WORKFLOW_RELEASE_SHORT
 ```
 
-Before you continue, ensure pull requests in all applicable repositories are reviewed, and merge
-them.
+Before you continue, ensure pull requests in all applicable repositories are reviewed, and merge them.
 
 # Step 7: Tag and Push Git Repositories
 
@@ -208,7 +199,7 @@ summary blog posts, tweets, notes for the monthly newsletter updates, etc.
 Provide a gist to the aggregated release notes.  We can generate the aggregated changelog data from `deisrel`:
 
 ```console
-deisrel generate-changelog $PREVIOUS_TAG $WORKFLOW_RELEASE
+deisrel changelog global $PREVIOUS_TAG $WORKFLOW_RELEASE
 ```
 
 You are now done with the release.
