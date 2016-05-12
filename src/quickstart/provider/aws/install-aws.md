@@ -14,23 +14,17 @@ use it to communicate. You can test that it is working properly by running:
 
 ```
 $ helmc target
-Kubernetes master is running at https://10.245.1.2
-Heapster is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/heapster
-KubeDNS is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-dns
-KubeUI is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-ui
-Grafana is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
-InfluxDB is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
+Kubernetes master is running at https://52.9.206.49
+Elasticsearch is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/elasticsearch-logging
+Heapster is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/heapster
+Kibana is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/kibana-logging
+KubeDNS is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/kube-dns
+kubernetes-dashboard is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
+Grafana is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
+InfluxDB is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
 ```
 
 If you see a list of targets like the one above, `helmc` can communicate with the Kubernetes master.
-
-Deis Workflow requires Kubernetes 1.2 or higher. You can test that by running:
-
-```
-$ kubectl version
-Client Version: version.Info{Major:"1", Minor:"2", GitVersion:"v1.2.3", GitCommit:"882d296a99218da8f6b2a340eb0e81c69e66ecc7", GitTreeState:"clean"}
-Server Version: version.Info{Major:"1", Minor:"2", GitVersion:"v1.2.3", GitCommit:"882d296a99218da8f6b2a340eb0e81c69e66ecc7", GitTreeState:"clean"}
-```
 
 ## Add the Deis Chart Repository
 
@@ -68,15 +62,52 @@ If you would like `kubectl` to automatically update as the pod states change, ru
 $ kubectl get pods --namespace=deis -w
 ```
 
+Depending on the order in which the Workflow components start, you may see a few components restart. This is common during the installation process, if a component's dependencies are not yet available the component will exit and Kubernetes will automatically restart the containers.
+
+Here, you can see that controller, builder and registry all took a few loops before there were able to start:
+```
+$ kubectl get pods --namespace=deis
+NAME                          READY     STATUS    RESTARTS   AGE
+deis-builder-hy3xv            1/1       Running   5          5m
+deis-controller-g3cu8         1/1       Running   5          5m
+deis-database-rad1o           1/1       Running   0          5m
+deis-logger-fluentd-1v8uk     1/1       Running   0          5m
+deis-logger-fluentd-esm60     1/1       Running   0          5m
+deis-logger-sm8b3             1/1       Running   0          5m
+deis-minio-4ww3t              1/1       Running   0          5m
+deis-registry-asozo           1/1       Running   1          5m
+deis-router-k1ond             1/1       Running   0          5m
+deis-workflow-manager-68nu6   1/1       Running   0          5m
+```
+
 Once you see all of the pods in the `READY` state, Deis Workflow is up and running!
 
 ## Configure your AWS Load Balancer
 
-After installing Workflow on your cluster, you'll need to [configure your load balancer][lb].
-Following this step is especially important on AWS because the default idle timeout for connections
-on the Elastic Load Balancer is too low for the [Builder][] to finish a `git push` operation.
+After installing Workflow on your cluster, you will need to adjust your load balancer configuration.
+By default, the connection timeout for Elastic Load Blancers is 60 seconds. Unfortunately, this timeout is too short for
+long running connections when using `git push` functionality of Deis Workflow.
 
-Next, [configure dns](dns.md) so you can register your first user.
+First, find the ELB that was automatically provisioned for the Deis Workflow edge router:
+```
+$ kubectl describe svc deis-router --namespace=deis | egrep LoadBalancer
+Type:                   LoadBalancer
+LoadBalancer Ingress:   abce0d48217d311e69a470643b4d9062-2074277678.us-west-1.elb.amazonaws.com
+```
 
-[builder]: ../../../understanding-workflow/components.md#builder-builder-slugbuilder-and-dockerbuilder
-[lb]: ../../../managing-workflow/configuring-load-balancers.md
+The AWS name for the ELB is the first part of hostname before the `-`. List all of your ELBs by name to confirm:
+```
+$ aws elb describe-load-balancers --query 'LoadBalancerDescriptions[*].LoadBalancerName'
+abce0d48217d311e69a470643b4d9062
+```
+
+Set the connection timeout to 1200 seconds:
+```
+$ aws elb modify-load-balancer-attributes \
+        --load-balancer-name abce0d48217d311e69a470643b4d9062 \
+        --load-balancer-attributes "{\"ConnectionSettings\":{\"IdleTimeout\":1200}}"
+abce0d48217d311e69a470643b4d9062
+CONNECTIONSETTINGS	1200
+```
+
+Next, [configure dns](dns.md) so you can register your first user and deploy an application.
