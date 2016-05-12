@@ -47,7 +47,7 @@ $ helmc install workflow-beta3                # injects resources into
                                               # your cluster
 ```
 
-Helm will install a variety of Kubernetes resources in the `deis` namespace.
+Helm Classic will install a variety of Kubernetes resources in the `deis` namespace.
 You'll need to wait for the pods that it launched to be ready. Monitor their status
 by running:
 
@@ -62,9 +62,9 @@ $ kubectl get pods --namespace=deis -w
 
 Depending on the order in which the Workflow components start, you may see a few components restart. This is common during the installation process, if a component's dependencies are not yet available the component will exit and Kubernetes will automatically restart the containers.
 
-Here, you can see that controller, builder and registry all took a few loops before there were able to star:
+Here, you can see that controller, builder and registry all took a few loops before there were able to start:
 ```
-workflow [refactor-docs*]$ kubectl get pods --namespace=deis
+$ kubectl get pods --namespace=deis
 NAME                          READY     STATUS    RESTARTS   AGE
 deis-builder-miekp            1/1       Running   1          2m
 deis-controller-egu7x         1/1       Running   3          2m
