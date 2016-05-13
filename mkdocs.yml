@@ -26,6 +26,7 @@ pages:
     - Architecture: understanding-workflow/architecture.md
     - Components: understanding-workflow/components.md
   - Installing Workflow:
+    - Installing Workflow: installing-workflow/index.md
     - System Requirements: installing-workflow/system-requirements.md
     - Configuring Object Storage: installing-workflow/configuring-object-storage.md
   - Using Workflow:
