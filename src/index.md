@@ -8,6 +8,8 @@ For more detailed information about Workflow, view the [Concepts][concepts] and 
 
 To get started with Workflow, follow our [Quick Start][quickstart] guide.
 
+If you are interested in commercial service and support for Deis Workflow, check out our [services offerings on deis.com](https://deis.com/services).
+
 [arch]: understanding-workflow/architecture.md
 [concepts]: understanding-workflow/concepts.md
 [quickstart]: quickstart/index.md
