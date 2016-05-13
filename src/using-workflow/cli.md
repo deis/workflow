@@ -80,7 +80,7 @@ set the `http_proxy` or `https_proxy` environment variable to enable proxy suppo
 
 ## CLI Plugins
 
-Plugins allow developers to extend the functionality of the [Deis Client][], adding new commands or features.
+Plugins allow developers to extend the functionality of the Deis Client, adding new commands or features.
 
 If an unknown command is specified, the client will attempt to execute the command as a dash-separated command. In this case, `deis resource:command` will execute `deis-resource` with the argument list `command`. In full form:
 
@@ -99,5 +99,3 @@ But flags preceding the command will not:
     $ # these two are identical
     $ deis --debug accounts:list
     $ deis-accounts list
-
-[controller]: ../understanding-workflow/components.md#controller
