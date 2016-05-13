@@ -6,7 +6,7 @@ Getting started with Deis Workflow in four easy steps.
 2. Boot a Kubernetes and install Deis Workflow
 3. Deploy your first application
 
-This guide will help you setup a cluster suitable for evaluation, development and testing. When you are ready for staging and production, view our [production checklist](TODO).
+This guide will help you setup a cluster suitable for evaluation, development and testing. When you are ready for staging and production, view our [production checklist](../managing-workflow/production-deployments.md).
 
 ## Step 1: Install CLI tools
 
