@@ -54,11 +54,11 @@ $ helmc repo add deis https://github.com/deis/charts
 Now that you have Helm Classic installed and have added the Deis Chart Repository, install Workflow by running:
 
 ```
-$ helmc fetch deis/workflow-beta3             # fetches the chart into a
-                                             # local workspace
-$ helmc generate -x manifests workflow-beta3  # generates various secrets
-$ helmc install workflow-beta3                # injects resources into
-                                             # your cluster
+$ helmc fetch deis/workflow-beta4             # fetches the chart into a
+                                              # local workspace
+$ helmc generate -x manifests workflow-beta4  # generates various secrets
+$ helmc install workflow-beta4                # injects resources into
+                                              # your cluster
 ```
 
 Helm Classic will install a variety of Kubernetes resources in the `deis` namespace.

@@ -7,8 +7,8 @@ The below sections present a step-by-step guide to publish a new Workflow releas
 of the examples, we'll be assuming that the below two environment variables are present in wherever
 you're working. Make sure to set them (e.g. by `export`ing them) before you get started.
 
-- `$WORKFLOW_RELEASE` - the full name of this version. For example, `v2.0.0-beta3`
-- `$WORKFLOW_RELEASE_SHORT` - The short name of this version. For example, `beta3`
+- `$WORKFLOW_RELEASE` - the full name of this version. For example, `v2.0.0-beta4`
+- `$WORKFLOW_RELEASE_SHORT` - The short name of this version. For example, `beta4`
 
 # What's a Release?
 
@@ -31,8 +31,8 @@ A release consists of the following artifacts:
   - [workflow-manager](https://github.com/deis/workflow-manager)
   - [workflow-cli](https://github.com/deis/workflow-cli)
 2. A new [Helm Classic chart for Workflow](https://github.com/deis/charts) that references all of the new
-images referenced above. For example, if `$WORKFLOW_RELEASE` is `2.0.0-beta3`, the new chart would
-be in a new directory called `workflow-beta3`.
+images referenced above. For example, if `$WORKFLOW_RELEASE` is `2.0.0-beta4`, the new chart would
+be in a new directory called `workflow-beta4`.
 
 # Step 1: Create New Helm Classic Charts
 
@@ -69,7 +69,7 @@ As of this writing, the e2e tests in this job are run on a GKE cluster using def
 # Step 3: Manual Testing
 
 After the chart is created with the immutable Docker image tags that represent the final images
-(i.e. the ones that will be re-tagged to the immutable release tag, such as `2.0.0-beta3`), it
+(i.e. the ones that will be re-tagged to the immutable release tag, such as `2.0.0-beta4`), it
 should be manually tested by as many people as possible. Special attention should be paid to the
 user experience, both from an operator and developer perspective.
 
