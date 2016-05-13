@@ -54,11 +54,30 @@ pod "deis-controller-lto6v" deleted
 Kubernetes will automatically start a new Pod with the new environment variables set. Note that you will incur downtime
 for the Workflow API only. All running applications will continue to function.
 
-## Promoting users to Administrators
+## Managing Administrative Permissions
 
-You can use the `deis perms` command to promote a user to an administrator:
+You can use the `deis perms` command to promote a user to an admin:
 
-    $ deis perms:create john --admin
+```
+$ deis perms:create john --admin
+Adding john to system administrators... done
+```
+
+View current admins:
+
+```
+$ deis perms:list --admin
+=== Administrators
+admin
+john
+```
+
+Demote admins to normal users:
+
+```
+$ deis perms:delete john --admin
+Removing john from system administrators... done
+```
 
 ## Login to Workflow
 
