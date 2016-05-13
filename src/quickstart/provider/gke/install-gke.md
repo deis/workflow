@@ -2,7 +2,7 @@
 
 ## Check Your Setup
 
-First check that the `helm` command is available and the version is 0.6 or newer.
+First check that the `helm` command is available and the version is 0.7 or newer.
 
 ```
 $ helmc --version
