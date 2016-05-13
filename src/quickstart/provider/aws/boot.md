@@ -25,10 +25,31 @@ REGIONS	ec2.us-west-1.amazonaws.com	us-west-1
 REGIONS	ec2.us-west-2.amazonaws.com	us-west-2
 ```
 
+## Download and Unpack Kubernetes
+
+First, make a directory to hold the Kubernetes release files:
+
+```
+$ mkdir my-first-cluster
+$ cd my-first-cluster
+```
+
+Download Kubernetes release v1.2.4, and extract the archive on your machine.
+
+This archive has everything that you need to launch Kubernetes. It weighs in around 500MB, so it may take some time to download:
+
+```
+$ curl -sSL https://storage.googleapis.com/kubernetes-release/release/v1.2.4/kubernetes.tar.gz -O
+$ tar -xvzf kubernetes.tar.gz
+$ cd kubernetes
+$ ls
+LICENSES     README.md    Vagrantfile  cluster/     contrib/     docs/        examples/    platforms/   server/      third_party/ version
+```
+
 ## Configure the Kubernetes Environment
 
 Before calling the Kubernetes setup scripts, we need to change a few defaults so that Deis Workflow works best. Type
-each of these commands into your terminal application before calling `curl -sS https://get.k8s.io | bash`.
+each of these commands into your terminal application before calling `kube-up.sh`.
 
 First, enable insecure registry support for Docker:
 ```
@@ -65,21 +86,7 @@ We are now ready to boot our first Kubernetes cluster on AWS!
 Since this script does a **lot** of stuff, we'll break it into sections.
 
 ```
-$ curl -sS https://get.k8s.io | bash
-Downloading kubernetes release v1.2.4 to /Users/jhansen/p/docs/kubernetes.tar.gz
---2016-05-11 15:31:14--  https://storage.googleapis.com/kubernetes-release/release/v1.2.4/kubernetes.tar.gz
-Resolving storage.googleapis.com... 216.58.194.208, 2607:f8b0:4005:805::2010
-Connecting to storage.googleapis.com|216.58.194.208|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 496696744 (474M) [application/x-tar]
-Saving to: 'kubernetes.tar.gz'
-
-kubernetes.tar.gz                       100%[============================================================================>] 473.69M  2.16MB/s    in 4m 37s
-
-2016-05-11 15:35:50 (1.71 MB/s) - 'kubernetes.tar.gz' saved [496696744/496696744]
-
-Unpacking kubernetes release v1.2.4
-
+$ ./clusters/kube-up.sh
 Creating a kubernetes on aws...
 ... Starting cluster in us-west-1c using provider aws
 ... calling verify-prereqs
@@ -229,7 +236,6 @@ Installation successful!
 A few things to note! Your Kubernetes master is now up and running and we are ready to install Deis Workflow. If you
 need to access the Kubernetes master the default username is `admin` and the ssh key lives at `~/.ssh/kube_aws_rsa`.
 
-
 ```
 $ ssh -i ~/.ssh/kube_aws_rsa admin@52.9.206.49
 
@@ -249,5 +255,9 @@ For Kubernetes copyright and licensing information, see:
 
 admin@ip-172-20-0-9:~$
 ```
+
+When you are finished with the Kubernetes cluster, you may terminate the AWS resources by running
+`./clusters/kube-down.sh`. If you are using a new shell environement you will need to set the environment variables we
+used above so `kube-down.sh` can find the right cluster.
 
 You are now ready to [install Deis Workflow](install-aws.md)
