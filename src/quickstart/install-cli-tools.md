@@ -39,4 +39,14 @@ Check your work by running `helmc version`:
 
 Make sure you are running at least version 0.7.0 or newer.
 
-[Next: (Step 2) boot a kubernetes cluster](index.md#step-2-boot-a-kubernetes-cluster)
+## Step 2: Boot a Kubernetes Cluster and Install Deis Workflow
+
+There are many ways to boot and run Kubernetes. You may choose to get up and running in cloud environments or locally on
+your laptop.
+
+Cloud-based options:
+
+* [Google Container Engine](provider/gke/boot.md): provides a managed Kubernetes environment, available with a few clicks.
+* [Amazon Web Services](provider/aws/boot.md): uses Kubernetes upstream `kube-up.sh` to boot a cluster on AWS EC2.
+
+If you would like to tests on your local machine follow our guide for [Vagrant](provider/vagrant/boot.md).
