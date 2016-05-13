@@ -1,8 +1,8 @@
-# Installing Deis Workflow
+# Installing Deis Workflow on Vagrant
 
 ## Check Your Setup
 
-First check that the `helm` command is available and the version is 0.6 or newer.
+First check that the `helm` command is available and the version is 0.7 or newer.
 
 ```
 $ helmc --version
@@ -17,20 +17,12 @@ $ helmc target
 Kubernetes master is running at https://10.245.1.2
 Heapster is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/heapster
 KubeDNS is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-dns
-KubeUI is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kube-ui
+kubernetes-dashboard is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
 Grafana is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
 InfluxDB is running at https://10.245.1.2/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
 ```
 
 If you see a list of targets like the one above, `helm` can communicate with the Kubernetes master.
-
-Deis Workflow requires Kubernetes 1.2 or higher. You can test that by running:
-
-```
-$ kubectl version
-Client Version: version.Info{Major:"1", Minor:"2", GitVersion:"v1.2.3", GitCommit:"882d296a99218da8f6b2a340eb0e81c69e66ecc7", GitTreeState:"clean"}
-Server Version: version.Info{Major:"1", Minor:"2", GitVersion:"v1.2.3", GitCommit:"882d296a99218da8f6b2a340eb0e81c69e66ecc7", GitTreeState:"clean"}
-```
 
 ## Add the Deis Chart Repository
 
@@ -68,6 +60,22 @@ If you would like `kubectl` to automatically update as the pod states change, ru
 $ kubectl get pods --namespace=deis -w
 ```
 
+Depending on the order in which the Workflow components start, you may see a few components restart. This is common during the installation process, if a component's dependencies are not yet available the component will exit and Kubernetes will automatically restart the containers.
+
+```
+$ kubectl --namespace=deis get pods
+NAME                          READY     STATUS    RESTARTS   AGE
+deis-builder-lrb54            1/1       Running   1          2m
+deis-controller-lto6v         1/1       Running   1          2m
+deis-database-2jh3w           1/1       Running   0          2m
+deis-logger-fluentd-9hm06     1/1       Running   0          2m
+deis-logger-yxhwk             1/1       Running   0          2m
+deis-minio-p384q              1/1       Running   0          2m
+deis-registry-l9l6g           1/1       Running   2          2m
+deis-router-yc3rb             1/1       Running   0          2m
+deis-workflow-manager-fw5vq   1/1       Running   0          2m
+```
+
 Once you see all of the pods in the `READY` state, Deis Workflow is up and running!
 
-Next, [configure dns](dns.md) so you can register your first user.
+Next, [configure dns](dns.md) so you can register your first user and deploy an application.
