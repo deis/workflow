@@ -1,3 +1,6 @@
+body {
+    font-size: 16px;
+}
 footer {
     display: none;
     width: 201px;
@@ -12,22 +15,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 h1 {
     display: inline-block;
-    padding: 50px 0 45px 0;
-    margin-bottom: 21px;
-    font-size: 36px;
-}
-h2 {
-    margin-top: 48px;
+    margin-top: 24px;
     margin-bottom: 24px;
     font-size: 36px;
 }
+h2 {
+    margin-top: 24px;
+    margin-bottom: 12px;
+    font-size: 24px;
+}
 h3 {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 300;
 }
 h4 {
     margin: 50px 0 50px 0;
-    font-size: 28px;
+    font-size: 18px;
     font-style: italic;
     line-height: normal;
     color: #999;
@@ -46,6 +49,9 @@ p {
 }
 img {
     border: 0!important;
+}
+li {
+    margin: 6px;
 }
 .fork {
     float: right;
