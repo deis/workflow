@@ -28,4 +28,4 @@ If you have already created a Kubernetes cluster, check out the [system requirem
 
 ## Step 3: Deploy your first app
 
-Last but not least, select your build process and [deploy your first application](deploy-an-app.md).
+Last but not least, [register a user and deploy your first application](deploy-an-app.md).
