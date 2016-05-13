@@ -1,4 +1,4 @@
-## Deis Workflow  CLI
+# Deis Workflow  CLI
 
 The Deis Workflow command-line interface (CLI), or client, allows you to interact
 with Deis Workflow.
@@ -78,7 +78,7 @@ set the `http_proxy` or `https_proxy` environment variable to enable proxy suppo
 !!! note
     Configuring a proxy is generally not necessary for local Vagrant clusters.
 
-# CLI Plugins
+## CLI Plugins
 
 Plugins allow developers to extend the functionality of the [Deis Client][], adding new commands or features.
 

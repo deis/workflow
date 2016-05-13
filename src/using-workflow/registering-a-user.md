@@ -1,7 +1,6 @@
 # Registering a User
 
-To use Deis, you must first register a user on the [Controller][].
-
+To use Deis Workflow, you must first register a user on the [Controller][].
 
 ## Register with a Controller
 
@@ -37,7 +36,7 @@ Logout of an existing controller session using `deis logout`.
     $ deis logout
     Logged out as deis
 
-## Verify your session
+## Verify Your Session
 
 You can verify your client configuration by running `deis whoami`.
 
