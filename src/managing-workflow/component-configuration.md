@@ -19,7 +19,6 @@ env:
     value: "admin_only"
 ```
 
-
 ## Customizing the Controller
 
 The following environment variables are tunable for the [Controller][] component:
@@ -29,7 +28,6 @@ Setting             | Description
 REGISTRATION_MODE   | set registration to "enabled", "disabled", or "admin_only" (default: "enabled")
 GUNICORN_WORKERS    | number of [gunicorn][] workers spawned to process requests (default: 8)
 DEIS_RESERVED_NAMES | a comma-separated list of names which applications cannot reserve for routing (default: "deis")
-
 
 ## Customizing the Database
 
