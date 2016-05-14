@@ -1,11 +1,13 @@
-## Limit Resource Usage
+## Managing Application Resource Limits
 
 Deis Workflow supports restricting memory and CPU shares of each process. Limits set on a per-process type are given to
 Kubernetes as both a request and limit. Which means you guarantee 'X' amount of resource for a process as well as limit
 the process from using more than 'X'.
 
+## Limiting Memory
+
 If you set a limit that is out of range for your cluster, Kubernetes will be unable to schedule your application
-processes into the cluster.
+processes into the cluster!
 
 Available units for memory are:
 
@@ -33,6 +35,23 @@ web     64M
 --- CPU
 Unlimited
 ```
+
+If you would like to remove any configured memory limits use `deis limits:unset web`:
+
+```
+$ deis limits:unset web
+Applying limits... done
+
+=== indoor-whitecap Limits
+
+--- Memory
+Unlimited
+
+--- CPU
+web     250m
+```
+
+## Limiting CPU
 
 You can also use `deis limits:set -c` to restrict CPU shares. CPU shares are tracked in milli-cores. One CPU core is
 equivalent to 1000 milli-cores. To dedicate half a core to your process, you would need 500 milli-cores or 500m.
@@ -82,3 +101,18 @@ Containers:
     If you restrict resources to the point where containers do not start,
     the `limits:set` command will hang.  If this happens, use CTRL-C
     to break out of `limits:set` and use `limits:unset` to revert.
+
+To unset a CPU limit use `deis limits:unset web -c`:
+
+```
+$ deis limits:unset web -c
+Applying limits... done
+
+=== indoor-whitecap Limits
+
+--- Memory
+Unlimited
+
+--- CPU
+Unlimited
+```
