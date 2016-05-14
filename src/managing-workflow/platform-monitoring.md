@@ -2,6 +2,7 @@
 
 ## Description
 With the release of Workflow Beta4 we now include a monitoring stack for introspection on a running Kubernetes cluster. The stack includes 4 components:
+
 * [Telegraf](https://docs.influxdata.com/telegraf/v0.12/) - Metrics collection daemon written by team behind InfluxDB.
 * [InfluxDB](https://docs.influxdata.com/influxdb/v0.12/) - Time series database
 * [Grafana](http://grafana.org/) - Graphing tool for time series data
@@ -34,18 +35,34 @@ With the release of Workflow Beta4 we now include a monitoring stack for introsp
 ```
 
 ### Grafana
-We expose Grafana through the router using [service annotations](https://github.com/deis/router#how-it-works). This allows users to access the Grafana UI by accessing `grafana.mydomain.com`. While  we provide a default username/password of `admin/admin` this can be overridden at any time by setting the following environment variables in `$CHART_HOME/workspace/workflow-$WORKFLOW_RELEASE/manifests/deis-monitor-grafana-rc.yaml`: `GRAFANA_USER` and `GRAFANA_PASSWD`.
 
-It will preload several dashboards that we've created to help operators get started with monitoring their Kubernetes and Workflow installations. Each dashboard is meant to be a starting place for the operator and is not representative of all the dashboards needed to monitor a production installation.
+We expose Grafana through the router using [service annotations](https://github.com/deis/router#how-it-works). This
+allows users to access the Grafana UI by accessing `grafana.mydomain.com`. While  we provide a default username/password
+of `admin/admin` this can be overridden at any time by setting the following environment variables in
+`$CHART_HOME/workspace/workflow-$WORKFLOW_RELEASE/manifests/deis-monitor-grafana-rc.yaml`: `GRAFANA_USER` and
+`GRAFANA_PASSWD`.
 
-We are currently not writing the data to the host file system or to long term storage. Therefore, if the Grafana instance dies you will lose all custom and modified dashboards. It is recommended that you export your dashboards and store them in version control until a solution is implemented for long term storage.
+It will preload several dashboards that we've created to help operators get started with monitoring their Kubernetes and
+Workflow installations. Each dashboard is meant to be a starting place for the operator and is not representative of all
+the dashboards needed to monitor a production installation.
+
+We are currently not writing the data to the host file system or to long term storage. Therefore, if the Grafana
+instance dies you will lose all custom and modified dashboards. It is recommended that you export your dashboards and
+store them in version control until a solution is implemented for long term storage.
 
 ### InfluxDB
-As of the Beta4 release InfluxDB is writing data to the host disk, however, if the InfluxDB pod dies and comes back on another host the data will not be recovered. We intend to fix this in a future release. The InfluxDB Admin UI is also exposed through the router allowing users to access the query engine by going to `influx.mydomain.com`. You will need to configure where to find the `influx-api` endpoint by clicking the "gear" icon at the top right and changing the host to `influxapi.mydomain.com` and port to `80`.
+As of the Beta4 release InfluxDB is writing data to the host disk, however, if the InfluxDB pod dies and comes back on
+another host the data will not be recovered. We intend to fix this in a future release. The InfluxDB Admin UI is also
+exposed through the router allowing users to access the query engine by going to `influx.mydomain.com`. You will need to
+configure where to find the `influx-api` endpoint by clicking the "gear" icon at the top right and changing the host to
+`influxapi.mydomain.com` and port to `80`.
 
 ** Note: Each user accessing the Influx UI will need to make this change. **
 
-You can choose to not expose the Influx UI and API to the world by updating `$CHART_HOME/workspace/workflow-$WORKFLOW_RELEASE/manifests/deis-monitor-influxdb-api-svc.yaml` and `$CHART_HOME/workspace/workflow-$WORKFLOW_RELEASE/manifests/deis-monitor-influxdb-ui-svc.yaml` and removing the following line - `router.deis.io/routable: "true"`.
+You can choose to not expose the Influx UI and API to the world by updating
+`$CHART_HOME/workspace/workflow-$WORKFLOW_RELEASE/manifests/deis-monitor-influxdb-api-svc.yaml` and
+`$CHART_HOME/workspace/workflow-$WORKFLOW_RELEASE/manifests/deis-monitor-influxdb-ui-svc.yaml` and removing the
+following line - `router.deis.io/routable: "true"`.
 
 ### Telegraf
 Telegraf is the metrics collection daemon used within the monitoring stack. It will collect and send the following metrics to InfluxDB:
