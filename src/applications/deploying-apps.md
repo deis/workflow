@@ -4,9 +4,12 @@ An [Application][] is deployed to Deis using `git push` or the `deis` client.
 
 ## Supported Applications
 
-Deis can deploy any application or service that can run inside a Docker container.  In order to be scaled horizontally, applications must follow the [Twelve-Factor App][] methodology and store any application state in external backing services.
+Deis Workflow can deploy any application or service that can run inside a Docker container.  In order to be scaled
+horizontally, applications must follow the [Twelve-Factor App][] methodology and store any application state in external
+backing services.
 
-For example, if your application persists state to the local filesystem -- common with content management systems like Wordpress and Drupal -- it cannot be scaled horizontally using `deis scale`.
+For example, if your application persists state to the local filesystem -- common with content management systems like
+Wordpress and Drupal -- it cannot be scaled horizontally using `deis scale`.
 
 Fortunately, most modern applications feature a stateless application tier that can scale horizontally inside Deis.
 
@@ -27,7 +30,7 @@ Logged in as deis
 
 ## Select a Build Process
 
-Deis supports three different ways of building applications:
+Deis Workflow supports three different ways of building applications:
 
 ### Buildpacks
 
