@@ -19,10 +19,12 @@ Fortunately, most modern applications feature a stateless application tier that 
 Before deploying an application, users must first authenticate against the Deis [Controller][]
 using the URL supplied by their Deis administrator.
 
-    $ deis login http://deis.example.com
-    username: deis
-    password:
-    Logged in as deis
+```
+$ deis login http://deis.example.com
+username: deis
+password:
+Logged in as deis
+```
 
 ## Upload Your SSH Public Key
 
@@ -32,11 +34,11 @@ If you plan on using `git push` to deploy applications to Deis, you must provide
 * ~/.ssh/id_dsa.pub
 
 ```
-    $ deis keys:add
-    Found the following SSH public keys:
-    1) id_rsa.pub
-    Which would you like to use with Deis? 1
-    Uploading /Users/myuser/.ssh/id_rsa.pub to Deis... done
+$ deis keys:add
+Found the following SSH public keys:
+1) id_rsa.pub
+Which would you like to use with Deis? 1
+Uploading /Users/myuser/.ssh/id_rsa.pub to Deis... done
 ```
 
 ## Select a Build Process
