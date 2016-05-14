@@ -32,6 +32,7 @@ pages:
   - Using Workflow:
     - Command Line Interface: using-workflow/cli.md
     - Users and Registration: using-workflow/users-and-registration.md
+    - User SSH Keys: using-workflow/user-ssh-keys.md
   - Applications:
     - Deploying Apps: applications/deploying-apps.md
     - Buildpacks: applications/using-buildpacks.md

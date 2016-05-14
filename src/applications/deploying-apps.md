@@ -10,7 +10,6 @@ For example, if your application persists state to the local filesystem -- commo
 
 Fortunately, most modern applications feature a stateless application tier that can scale horizontally inside Deis.
 
-
 ## Login to the Controller
 
 !!! important
@@ -24,21 +23,6 @@ $ deis login http://deis.example.com
 username: deis
 password:
 Logged in as deis
-```
-
-## Upload Your SSH Public Key
-
-If you plan on using `git push` to deploy applications to Deis, you must provide your SSH public key.  Use the `deis keys:add` command to upload your default SSH public key, usually one of:
-
-* ~/.ssh/id_rsa.pub
-* ~/.ssh/id_dsa.pub
-
-```
-$ deis keys:add
-Found the following SSH public keys:
-1) id_rsa.pub
-Which would you like to use with Deis? 1
-Uploading /Users/myuser/.ssh/id_rsa.pub to Deis... done
 ```
 
 ## Select a Build Process
