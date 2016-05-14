@@ -87,35 +87,57 @@ Notice that the process name has changed from `scenic-icehouse-v2-background-yf8
 `scenic-icehouse-v2-background-yd87g`. In a multi-node Kubernetes cluster, this may also have the effect of scheduling
 the Pod to a new node.
 
-## Rollback a Release
-
-Use `deis rollback` to revert to a previous release.
-
-    $ deis rollback v2
-    Rolled back to v2
-
-    $ deis releases
-    === folksy-offshoot Releases
-    v5      Just now                          gabrtv rolled back to v2
-    v4      4 minutes ago                     gabrtv deployed d3ccc05
-    v3      1 hour 18 minutes ago             gabrtv added DATABASE_URL
-    v2      6 hours 2 minutes ago             gabrtv deployed 7cb3321
-    v1      6 hours 3 minutes ago             gabrtv deployed deis/helloworld
-
-!!! note
-    All releases (including rollbacks) append to the release ledger.
-
 ## Track Application Changes
 
-Each time a build or config change is made to your application, a new [release][] is created.
-Track changes to your application using `deis releases`.
+Deis Workflow tracks all changes to your application. Application changes are the result of either new application code
+pushed to the platform (via `git push deis master`), or an update to application configuration (via `deis config:set KEY=VAL`).
 
-    $ deis releases
-    === peachy-waxworks Releases
-    v4      3 minutes ago                     gabrtv deployed d3ccc05
-    v3      1 hour 17 minutes ago             gabrtv added DATABASE_URL
-    v2      6 hours 2 minutes ago             gabrtv deployed 7cb3321
-    v1      6 hours 2 minutes ago             gabrtv deployed deis/helloworld
+Each time a build or config change is made to your application a new [release][] is created. These release numbers
+increase montonically.
+
+You can see a record of changes to your application using `deis releases`:
+
+```
+$ deis releases
+=== peachy-waxworks Releases
+v4      3 minutes ago                     gabrtv deployed d3ccc05
+v3      1 hour 17 minutes ago             gabrtv added DATABASE_URL
+v2      6 hours 2 minutes ago             gabrtv deployed 7cb3321
+v1      6 hours 2 minutes ago             gabrtv deployed deis/helloworld
+```
+
+## Rollback a Release
+
+Deis Workflow also supports rolling back go previous releases. If buggy code or an errant configuration change is pushed
+to your application, you may rollback to a previously known, good release.
+
+!!! note
+    All rollbacks create a new, numbered release. But will reference the build/code and configuration from the desired rollback point.
+
+
+In this example, the application is currently running release v4. Using `deis rollback v2` tells Workflow to deploy the
+build and configuration that was used for release v2. This creates a new release named v5 whose contents are the source
+and configuration from release v2:
+
+```
+$ deis releases
+=== folksy-offshoot Releases
+v4      4 minutes ago                     gabrtv deployed d3ccc05
+v3      1 hour 18 minutes ago             gabrtv added DATABASE_URL
+v2      6 hours 2 minutes ago             gabrtv deployed 7cb3321
+v1      6 hours 3 minutes ago             gabrtv deployed deis/helloworld
+
+$ deis rollback v2
+Rolled back to v2
+
+$ deis releases
+=== folksy-offshoot Releases
+v5      Just now                          gabrtv rolled back to v2
+v4      4 minutes ago                     gabrtv deployed d3ccc05
+v3      1 hour 18 minutes ago             gabrtv added DATABASE_URL
+v2      6 hours 2 minutes ago             gabrtv deployed 7cb3321
+v1      6 hours 3 minutes ago             gabrtv deployed deis/helloworld
+```
 
 ## Run One-off Administration Tasks
 
@@ -165,30 +187,33 @@ CPU shares are on a scale of 0 to 1024, with 1024 being all CPU resources on the
 
 Use `deis perms:create` to allow another Deis user to collaborate on your application.
 
-    $ deis perms:create otheruser
-    Adding otheruser to peachy-waxworks collaborators... done
+```
+$ deis perms:create otheruser
+Adding otheruser to peachy-waxworks collaborators... done
+```
 
-Use `deis perms` to see who an application is currently shared with, and
-`deis perms:remove` to remove a collaborator.
+Use `deis perms` to see who an application is currently shared with, and `deis perms:remove` to remove a collaborator.
 
 !!! note
-    Collaborators can do anything with an application that its owner can do,
-    except delete the application itself.
+    Collaborators can do anything with an application that its owner can do, except delete the application.
 
-When working with an application that has been shared with you, clone the original repository and add Deis' git remote entry before attempting to `git push` any changes to Deis.
+When working with an application that has been shared with you, clone the original repository and add Deis' git remote
+entry before attempting to `git push` any changes to Deis.
 
-    $ git clone https://github.com/deis/example-java-jetty.git
-    Cloning into 'example-java-jetty'... done
-    $ cd example-java-jetty
-    $ git remote add -f deis ssh://git@local3.deisapp.com:2222/peachy-waxworks.git
-    Updating deis
-    From deis-controller.local:peachy-waxworks
-     * [new branch]      master     -> deis/master
-
+```
+$ git clone https://github.com/deis/example-java-jetty.git
+Cloning into 'example-java-jetty'... done
+$ cd example-java-jetty
+$ git remote add -f deis ssh://git@local3.deisapp.com:2222/peachy-waxworks.git
+Updating deis
+From deis-controller.local:peachy-waxworks
+ * [new branch]      master     -> deis/master
+```
 
 ## Application Troubleshooting
 
-Applications deployed on Deis [treat logs as event streams][]. Deis aggregates `stdout` and `stderr` from every [Container][] making it easy to troubleshoot problems with your application.
+Applications deployed on Deis Workflow [treat logs as event streams][]. Deis Workflow aggregates `stdout` and `stderr`
+from every [Container][] making it easy to troubleshoot problems with your application.
 
 Use `deis logs` to view the log output from your deployed application.
 
