@@ -21,16 +21,16 @@ Check your work by running `deis version`:
 
 We will install Deis Workflow using Helm Classic which is a tool for installing and managing software in a Kubernetes cluster.
 
-Install the latest `helm` cli for Linux or Mac OS X with:
+Install the latest `helmc` cli for Linux or Mac OS X with:
 
     $ curl -sSL https://get.helm.sh | bash
 
 *or*:
 
 1. Grab a prebuilt binary from:
-  - the latest release: [ ![Download](https://api.bintray.com/packages/deis/helm/helm/images/download.svg) ](https://bintray.com/deis/helm/helm/_latestVersion#files)
-  - the CI build pipeline: [ ![Download](https://api.bintray.com/packages/deis/helm-ci/helm/images/download.svg) ](https://bintray.com/deis/helm-ci/helm/_latestVersion#files)
-2. Unzip the package and make sure `helm` is available on the PATH.
+  - the latest release: [ ![Download](https://api.bintray.com/packages/deis/helm/helmc/images/download.svg) ](https://bintray.com/deis/helm/helmc/_latestVersion#files)
+  - the CI build pipeline: [ ![Download](https://api.bintray.com/packages/deis/helm-ci/helmc/images/download.svg) ](https://bintray.com/deis/helm-ci/helmc/_latestVersion#files)
+2. Unzip the package and make sure `helmc` is available on the PATH.
 
 Check your work by running `helmc version`:
 
