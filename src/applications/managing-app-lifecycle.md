@@ -1,31 +1,91 @@
 # Managing an Application
 
-## Scale the Application
+## Scaling an Application
 
-Applications deployed on Deis [scale out via the process model][].
-Use `deis scale` to control the number of [Containers][container] that power your app.
+Applications deployed on Deis [scale out via the process model][]. Use `deis scale` to control the number of
+[Containers][container] that power your app.
 
-    $ deis scale web=8
-    Scaling processes... but first, coffee!
-    done in 20s
+```
+$ deis scale cmd=5 -a iciest-waggoner
+Scaling processes... but first, coffee!
+done in 3s
+=== iciest-waggoner Processes
+--- cmd:
+iciest-waggoner-v2-cmd-09j0o up (v2)
+iciest-waggoner-v2-cmd-3r7kp up (v2)
+iciest-waggoner-v2-cmd-gc4xv up (v2)
+iciest-waggoner-v2-cmd-lviwo up (v2)
+iciest-waggoner-v2-cmd-kt7vu up (v2)
+```
 
-    === peachy-waxworks Processes
+If you have multiple process types for your application you may scale the process count for each type separately. For
+example, this allows you to manage web process indepenetly from background workers. For more information on process
+types see our documentation for [Managing App Processes](managing-app-processes.md).
 
-    --- web:
-    web.1 up (v2)
-    web.2 up (v2)
-    web.3 up (v2)
-    web.4 up (v2)
-    web.5 up (v2)
-    web.6 up (v2)
-    web.7 up (v2)
-    web.8 up (v2)
+In this example, we are scaling the process type `web` to 5 but leaving the process type `background` with one worker.
 
-Scaling is managed by process types like `web` or `worker` defined in a
-[Procfile][] in the root of your application repository.
+```
+$ deis scale web=5
+Scaling processes... but first, coffee!
+done in 4s
+=== scenic-icehouse Processes
+--- web:
+scenic-icehouse-v2-web-7lord up (v2)
+scenic-icehouse-v2-web-jn957 up (v2)
+scenic-icehouse-v2-web-rsekj up (v2)
+scenic-icehouse-v2-web-vwhnh up (v2)
+scenic-icehouse-v2-web-vokg7 up (v2)
+--- background:
+scenic-icehouse-v2-background-yf8kh up (v2)
+```
 
 !!! note
-    Docker applications can use the `cmd` process type to scale the default container command.
+    The default process type for Dockerfile and Docker Image applications is 'cmd' rather than 'web'.
+
+Scaling a process down, by reducing the process count, sends a `TERM` signal to the processes, followed by a `SIGKILL`
+if they have not exited within 30 seconds. Depending on your application, scaling down may interrupt long-running HTTP
+client connections.
+
+For example, scaling from 5 processes to 3:
+
+```
+$ deis scale web=3
+Scaling processes... but first, coffee!
+done in 1s
+=== scenic-icehouse Processes
+--- background:
+scenic-icehouse-v2-background-yf8kh up (v2)
+--- web:
+scenic-icehouse-v2-web-7lord up (v2)
+scenic-icehouse-v2-web-rsekj up (v2)
+scenic-icehouse-v2-web-vokg7 up (v2)
+```
+
+## Restarting an Application Processes
+
+If you need to restart an application process, you may use `deis ps:restart`. Behind the scenes, Deis Workflow instructs
+Kubernetes to terminate the old process and launch a new one in its place.
+
+```
+$ deis ps
+=== scenic-icehouse Processes
+--- web:
+scenic-icehouse-v2-web-7lord up (v2)
+scenic-icehouse-v2-web-rsekj up (v2)
+scenic-icehouse-v2-web-vokg7 up (v2)
+--- background:
+scenic-icehouse-v2-background-yf8kh up (v2)
+$ deis ps:restart scenic-icehouse-v2-background-yf8kh
+Restarting processes... but first, coffee!
+done in 6s
+=== scenic-icehouse Processes
+--- background:
+scenic-icehouse-v2-background-yd87g up (v2)
+```
+
+Notice that the process name has changed from `scenic-icehouse-v2-background-yf8kh` to
+`scenic-icehouse-v2-background-yd87g`. In a multi-node Kubernetes cluster, this may also have the effect of scheduling
+the Pod to a new node.
 
 ## Rollback a Release
 
