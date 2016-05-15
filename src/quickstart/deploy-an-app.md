@@ -80,10 +80,24 @@ $ curl http://proper-barbecue.104.197.125.75.nip.io
 Powered by Docker Images + Kubernetes
 ```
 
-Congratulations! You have deployed your first application using Deis Workflow.
-There is a lot more you can do with Deis Workflow, play around with the CLI:
+## Scale Your Application
 
-* You may scale your app with `deis scale cmd=5 -a proper-barbecue`
+Last, let's scale our application by adding more application processes. Using the CLI you can easily add and remove
+additional processes to service requests:
+
+```
+$ deis scale cmd=2 -a proper-barbecue
+Scaling processes... but first, coffee!
+done in 36s
+=== proper-barbecue Processes
+--- cmd:
+proper-barbecue-v18-cmd-rk644 up (v18)
+proper-barbecue-v18-cmd-0ag04 up (v18)
+```
+
+Congratulations! You have deployed, configured, and scaled your first application using Deis Workflow. There is a lot
+more you can do with Deis Workflow, play around with the CLI:
+
 * Roll back to a previous release with `deis rollback -a proper-barbecue`
 * See application logs with `deis logs -a proper-barbecue`
 * Try one of our other example applications like:
