@@ -46,27 +46,11 @@ Next, we'll create new [Helm Classic](https://github.com/helm/helm-classic) char
 version of our release for testing. Here is the current process to do so:
 
 1. Create a new branch in [deis/charts](https://github.com/deis/charts): `git checkout -b release-$WORKFLOW_RELEASE origin/master`
-2. Copy the existing `dev` charts:
+2. Download the [deisrel](https://github.com/deis/deisrel) binary via the bintray link provided in the project's README and place it in your `$PATH`
+3. Stage copies of all files needing release updates into the appropriate `workflow-$WORKFLOW_RELEASE_SHORT(-e2e)` chart directories.  (Note: `deisrel` will automatically fetch the latest commit sha values from the `master` branch of each repo to populate the appropriate component's `dockerTag` in `tpl/generate_params.toml`):
   ```
-  cp -r workflow-dev workflow-$WORKFLOW_RELEASE_SHORT
-  cp -r workflow-dev-e2e workflow-$WORKFLOW_RELEASE_SHORT-e2e
-  ```
-3. For the next few steps, we'll work with [deisrel](https://github.com/deis/deisrel):
-  * Download the binary from the link in the project's `README` and place it in your `$PATH`
-  * Stage copies of the `tpl/generate_params.toml` for each chart into staging.  `deisrel` will automatically populate the latest commit sha values for each component's `dockerTag`:
-  ```
-  deisrel helm-params --stage workflow
-  deisrel helm-params --stage e2e
-  ```
-  * Stage copies of the additional files in `workflow-dev(-e2e)` charts needing release value updates into staging (i.e., `Chart.yaml`, `README.md`, etc.)
-  ```
-  deisrel helm-stage workflow
-  deisrel helm-stage e2e
-  ```
-  * Copy these staged files back to the correlating chart directories created in step 2 above:
-  ```
-  cp -r staging/workflow-dev/* workflow-$WORKFLOW_RELEASE_SHORT
-  cp -r staging/workflow-dev-e2e/* workflow-$WORKFLOW_RELEASE_SHORT-e2e
+  deisrel helm-stage --stagingDir workflow-$WORKFLOW_RELEASE_SHORT workflow
+  deisrel helm-stage --stagingDir workflow-$WORKFLOW_RELEASE_SHORT-e2e e2e
   ```
 4. Delete the `KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS` env var from `workflow-$WORKFLOW_RELEASE_SHORT/tpl/deis-controller-rc.yaml`
 5. Commit your changes:
