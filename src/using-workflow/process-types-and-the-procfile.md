@@ -5,7 +5,9 @@ mechanism for declaring the commands that should be run by your application’s 
 use a Procfile to declare multiple processes for different types of application workers-- for
 example, an application server, a job execution timer, or a consumer of the Twitter streaming API.
 
-Multiple process types can be scaled independently of one another.
+Multiple process types can be scaled independently of one another. When you first deploy your application
+only one `web` or `cmd` processes is spawned.  To spawn other process types, use `deis scale <process>=<n>`
+to scale those processes accordingly.
 
 ## Default Process Types
 
