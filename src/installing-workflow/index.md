@@ -35,8 +35,8 @@ Grafana is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/se
 InfluxDB is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
 ```
 
-If you see a list of targets like the one above, `helmc` can communicate with the Kubernetes master. Also make sure that
-kubectl is pointing at the cluster you expect.
+If you see a list of targets like the one above, `helmc` can communicate with the Kubernetes master. Double check that
+the master returned by `helmc target` matches the expected cluster.
 
 ## Add the Deis Chart Repository
 
