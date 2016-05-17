@@ -24,7 +24,7 @@ Cloud-based options:
 
 If you would like to test on your local machine follow our guide for [Vagrant](provider/vagrant/boot.md).
 
-If you have already created a Kubernetes cluster, check out the [system requirements](../installing-workflow/system-requirements.md) and then proceed to [installing Deis Workflow on your own Kubernetes clsuter](../installing-workflow/index.md).
+If you have already created a Kubernetes cluster, check out the [system requirements](../installing-workflow/system-requirements.md) and then proceed to [install Deis Workflow on your own Kubernetes cluster](../installing-workflow/index.md).
 
 ## Step 3: Deploy your first app
 
