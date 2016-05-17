@@ -10,7 +10,7 @@ certificate](../reference-guide/creating-a-self-signed-ssl-certificate.md).
 
 Note that the platform SSL certificate also functions as a default certificate for your apps that are deployed via
 Workflow. If you would like to attach a specific certificate to an application and domain see [Application SSL
-Certificates](../.applications/ssl-certificates.md).
+Certificates](../applications/ssl-certificates.md).
 
 ## Installing SSL on the Deis Router
 
