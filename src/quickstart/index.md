@@ -22,7 +22,7 @@ Cloud-based options:
 * [Google Container Engine](provider/gke/boot.md): provides a managed Kubernetes environment, available with a few clicks.
 * [Amazon Web Services](provider/aws/boot.md): uses Kubernetes upstream `kube-up.sh` to boot a cluster on AWS EC2.
 
-If you would like to test on your local machine follow our guide for [Vagrant](provider/vagrant/boot.md).
+If you would like to test on your local machine follow, our guide for [Vagrant](provider/vagrant/boot.md).
 
 If you have already created a Kubernetes cluster, check out the [system requirements](../installing-workflow/system-requirements.md) and then proceed to [install Deis Workflow on your own Kubernetes cluster](../installing-workflow/index.md).
 
