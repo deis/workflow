@@ -10,10 +10,10 @@ command line interface.
 
 ## Getting Started
 
+To get started with Workflow, follow our [Quick Start][quickstart] guide.
+
 Take a deep dive into Deis Workflow in our [Concepts][concepts], [Architecture][arch], and [Components][components]
 sections.
-
-To get started with Workflow, follow our [Quick Start][quickstart] guide.
 
 ## Service and Support
 
