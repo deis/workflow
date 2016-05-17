@@ -38,8 +38,8 @@ be sufficient.
 
 ## SELinux + OverlayFS
 
-If you are using Docker with OverlayFS you must disable SELinux by adding `--selinux-enabled=false` to
-`EXTRA_DOCKER_OPTS`. For more background information see:
+If you are using Docker with OverlayFS, you must disable SELinux by adding `--selinux-enabled=false` to
+`EXTRA_DOCKER_OPTS`. For more background information, see:
 
 * [https://github.com/docker/docker/issues/7952](https://github.com/docker/docker/issues/7952)
 * [https://github.com/deis/postgres/issues/63](https://github.com/deis/postgres/issues/63)
