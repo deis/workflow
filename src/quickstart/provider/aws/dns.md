@@ -8,7 +8,7 @@ By describing the `deis-router` service, you can see what hostname allocated by 
 cluster:
 
 ```
-$ kubectl describe svc deis-router --namespace=deis | egrep LoadBalancer
+$ kubectl --namespace=deis describe svc deis-router | egrep LoadBalancer
 Type:                   LoadBalancer
 LoadBalancer Ingress:   abce0d48217d311e69a470643b4d9062-2074277678.us-west-1.elb.amazonaws.com
 ```

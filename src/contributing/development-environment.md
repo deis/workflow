@@ -203,7 +203,7 @@ Once your customized Deis component has been deployed, here are some helpful com
 ### See All Deis Pods
 
 ```
-$ kubectl get pods --namespace=deis
+$ kubectl --namespace=deis get pods
 ```
 
 ### Describe a Pod
@@ -211,13 +211,13 @@ $ kubectl get pods --namespace=deis
 This is often useful for troubleshooting pods that are in pending or crashed states:
 
 ```
-$ kubectl describe -f <pod name> --namespace=deis
+$ kubectl --namespace=deis describe -f <pod name>
 ```
 
 ### Tail Logs
 
 ```
-$ kubectl logs -f <pod name> --namespace=deis
+$ kubectl --namespace=deis logs -f <pod name>
 ```
 
 ### Django Shell
@@ -225,7 +225,7 @@ $ kubectl logs -f <pod name> --namespace=deis
 Specific to [deis/controller][controller]
 
 ```
-$ kubectl exec -it <pod name> --namespace=deis -- python manage.py shell
+$ kubectl --namespace=deis exec -it <pod name> -- python manage.py shell
 ```
 
 Have commands other Deis contributors might find useful? Send us a PR!

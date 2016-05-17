@@ -66,19 +66,19 @@ You'll need to wait for the pods that it launched to be ready. Monitor their sta
 by running:
 
 ```
-$ kubectl get pods --namespace=deis
+$ kubectl --namespace=deis get pods
 ```
 
 If you would like `kubectl` to automatically update as the pod states change, run (type Ctrl-C to stop the watch):
 ```
-$ kubectl get pods --namespace=deis -w
+$ kubectl --namespace=deis get pods
 ```
 
 Depending on the order in which the Workflow components start, you may see a few components restart. This is common during the installation process, if a component's dependencies are not yet available the component will exit and Kubernetes will automatically restart the containers.
 
 Here, you can see that controller, builder and registry all took a few loops before there were able to start:
 ```
-$ kubectl get pods --namespace=deis
+$ kubectl --namespace=deis get pods
 NAME                          READY     STATUS    RESTARTS   AGE
 deis-builder-hy3xv            1/1       Running   5          5m
 deis-controller-g3cu8         1/1       Running   5          5m

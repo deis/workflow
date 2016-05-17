@@ -23,7 +23,7 @@ DNS for any applications using a "custom domain" (a fully-qualified domain name 
 Although it is dependent upon your distribution of Kubernetes and your underlying infrastructure, in many cases, the IP(s) or existing fully-qualified domain name of a load balancer can be determined directly using the `kubectl` tool:
 
 ```
-$ kubectl describe service deis-router --namespace=deis | grep "LoadBalancer Ingress"
+$ kubectl --namespace=deis describe service deis-router | grep "LoadBalancer Ingress"
 LoadBalancer Ingress:	a493e4e58ea0511e5bb390686bc85da3-1558404688.us-west-2.elb.amazonaws.com
 ```
 
@@ -40,7 +40,7 @@ In general, for any IP, `a.b.c.d`, the fully-qualified domain name `any-subdomai
 To begin, find the node(s) hosting router instances using `kubectl`:
 
 ```
-$ kubectl describe pod deis-router --namespace=deis | grep Node
+$ kubectl --namespace=deis describe pod deis-router | grep Node
 Node:       ip-10-0-0-199.us-west-2.compute.internal/10.0.0.199
 Node:       ip-10-0-0-198.us-west-2.compute.internal/10.0.0.198
 ```

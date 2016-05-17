@@ -16,7 +16,7 @@ Begin by determining the "node ports" for the `deis-router` service:
 
 
 ```
-$ kubectl describe service deis-router --namespace=deis
+$ kubectl --namespace=deis describe service deis-router
 ```
 
 This will yield output similar to the following:
