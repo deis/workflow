@@ -74,7 +74,9 @@ If you would like `kubectl` to automatically update as the pod states change, ru
 $ kubectl --namespace=deis get pods
 ```
 
-Depending on the order in which the Workflow components start, you may see a few components restart. This is common during the installation process, if a component's dependencies are not yet available the component will exit and Kubernetes will automatically restart the containers.
+Depending on the order in which the Workflow components initialize, some pods may restart. This is common during the
+installation: if a component's dependencies are not yet available, that component will exit and Kubernetes will
+automatically restart it.
 
 Here, you can see that controller, builder and registry all took a few loops before there were able to start:
 ```
