@@ -17,7 +17,7 @@ To get started with Workflow, follow our [Quick Start][quickstart] guide.
 
 ## Service and Support
 
-If you are interested in commercial service and support for Deis Workflow, check out our [services offerings on deis.com](https://deis.com/services).
+If you are interested in commercial service and support for Deis Workflow, check out the various [services offerings on deis.com](https://deis.com/services).
 
 [arch]: understanding-workflow/architecture.md
 [concepts]: understanding-workflow/concepts.md
