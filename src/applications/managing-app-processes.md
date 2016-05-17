@@ -75,8 +75,11 @@ Or via a Procfile:
 $ cat Procfile
 cmd: /bin/boot
 sleeper: echo "sleeping"; sleep 900
+
+
 $ deis pull -a steely-mainsail deis/example-go
 Creating build... done
+
 $ deis scale sleeper=1 -a steely-mainsail
 Scaling processes... but first, coffee!
 done in 0s
