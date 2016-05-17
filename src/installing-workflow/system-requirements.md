@@ -1,7 +1,10 @@
 # Requirements
 
-If you are planning to run Deis Workflow on your own Kubernetes cluster there are a few requirements that you should be
-aware of when creating your environment.
+To run Deis Workflow on a Kubernetes cluster, there are a few requirements to keep in mind.
+
+## Kubernetes Versions
+
+Deis Workflow has been tested with the **Kubernetes v1.2** release line. It is incompatible with Kubernetes v1.1 and earlier.
 
 ## Resource Requirements
 
@@ -22,10 +25,6 @@ application footprint as well.
 
 Running smaller machines will likely result in increased system load and has been known to result in component failures
 and instability.
-
-## Kubernetes Versions
-
-Deis Workflow has been tested with the **Kubernetes v1.2** release line. It is incompatible with Kubernetes v1.1 and earlier.
 
 ## Docker Insecure Registry
 
