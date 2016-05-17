@@ -21,7 +21,7 @@ helmc version 0.7.0+20a7ed7
 Ensure the `kubectl` client is installed and can connect to your Kubernetes cluster. `helmc` uses `kubectl` to interact
 with your Kubernetes cluster.
 
-You can test that helmc and kubectl are working properly by running:
+You can test that `helmc` and `kubectl` are working properly by running:
 
 ```
 $ helmc target
