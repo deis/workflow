@@ -11,9 +11,8 @@ healthy hosts as hosts leave the cluster for various reasons (failures, reboots,
 you should have ample spare resources on any machine in your cluster to withstand the additional load of running
 services for failed machines.
 
-Deis Workflow components consume approximately 2 - 2.5GB of memory across the cluster, and approximately 30GB of hard
-disk space. Because each machine should be able to absorb additional load should a machine fail, each machine must
-have:
+Deis Workflow components use about 2.5GB of memory across the cluster, and require approximately 30GB of hard disk
+space. Because it may need to handle additional load if another one fails, each machine has minimum requirements of:
 
 * At least 4GB of RAM (more is better)
 * At least 40GB of hard disk space
@@ -21,7 +20,8 @@ have:
 Note that these estimates are for Deis Workflow and Kubernetes only. Be sure to leave enough spare capacity for your
 application footprint as well.
 
-Running smaller machines will likely result in increased system load and has been known to result in component failures and instability.
+Running smaller machines will likely result in increased system load and has been known to result in component failures
+and instability.
 
 ## Kubernetes Versions
 
