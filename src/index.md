@@ -8,6 +8,8 @@ configuration, creating and rolling back releases, managing domain names and SSL
 routing, aggregating logs, and sharing applications with teams. All of this is exposed through a simple REST API and
 command line interface.
 
+Please note that this documentation is for Deis Workflow (v2). For v1 documentation visit <http://docs.deis.io/en/latest/>.
+
 ## Getting Started
 
 To get started with Workflow, follow our [Quick Start][quickstart] guide.
@@ -18,6 +20,7 @@ sections.
 ## Service and Support
 
 If you are interested in commercial service and support for Deis Workflow, check out the various [services offerings on deis.com](https://deis.com/services).
+
 
 [arch]: understanding-workflow/architecture.md
 [concepts]: understanding-workflow/concepts.md
