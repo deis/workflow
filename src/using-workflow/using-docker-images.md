@@ -37,7 +37,7 @@ Use `deis create` to create an application on the [controller][].
     Creating application... done, created example-go
 
 !!! note
-    For all commands except for `deis create`, the `deis` client uses the name of the current directory 
+    For all commands except for `deis create`, the `deis` client uses the name of the current directory
     as the app name if you don't specify it explicitly with `--app`.
 
 
@@ -60,26 +60,33 @@ running that process.
 
 ## Private Registry
 
-To deploy Docker images from a private registry or even from a private repository within a public registry, take the following steps:
+To deploy Docker images from a private registry or from a private repository, use `deis registry`
+to attach credentials to your application. These credentials are the same as you'd use when running
+`docker login` at your private registry.
 
-* Gather the username and password for the registry, such as a [Quay.io Robot Accounts][] or [GCR.io Long Lived Token][]
+To deploy private Docker images, take the following steps:
+
+* Gather the username and password for the registry, such as a [Quay.io Robot Account][] or a [GCR.io Long Lived Token][]
 * Run `deis registry:set username=<the-user> password=<secret> -a <application-name>`
 * Now perform `deis pull` as normal, against an image in the private registry
 
-When using a [GCR.io Long Lived Token][] the JSON blob will have to be compacted first using a tool like [jq][]
-and then used in the password field in `deis registry:set`.
+When using a [GCR.io Long Lived Token][], the JSON blob will have to be compacted first using a
+tool like [jq][] and then used in the password field in `deis registry:set`. For the username, use
+`_json_key`. For example:
 
-`cat serviceaccount.json | jq -c .` will compact the JSON blob using [jq][]. 
+```
+deis registry:set username=_json_key password="$(cat google_cloud_cred.json | jq -c .)"
+```
 
 **NOTE:**
-    Currently [GCR.io][] and [ECR][] in short lived auth token mode are not supported
+    Currently [GCR.io][] and [ECR][] in short lived auth token mode are not supported.
 
 [container]: ../reference-guide/terms.md#container
 [controller]: ../understanding-workflow/components.md#controller
 [Docker Image]: https://docs.docker.com/introduction/understanding-docker/
 [DockerHub]: https://registry.hub.docker.com/
 [CMD instruction]: https://docs.docker.com/reference/builder/#cmd
-[Quay.io Robot Accounts]: https://docs.quay.io/glossary/robot-accounts.html
+[Quay.io Robot Account]: https://docs.quay.io/glossary/robot-accounts.html
 [GCR.io Long Lived Token]: https://cloud.google.com/container-registry/docs/auth#using_a_json_key_file
 [jq]: https://stedolan.github.io/jq/
 [GCR.io]: https://gcr.io
