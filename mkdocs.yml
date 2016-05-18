@@ -29,10 +29,10 @@ pages:
     - Installing Workflow: installing-workflow/index.md
     - System Requirements: installing-workflow/system-requirements.md
     - Configuring Object Storage: installing-workflow/configuring-object-storage.md
-  - Using Workflow:
-    - Command Line Interface: using-workflow/cli.md
-    - Users and Registration: using-workflow/users-and-registration.md
-    - User SSH Keys: using-workflow/user-ssh-keys.md
+  - Users:
+    - Command Line Interface: users/cli.md
+    - Users and Registration: users/registration.md
+    - SSH Keys: users/ssh-keys.md
   - Applications:
     - Deploying Apps: applications/deploying-apps.md
     - Buildpacks: applications/using-buildpacks.md
