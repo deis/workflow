@@ -5,7 +5,7 @@
             <ul style="display: none;"{% if nav_item.active %} class="current"{% endif %}>
             {% for child in nav_item.children %}
                 <li class="toctree-l2{% if child.active %} current{% endif %}">
-                <a class="reference internal{% if nav_item.active %} current{% endif %}" href="{{ child.url }}">{{ child.title }}</a>
+                <a class="reference internal{% if nav_item.active %} current{% endif %}" id="{{ child.title }}" href="{{ child.url }}">{{ child.title }}</a>
                 </li>
             {% endfor %}
             </ul>
