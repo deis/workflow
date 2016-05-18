@@ -13,7 +13,7 @@ Logger acts like a syslog server and receives all log messages that are occurrin
 With the release of workflow-beta3 chart the logging system is part of the main installation of Workflow. You will then need to watch the components come up and verify they are in a running state by executing the following command:
 
 ```
-$ kubectl get pods --namespace=deis
+$ kubectl --namespace=deis get pods
 ```
 
 You should see output similar to this:
@@ -46,8 +46,8 @@ Once the pod has restarted, you can verify the logging system is working by goin
 ```
 Error: There are currently no log messages. Please check the following things:
 1) Logger and fluentd pods are running.
-2) The application is writing logs to the logger component by checking that an entry in the ring buffer was created: kubectl logs <logger pod> --namespace=deis
-3) Making sure that the container logs were mounted properly into the fluentd pod: kubectl exec <fluentd pod> --namespace=deis ls /var/log/containers
+2) The application is writing logs to the logger component by checking that an entry in the ring buffer was created: kubectl  --namespace=deis logs <logger pod>
+3) Making sure that the container logs were mounted properly into the fluentd pod: kubectl --namespace=deis exec <fluentd pod> ls /var/log/containers
 ```
 
 ## Architecture Diagram

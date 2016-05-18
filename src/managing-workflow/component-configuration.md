@@ -5,8 +5,8 @@ or service. Helm is heavily influenced by [Homebrew](http://brew.sh/), including
 [formula model](https://github.com/Homebrew/homebrew-core). A Helm chart is to Helm as a Formula
 is to Homebrew.
 
-When you run `helmc fetch deis/workflow-beta3`, you can customize the chart with
-`helmc edit workflow-beta3`. To customize the respective component, edit
+When you run `helmc fetch deis/workflow-beta4`, you can customize the chart with
+`helmc edit workflow-beta4`. To customize the respective component, edit
 `manifests/deis-<component>-rc.yaml` and modify the `env` section of the component to tune these
 settings.
 
@@ -19,7 +19,6 @@ env:
     value: "admin_only"
 ```
 
-
 ## Customizing the Controller
 
 The following environment variables are tunable for the [Controller][] component:
@@ -29,7 +28,6 @@ Setting             | Description
 REGISTRATION_MODE   | set registration to "enabled", "disabled", or "admin_only" (default: "enabled")
 GUNICORN_WORKERS    | number of [gunicorn][] workers spawned to process requests (default: 8)
 DEIS_RESERVED_NAMES | a comma-separated list of names which applications cannot reserve for routing (default: "deis")
-
 
 ## Customizing the Database
 

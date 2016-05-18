@@ -32,7 +32,7 @@ deps:
 	pip install -r requirements.txt
 
 test: build
-	grep -q '<title>Deis Documentation</title>' _build/html/index.html
+	grep -q '<title>Deis Workflow Documentation</title>' _build/html/index.html
 	@echo
 	@echo "Test finished. The HTML pages are in $(BUILDDIR)."
 

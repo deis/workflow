@@ -2,7 +2,6 @@
 
 Deis supports deploying applications via [Heroku Buildpacks][]. Buildpacks are useful if you're interested in following Heroku's best practices for building applications or if you are deploying an application that already runs on Heroku.
 
-
 ## Prepare an Application
 
 If you do not have an existing application, you can clone an example application that demonstrates the Heroku Buildpack workflow.
@@ -99,7 +98,6 @@ To use a custom buildpack, set the `BUILDPACK_URL` environment variable.
     If, however, you're unable to deploy using the latest version of the buildpack, You can set an exact version of a buildpack by using a git revision in your `BUILDPACK_URL`. For example: `BUILDPACK_URL=https://github.com/dpiddy/heroku-buildpack-ruby-minimal#v13`
 
 On your next `git push`, the custom buildpack will be used.
-
 
 ## Using Private Repositories
 

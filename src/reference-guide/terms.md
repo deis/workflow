@@ -55,13 +55,9 @@ The Controller stack includes:
 
 - Django API Server for handling API calls
 
-Follow the [Installing Deis Workflow](../installing-workflow/installing-deis-workflow.md) guide to create your own private controller.
-
-
 ## Key
 
 Deis keys are SSH Keys used during the git push process. Each user can use the client to manage a list of keys on the Controller.
-
 
 ## Release
 
