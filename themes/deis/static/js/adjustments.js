@@ -56,5 +56,9 @@ $(function(){
     }
   });
 
+  $('#AWS').attr('href', documentationBaseURL + '/quickstart/provider/aws/boot/')
+  $('#GKE').attr('href', documentationBaseURL + '/quickstart/provider/gke/boot/')
+  $('#Vagrant').attr('href', documentationBaseURL + '/quickstart/provider/vagrant/boot/')
+
   $(window).resize(set_columns);
 });
