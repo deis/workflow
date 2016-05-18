@@ -10,7 +10,8 @@ The logging platform is made up of 2 components - [Fluentd](https://github.com/d
 Logger acts like a syslog server and receives all log messages that are occurring on the cluster. It then filters this data to only Deis deploy applications and stores those log messages in a ring buffer where they can be fetched via the Deis CLI.
 
 ## Installation
-With the release of workflow-beta3 chart the logging system is part of the main installation of Workflow. You will then need to watch the components come up and verify they are in a running state by executing the following command:
+
+The logging system is part of the main installation of Workflow. You will need to watch the components come up and verify they are in a running state by executing the following command:
 
 ```
 $ kubectl --namespace=deis get pods
