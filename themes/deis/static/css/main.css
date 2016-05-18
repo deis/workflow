@@ -9,6 +9,10 @@ footer {
     padding: 0;
     margin: 0;
 }
+
+.injected {
+    display: none;
+}
 h1, h2, h3, h4, h5, h6 {
     font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-weight: 300;
