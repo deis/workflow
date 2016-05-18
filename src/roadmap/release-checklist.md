@@ -66,7 +66,12 @@ Navigate to https://ci.deis.io/job/workflow-test-release/ and kick off a new job
 
 As of this writing, the e2e tests in this job are run on a GKE cluster using default (minio) external storage.
 
-# Step 3: Manual Testing
+# Step 3: Update Documentation
+
+Create a new pull request against deis/workflow, updating all references of the old release to
+`$WORKFLOW_RELEASE`. Use `git grep $WORKFLOW_OLD_RELEASE` to find any references.
+
+# Step 4: Manual Testing
 
 After the chart is created with the immutable Docker image tags that represent the final images
 (i.e. the ones that will be re-tagged to the immutable release tag, such as `2.0.0-beta4`), it
@@ -90,7 +95,7 @@ Amazon S3                           |
       - Update the appropriate docker tag(s) in the `generate_params.toml` file
       - Push this change to the release branch
 
-# Step 4: Tag and Push Docker Images
+# Step 5: Tag and Push Docker Images
 
 After everyone has tested and determined that there are no show-stopping problems for this release,
 it's time to tag each individual Docker image with `$WORKFLOW_RELEASE`.
@@ -103,7 +108,7 @@ make git-update
 TAG=$WORKFLOW_RELEASE make docker-tag docker-push
 ```
 
-# Step 5: Update Helm Classic Chart
+# Step 6: Update Helm Classic Chart
 
 Now that new Docker images are on public Docker repositories, it's time to update the Helm Classic chart
 to reference the official images. We will use `deisrel` to do this.  The following will change every `dockerTag` value
@@ -126,7 +131,7 @@ When you're done, commit and push your changes. You should get your pull request
 
 **Note:** If non-release-specific amendments have been made to the release chart that do not exist in the `workflow-dev`, be sure to PR said changes for this chart as well.
 
-# Step 6: Update Changelogs
+# Step 7: Update Changelogs
 
 At this point, part of the first part and all of the second part of the release is complete.
 That is, the Helm Classic chart for the new Workflow version is done, and new Docker versions for all
@@ -158,7 +163,7 @@ git push -u $YOUR_FORK_REMOTE release-$WORKFLOW_RELEASE_SHORT
 
 Before you continue, ensure pull requests in all applicable repositories are reviewed, and merge them.
 
-# Step 7: Tag and Push Git Repositories
+# Step 8: Tag and Push Git Repositories
 
 The final step of the release process is to tag each git repository, and push the tag to each
 GitHub project. To do so, simply run the below command in the `deisrel` repository:
@@ -167,14 +172,14 @@ GitHub project. To do so, simply run the below command in the `deisrel` reposito
 deisrel git tag $WORKFLOW_RELEASE
 ```
 
-# Step 8: Close GitHub Milestones
+# Step 9: Close GitHub Milestones
 
 Close the github milestone by creating a new pull request at
 [seed-repo](https://github.com/deis/seed-repo). Any changes merged to master on that repository
 will be applied to all of the component projects. If there are open issues attached to the
 milestone, move them to the next upcoming milestone before merging the pull request.
 
-# Step 9: Let Everyone Know
+# Step 10: Let Everyone Know
 
 Jump in #company on slack and let folks know that the release has been cut! This will let
 folks in supporting functions know that they should start the release support process including
