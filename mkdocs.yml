@@ -2,7 +2,7 @@
 # NOTE: titles need to be capitalized here to work around MkDocs automatically downcasing title
 # names
 #
-site_name: Deis Documentation
+site_name: Deis Workflow Documentation
 pages:
   - Home: index.md
   - Quick Start:
