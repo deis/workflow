@@ -131,3 +131,6 @@ They will need to log back in to use their new auth token.
 If there is a cluster wide security breach, an administrator can regenerate everybody's auth token like this:
 
     $ deis auth:regenerate --all=true
+
+
+[controller]: ../understanding-workflow/components.md#controller
