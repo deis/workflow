@@ -69,6 +69,14 @@ Slugrunner is configured and launched by the controller inside a Workflow cluste
 
 Slugrunner reads credential information from a `objectstorage-keyfile` secret in the current Kubernetes namespace.
 
+### [deis/dockerbuilder](https://github.com/deis/dockerbuilder)
+
+Dockerbuilder is configured and launched by the builder component. Dockerbuilder reads credential information from the standard `objectstorage-keyfile` secret.
+
+If you are using dockerbuilder as a standalone component the following configuration is important:
+
+- `TAR_PATH` - The location of the application `.tar` archive, relative to the configured bucket for builder e.g. `home/burley-yeomanry:git-3865c987/tar`
+
 ### [deis/controller](https://github.com/deis/controller)
 
 The controller is responsible for configuring the execution environment for buildpack-based applications. Controller copies `objectstorage-keyfile` into the application namespace so slugrunner can fetch the application slug.
