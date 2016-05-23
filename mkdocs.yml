@@ -55,7 +55,8 @@ pages:
     - Platform SSL: managing-workflow/platform-ssl.md
     - Upgrading Workflow: managing-workflow/upgrading-workflow.md
   - Troubleshooting:
-    - Troubleshooting with kubectl: troubleshooting/troubleshooting.md
+    - Troubleshooting Workflow: troubleshooting/index.md
+    - Troubleshooting using Kubectl: troubleshooting/kubectl.md
   - Roadmap:
     - Planning Process: roadmap/planning-process.md
     - Roadmap: roadmap/roadmap.md
