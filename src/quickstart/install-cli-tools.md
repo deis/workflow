@@ -35,9 +35,9 @@ Install the latest `helmc` cli for Linux or Mac OS X with:
 Check your work by running `helmc version`:
 
     $ helmc version
-    helmc version 0.7.0+20a7ed7
+    helmc version 0.8.0+f3cafbc
 
-Make sure you are running at least version 0.7.0 or newer.
+Make sure you are running at least version 0.8.0 or newer.
 
 ## Step 2: Boot a Kubernetes Cluster and Install Deis Workflow
 
