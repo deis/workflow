@@ -48,7 +48,8 @@ crucial. See [Platform SSL][] for the platform.
 
 
 [configuring object storage]: ../installing-workflow/configuring-object-storage.md
-[customizing controller]: ../customizing-workflow/tuning-component-settings.md#customizing-the-controller
+<!-- TODO: Uncomment once https://github.com/deis/workflow/pull/253 is merged -->
+<!-- [customizing controller]: ../customizing-workflow/tuning-component-settings.md#customizing-the-controller -->
 [database]: ../understanding-workflow/components.md#database
 [logger]: ../understanding-workflow/components.md#logger
 [minio]: ../understanding-workflow/components.md#minio
