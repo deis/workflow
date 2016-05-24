@@ -3,12 +3,12 @@
 To upgrade to a newer version of Workflow, run the following:
 
 ```
-$ helmc uninstall workflow-beta3 -n deis
-$ helmc fetch deis/workflow-beta4
-$ helmc generate -x manifests workflow-beta4
-$ cp `helmc home`/workspace/charts/workflow-beta3/manifests/deis-database-secret-creds.yaml \
-    `helmc home`/workspace/charts/workflow-beta4/manifests/
-$ helmc install workflow-beta4
+$ helmc uninstall workflow-beta4 -n deis
+$ helmc fetch deis/workflow-rc1
+$ helmc generate -x manifests workflow-rc1
+$ cp `helmc home`/workspace/charts/workflow-beta4/manifests/deis-database-secret-creds.yaml \
+    `helmc home`/workspace/charts/workflow-rc1/manifests/
+$ helmc install workflow-rc1
 ```
 
 Make sure to copy the existing `deis-database-secret-creds.yaml` manifest into the new chart
