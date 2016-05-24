@@ -2,11 +2,11 @@
 
 ## Check Your Setup
 
-First check that the `helmc` command is available and the version is 0.7 or newer.
+First check that the `helmc` command is available and the version is 0.8 or newer.
 
 ```
 $ helmc --version
-helmc version 0.7.0+20a7ed7
+helmc version 0.8.0+f3cafbc
 ```
 
 Ensure the `kubectl` client is installed and can connect to your Kubernetes cluster. `helmc` will
