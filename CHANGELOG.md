@@ -1,3 +1,34 @@
+### v2.0.0-beta4 -> v2.0.0-rc1
+
+#### Features
+
+ - [`7abd71b`](https://github.com/deis/workflow/commit/7abd71b5a1409e8aa6d0bc738a71eb5e87ed0de9) managing-workflow: add back production deployments
+ - [`c8b3548`](https://github.com/deis/workflow/commit/c8b3548979be2a483f6deaf58baa9fe7d197f340) storage: modify docs for configuring storage using env vars
+ - [`9e9fc03`](https://github.com/deis/workflow/commit/9e9fc031e96ec757c2747a8d16fd778647512416) customizing-workflow: add component tuning
+
+#### Fixes
+
+ - [`9c14781`](https://github.com/deis/workflow/commit/9c14781df2dfe10f83da2eaefd31be4158f83ca7) production-deployments.md: comment link to non-existent doc
+ - [`70221f4`](https://github.com/deis/workflow/commit/70221f4a6aa7020b0cb112a45af7b95a622e6237) users: add broken link
+
+#### Documentation
+
+ - [`539a80c`](https://github.com/deis/workflow/commit/539a80c83b8aabeb85d7c72ca2d1aad0690a5ef5) upgrading-workflow: copy DB creds into new chart
+ - [`48c5ea8`](https://github.com/deis/workflow/commit/48c5ea80ae833b95786f872da930776353c49886) upgrading-workflow: require off-cluster storage for upgrade
+ - [`ad27e4e`](https://github.com/deis/workflow/commit/ad27e4e65660b395f8aaf3b164ce67558699393d) upgrading-workflow: describe "keeper" upgrade behavior
+ - [`9dd5cad`](https://github.com/deis/workflow/commit/9dd5cad0ef9e109e4e582ed4b6c298c4e8768a70) quickstart: add DNS registrar and Route53 docs for AWS
+ - [`4e26b54`](https://github.com/deis/workflow/commit/4e26b5485726958bb1a14ad0f7b6632db869a43c) index: move version header to index
+ - [`6be97a2`](https://github.com/deis/workflow/commit/6be97a22a851583df44d211d5a105a0799b3eda8) installing-workflow: add docs on dockerbuilder config
+ - [`a920428`](https://github.com/deis/workflow/commit/a920428b8a8949781dc52fd257c7c4e5ef2326f3) managing-workflow: remove daemon set warning
+ - [`daf12a2`](https://github.com/deis/workflow/commit/daf12a2f9a2488881a8b63a4ea6d43838c01ba87) using-workflow: clarify what username and password reflect
+ - [`9c71b3a`](https://github.com/deis/workflow/commit/9c71b3aca2de31f61877943163db650fecf51e2e) release_checklist.md: update with latest deisrel usage
+ - [`0d48686`](https://github.com/deis/workflow/commit/0d48686bcfe4f3ac74c29005f117535d533ca35b) release-checklist.md: update with latest processes
+
+#### Maintenance
+
+ - [`079d4d5`](https://github.com/deis/workflow/commit/079d4d55c83635f323321e811dceab14736457b0) src: bump docs to workflow-beta4
+ - [`56ead28`](https://github.com/deis/workflow/commit/56ead28e8d2097f978bd1b7000fa3fa90e253c38) sidebar: hide sidebar
+
 ### v2.0.0-beta3 -> v2.0.0-beta4
 
 #### Features
