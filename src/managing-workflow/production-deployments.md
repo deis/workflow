@@ -46,6 +46,12 @@ Please see the following documentation: [Customizing Controller][]
 Using TLS to encrypt traffic (including Workflow client traffic, such as login credentials) is
 crucial. See [Platform SSL][] for the platform.
 
+## Scale Routers
+
+If all router pods in your cluster become unavailable then you will be unable to access the workflow API or
+any deployed applications. To reduce the potential of this happening it is recommended that you scale the
+deis-router Deployment to run more than one router pod. This can be accomplished by running
+`kubectl --namespace=deis scale --replicas=2 deployment/deis-router`
 
 [configuring object storage]: ../installing-workflow/configuring-object-storage.md
 <!-- TODO: Uncomment once https://github.com/deis/workflow/pull/253 is merged -->
