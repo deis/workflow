@@ -32,7 +32,7 @@ friendly (and sometimes funny) name.
 ```
 $ deis create --no-remote
 Creating Application... done, created proper-barbecue
-remote available at ssh://git@deis.104.197.125.75.nip.io:2222/proper-barbecue.git
+If you want to add a git remote for this app later, use `deis git:remote -a proper-barbecue`
 ```
 
 Our application has been created and named `proper-barbecue`. As with the
