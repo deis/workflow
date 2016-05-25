@@ -10,6 +10,14 @@ $ helmc generate -x manifests workflow-beta4
 $ helmc install workflow-beta4
 ```
 
+## Off-Cluster Storage Required
+
+A Workflow upgrade requires using off-cluster object storage, since the default
+in-cluster storage is ephemeral. Upgrading Workflow with the in-cluster default
+of [Minio][] will result in data loss.
+
+See [Configuring Object Storage][] to learn how to store your Workflow data off-cluster.
+
 ## Keeping Essential Pieces
 
 !!! note
@@ -33,4 +41,6 @@ $ kubectl delete ns deis  # Be sure you want to delete the
 
 See the Helm Classic documentation for more detail about [keeper manifests].
 
+[configuring object storage]: ../installing-workflow/configuring-object-storage.md
 [keeper manifests]: http://helm-classic.readthedocs.io/en/latest/awesome/#keeper-manifests
+[minio]: https://github.com/deis/minio
