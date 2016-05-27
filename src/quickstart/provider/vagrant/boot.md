@@ -65,7 +65,7 @@ KUBERNETES_MASTER_MEMORY=1536
 
 ## Boot Your First Cluster
 
-We are now ready to boot our first Kubernetes cluster on AWS!
+We are now ready to boot our first Kubernetes cluster using Vagrant!
 
 Since this script does a **lot** of stuff, we'll break it into sections.
 
