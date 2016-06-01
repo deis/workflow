@@ -38,72 +38,70 @@ be in a new directory called `workflow-rc1`.
 
 # Step 1: Cut repo branches and push image tags
 
-1. Once the release milestone is cleared of tickets in the workflow component repos, the release branches can be cut.  
+  1. Once the release milestone is cleared of tickets in the workflow component repos, the release branches can be cut.  
 
-  If only a particular repo is ready, navigate to said repo and:
-  ```
-  git checkout master && git pull upstream master
-  git checkout -b release-$WORKFLOW_RELEASE && git push upstream release-$WORKFLOW_RELEASE
-  ```
-  Otherwise, for bulk-cutting all repos at the same time, we will use [sgoings/deis-workflow-group](https://github.com/sgoings/deis-workflow-group) here and in Step 2 below:
-  ```
-  git clone git@github.com:sgoings/deis-workflow-group.git
-  cd deis-workflow-group
+    If only a particular repo is ready, navigate to said repo and:
 
-  make git-update # point all repos to latest master commits
-  BRANCH="release-${WORKFLOW_RELEASE}" NEW="true" make git-checkout-branch
-  BRANCH="release-${WORKFLOW_RELEASE}" make git-push-branch #(can use DRY_RUN=true)
-  ```
+          git checkout master && git pull upstream master
+          git checkout -b release-$WORKFLOW_RELEASE && git push upstream release-$WORKFLOW_RELEASE
 
-2. tag and push docker images to 'staging' `deisci` org
-  ```
-   TAG="${WORKFLOW_RELEASE}" ORG="deisci" make docker-tag docker-push #(can use DRY_RUN=true)
-  ```
+    Otherwise, for bulk-cutting all repos at the same time, we will use [sgoings/deis-workflow-group](https://github.com/sgoings/deis-workflow-group) here and in Step 2 below:
+
+          git clone git@github.com:sgoings/deis-workflow-group.git
+          cd deis-workflow-group
+
+          make git-update # point all repos to latest master commits
+          BRANCH="release-${WORKFLOW_RELEASE}" NEW="true" make git-checkout-branch
+          BRANCH="release-${WORKFLOW_RELEASE}" make git-push-branch #(can use DRY_RUN=true)
+
+  2. Tag and push docker images to 'staging' `deisci` org
+
+          TAG="${WORKFLOW_RELEASE}" ORG="deisci" make docker-tag docker-push #(can use DRY_RUN=true)
 
 # Step 2: Create New Helm Classic Charts
 
 Next, we'll create new [Helm Classic](https://github.com/helm/helm-classic) charts so that we can "stage" a
 version of our release for testing. Here is the current process to do so:
 
-1. Create a new branch in [deis/charts](https://github.com/deis/charts): `git checkout -b release-$WORKFLOW_RELEASE upstream/master`
+  1. Create a new branch in [deis/charts](https://github.com/deis/charts):
 
-2. Download the [deisrel](https://github.com/deis/deisrel) binary via the bintray link provided in the project's README and place it in your `$PATH`
+        git checkout -b release-$WORKFLOW_RELEASE upstream/master
 
-3. Copy the current `dev` charts into new `workflow-$WORKFLOW_RELEASE_SHORT` charts:
-  ```console
-  cp -r workflow-dev workflow-$WORKFLOW_RELEASE_SHORT
-  cp -r workflow-dev-e2e workflow-$WORKFLOW_RELEASE_SHORT-e2e
-  ```
+  2. Download the [deisrel](https://github.com/deis/deisrel) binary via the bintray link provided in the project's README and place it in your `$PATH`
 
-4. Stage copies of all files needing release updates into the appropriate `workflow-$WORKFLOW_RELEASE_SHORT(-e2e)` chart directories:
-  ```console
-  deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT workflow
-  deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT-e2e e2e
-  ```
+  3. Copy the current `dev` charts into new `workflow-$WORKFLOW_RELEASE_SHORT` charts:
 
-5. Delete the `KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS` env var from `workflow-$WORKFLOW_RELEASE_SHORT/tpl/deis-controller-rc.yaml`
+        cp -r workflow-dev workflow-$WORKFLOW_RELEASE_SHORT
+        cp -r workflow-dev-e2e workflow-$WORKFLOW_RELEASE_SHORT-e2e
 
-6. Test the chart and make sure it installs:
-  ```console
-  cp -r workflow-$WORKFLOW_RELEASE_SHORT* `helmc home`/workspace/charts
-  helmc generate workflow-$WORKFLOW_RELEASE_SHORT
-  helmc install workflow-$WORKFLOW_RELEASE_SHORT
-  ```
+  4. Stage copies of all files needing release updates into the appropriate `workflow-$WORKFLOW_RELEASE_SHORT(-e2e)` chart directories:
 
-  Optionally, run the e2e tests as well:
-  ```console
-  helmc generate workflow-$WORKFLOW_RELEASE_SHORT-e2e
-  helmc install workflow-$WORKFLOW_RELEASE_SHORT-e2e (to run the e2e tests)
-  ```
+        deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT workflow
+        deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT-e2e e2e
 
-7. Commit your changes:
-  ```console
-  git commit -a -m "chore(workflow-$WORKFLOW_RELEASE_SHORT): releasing workflow-$WORKFLOW_RELEASE_SHORT(-e2e)"
-  ```
+  5. Delete the `KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS` env var from `workflow-$WORKFLOW_RELEASE_SHORT/tpl/deis-controller-rc.yaml`
 
-8. Push your changes: `git push upstream HEAD:release-$WORKFLOW_RELEASE`.
+  6. Test the chart and make sure it installs:
 
-9. Open a pull request from your branch to merge into `master` on https://github.com/deis/charts
+        cp -r workflow-$WORKFLOW_RELEASE_SHORT* `helmc home`/workspace/charts
+        helmc generate workflow-$WORKFLOW_RELEASE_SHORT
+        helmc install workflow-$WORKFLOW_RELEASE_SHORT
+
+    Optionally, run the e2e tests as well:
+
+        helmc generate workflow-$WORKFLOW_RELEASE_SHORT-e2e
+        helmc install workflow-$WORKFLOW_RELEASE_SHORT-e2e
+
+  7. Commit your changes:
+
+        git commit -a -m "chore(workflow-$WORKFLOW_RELEASE_SHORT): releasing workflow-$WORKFLOW_RELEASE_SHORT(-e2e)"
+
+  8. Push your changes:
+
+        git push upstream HEAD:release-$WORKFLOW_RELEASE
+
+
+  9. Open a pull request from your branch to merge into `master` on https://github.com/deis/charts
 
 # Step 3: Kick off Jenkins Jobs
 
