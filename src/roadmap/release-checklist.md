@@ -73,15 +73,17 @@ version of our release for testing. Here is the current process to do so:
 
         cp -r workflow-dev workflow-$WORKFLOW_RELEASE_SHORT
         cp -r workflow-dev-e2e workflow-$WORKFLOW_RELEASE_SHORT-e2e
+        cp -r router-dev router-$WORKFLOW_RELEASE_SHORT
 
   4. Stage copies of all files needing release updates into the appropriate `workflow-$WORKFLOW_RELEASE_SHORT(-e2e)` chart directories:
 
         deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT workflow
         deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT-e2e e2e
+        deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir router-$WORKFLOW_RELEASE_SHORT router
 
   5. Delete the `KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS` env var from `workflow-$WORKFLOW_RELEASE_SHORT/tpl/deis-controller-rc.yaml`
 
-  6. Test the chart and make sure it installs:
+  6. Test the new Workflow chart and make sure it installs:
 
         cp -r workflow-$WORKFLOW_RELEASE_SHORT* `helmc home`/workspace/charts
         helmc generate workflow-$WORKFLOW_RELEASE_SHORT
@@ -168,6 +170,7 @@ to the same `$WORKFLOW_RELEASE` as well as now pointing to the `deis` quay org.
 cd <back_to_charts_dir>
 deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT --org deis workflow
 deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT-e2e --org deis e2e
+deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir router-$WORKFLOW_RELEASE_SHORT --org deis router
 ```
 
 When you're done, commit and push your changes. You should get your pull request reviewed and merged before continuing.
