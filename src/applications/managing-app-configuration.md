@@ -65,7 +65,9 @@ Available configuration options for health checks are the following, including d
 
 **HEALTHCHECK_URL**
 
-Path in the application to use for health check, such as /healthz - This value needs to be set for any health check to happen. Needs to accept a HTTP GET request and return a HTTP status between 200-399.
+Path in the application to use for health check, such as /healthz - Query Parameters are not supported.
+
+This value needs to be set for any health check to happen. Needs to accept a HTTP GET request and return a HTTP status between 200-399.
 
 **HEALTHCHECK_TIMEOUT**
 
