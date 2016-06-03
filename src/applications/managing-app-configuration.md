@@ -56,7 +56,7 @@ Detachments can be performed with `deis config:unset`.
 
 By default, Workflow only checks that your application containers start in
 their Pod. If you would like Kubernetes to respond to appliation health, you
-may add a health check by configuring URL, port, initial delay, and timeout
+may add a health check by configuring URL, initial delay, and timeout
 values.
 
 The health checks are implemented as [Kubernetes container probes][kubernetes-probes]. Currently only HTTP GET is supported.
@@ -66,10 +66,6 @@ Available configuration options for health checks are the following, including d
 **HEALTHCHECK_URL**
 
 Path in the application to use for health check, such as /healthz - This value needs to be set for any health check to happen. Needs to accept a HTTP GET request and return a HTTP status between 200-399.
-
-**HEALTHCHCK_PORT**
-
-TCP port to use for health check. Defaults to using same port as the application
 
 **HEALTHCHECK_TIMEOUT**
 
@@ -110,13 +106,6 @@ $ deis config:set HEALTHCHECK_TIMEOUT=5
 HEALTHCHECK_TIMEOUT: 5
 HEALTHCHECK_INITIAL_DELAY: 5
 HEALTHCHECK_URL: /200.html
-$ deis config:set HEALTHCHECK_PORT=5000
-=== peachy-waxworks
-HEALTHCHECK_TIMEOUT: 5
-HEALTHCHECK_INITIAL_DELAY: 5
-HEALTHCHECK_URL: /200.html
-HEALTHCHECK_PORT: 5000
-```
 
 If an application times out, or responds to a health check with a response code
 outside the 200-399 range, Kubernetes will stop sending requests to the
