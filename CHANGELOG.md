@@ -1,3 +1,23 @@
+### v2.0.0-rc1 -> v2.0.0-rc2
+
+#### Fixes
+
+- [`b441b5f`](https://github.com/deis/workflow/commit/b441b5fb443e016c3a2bc51fe9f9298746e838ea) reference-guide/controller-api: v1->v2
+
+#### Documentation
+
+- [`adae0b5`](https://github.com/deis/workflow/commit/adae0b5131d6d5f7ea5d525a92dee1f71dbcdf96) deploy-an-app.md: update to reflect current output
+- [`7ef70d2`](https://github.com/deis/workflow/commit/7ef70d2b30da0a08fb00aaedde5ba19eb5f33d4f) various: update 'beta4' occurrences to 'rc1'
+- [`ba7b1cd`](https://github.com/deis/workflow/commit/ba7b1cdb7727493f84331f6b5a39632b09c9c749) managing-workflow: add Security Considerations
+- [`8f524a7`](https://github.com/deis/workflow/commit/8f524a7a05213a4ae94324583b910863c56c0113) release-checklist.md: update from rc1 amended processes
+- [`84a8aed`](https://github.com/deis/workflow/commit/84a8aedf90f2221d736d29ed599cae75fd2f368e) upgrades: expand upgrade documentation
+- [`b0a601b`](https://github.com/deis/workflow/commit/b0a601b58772f89b4693a7ad7cdd9db0a696e0be) src/roadmap/release-checklist.md: adjust spacing
+
+#### Maintenance
+
+- [`172bb64`](https://github.com/deis/workflow/commit/172bb64c07f33068d1be1139704ada2c559080ef) release-checklist: Amend with steps for router chart
+- [`15730d1`](https://github.com/deis/workflow/commit/15730d11b9292b38a0037c997d6b0492a88461a9) workflow-rc2: releasing workflow-rc2
+
 ### v2.0.0-beta4 -> v2.0.0-rc1
 
 #### Features
