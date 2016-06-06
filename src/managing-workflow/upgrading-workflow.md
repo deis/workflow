@@ -19,7 +19,7 @@ See [Configuring Object Storage][] to learn how to store your Workflow data off-
 
 !!! note
     "Keeper" upgrade behavior requires Helm Classic 0.8.0 or newer and the workflow-rc1
-    or workflow-dev chart.
+    or newer chart.
 
 Helm Classic recognizes when a manifest inside a chart is marked as a "keeper"
 and will not uninstall the annotated resource during `helmc uninstall`.
@@ -67,27 +67,27 @@ $ kubectl --namespace=deis get secret database-creds -o yaml > ~/active-deis-dat
 $ kubectl --namespace=deis get secret builder-ssh-private-keys -o yaml > ~/active-deis-builder-secret-ssh-private-keys.yaml
 
 # fetch new chart
-$ helmc fetch deis/workflow-rc1
+$ helmc fetch deis/workflow-rc2
 
 # update your off-cluster storage configuration
-$ $EDITOR $(helmc home)/workspace/charts/workflow-beta4/tpl/generate_params.toml
+$ $EDITOR $(helmc home)/workspace/charts/workflow-rc2/tpl/generate_params.toml
 
 # generate new templates
-$ helmc generate -x manifests workflow-rc1
+$ helmc generate -x manifests workflow-rc2
 
 # copy your active database secrets into the helmc workspace
 $ cp ~/active-deis-database-secret-creds.yaml \
-	$(helmc home)/workspace/charts/workflow-rc1-manifests/deis-database-secret-creds.yaml
+	$(helmc home)/workspace/charts/workflow-rc2-manifests/deis-database-secret-creds.yaml
 
 # copy your active builder ssh keys into the helmc workspace
 $ cp ~/active-deis-builder-secret-ssh-private-keys.yaml \
-	$(helmc home)/workspace/charts/workflow-rc1/manifests/deis-builder-secret-ssh-private-keys.yaml
+	$(helmc home)/workspace/charts/workflow-rc2/manifests/deis-builder-secret-ssh-private-keys.yaml
 
 # uninstall workflow
-$ helmc uninstall workflow-beta4 -n deis
+$ helmc uninstall workflow-rc1 -n deis
 
-# install workflow rc1
-$ helmc install workflow-rc1
+# install workflow rc2
+$ helmc install workflow-rc2
 ```
 
 Make sure to copy the existing `deis-database-secret-creds.yaml` manifest into the new chart
