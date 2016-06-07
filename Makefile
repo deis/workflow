@@ -7,7 +7,6 @@ MKDOCS          = mkdocs
 MKDOCSBUILDOPTS = --clean --strict --verbose
 MKDOCSBUILD     = $(MKDOCS) build $(MKDOCSBUILDOPTS)
 MKDOCSSERVE     = $(MKDOCS) serve -a 0.0.0.0:8000
-SASS = themes/deis/static/scss/app.scss:themes/deis/static/css/styles.css --style compressed
 
 SHORT_NAME ?= workflow
 VERSION ?= git-$(shell git rev-parse --short HEAD)
@@ -31,9 +30,6 @@ build:
 
 serve:
 	$(MKDOCSSERVE)
-
-watch:
-	sass --watch $(SASS)
 
 clean:
 	rm -rf $(BUILDDIR)/*

@@ -76,44 +76,6 @@
 
   </div>
 
-  <!-- div class="row">
-    <div class="small-9 column_calc contents">
-      <div class="doc-content">
-        {{ content }}
-      </div>
-    </div>
-
-    <div class="small-3 docs-sidebar column_calc">
-      <a class="fork" href="http://github.com/deis/workflow"><div class="forkImage"></div></a>
-      <div class="docs-border"></div>
-      <div class="navigation">
-        <ul class="current">
-          {%- include "nav.html" %}
-          <li class="toctree-l1">
-            {% if READTHEDOCS %}
-            <a class="reference internal" href="../" state="open">Versions</a>
-              <ul class="current">
-                {% for slug, url in versions %}
-                <li class="toctree-l2"><a href="{{ url }}{%- for word in pagename.split('/') -%}
-                  {%- if word != 'index' -%}
-                  {%- if word != '' -%}
-                  {{ word }}/
-                  {%- endif -%}
-                  {%- endif -%}
-                  {%- endfor -%}"
-                  title="Switch to {{ slug }}">{{ slug }}</a></li>
-              {% endfor %}
-              </ul>
-            {% endif %}
-          </li>
-        </ul>
-
-        <div class="clearfix"></div>
-      </div>
-      </div>
-    </div>
-  </div> -->
-
   {%- include "footer.html" %}
 
   <!-- scripts -->
