@@ -1,0 +1,130 @@
+// Sass for custom Deis shape blocks
+    // see docs here: http://codepen.io/flynnduism/pen/BjGZPp
+
+
+// circles, squares, triangles
+
+.geo-shapes {
+  padding-bottom: 2em;
+
+  hr {
+    border-width: 5px 0 0;
+    margin-top: -0.667em;
+    margin-left: 40%;
+    margin-right: 40%;
+    opacity: 0.13;
+  }
+
+  span {
+    position: relative;
+    z-index: 650;
+    margin: 0 0 -2em;
+  }
+}
+
+
+// block shapes
+
+.shapes {
+  .row {
+    display: block;
+
+    span {
+      display: inline-block;
+      width: 10%;
+      padding-bottom: 10%;
+      height: 0;
+      overflow: hidden;
+      float: left;
+      position: relative;
+
+      em {
+        transform: rotate(45deg);
+        display: block;
+        width: 150%;
+        padding-bottom: 150%;
+        position: absolute;
+        right: -75%;
+        top: -81.5%;
+        height: 0;
+      }
+    }
+  }
+
+  .shape-row-6 > span {
+    width: 16.666%;
+    padding-bottom: 16.666%;
+  }
+
+  .shape-row-8 > span {
+    width: 12.5%;
+    padding-bottom: 12.5%;
+  }
+
+  .shape-row-12 > span {
+    width: 8.3333%;
+    padding-bottom: 8.3333%;
+  }
+
+  // shape colors
+  .s-p { background: $pink }
+  .s-b { background: $blue }
+  .s-g { background: $green }
+
+  //lighter colors
+  .s-pl { background: $lightpink }
+  .s-bl { background: $lightblue }
+  .s-gl { background: $lightgreen }
+
+  // darker deis colors
+  .s-pd { background: $darkpink }
+  .s-bd { background: $darkblue }
+  .s-gd { background: $darkgreen }
+
+  .s-d1 { background: $dark1 }
+  .s-d2 { background: $dark2 }
+
+  .s-l1 { background: $light1}
+  .s-l2 { background: $light2 }
+
+  .s-w { background: white }
+
+  // hover effect
+  &.shapes-animate {
+    .row {
+      display: block;
+
+      span {
+        transition: all 0.85s ease-in-out;
+
+        &:hover {
+          transform: rotate(90deg);
+        }
+      }
+    }
+  }
+}
+
+// vertical alignment
+.shape-position {
+  width: 100%;
+
+  .row {
+    max-width: 100%;
+  }
+
+  &.shape-position-top {
+    @include topper;
+  }
+
+  &.shape-position-bottom {
+    @include bottomer;
+
+    .row span em {
+      transform: rotate(45deg);
+      left: -75%;
+      right: auto;
+      top: -81.5%;
+    }
+  }
+}

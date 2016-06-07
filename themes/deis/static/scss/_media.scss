@@ -1,0 +1,35 @@
+@media only screen and (max-width: 40.063em) {
+
+  .billboard-home section {
+    width: 100%;
+    z-index: 50;
+
+    h1 {
+      font-size: 1.425em;
+    }
+
+    p {
+      font-size: 0.925em;
+      margin: 0 20% 2em;
+    }
+
+    .button {
+      min-width: 85%;
+      margin: 0.25em 7.5%;
+      max-width: 200px;
+    }
+  }
+
+  .shape-position.shape-position-bottom {
+    bottom: -3.5em;
+    width: 117.5%;
+    z-index: 150;
+  }
+
+}
+
+@media only screen and (max-width: 64.063em) {
+
+  
+
+}

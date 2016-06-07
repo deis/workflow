@@ -1,0 +1,87 @@
+#documentation {
+  .billboard {
+    @include fullheight;
+    min-height: 380px;
+    @include mobile {
+      min-height: 320px;
+    }
+    @include smallLandscape {
+      min-height: 380px;
+    }
+    display: block;
+    position: relative;
+    text-align: center;
+    background: lighten($lightpink, 30%);
+
+    h1 {
+      margin-top: 38px;
+    }
+
+    .shape-position.shape-position-top {
+      top: 42px;
+      @include mobile {
+        top: 75px;
+      }
+
+      .s-w {
+        background: lighten($lightpink, 35%);
+      }
+      .s-l1 {
+        opacity: 0.5;
+      }
+    }
+
+    .intro {
+        width: 75%;
+        left: 12.5%;
+        transform: translate(0, -50%);
+        z-index: 600;
+        margin-top: 80px;
+        @include mobile {
+          top: 47%;
+          margin-top: 60px;
+        }
+    }
+  }
+  .content {
+    @include mobile {
+      h2 {
+        margin-top: 1em;
+      }
+      h3 {
+        margin: 1em 0;
+      }
+      .geo-shapes {
+        padding: 0;
+      }
+    }
+  }
+  .documentation-items {
+    padding-bottom: 80px;
+    @include mobile {
+      padding-bottom: 40px;
+    }
+  }
+  .doc-links {
+    hr {
+      @include mobile {
+        display: none;
+      }
+      margin-bottom: -1.125em;
+    }
+    .button {
+      @include mobile {
+        display: block;
+        margin: 0 40px;
+      }
+    }
+    .button + .button {
+      @include tablet {
+        margin-left: 100px;
+      }
+      @include mobile {
+        margin-top: 20px;
+      }
+    }
+  }
+}

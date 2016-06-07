@@ -13,6 +13,7 @@ develop-eggs
 .installed.cfg
 lib
 lib64
+.sass-cache
 
 # python virtual environments for testing
 venv/

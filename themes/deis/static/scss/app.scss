@@ -1,0 +1,369 @@
+// Import Foundation
+@import '../../bower_components/foundation/scss/normalize';
+    @import 'custom-foundation-settings';
+    // override foundation's settings ^
+
+
+// Foundation Components
+@import "../../bower_components/foundation/scss/foundation/components/grid";
+@import "../../bower_components/foundation/scss/foundation/components/block-grid";
+@import "../../bower_components/foundation/scss/foundation/components/inline-lists";
+@import "../../bower_components/foundation/scss/foundation/components/alert-boxes";
+@import "../../bower_components/foundation/scss/foundation/components/reveal";
+@import "../../bower_components/foundation/scss/foundation/components/split-buttons";
+@import "../../bower_components/foundation/scss/foundation/components/tables";
+@import "../../bower_components/foundation/scss/foundation/components/type";
+@import "../../bower_components/foundation/scss/foundation/components/offcanvas";
+@import "../../bower_components/foundation/scss/foundation/components/visibility";
+
+
+
+// Deis Style Components
+@import 'mixins';
+@import 'typography';
+@import 'buttons';
+@import 'shapes';
+@import 'media';
+
+@import 'header';
+@import 'offcanvas';
+@import 'footer';
+
+
+
+// Deis Docs
+@import 'doc-layout';
+@import 'doc-sidebar';
+@import 'doc-content';
+
+
+.panel {
+  font-size: 21px;
+  padding: ($gutter / 1.5) 0;
+  width: 100%;
+  position: relative;
+
+  @include mobile {
+    padding: 10px 0;
+  }
+
+  &.-blue {
+    background-color: $blue;
+    color: #fff;
+    @include tablet {
+    padding-top: $gutter;
+    }
+    h1, h2, p {
+    color: $black;
+    }
+  }
+
+  &.-gray {
+    background-color: $light1;
+  }
+}
+
+
+.geo-shapes-title {
+  margin: 0 auto;
+
+  &.blue h2 hr.border {
+    border-color: $blue;
+  }
+
+  &.pink h2 hr.border {
+    border-color: $pink;
+  }
+
+  h2 {
+    display: inline-block;
+    line-height: 1;
+    padding: 0 1em;
+    margin: 0 0 1.5em;
+    @include klinicBold;
+
+    hr.border {
+      border-color: $green;
+      border-width: 0 0 5px;
+      margin: 0.575em -5% 1em
+    }
+
+    .geo-shapes {
+      padding-bottom: 0;
+      font-size: 21px;
+      line-height: 1.5;
+
+      hr {
+        width: 42.5%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  }
+}
+
+.panel.panel--signoff {
+  min-height: 320px;
+  overflow: hidden;
+
+  &.panel--signoff-how {
+      min-height: 570px;
+  }
+
+  .text-center {
+    @include centerer;
+    margin-top: -5%;
+    z-index: 1200;
+
+    .geo-shapes {
+        padding-top: 2em;
+        padding-bottom: 0.5em;
+    }
+
+    h2 {
+      margin: 0.5em 0;
+    }
+
+    h4 a {
+      @include ripple;
+      line-height: 1;
+    }
+
+    p:last-child {
+        margin-bottom: 0;
+    }
+
+    .button {
+
+    }
+  }
+
+  .shape-position.shape-position-bottom {
+    bottom: -10%;
+  }
+}
+
+.intro {
+  @include centerer;
+  margin-top: 50px;
+
+  .geo-shapes {
+      padding-bottom: 0.5em;
+  }
+
+  p {
+      max-width: 92%;
+      font-size: 0.875em;
+      margin: 0.5em auto 1.5em;
+  }
+}
+
+.content {
+
+    .pink {
+        color: $pink;
+        border-color: $pink;
+    }
+
+    .blue {
+        color: $blue;
+        border-color: $blue;
+    }
+
+    .green {
+        color: $green;
+        border-color: $green;
+    }
+
+    h2, h3, h4 {
+        color: $pink;
+        margin: 1.5em 0;
+        line-height: 1.3;
+    }
+
+    h2 {
+        margin: 2em 0 0.5em;
+
+        .geo-shapes {
+            padding: 0;
+        }
+    }
+
+    h3 {
+      margin: 1em 0;
+    }
+
+    .pics {
+        p {
+            padding-right: 0;
+        }
+    }
+
+    .text-center {
+        p {
+            padding-right: 0;
+        }
+    }
+
+    p {
+        padding-right: 5%;
+        line-height: 1.636;
+        margin-bottom: 1.5rem;
+
+        &:last-child {
+            @include tablet {
+              margin-bottom: 1em;
+            }
+        }
+
+        &.lead {
+            @include klinicReg;
+            padding: 0;
+            font-size: 0.925em;
+        }
+    }
+
+    code,
+    pre {
+        font-family: $font-family-monospace;
+        background: darken($light1, 1.5%);
+        border: none;
+        color: $dark2;
+        line-height: 1.8;
+    }
+
+    table {
+        border: 2px solid $light1;
+        margin: 1.5em auto;
+        width: 100%;
+
+        th,
+        td {
+            vertical-align: top;
+            padding: 0.825em 1.5em 1.25em 0.75em;
+            line-height: 1.333;
+        }
+
+        th {
+            @include klinicBold;
+            color: white;
+            font-size: 1em;
+            background: $dark1;
+            line-height: 1.2;
+        }
+
+        .small {
+            font-size: 0.75em;
+            line-height: 1.7;
+            max-width: 50%;
+        }
+    }
+
+    dl {
+        margin: 0 0 1.5em;
+        font-size: 1.25rem;
+        line-height: 1.5;
+
+        dt,
+        dd {
+            @include klinicReg;
+        }
+
+        dt {
+            @include klinicBold;
+            color: darken($light2, 12.5%);
+        }
+
+        &.inline-list {
+            dt,
+            dd {
+                float: left;
+                display: inline-block;
+                margin-right: 1em;
+            }
+
+            dt {
+                clear: left;
+            }
+        }
+    }
+
+    address {
+        @include klinicReg;
+        font-size: 1.25rem;
+        margin: 2em 0 1em;
+        line-height: 1.333;
+
+        em {
+            @include klinicBold;
+            font-style: normal;
+            color: darken($light2, 12.5%);
+        }
+    }
+
+    hr.blank {
+        color: white;
+        border-color: white;
+    }
+
+    .quote {
+        @include quote;
+    }
+
+    a.ripple {
+        @include ripple;
+        display: inline;
+
+        &:after {
+            position: absolute;
+            left: 0;
+            bottom: -0.2em;
+        }
+    }
+
+    .breakout-cta-row {
+        background: white;
+        box-shadow: 0 1px 3px darken($light2, 2.5%);
+        padding: 1em 1.25em;
+        margin-bottom: 1.25em;
+
+        p.left {
+            font-size: 0.75em;
+            padding: 0.5em 0;
+            margin: 0;
+            color: darken($light2, 42.5%);
+        }
+
+        @include mobile {
+            p.left,
+            button {
+                float: none;
+                text-align: center;
+                margin: 0 auto;
+            }
+        }
+    }
+
+    .centerer {
+        @include centerer;
+    }
+}
+
+// required to enforce "sticky" menu items when hamburger is clicked
+.off-canvas-wrap.move-left {
+  position: fixed;
+}
+
+// ensure that top navbar hugs the top in mobile
+.navbar.top-bar {
+  @include mobile {
+    top: 0;
+  }
+}
+
+#tos {
+  padding-top: 100px;
+  @include mobile {
+    padding: 80px 20px 20px 20px;
+  }
+}

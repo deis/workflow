@@ -1,0 +1,144 @@
+#how-it-works {
+  .billboard {
+    @include fullheight;
+    min-height: 400px;
+    @include mobile {
+      min-height: 370px;
+    }
+    display: block;
+    position: relative;
+    text-align: center;
+    background: lighten($green, 50%);
+
+    .shape-position.shape-position-top {
+        top: 55px;
+        @include mobile {
+          top: 75px;
+        }
+
+        .s-w {
+          background: lighten($green, 50%);
+        }
+    }
+
+    .intro {
+        width: 75%;
+        left: 12.5%;
+        transform: translate(0, -50%);
+        z-index: 600;
+        padding-bottom: 265px;
+        top: 90%;
+        @include mobile {
+          top: 88%;
+        }
+    }
+
+    .button {
+        width: 12em;
+        margin-left: -6em;
+        @include bottomer;
+        bottom: -1.5em;
+        z-index: 700;
+    }
+
+    img.chart {
+        bottom: 0;
+        left: 50%;
+        width: 90%;
+        margin-left: -45%;
+        position: absolute;
+        z-index: 200;
+    }
+  }
+
+  .content {
+    h2 {
+      margin-top: 0.5em;
+    }
+    hr.blank {
+      @include mobile {
+        margin: 0;
+      }
+    }
+    .cloud-image-container {
+      @include tablet {
+        min-height: 240px;
+      }
+      @include mobile {
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+    }
+  }
+
+  .features {
+    background: lighten($light2, 7.5%);
+    padding-top: 0;
+
+    .feature-items {
+        div.columns {
+            min-height: 220px;
+        }
+
+        h4 {
+            @include tablet {
+              text-align: center;
+            }
+            padding: 0;
+            margin: 1em 0 0.25em;
+            color: $blue;
+        }
+
+        p {
+            padding: 1em 2% 0 0;
+            font-size: 0.725em;
+            color: lighten($dark1, 5%);
+            line-height: 1.6;
+            margin-bottom: 0;
+
+            hr {
+                width: 20%;
+                margin: 1em auto;
+            }
+        }
+    }
+
+
+    .features-cta hr {
+        margin-bottom: -1.125em;
+    }
+
+    .row {
+      padding: 10px 0;
+      &:last-child {
+        @include tablet {
+          padding: 0;
+        }
+      }
+    }
+
+    .lead {
+      + hr {
+        @include mobile {
+          margin: 0;
+        }
+      }
+    }
+  }
+  +.panel--signoff {
+    @include mobile {
+      min-height: 400px;
+    }
+    .shape-position.shape-position-bottom {
+      @include mobile {
+        bottom: 0;
+      }
+    }
+    .text-center{
+      @include mobile {
+        width: 75%;
+        top: 37%;
+      }
+    }
+  }
+}

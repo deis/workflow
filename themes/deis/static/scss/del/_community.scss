@@ -1,0 +1,208 @@
+#community {
+  .billboard {
+    @include fullheight;
+    min-height: 600px;
+    @include mobile {
+      min-height: 800px;
+    }
+    @include smallLandscape {
+      min-height: 700px;
+    }
+    display: block;
+    position: relative;
+    text-align: center;
+    background: white;
+
+    .intro {
+      width: 100%;
+      margin-top: initial;
+      top: 55%;
+      @include mobile {
+        top: 53%;
+      }
+      p {
+        font-size: 1em;
+        margin-bottom: 0;
+        em {
+          color: $green;
+          font-style: normal;
+        }
+        &.longcopy {
+          margin-top: 2em;
+          max-width: 75%;
+          font-size: 1rem;
+          em {
+            color: initial;
+            font-weight: 600;
+          }
+        }
+      }
+      .geo-shapes {
+        padding: 0;
+      }
+      hr.border {
+        border-width: 0 0 5px;
+        margin: 1em 45%;
+      }
+    }
+
+    h1 {
+      margin: 40px 0;
+      &:after {
+        content: "";
+        display: block;
+        height: 5px;
+        position: absolute;
+        left: 50%;
+        background-color: $green;
+      }
+    }
+
+    .shape-position.shape-position-top {
+      top: 48px;
+      @include mobile {
+        top: 75px;
+      }
+
+      .s-w {
+        background: lighten($lightblue, 20%);
+      }
+      .s-l1 {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .container.panel {
+    padding: 0 12%;
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      text-align: center;
+      color: $black;
+    }
+    &.stats {
+      .row {
+        background: lighten($dark2, 10%);
+      }
+      .stats-item {
+        background: $dark2;
+        color: $white;
+        font-size: 1.2rem;
+        padding: 10px;
+        .statistic {
+          font-family: "klinic",Consolas,"Andale Mono",Rockwell,Courier,sans-serif;
+          font-size: 3rem;
+          display: block;
+          line-height: initial;
+        }
+        &:last-child {
+          background: transparent;
+          @include mobileAndTablet {
+            padding: 20px 0;
+          }
+        }
+        a.button.hollow {
+          color: $white;
+          border: 3px solid $dark2;
+        }
+        i {
+          font-size: 1.7rem;
+          line-height: 0.5rem;
+          margin-right: 1rem;
+          margin-top: 0.5rem;
+        }
+      }
+    }
+    &.involved {
+      padding: 0 15%;
+      .involved-item {
+        text-align: center;
+        color: $pink;
+        @include mobile {
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+        i {
+          font-size: 3rem;
+        }
+        h5 {
+          color: $pink;
+          font-size: 1.2rem;
+          font-weight: 500;
+        }
+      }
+      hr {
+        border-color: rgba($pink, 0.3);
+      }
+      hr.border {
+        border-color: $pink;
+        border-width: 0 0 4px;
+        margin: 0.575em 45% 2em;
+        @include mobile {
+          margin: 0.575em 30% 1em;
+        }
+      }
+    }
+    &.events {
+      font-family: "klinic",Consolas,"Andale Mono",Rockwell,Courier,sans-serif;
+      padding-bottom: 2em;
+      a {
+        color: $black;
+        font-weight: 800;
+        font-size: 1.6rem;
+      }
+      hr.border {
+        border-color: $blue;
+        border-width: 0 0 4px;
+        margin: 0.575em 45% 2em;
+        @include mobile {
+          margin: 0.575em 30% 1em;
+        }
+      }
+      .bullet {
+        color: $blue;
+        text-align: right;
+        bottom: -5px;
+      }
+      .presenter {
+        @include helvetica;
+        font-size: 0.8rem;
+      }
+      .row.presentation {
+        margin-bottom: 0.8em;
+      }
+    }
+  }
+  +.panel--signoff {
+    @include mobile {
+      min-height: 220px;
+    }
+    .shape-position.shape-position-bottom {
+      @include mobile {
+        bottom: 0;
+      }
+    }
+    .text-center{
+      @include mobile {
+        width: 75%;
+        top: 35%;
+      }
+    }
+  }
+  @include desktop {
+    .valign-middle {
+      display: table;
+    }
+
+    .valign-middle .columns {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    .valign-middle .columns,
+    .valign-middle [class*="column"] + [class*="column"]:last-child {
+      float: none;
+    }
+  }
+}

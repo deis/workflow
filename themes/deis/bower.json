@@ -1,0 +1,8 @@
+{
+  "name": "deis workflow docs",
+  "dependencies": {
+    "headroom.js": "^0.9.3",
+    "font-awesome": "^4.6.3",
+    "foundation": "^5.5.3"
+  }
+}

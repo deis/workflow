@@ -3,94 +3,152 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+
 <head>
-    <title>{% if page_title %}{{ page_title }} - {% endif %}{{ site_name }}</title>
-    <link rel="shortcut icon" href="{{ base_url }}/static/favicon.ico">
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="description" content="{{ page_description if page_description }}" />
-    <meta name="keywords" content="{{ meta['keywords'] if meta }}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="msvalidate.01" content="079E754911917142D42AB2A3694F9267" />
-    <meta name="msvalidate.01" content="08598E7D936D9217891AE6C1665A645D" />
-    <link rel="stylesheet" href="{{ base_url }}/static/css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="{{ base_url }}/static/css/bootstrap-responsive.min.css" type="text/css">
-    <link rel="stylesheet" href="{{ base_url }}/static/css/main.css" type="text/css">
-    <link rel="stylesheet" href="{{ base_url }}/static/css/deis-docs.css" type="text/css">
-    <script type="text/javascript">var documentationBaseURL = "{{ base_url}}"</script>
-    <script src="{{ base_url }}/static/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="{{ base_url }}/static/js/jquery-1.10.2.min.js"><\/script>')</script>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="keywords" content="{{ meta['keywords'] if meta }}" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ page_description if page_description }}" />
+
+  <meta name="msvalidate.01" content="079E754911917142D42AB2A3694F9267" />
+  <meta name="msvalidate.01" content="08598E7D936D9217891AE6C1665A645D" />
+
+  <title>{% if page_title %}{{ page_title }} - {% endif %}{{ site_name }}</title>
+  <!-- <base href="https://deis.com/docs"> -->
+
+  <link rel="icon" href="{{ base_url }}/static/img/favicon/favicon.png" type="image/png">
+
+  <!-- styles -->
+  <link rel="stylesheet" href="{{ base_url }}/static/css/styles.css" type="text/css">
 </head>
-<body style="zoom: 1;">
-    <!--[if lt IE 7]>
-        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
-    <div class="container">
+
+<body>
+  <!--[if lt IE 7]>
+      <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+      <![endif]-->
+
+  {%- include "topbar.html" %}
+
+  <!-- banner at the top of the page for temporary announcements-->
+  <div data-alert class="alert-box alert banner text-center">
+    You're viewing docs for the latest release of <strong>Deis Workflow</strong>. For docs <a href="https://deis.io/">relating to Deis 1.0 click here</a>.
+  </div>
+
+  <div class="content-wrap">
+
+    <div class="content-inner">
+      <div class="container">
         <div class="row">
-            <div class="span9 column_calc contents">
-                <div class="doc-content">
-                    {{ content }}
-                </div>
-            </div>
-
-
-            <div class="span3 docs-sidebar column_calc">
-                <a class="fork" href="http://github.com/deis/workflow"><div class="forkImage"></div></a>
-                <div class="docs-border"></div>
-                <div class="navigation">
-                    <ul class="current">
-                        {%- include "nav.html" %}
-                        <li class="toctree-l1">
-                            {% if READTHEDOCS %}
-                                <a class="reference internal" href="../" state="open">Versions</a>
-                                <ul class="current">
-                                    {% for slug, url in versions %}
-                                        <li class="toctree-l2"><a href="{{ url }}{%- for word in pagename.split('/') -%}
-                                            {%- if word != 'index' -%}
-                                            {%- if word != '' -%}
-                                            {{ word }}/
-                                            {%- endif -%}
-                                            {%- endif -%}
-                                            {%- endfor -%}"
-                                            title="Switch to {{ slug }}">{{ slug }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                        </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                </div>
-            </div>
+          <div class="small-12">
+            {{ content }}
+          </div>
         </div>
+      </div>
     </div>
 
-    <!--
-        extra_javascript contains paths to JavaScript files in the
-        users documentation directory or a list of JavaScript files
-        defined in their mkdocs.yml.
+    <nav class="sidebar">
+      <div class="sidebar-inner">
+        <ul class="current">
+          {%- include "nav.html" %}
+          <li class="toctree-l1">
+            {% if READTHEDOCS %}
+            <a class="reference internal" href="../" state="open">Versions</a>
+              <ul class="current">
+                {% for slug, url in versions %}
+                <li class="toctree-l2"><a href="{{ url }}{%- for word in pagename.split('/') -%}
+                  {%- if word != 'index' -%}
+                  {%- if word != '' -%}
+                  {{ word }}/
+                  {%- endif -%}
+                  {%- endif -%}
+                  {%- endfor -%}"
+                  title="Switch to {{ slug }}">{{ slug }}</a></li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+        </ul>
+      </div>
 
-        http://www.mkdocs.org/user-guide/configuration/#extra_javascript
-    -->
-    {% for path in extra_javascript %}
-        <script src="{{ path }}"></script>
-    {% endfor %}
+      <div class="sidebar-bg"></div>
+    </nav>
 
-    <!--
-        Include Google Analytics tracking code.
+  </div>
 
-        http://www.mkdocs.org/user-guide/configuration/#google_analytics
-    -->
-    {% if google_analytics %}
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  <!-- div class="row">
+    <div class="small-9 column_calc contents">
+      <div class="doc-content">
+        {{ content }}
+      </div>
+    </div>
 
-        ga('create', '{{ google_analytics[0] }}', '{{ google_analytics[1] }}');
-        ga('send', 'pageview');
-    </script>
-    {% endif %}
+    <div class="small-3 docs-sidebar column_calc">
+      <a class="fork" href="http://github.com/deis/workflow"><div class="forkImage"></div></a>
+      <div class="docs-border"></div>
+      <div class="navigation">
+        <ul class="current">
+          {%- include "nav.html" %}
+          <li class="toctree-l1">
+            {% if READTHEDOCS %}
+            <a class="reference internal" href="../" state="open">Versions</a>
+              <ul class="current">
+                {% for slug, url in versions %}
+                <li class="toctree-l2"><a href="{{ url }}{%- for word in pagename.split('/') -%}
+                  {%- if word != 'index' -%}
+                  {%- if word != '' -%}
+                  {{ word }}/
+                  {%- endif -%}
+                  {%- endif -%}
+                  {%- endfor -%}"
+                  title="Switch to {{ slug }}">{{ slug }}</a></li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+        </ul>
+
+        <div class="clearfix"></div>
+      </div>
+      </div>
+    </div>
+  </div> -->
+
+  {%- include "footer.html" %}
+
+  <!-- scripts -->
+  <script type="text/javascript">var documentationBaseURL = "{{ base_url}}"</script>
+  <script src="{{ base_url }}/static/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="{{ base_url }}/static/js/jquery-1.10.2.min.js"><\/script>')</script>
+
+  <!--
+    extra_javascript contains paths to JavaScript files in the
+    users documentation directory or a list of JavaScript files
+    defined in their mkdocs.yml.
+
+    http://www.mkdocs.org/user-guide/configuration/#extra_javascript
+  -->
+  {% for path in extra_javascript %}
+    <script src="{{ path }}"></script>
+  {% endfor %}
+
+  <!--
+    Include Google Analytics tracking code.
+
+    http://www.mkdocs.org/user-guide/configuration/#google_analytics
+  -->
+  {% if google_analytics %}
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', '{{ google_analytics[0] }}', '{{ google_analytics[1] }}');
+    ga('send', 'pageview');
+  </script>
+  {% endif %}
+
 </body>
 </html>

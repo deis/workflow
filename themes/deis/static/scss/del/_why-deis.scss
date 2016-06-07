@@ -1,0 +1,157 @@
+#why-deis {
+    .billboard {
+      @include fullheight;
+      min-height: 820px;
+      @include mobile {
+        min-height: 620px;
+      }
+      display: block;
+      position: relative;
+      text-align: center;
+      background-color: lighten(saturate($light2, 35%), 9.25%);
+      background-image:
+          url('../images/simple-stack-chart.png'),
+          url('../images/tiles/grey.png');
+      background-position:
+          50% bottom,
+          0 0;
+      background-repeat:
+          no-repeat,
+          repeat;
+      border-bottom: 1px solid $light2;
+
+      .shape-position.shape-position-top {
+        top: 55px;
+
+        .s-l1 {
+          background: lighten(saturate($light2, 35%), 9.25%) url('../images/tiles/grey.png') repeat 0 0;
+        }
+      }
+
+      .button {
+        margin-top: 1.5em;
+      }
+
+      .intro {
+        @include mobile {
+          width: 75%;
+          top: 50%;
+        }
+      }
+    }
+
+    .panel-oldvnew {
+        background: $dark2;
+
+        h4 {
+          color: $white;
+          margin: 0.5em 0 1.25em;
+          @include klinicReg;
+          font-size: 1.333em;
+        }
+
+        .old-way {
+            border-right: 1px solid darken($light2, 67%);
+
+            h4 {
+                font-family: $font-family-monospace;
+                font-weight: bold;
+                color: $light1;
+            }
+        }
+
+        ul {
+            margin: 1em 0 1.5em 1em;
+
+            li {
+                font-size: 1em;
+                line-height: 1.67;
+                margin: 0.5em 7.5% 1.25em 0;
+                letter-spacing: 0.0125em;
+                list-style: none;
+                padding-left: 1.333em;
+                position: relative;
+                color: $light1;
+
+                img,
+                .fa {
+                    position: absolute;
+                    left: -0.825em;
+                    top: 0.333em;
+                    color: darken($light2, 25%);
+                }
+            }
+        }
+
+        .deis-way {
+            padding-left: 2.5%;
+
+            em {
+                color: $pink;
+                font-style: normal;
+                @include klinicBold;
+            }
+        }
+    }
+
+    .panel-why-points {
+        background: lighten(saturate($light2, 35%), 9.25%) url('../images/tiles/geometry2.png') repeat 0 0;
+    }
+    + .panel--signoff {
+      @include mobile {
+        min-height: 450px;
+      }
+      @include tablet {
+        min-height: 570px;
+        background: white url('../images/simple-stack-chart.png') no-repeat center 90%;
+        background-size: auto 50%;
+      }
+      .shape-position.shape-position-bottom {
+        @include mobile {
+          bottom: 0;
+        }
+      }
+      .text-center{
+        @include mobile {
+          width: 75%;
+          top: 40%;
+        }
+      }
+    }
+    .panel-industry {
+      @include mobile {
+        padding-bottom: 10px;
+      }
+    }
+    .content {
+      h2 {
+        margin-top: 0.5em;
+      }
+      &.deis-clouds {
+        .cloud-image-container {
+          @include tablet {
+            min-height: 280px;
+          }
+        }
+        img {
+          @include tablet {
+            @include centerer;
+          }
+        }
+        h2 {
+          margin-top: 1em;
+        }
+      }
+      hr.blank {
+        @include mobile {
+          margin: 0;
+        }
+      }
+    }
+    .k8s-docker-coreos {
+      min-height: 580px;
+      @include mobile {
+        display: none;
+      }
+    }
+}

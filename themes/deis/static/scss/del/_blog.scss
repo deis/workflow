@@ -1,0 +1,301 @@
+#blog {
+  border-bottom: 1px solid #e2e2e2;
+  @include mobile {
+    .billboard {
+      display: none;
+      + .post {
+        margin-top: 85px;
+      }
+    }
+  }
+  .more, .prev {
+    text-align: center;
+    .button {
+      font-size: 16px;
+    }
+    .columns {
+      background: white;
+    }
+  }
+
+  .more {
+    .button {
+      margin: 20px 0;
+    }
+  }
+
+  .prev {
+    .button {
+      margin-top: 20px;
+      @include mobile {
+        margin-top: 80px;
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  .post, .more {
+    background: linear-gradient(to right, white 30%, #eee);
+  }
+}
+
+.blog-header {
+  border-bottom: 1px solid #e2e2e2;
+  padding: ($gutter / 3) 0;
+  .subscribe {
+    float: right;
+  }
+  ul {
+    margin-bottom: 0;
+  }
+}
+
+.post {
+  $columnWidth: 0.9375rem;
+  border-color: $light2;
+  // Prevent iframe embeds from exceeding mobile screen widths
+  // for various breakpoints
+  // iPhone 6 Plus
+  @media only screen and (max-width: 414px) {
+    iframe {
+      max-width: rem-calc(414px) - ($columnWidth * 2)
+    }
+  }
+  // iPhone 6
+  @media only screen and (max-width: 375px) {
+    iframe {
+      max-width: rem-calc(375px) - ($columnWidth * 2)
+    }
+  }
+  // iPhone 4, 5
+  @media only screen and (max-width: 320px) {
+    iframe {
+      max-width: rem-calc(320px) - ($columnWidth * 2)
+    }
+  }
+  border-bottom: 1px solid #e2e2e2;
+  position: relative;
+
+  h1 {
+    margin-top: ($gutter / 3);
+    margin-bottom: ($gutter);
+    line-height: 1.4;
+
+    a {
+      font-size: 2.5rem;
+      color: $pink;
+      @include klinicBold;
+    }
+  }
+}
+.post__content {
+  background-color: #fff;
+  @include tablet {
+    padding: ($gutter / 2) $gutter ($gutter / 3) rem-calc(15px);
+  }
+  @include mobile {
+    padding-bottom: 20px;
+  }
+
+  h1 {
+    @include klinicBold;
+    line-height: 1.2;
+    margin-top: ($gutter / 1.25);
+    margin-bottom: ($gutter / 2);
+    color: $pink;
+    padding-right: 5%;
+    @include mobile {
+      margin: 15px 0;
+    }
+  }
+  h2 {
+    @include klinicReg;
+    letter-spacing: 0.02em;
+    margin-top: ($gutter / 2);
+    margin-bottom: ($gutter / 2.25);
+    color: $darkblue;
+    padding-right: 7.5%;
+    line-height: 1.25;
+    font-size: 1.75em;
+  }
+  h3 {
+    margin-top: ($gutter / 1.5);
+    margin-bottom: ($gutter / 2.5);
+    color: $darkpink;
+    padding-right: 7.5%;
+    line-height: 1.25;
+    @include klinicBold;
+    font-size: 1.333em;
+    text-transform: uppercase;
+    letter-spacing: 0.075em;
+  }
+  p {
+    font-size: 18px;
+    margin-top: ($gutter / 4.25);
+    margin-bottom: ($gutter / 4.25);
+    padding-right: 7.5%;
+
+    img {
+        margin-top: 0.75em;
+        margin-bottom: 0.75em;
+    }
+  }
+  ul {
+    margin-top: ($gutter / 2);
+    margin-bottom: ($gutter / 2);
+    font-size: 18px;
+  }
+  code,
+  pre {
+    font-family: $font-family-monospace;
+    background: darken($light1, 1.5%);
+    border: none;
+    color: $dark2;
+    line-height: 1.8;
+    padding: 0;
+  }
+
+  pre,
+  figure {
+    @include transition;
+    background: darken($light1, 1.5%);
+    margin: ($gutter / 2) 0;
+    padding: 0.925em 1.25em;
+
+    &:hover {
+        border-left: 4px solid $blue;
+
+        pre {
+            border-left: none !important;
+        }
+    }
+
+    pre {
+        padding: 0;
+        margin: 0;
+    }
+  }
+  pre {
+    padding: 0.5em 1.25em;
+  }
+
+
+  .publish-date, .tags {
+    font-size: 0.825em;
+    color: darken($light2, 12.5%);
+    display: inline-block;
+  }
+  .publish-date {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: bold;
+  }
+  .tags {
+    padding-left: 0.3em;
+
+    strong {
+      padding-left: 0.7em;
+      color: $lightblue;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  .social-links {
+    font-size: 1.7rem;
+    margin-top: ($gutter / 3);
+    a {
+      margin-right: 10px;
+      text-decoration: none;
+      &.facebook {
+        color: #3b5998;
+      }
+      &.twitter {
+        color: #4099FF;
+      }
+    }
+    h5 {
+      @include helvetica;
+      font-size: 0.8rem;
+      color: darken($light2, 12.5%);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: bold;
+    }
+  }
+}
+.post__sidebar {
+  color: #111111;
+  @media only screen and (min-width: 40.063em) {
+    padding: 30px 0 50px 15px;
+    .author {
+      margin-top: ($gutter);
+      margin-bottom: ($gutter / 2);
+    }
+  }
+
+  .avatar {
+    @media only screen and (max-width: 40em) {
+      margin: $smidgen $smidgen $smidgen 0;
+    }
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -ms-border-radius: 100px;
+    -o-border-radius: 100px;
+    border-radius: 100px;
+    border: solid $skosh white;
+    float: left;
+    margin-left: -70px;
+  }
+  .bio {
+    padding-top: ($gutter / 4);
+    margin-left: ($gutter / 2);
+    @media only screen and (max-width: 40em) {
+      .author-twitter {
+        margin: 5px 0 $smidgen $gutter;
+      }
+    }
+
+    div {
+        font-size: 14px;
+        color: darken($light2, 25%);
+        margin-top: 1em;
+        line-height: 1.4;
+    }
+  }
+  .related-articles {
+    @media only screen and (max-width: 40em) {
+      margin-bottom: ($gutter / 3);
+    }
+    .related-border {
+      margin-left: -($gutter / 2);
+      border-top: solid 1px #ddd;
+    }
+    p {
+      @media only screen and (max-width: 40em) {
+        text-align: center;
+        margin: $smidgen 0;
+      }
+      margin-top: 30px;
+      text-transform: uppercase;
+      color: #888;
+      font-size: 0.9em;
+      font-weight: 600;
+    }
+    ul {
+      list-style-type: none;
+      margin: 0;
+      .related-post-date {
+        margin-top: 5px;
+        color: #aaa;
+        font-weight: 300;
+        @media only screen and (max-width: 40em) {
+          margin-left: $smidgen;
+        }
+        @media only screen and (min-width: 40.063em) {
+          display: block;
+        }
+      }
+    }
+  }
+}

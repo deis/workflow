@@ -1,0 +1,85 @@
+.navbar {
+  background: #fff;
+  padding: 15px 0;
+  position: fixed;
+  width: 100%;
+  z-index: 10000;
+  transition: box-shadow 0.2s;
+  transform-style: preserve-3d;
+  border-bottom: 2px solid $light1;
+
+  .row {
+    max-width: 1240px;
+  }
+
+  h1 {
+    margin: -0.125em 0 0.125em;
+    line-height: 1;
+  }
+
+  nav {
+    height: 1em;
+
+    ul.inline-list {
+        margin: 0.925em 0 0;
+    }
+
+    li {
+        margin-left: 5%;
+
+        a {
+            @include helvetica;
+            @include ripple;
+            font-weight: bold;
+            font-size: 0.825em;
+            line-height: 1;
+            letter-spacing: 0.03em;
+            color: $dark2;
+
+            &:hover {
+                color: $pink;
+            }
+
+            &.active {
+                color: $pink;
+
+                &::after {
+                    width: 100%;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .button {
+        margin: -1.25em 0 0;
+        color: $pink;
+
+        &:hover {
+            border-color: $lightpink;
+        }
+    }
+  }
+}
+
+
+// affix the menu on upward scroll
+.headroom {
+  transition: transform 200ms linear;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+
+  &.headroom--pinned {
+    transform: translateY(0%);
+    box-shadow: 0 0 15px rgba(100, 100, 100, 0.15);
+  }
+
+  &.headroom--top {
+    box-shadow: none;
+  }
+
+  &.headroom--unpinned {
+    transform: translateY(-100%);
+  }
+}
