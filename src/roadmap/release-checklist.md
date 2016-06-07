@@ -4,11 +4,13 @@ This document describes how to release a new Workflow version. It's targeted tow
 maintainers.
 
 The below sections present a step-by-step guide to publish a new Workflow release. Throughout all
-of the examples, we'll be assuming that the below two environment variables are present in wherever
+of the examples, we'll be assuming that the below four environment variables are present wherever
 you're working. Make sure to set them (e.g. by `export`ing them) before you get started.
 
-- `$WORKFLOW_RELEASE` - the full name of this version. For example, `v2.0.0-rc2` for a minor version, `v2.0.0` for a major version.
-- `$WORKFLOW_RELEASE_SHORT` - The short name of this version. For example, `rc2` for a minor version and identical to `$WORKFLOW_RELEASE` above if a major version.
+- `$WORKFLOW_RELEASE` - the full name of this version. For example, `v2.0.0-rc2` for a pre-release version or `v2.0.0` otherwise.
+- `$WORKFLOW_RELEASE_SHORT` - The short name of this version. For example, `rc2` for a pre-release version or identical to `$WORKFLOW_RELEASE` above otherwise.
+- `$WORKFLOW_PREV_RELEASE` - the full name of the previous version. For example, `v2.0.0-rc1` for a pre-release version or `v2.0.0` otherwise.
+- `$WORKFLOW_PREV_RELEASE_SHORT` - The short name of the previous version. For example, `rc1` for a pre-release version or identical to `$WORKFLOW_PREV_RELEASE` above otherwise.
 
 # What's a Release?
 
@@ -116,11 +118,12 @@ values used in job above.
 # Step 4: Update Documentation
 
 Create a new pull request against deis/workflow, updating all references of the old release to
-`$WORKFLOW_RELEASE`. Use `git grep $WORKFLOW_OLD_RELEASE` to find any references. (Be careful not to
-  change `CHANGELOG.md`)
+`$WORKFLOW_RELEASE`. Use `git grep $WORKFLOW_PREV_RELEASE` and `git grep
+$WORKFLOW_PREV_RELEASE_SHORT` to find any references. (Be careful not to change `CHANGELOG.md`)
 
-Also, note there may be an occurrence of the previous oldest release (prior to `$WORKFLOW_OLD_RELEASE`) in
-`upgrading-workflow.md`.  This should be changed to `$WORKFLOW_OLD_RELEASE`.
+Also, note there may be occurrences of an older release (prior to
+`$WORKFLOW_PREV_RELEASE`) in `upgrading-workflow.md`. These should be changed to
+`$WORKFLOW_PREV_RELEASE`.
 
 # Step 5: Manual Testing
 
