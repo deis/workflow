@@ -15,7 +15,7 @@ should move it somewhere in your $PATH:
 Check your work by running `deis version`:
 
     $ deis version
-    2.0.0-betaX
+    2.0.0
 
 ## Helm Classic Installation
 
