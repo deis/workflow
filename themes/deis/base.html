@@ -22,62 +22,66 @@
 </head>
 
 <body>
-  <!--[if lt IE 7]>
-      <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-      <![endif]-->
+  <div class="off-canvas-wrap">
+    <div class="inner-wrap">
+      <!--[if lt IE 7]>
+        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
 
-  {%- include "topbar.html" %}
-  {%- include "offcanvas.html" %}
+      {%- include "topbar.html" %}
+      {%- include "offcanvas.html" %}
 
-  <!-- banner at the top of the page for temporary announcements-->
-  <div data-alert class="alert-box alert banner text-center hide-for-small">
-    You're viewing docs for the latest release of <strong>Deis Workflow</strong>. For docs <a href="https://docs.deis.io/">relating to Deis 1.0 click here</a>.
-  </div>
+      <!-- banner at the top of the page for temporary announcements-->
+      <div data-alert class="alert-box alert banner text-center hide-for-small">
+        You're viewing docs for the latest release of <strong>Deis Workflow</strong>. For docs <a href="http://docs.deis.io">relating to Deis 1.0 click here</a>.
+      </div>
 
-  <div class="content-wrap">
+      <div class="content-wrap">
 
-    <div class="content-inner">
-      <div class="container">
-        <div class="row">
-          <div class="small-12">
-            {{ content }}
+        <div class="content-inner">
+          <div class="container">
+            <div class="row">
+              <div class="small-12">
+                {{ content }}
+              </div>
+            </div>
           </div>
         </div>
+
+        <nav class="sidebar hide-for-small">
+          <div class="sidebar-inner">
+            <h1><a href="/" class="logo"><img src="{{ base_url }}/static/img/svg/logo.svg" width="128px" height="41px" alt="Deis"></a></h1>
+
+            <ul class="current sidebar-main">
+              {%- include "nav.html" %}
+              <li class="toctree-l1">
+                {% if READTHEDOCS %}
+                <a class="reference internal" href="../" state="open">Versions</a>
+                  <ul class="current">
+                    {% for slug, url in versions %}
+                    <li class="toctree-l2"><a href="{{ url }}{%- for word in pagename.split('/') -%}
+                      {%- if word != 'index' -%}
+                      {%- if word != '' -%}
+                      {{ word }}/
+                      {%- endif -%}
+                      {%- endif -%}
+                      {%- endfor -%}"
+                      title="Switch to {{ slug }}">{{ slug }}</a></li>
+                  {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            </ul>
+          </div>
+
+          <div class="sidebar-bg"></div>
+        </nav>
+
       </div>
+
+      {%- include "footer.html" %}
     </div>
-
-    <nav class="sidebar hide-for-small">
-      <div class="sidebar-inner">
-        <h1><a href="/" class="logo"><img src="{{ base_url }}/static/img/svg/logo.svg" width="128px" height="41px" alt="Deis"></a></h1>
-
-        <ul class="current sidebar-main">
-          {%- include "nav.html" %}
-          <li class="toctree-l1">
-            {% if READTHEDOCS %}
-            <a class="reference internal" href="../" state="open">Versions</a>
-              <ul class="current">
-                {% for slug, url in versions %}
-                <li class="toctree-l2"><a href="{{ url }}{%- for word in pagename.split('/') -%}
-                  {%- if word != 'index' -%}
-                  {%- if word != '' -%}
-                  {{ word }}/
-                  {%- endif -%}
-                  {%- endif -%}
-                  {%- endfor -%}"
-                  title="Switch to {{ slug }}">{{ slug }}</a></li>
-              {% endfor %}
-              </ul>
-            {% endif %}
-          </li>
-        </ul>
-      </div>
-
-      <div class="sidebar-bg"></div>
-    </nav>
-
   </div>
-
-  {%- include "footer.html" %}
 
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
   <script>window.jQuery || document.write('<script src="{{ base_url }}/static/js/jquery-1.12.4.min.js"><\/script>')</script>

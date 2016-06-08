@@ -1,10 +1,10 @@
-<aside class="right-off-canvas-menu">
+<aside class="right-off-canvas-menu" data-offcanvas>
   <ul>
     {% for nav_item in nav %}
     <li class="toctree-l1{% if nav_item.active %} current{% endif %}">
       <a class="reference internal{% if nav_item.active %} current{% endif %}"{% if nav_item.active %} state="open"{% endif %} href="{{ nav_item.url }}">{{ nav_item.title }}</a>
       {% if nav_item.children %}
-        <ul style="display: none;"{% if nav_item.active %} class="current"{% endif %}>
+        <ul {% if nav_item.active %} class="current"{% endif %}>
         {% for child in nav_item.children %}
           <li class="toctree-l2{% if child.active %} current{% endif %}">
           <a class="reference internal{% if nav_item.active %} current{% endif %}" id="{{ child.title }}" href="{{ child.url }}">{{ child.title }}</a>
