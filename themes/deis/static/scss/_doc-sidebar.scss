@@ -54,11 +54,12 @@
                 font-size: 0.825em;
                 @include transition;
 
+                &[state=open],
                 &.current {
                     color: $pink;
                     font-weight: bold;
 
-                    + ul > li a.current {
+                    + ul > li a {
                         font-weight: normal !important;
                         color: $dark1;
 
