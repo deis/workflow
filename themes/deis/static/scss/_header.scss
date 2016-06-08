@@ -4,6 +4,7 @@
   position: fixed;
   width: 100%;
   z-index: 10000;
+  height: 82px;
   transition: box-shadow 0.2s;
   transform-style: preserve-3d;
   border-bottom: 2px solid $light1;
@@ -21,7 +22,7 @@
     height: 1em;
 
     ul.inline-list {
-        margin: 0.925em 0 0;
+        margin: 1em 0 0;
     }
 
     li {
@@ -72,7 +73,7 @@
 
   &.headroom--pinned {
     transform: translateY(0%);
-    box-shadow: 0 0 15px rgba(100, 100, 100, 0.15);
+    box-shadow: 0 0 10px rgba(100, 100, 100, 0.15);
   }
 
   &.headroom--top {

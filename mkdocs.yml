@@ -86,7 +86,8 @@ markdown_extensions:
   - toc:
       permalink: True
 extra_javascript:
+  - static/js/foundation.js
+  - static/js/foundation.offcanvas.js
+  - static/js/headroom.min.js
   - static/js/adjustments.js
-  - static/js/bootstrap.min.js
-  - static/js/checkURL.js
 google_analytics: ['UA-42867143-1', 'deis.io']

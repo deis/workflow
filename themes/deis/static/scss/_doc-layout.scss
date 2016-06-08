@@ -1,3 +1,7 @@
+html, body{
+  height:100%;
+}
+
 body {
     @include helvetica;
     overflow-x: hidden;
@@ -16,6 +20,7 @@ body {
 .content-wrap {
     position: relative;
     padding-left: 320px;
+    padding-bottom: 10em;
 }
 
 .content-inner {
@@ -31,6 +36,11 @@ body {
     position: fixed;
     top: 0;
     left: 0;
+    background: white;
+    z-index: 1010;
+    height: 100%;
+    overflow-y: scroll;
+    border-bottom: 2px solid $light1;
 }
 
 .alert-box.banner {
@@ -39,7 +49,8 @@ body {
     color: white;
     position: relative;
     z-index: 10;
-    width: 100%;
+    display: block;
+    margin-left: 290px;
     padding: 88px 0 8px;
     margin-bottom: -75px;
     font-size: 0.925rem;

@@ -1,10 +1,41 @@
 .sidebar {
 
     .sidebar-inner {
-        padding: 150px 0 40px;
+        padding: 120px 0 40px;
+        
         max-width: 320px;
         position: relative;
         z-index: 50;
+
+        h1 {
+            margin: 0 0 70px;
+            padding: 0;
+            border-bottom: 2px solid $light1;
+            height: 82px;
+            width: 290px;
+            position: fixed;
+            top: 0;
+
+            &:hover {
+              border-color: $blue;
+            }
+
+            a.logo {
+                padding: 0 0 0 0.825em;
+                display: block;
+                line-height: 78px;
+                background: white;
+                border-right: 2px solid $light1;
+
+                img {
+                    margin-top: -10px;
+                }
+            }
+        }
+
+        &:hover li a {
+          color: darken($grey, 25%);
+        }
 
         ul, li {
             list-style: none;
@@ -19,7 +50,7 @@
                 padding: 0.333em 2.5em;
                 display: inline-block;
                 width: 100%;
-                color: darken($blue, 3.5%);
+                color: darken($grey, 17.5%);
                 font-size: 0.825em;
                 @include transition;
 
@@ -29,7 +60,7 @@
 
                     + ul > li a.current {
                         font-weight: normal !important;
-                        color: $blue;
+                        color: $dark1;
 
                         &:before {
                             content: " ";
