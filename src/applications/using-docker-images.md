@@ -78,6 +78,11 @@ tool like [jq][] and then used in the password field in `deis registry:set`. For
 deis registry:set username=_json_key password="$(cat google_cloud_cred.json | jq -c .)"
 ```
 
+When using a private registry the docker images are no longer pulled into the Deis Internal Registry via
+the Deis Workflow Controller but rather is managed by Kubernetes. This will increase security and overall speed,
+however the `port` information can no longer be discovered. Instead the `port` information can be set via
+`deis config:set PORT=80` prior to setting the registry information.
+
 **NOTE:**
     Currently [GCR.io][] and [ECR][] in short lived auth token mode are not supported.
 
