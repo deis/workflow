@@ -1,22 +1,18 @@
 <aside class="right-off-canvas-menu">
   <ul>
-    <li>
-      <a href="/how-it-works" id="m-header-hiw" class="item" title="How It Works">How It Works</a>
+    {% for nav_item in nav %}
+    <li class="toctree-l1{% if nav_item.active %} current{% endif %}">
+      <a class="reference internal{% if nav_item.active %} current{% endif %}"{% if nav_item.active %} state="open"{% endif %} href="{{ nav_item.url }}">{{ nav_item.title }}</a>
+      {% if nav_item.children %}
+        <ul style="display: none;"{% if nav_item.active %} class="current"{% endif %}>
+        {% for child in nav_item.children %}
+          <li class="toctree-l2{% if child.active %} current{% endif %}">
+          <a class="reference internal{% if nav_item.active %} current{% endif %}" id="{{ child.title }}" href="{{ child.url }}">{{ child.title }}</a>
+          </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
     </li>
-    <li>
-      <a href="/why-deis" id="m-header-why-deis" class="item" title="Why Use Deis">Why Use Deis</a>
-    </li>
-    <li>
-      <a href="/services" id="m-header-services" class="item" title="Support &amp; Services">Support &amp; Services</a>
-    </li>
-    <li>
-      <a href="/community" id="m-header-community" class="item" title="Community">Community</a>
-    </li>
-    <li>
-      <a href="/blog" id="m-header-blog" class="item" title="Blog">Blog</a>
-    </li>
-    <li>
-      <a href="https://github.com/deis/workflow" data-event-category="Get Started" data-event-action="click" class="item button expand" title="Get Started">Get Started</a>
-    </li>
+    {% endfor %}
   </ul>
 </aside>

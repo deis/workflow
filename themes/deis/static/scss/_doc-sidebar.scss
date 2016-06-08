@@ -34,7 +34,7 @@
         }
 
         &:hover li a {
-          color: darken($grey, 25%);
+          color: darken($grey, 33.333%);
         }
 
         ul, li {
@@ -79,6 +79,12 @@
                 &:hover {
                     background: $light1;
                 }
+            }
+
+            &.toctree-l1.current {
+              ul {
+                display: block !important;
+              }
             }
         }
 
