@@ -91,4 +91,4 @@ extra_javascript:
   - static/js/foundation.offcanvas.js
   - static/js/headroom.min.js
   - static/js/adjustments.js
-google_analytics: ['UA-42867143-1', 'deis.io']
+google_analytics: ['UA-42867143-3', 'auto']
