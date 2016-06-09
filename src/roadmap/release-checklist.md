@@ -63,9 +63,10 @@ be in a new directory called `workflow-v2.0.0`.
 Next, we'll create new [Helm Classic](https://github.com/helm/helm-classic) charts so that we can "stage" a
 version of our release for testing. Here is the current process to do so:
 
-  1. Create a new branch in [deis/charts](https://github.com/deis/charts):
+  1. Checkout the `release-$WORKFLOW_RELEASE` branch in [deis/charts](https://github.com/deis/charts) (created in Step 1.1 above):
 
-        git checkout -b release-$WORKFLOW_RELEASE upstream/master
+        git fetch upstream
+        git checkout release-$WORKFLOW_RELEASE
 
   2. Download the [deisrel](https://github.com/deis/deisrel) binary via the links provided in the project's README. Once downloaded, place the binary in your `$PATH`.
 
