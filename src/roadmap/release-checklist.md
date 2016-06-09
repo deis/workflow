@@ -7,8 +7,8 @@ The below sections present a step-by-step guide to publish a new Workflow releas
 of the examples, we'll be assuming that the below two environment variables are present in wherever
 you're working. Make sure to set them (e.g. by `export`ing them) before you get started.
 
-- `$WORKFLOW_RELEASE` - the full name of this version. For example, `v2.0.0-v2.0.0`
-- `$WORKFLOW_RELEASE_SHORT` - The short name of this version. For example, `v2.0.0`
+- `$WORKFLOW_RELEASE` - the full name of this version. For example, `v2.0.0-rc2` for a minor version, `v2.0.0` for a major version.
+- `$WORKFLOW_RELEASE_SHORT` - The short name of this version. For example, `rc2` for a minor version and identical to `$WORKFLOW_RELEASE` above if a major version.
 
 # What's a Release?
 
