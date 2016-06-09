@@ -1,3 +1,14 @@
+### v2.0.0-rc2 -> v2.0.0
+
+#### Fixes
+
+- [`20ea192`](https://github.com/deis/workflow/commit/20ea192cf9537217d010ff1dc5e3f2807d32bce4) health: remove documentation on unused HEALTHCHECK_PORT
+
+#### Maintenance
+
+- [`5f2c4d9`](https://github.com/deis/workflow/commit/5f2c4d9c23aff05fa5f507404e78d467866b27e2) various: remove beta status
+- [`095035d`](https://github.com/deis/workflow/commit/095035daa47dcf8b2b4e0f600c27e52edc11eaef) docs: update version to v2.0.0
+
 ### v2.0.0-beta4 -> v2.0.0-rc1
 
 #### Features
