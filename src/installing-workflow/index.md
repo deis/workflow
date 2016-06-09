@@ -71,7 +71,7 @@ $ kubectl --namespace=deis get pods
 
 If you would like `kubectl` to automatically update as the pod states change, run (type Ctrl-C to stop the watch):
 ```
-$ kubectl --namespace=deis get pods
+$ kubectl --namespace=deis get pods -w
 ```
 
 Depending on the order in which the Workflow components initialize, some pods may restart. This is common during the
