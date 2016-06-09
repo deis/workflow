@@ -67,7 +67,7 @@ version of our release for testing. Here is the current process to do so:
 
         git checkout -b release-$WORKFLOW_RELEASE upstream/master
 
-  2. Download the [deisrel](https://github.com/deis/deisrel) binary via the bintray link provided in the project's README and place it in your `$PATH`
+  2. Download the [deisrel](https://github.com/deis/deisrel) binary via the links provided in the project's README. Once downloaded, place the binary in your `$PATH`.
 
   3. Copy the current `dev` charts into new `workflow-$WORKFLOW_RELEASE_SHORT` charts:
 
