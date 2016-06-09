@@ -1,0 +1,63 @@
+html, body{
+  height:100%;
+}
+
+body {
+    @include helvetica;
+    overflow-x: hidden;
+
+    .row {
+        max-width: 75rem;
+    }
+
+    .row.fullwidth {
+        max-width: 100%;
+        padding-left: 1.25em;
+        padding-right: 1.25em;
+    }
+}
+
+.content-wrap {
+    position: relative;
+    padding-left: 320px;
+    padding-bottom: 10em;
+}
+
+.content-inner {
+    width: auto;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 128px;
+}
+
+.sidebar {
+    width: 290px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: white;
+    z-index: 1010;
+    height: 100%;
+    overflow-y: scroll;
+    border-bottom: 2px solid $light1;
+}
+
+.alert-box.banner {
+    background: $pink;
+    text-align: center;
+    color: white;
+    position: relative;
+    z-index: 10;
+    display: block;
+    margin-left: 290px;
+    padding: 88px 0 8px;
+    margin-bottom: -75px;
+    font-size: 0.925rem;
+    letter-spacing: 0.025em;
+
+    a {
+        color: white;
+        border-bottom: 1px dotted white;
+    }
+}

@@ -1,0 +1,210 @@
+.content-inner {
+
+    // title anchor links appear on hover
+    h1, h2, h3, h4, h5, h6 {
+        .headerlink {
+            opacity: 0;
+            margin: 0 0 0 0.75em;
+            font-size: 0.75em;
+            color: lighten($dark1, 25%);
+            @include transition;
+        }
+    }
+
+    *:hover > .headerlink {
+        opacity: 1;
+    }
+
+
+    // link styles
+    a {
+        background-color: lighten($light1, 4%);
+        box-shadow: 0 0 0 3px lighten($light1, 4%);
+        color: darken($blue, 3.5%);
+        @include transition;
+
+        &:hover {
+            color: $blue;
+        }
+    }
+
+
+    // docs content text
+    h1, h2, h3, h4, h5, h6, p, li {
+        padding-right: 5%;
+    }
+
+    h1 {
+        color: $dark1;
+
+        &:not(:first-child) {
+            margin-top: 1.5em;
+        }
+    }
+
+    h1 + p {
+        font-size: 1.333em;
+        margin-bottom: 3.5em;
+        padding-right: 2.5%;
+        line-height: 1.75;
+        @include klinicReg;
+
+        &:not(:first-child) {
+            margin-bottom: 1.5em;
+        }
+    }
+
+    h2 {
+        margin-top: 2em;
+        font-size: 1.75em;
+        color: $pink;
+    }
+
+    p {
+        margin-top: 0.5em;
+        line-height: 1.925;
+        margin-bottom: 1.25em;
+    }
+
+    ol, ul, dl {
+        line-height: 1.5;
+        margin-bottom: 1.75em;
+
+        li {
+            margin-bottom: 0.5em;
+        }
+    }
+
+    pre,
+    code {
+        font-family: $font-family-monospace;
+        border: none;
+        background: $dark1;
+        color: white;
+        border: 4px solid transparent;
+        font-size: 0.825rem;
+        @include transition;
+    }
+
+    code {
+        padding: 0;
+        box-shadow: 0 0 0 1px $light1;
+        background: $light1;
+        color: $dark2;
+    }
+
+    pre {
+        line-height: 1.636;
+        padding: 0.5em 0.75em;
+        margin: 1em 0 2em;
+        display: inline-block;
+        width: 100%;
+        background: $dark1;
+        color: white;
+
+        code {
+            background: $dark1;
+            color: white;
+            box-shadow: 0 0 0 1px $dark1;
+        }
+
+        &:hover {
+            background: $dark2;
+            border-left: 4px solid $pink;
+
+            code {
+                background: $dark2;
+                box-shadow: 0 0 0 1px $dark2;
+            }
+        }
+    }
+}
+
+
+// .content-inner {
+//   .billboard {
+//     @include fullheight;
+//     min-height: 380px;
+//     @include mobile {
+//       min-height: 320px;
+//     }
+//     @include smallLandscape {
+//       min-height: 380px;
+//     }
+//     display: block;
+//     position: relative;
+//     text-align: center;
+//     background: lighten($lightpink, 30%);
+
+//     h1 {
+//       margin-top: 38px;
+//     }
+
+//     .shape-position.shape-position-top {
+//       top: 42px;
+//       @include mobile {
+//         top: 75px;
+//       }
+
+//       .s-w {
+//         background: lighten($lightpink, 35%);
+//       }
+//       .s-l1 {
+//         opacity: 0.5;
+//       }
+//     }
+
+//     .intro {
+//         width: 75%;
+//         left: 12.5%;
+//         transform: translate(0, -50%);
+//         z-index: 600;
+//         margin-top: 80px;
+//         @include mobile {
+//           top: 47%;
+//           margin-top: 60px;
+//         }
+//     }
+//   }
+//   .content {
+//     @include mobile {
+//       h2 {
+//         margin-top: 1em;
+//       }
+//       h3 {
+//         margin: 1em 0;
+//       }
+//       .geo-shapes {
+//         padding: 0;
+//       }
+//     }
+//   }
+//   .documentation-items {
+//     padding-bottom: 80px;
+//     @include mobile {
+//       padding-bottom: 40px;
+//     }
+//   }
+//   .doc-links {
+//     hr {
+//       @include mobile {
+//         display: none;
+//       }
+//       margin-bottom: -1.125em;
+//     }
+//     .button {
+//       @include mobile {
+//         display: block;
+//         margin: 0 40px;
+//       }
+//     }
+//     .button + .button {
+//       @include tablet {
+//         margin-left: 100px;
+//       }
+//       @include mobile {
+//         margin-top: 20px;
+//       }
+//     }
+//   }
+// }

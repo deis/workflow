@@ -1,0 +1,43 @@
+.right-off-canvas-toggle.fa {
+  color: $light2;
+  font-size: 1.5em;
+  padding: 1em 0.5em;
+  position: absolute;
+  margin-top: -0.5em;
+  top: 0;
+  right: 0;
+  z-index: 1250;
+  @include transition;
+
+  &:hover {
+    background: lighten($light1, 3.5%);
+    color: $dark1;
+  }
+}
+
+aside.right-off-canvas-menu {
+  ul {
+    margin: 1.25em 0;
+
+    li {
+      @include klinicReg;
+
+      a {
+        color: white;
+        padding: 0.5em 2em;
+        display: block;
+        line-height: 1.2;
+        @include transition;
+
+        &:hover {
+          background: darken($darkpink, 25%);
+        }
+      }
+    }
+  }
+
+  .button {
+    margin: 2.5em 10% 1em;
+    width: 80%;
+  }
+}

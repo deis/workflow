@@ -1,0 +1,181 @@
+/**
+ * Media query breakpoints
+ */
+$desktopFloor: 64.0625em;
+$tabletFloor: 40.063em;
+$tabletCeiling: 64.0624em;
+$mobileCeiling: 40em;
+
+@mixin mobile {
+  @media only screen and (max-width: $mobileCeiling) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media only screen and (min-width: $tabletFloor) {
+    @content;
+  }
+}
+
+@mixin mobileAndTablet {
+  @media only screen and (max-width: $tabletCeiling) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media only screen and (min-width: $desktopFloor) {
+    @content;
+  }
+}
+
+@mixin landscape {
+  @media only screen and (min-width: 569px) and (max-width: 736px) and (orientation: landscape) {
+    @content;
+  }
+}
+
+@mixin smallLandscape {
+  @media only screen and (max-width: 568px) and (orientation: landscape) {
+    @content;
+  }
+}
+
+// type
+@mixin klinicReg {
+  font-family: $klinic;
+  font-weight: 400;
+  letter-spacing: 0.0125em;
+}
+
+@mixin klinicBold {
+  font-family: $klinic;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+@mixin helvetica {
+  font-family: $font-family-sans-serif;
+}
+
+@mixin quote {
+    font-size: 0.875em;
+    font-family: $font-family-serif;
+    line-height: 1.7;
+    color: darken($light2, 33.33%);
+    padding: 0.5em 5%;
+    margin-right: -3.333em;
+    font-style: italic;
+    letter-spacing: 0.015em;
+    position: relative;
+
+    &:before {
+        content: "\“";
+        position: absolute;
+        font-size: 3em;
+        left: -0.125em;
+        top: -0.25em;
+        width: 1em;
+        opacity: 0.3;
+        z-index: 500;
+    }
+}
+
+
+// vertical alignment
+
+@mixin fullheight {
+  min-height: 100%;
+  height: 100%;
+}
+
+@mixin centerer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin topper {
+  position: absolute;
+  top: 0%;
+}
+
+@mixin bottomer {
+  position: absolute;
+  bottom: 0%;
+}
+
+
+// css3
+@mixin transition($property:all, $duration:0.3s, $easing:ease-in-out) {
+  transition: $property $duration $easing;
+}
+
+@mixin border-radius($radius1:3px, $radius2:3px) {
+  -webkit-border-radius: $radius1 $radius2 $radius1 $radius2;
+  -moz-border-radius: $radius1 $radius2 $radius1 $radius2;
+  border-radius: $radius1 $radius2 $radius1 $radius2;
+}
+
+@mixin box-shadow($xlength:0, $ylength:2px, $size:0, $color:rgba(30,30,30,0.25)) {
+  -webkit-box-shadow: $xlength $ylength $size $color;
+  -moz-box-shadow: $xlength $ylength $size $color;
+  box-shadow: $xlength $ylength $size $color;
+}
+
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+      @content;
+  }
+  @-moz-keyframes #{$name} {
+      @content;
+  }
+  @-o-keyframes #{$name} {
+      @content;
+  }
+  @keyframes #{$name} {
+      @content;
+  }
+}
+
+@mixin animation ($delay, $duration, $animation) {
+  -webkit-animation-delay: $delay;
+  -webkit-animation-duration: $duration;
+  -webkit-animation-name: $animation;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-delay: $delay;
+  -moz-animation-duration: $duration;
+  -moz-animation-name: $animation;
+  -moz-animation-fill-mode: forwards;
+  animation-delay: $delay;
+  animation-duration: $duration;
+  animation-name: $animation;
+  animation-fill-mode: forwards;
+}
+
+
+// link effect
+@mixin ripple($color: $pink) {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  @include transition;
+
+  &::after {
+    display: inline-block;
+    content: "";
+    background: $color;
+    height: 3px;
+    width: 10%;
+    opacity: 0;
+    margin: -0.75em auto 0;
+    @include transition;
+  }
+
+  &:hover::after {
+    width: 100%;
+    opacity: 1;
+  }
+}

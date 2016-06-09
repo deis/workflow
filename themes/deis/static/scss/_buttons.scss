@@ -1,0 +1,76 @@
+a.button {
+  color: white;
+
+  &:hover {
+    color: white;
+  }
+
+  &.hollow {
+    color: $dark1;
+  }
+}
+
+.button {
+  @include transition;
+  background-color: $blue;
+  color: white;
+
+  &:hover {
+    background-color: darken($blue, 10%);
+    color: white;
+  }
+
+  &.hollow {
+    background-color: transparent;
+    border: 2px solid darken($light1, 10%);
+
+    &:hover,
+    &:active {
+      background-color: transparent;
+      border: 2px solid $lightpink;
+    }
+  }
+
+  &.primary {
+    background-color: $pink;
+    color: white;
+
+    &:hover,
+    &:active {
+      background-color: darken($pink, 10%);
+      color: white;
+    }
+  }
+
+  &.secondary {
+    background-color: $blue;
+    color: white;
+
+    &:hover,
+    &:active {
+      background-color: darken($blue, 10%);
+      color: white;
+    }
+  }
+
+  .fa {
+    font-size: 0.875em;
+    margin: 0.25em 1.5em;
+
+    &.left {
+      margin-left: -0.7em;
+    }
+
+    &.right {
+      margin-right: -0.7em;
+    }
+    &.fa-github {
+      font-size: 19px;
+      margin: initial;
+      padding-right: 10px;
+    }
+    &.fa-caret-up, &.fa-caret-down {
+      margin: initial;
+    }
+  }
+}

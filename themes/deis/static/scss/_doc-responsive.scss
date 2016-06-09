@@ -1,0 +1,31 @@
+@media only screen and (max-width: 40em) {
+    .content-wrap {
+        padding-left: 0px;
+    }
+    .alert-box.banner {
+        margin-left: 0;
+    }
+
+    .navbar h1 {
+        margin: 0.1em 0 0.125em -0.75em;
+    }
+
+    .content-inner {
+        padding-top: 105px;
+        padding-left: 1em;
+        padding-right: 1em;
+
+        h1, h2, h3, h4, h5, h6, p, li {
+            padding-right: 0%;
+        }
+
+        h1 {
+          font-size: 1.75em;
+        }
+
+        h1 + p {
+          font-size: 1.25em;
+          line-height: 1.4;
+        }
+    }
+}

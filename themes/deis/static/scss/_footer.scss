@@ -1,0 +1,205 @@
+footer {
+  padding: 0;
+  z-index: 1020;
+  position: relative;
+
+  .logo {
+    margin: 0 0 2em;
+  }
+
+  p.copyright {
+    font-size: 12px;
+    line-height: 1.6;
+    color: lighten($dark1, 25%);
+    max-width: 220px;
+    margin: 0.75em 0 0;
+
+    .separator {
+        opacity: 0.5;
+    }
+
+    a {
+        color: lighten($dark1, 25%);
+
+        &:hover {
+            color: $blue;
+        }
+    }
+
+    img {
+        margin: -3px 0.2em 0;
+        max-height: 15px;
+    }
+  }
+
+  .panel-newsletter {
+    padding: 1.25em 0;
+
+    @include mobile {
+        padding: 0.75em 0;
+    }
+
+    .subscribe {
+        #mc_embed_signup_scroll {
+            position: relative;
+        }
+
+        label,
+        .button,
+        div.mce_inline_error {
+            position: absolute;
+            left: -999em;
+        }
+
+        input {
+            background-color: $light1;
+            border: none;
+            outline: none;
+            display: block;
+            color: $blue;
+            border-bottom: 1px solid $blue;
+            font-size: 0.75em;
+            padding: 0;
+            height: 2.5em;
+            margin: -0.5em 0 0;
+            box-shadow: none;
+            @include transition;
+            @include klinicBold;
+        }
+
+        input#mce-EMAIL {
+            width: 100%;
+        }
+
+        input::-webkit-input-placeholder {
+            color: $blue !important;
+        }
+        input::-moz-placeholder,
+        input:-moz-placeholder  {
+            color: $blue !important;
+        }
+        input::-ms-input-placeholder {
+            color: $blue !important;
+        }
+        input::placeholder-shown {
+            color: $blue !important;
+        }
+
+        &:after {
+            position: absolute;
+            color: $dark1;
+            opacity: 0.25;
+            right: 0.925em;
+            top: 0.125em;
+            font-size: 0.75em;
+            font-family: 'FontAwesome';
+            display: inline-block;
+            content: "\f054";
+        }
+    }
+
+    .social nav {
+      white-space: nowrap;
+      margin-right: 5%;
+
+      a {
+        font-size: 1.125em;
+        margin: 0 1.5em 0 0;
+        color: $dark1;
+        opacity: 0.425;
+        @include transition;
+
+        &:hover {
+            opacity: 1;
+            color: $blue;
+        }
+      }
+    }
+  }
+
+  #mc_embed_signup  {
+      #mce-error-response,
+      div.mce_inline_error {
+          left: 0;
+          top: -1.2em;
+          background-color: transparent;
+          padding: 0;
+          color: $pink;
+          font-size: 10px;
+      }
+
+      #mce-error-response{
+        color: $green;
+      }
+
+      #mce-success-response {
+        color: $green;
+        font-size: 11px;
+        padding: 0.2em 10% 0 0;
+
+      }
+  }
+
+  .panel-links {
+    padding-top: 2.5em;
+    @include tablet {
+      padding-bottom: 0;
+    }
+    background: white;
+
+    dl {
+        font-size: 0.925em;
+        float: left;
+        // min-width: 20%;
+        margin: 0.75em 0 2em 7.5%;
+
+        @include mobile {
+          float: left;
+          min-width: 30%;
+          margin: 0 5%;
+          line-height: 1;
+        }
+
+        dt {
+            @include klinicBold;
+            font-size: 0.875em;
+
+            a {
+                color: $pink;
+                @include ripple;
+                text-align: left;
+                line-height: 1;
+            }
+        }
+
+        dd {
+            @include helvetica;
+            font-weight: bold;
+            font-size: 0.667em;
+
+            @include mobile {
+              display: none;
+            }
+
+            a {
+                color: $dark1;
+                @include transition;
+
+                &:hover {
+                    color: $blue;
+                }
+            }
+        }
+    }
+  }
+}
+
+.panel--newsletter {
+    @include mobile {
+      display: none;
+    }
+}
+
+.panel--signoff-why {
+
+}
