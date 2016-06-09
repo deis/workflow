@@ -32,12 +32,12 @@ Install the latest `helmc` cli for Linux or Mac OS X with:
   - the CI build pipeline: [ ![Download](https://api.bintray.com/packages/deis/helm-ci/helmc/images/download.svg) ](https://bintray.com/deis/helm-ci/helmc/_latestVersion#files)
 2. Unzip the package and make sure `helmc` is available on the PATH.
 
-Check your work by running `helmc version`:
+Check your work by running `helmc --version`:
 
-    $ helmc version
-    helmc version 0.8.0+f3cafbc
+    $ helmc --version
+    helmc version 0.8.1+e4b3983
 
-Make sure you are running at least version 0.8.0 or newer.
+Make sure you are running at least version 0.8.1 or newer.
 
 ## Step 2: Boot a Kubernetes Cluster and Install Deis Workflow
 
