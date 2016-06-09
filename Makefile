@@ -17,10 +17,16 @@ DEV_ENV_WORK_DIR := /src/${REPO_PATH}
 DEV_ENV_PREFIX := docker run --rm -v ${CURDIR}:${DEV_ENV_WORK_DIR} -w ${DEV_ENV_WORK_DIR} -p 8000:8000
 DEV_ENV_CMD := ${DEV_ENV_PREFIX} ${DEV_ENV_IMAGE}
 
+BUILD_CMD := $(MKDOCSBUILD) --site-dir $(BUILDDIR) && \
+	echo && \
+	echo "Build finished. The HTML pages are in $(BUILDDIR)."
+
+TEST_CMD := grep -q "<title>Deis Workflow Documentation</title>" _build/html/index.html && \
+	echo && \
+	echo "Test finished. The HTML pages are in $(BUILDDIR)."
+
 build:
-	$(MKDOCSBUILD) --site-dir $(BUILDDIR)
-	@echo
-	@echo "Build finished. The HTML pages are in $(BUILDDIR)."
+	$(BUILD_CMD)
 
 serve:
 	$(MKDOCSSERVE)
@@ -32,12 +38,16 @@ deps:
 	pip install -r requirements.txt
 
 test: build
-	grep -q '<title>Deis Workflow Documentation</title>' _build/html/index.html
-	@echo
-	@echo "Test finished. The HTML pages are in $(BUILDDIR)."
+	$(TEST_CMD)
+
+docker-build-docs:
+	$(DEV_ENV_CMD) ${IMAGE} $(BUILD_CMD)
+
+docker-test: docker-build-docs
+	${DEV_ENV_CMD} ${IMAGE} $(TEST_CMD)
 
 docker-build:
 	docker build --rm -t ${IMAGE} .
 
 docker-serve:
-	${DEV_ENV_CMD} ${IMAGE}
+	${DEV_ENV_CMD} ${IMAGE} $(MKDOCSSERVE)
