@@ -10,6 +10,7 @@
   <meta name="keywords" content="{{ meta['keywords'] if meta }}" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{{ page_description if page_description }}" />
+  {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
 
   <meta name="msvalidate.01" content="079E754911917142D42AB2A3694F9267" />
   <meta name="msvalidate.01" content="08598E7D936D9217891AE6C1665A645D" />
