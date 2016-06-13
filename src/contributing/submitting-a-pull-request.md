@@ -91,6 +91,8 @@ No pull requests can be merged until at least one core maintainer signs off with
 
 If the PR is from a Deis maintainer, then he or she should be the one to close it. This keeps the commit stream clean and gives the maintainer the benefit of revisiting the PR before deciding whether or not to merge the changes.
 
+An exception to this is when an errant commit needs to be reverted urgently. If necessary, a PR that only reverts a previous commit can be merged without waiting for LGTM approval.
+
 [go]: http://golang.org/
 [glide]: https://github.com/Masterminds/glide
 [flake8]: https://pypi.python.org/pypi/flake8/
