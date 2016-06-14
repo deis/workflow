@@ -118,6 +118,74 @@
             }
         }
     }
+
+    // warning
+    .version-warning {
+        padding: 10px;
+        margin-top: 10px;
+        border: solid 4px $pink;
+
+        .version-warning-title {
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 26px;
+            text-indent: 50px;
+        }
+
+        .important .version-warning-title {
+            background: url(../img/glyphs.png) no-repeat 0 -81px;
+        }
+
+        a, a em, em {
+            font-style: normal !important;
+            color: $pink !important;
+        }
+    }
+
+    // admonition
+    .admonition {
+      padding: 0.25em 1.5em;
+      margin-bottom: 1.5em;
+      border: solid 4px $green;
+
+      .admonition-title {
+          font-size: 18px;
+          font-weight: bold;
+          line-height: 26px;
+          text-indent: 50px;
+      }
+    }
+
+    .warning  {
+        border: solid 4px $pink;
+    }
+    .warning .admonition-title {
+        background: url(../img/glyphs.png) no-repeat;
+    }
+    .note .admonition-title {
+        background: url(../img/glyphs.png) no-repeat 0 -25px;
+    }
+    .tip .admonition-title {
+        background: url(../img/glyphs.png) no-repeat 0 -53px;
+    }
+    .important .admonition-title {
+        background: url(../img/glyphs.png) no-repeat 0 -81px;
+    }
+    .hint .admonition-title {
+        background: url(../img/glyphs.png) no-repeat 0 -108px;
+    }
+    .attention .admonition-title {
+        background: url(../img/glyphs.png) no-repeat 0 -135px;
+    }
+    .caution .admonition-title {
+        background: url(../img/glyphs.png) no-repeat 0 -160px;
+    }
+    .danger .admonition-title {
+        background: url(../img/glyphs.png) no-repeat 0 -186px;
+    }
+    .error .admonition-title {
+        background: url(../img/glyphs.png) no-repeat 0 -218px;
+    }
 }
 
 
