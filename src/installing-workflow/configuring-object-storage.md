@@ -32,6 +32,7 @@ The helm classic chart for Deis Workflow can be easily configured to connect Wor
             ```
             export AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_REGISTRY_BUCKET, AWS_DATABASE_BUCKET, AWS_BUILDER_BUCKET, S3_REGION
             ```
+              * To use [IAM credentials][aws-iam], it is not necessary to set `AWS_ACCESS_KEY` or `AWS_SECRET_KEY`.
 
           * For `STORAGE_TYPE=azure`:
 
@@ -144,3 +145,4 @@ Azure (`DATABASE_STORAGE=azure`):
 
 [minio]: ../understanding-workflow/components.md#object-storage
 [generate-params-toml]: https://github.com/deis/charts/blob/master/workflow-dev/tpl/generate_params.toml
+[aws-iam]: http://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html
