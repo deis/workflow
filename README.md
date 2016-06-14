@@ -6,7 +6,7 @@
 
 Deis Workflow is the second major release (v2) of the Deis PaaS. If you are looking for the CoreOS-based PaaS visit [https://github.com/deis/deis](https://github.com/deis/deis).
 
-If you are looking to **get started** with **Deis Workflow** read the [Quick Start Guide](src/quickstart/index.md) in this repository or on [Read the Docs](https://docs-v2.readthedocs.org/en/latest/).
+To **get started** with **Deis Workflow** please read the [Quick Start Guide](https://deis.com/docs/workflow/quickstart/).
 
 Visit [https://deis.com](https://deis.com) for more information on [why you should use Deis Workflow](https://deis.com/why-deis/) or [learn about its features](https://deis.com/how-it-works/).
 
