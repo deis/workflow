@@ -54,68 +54,123 @@ Detachments can be performed with `deis config:unset`.
 
 ## Custom Health Checks
 
-By default, Workflow only checks that your application containers start in
-their Pod. If you would like Kubernetes to respond to appliation health, you
-may add a health check by configuring URL, initial delay, and timeout
-values.
+By default, Workflow only checks that the application starts in their Container. If it is preferred
+to have Kubernetes respond to application health, a health check may be added by configuring a
+health check probe for the application.
 
-The health checks are implemented as [Kubernetes container probes][kubernetes-probes]. Currently only HTTP GET is supported.
+The health checks are implemented as [Kubernetes container probes][kubernetes-probes]. A `liveness`
+and a `readiness` probe can be configured, and each probe can be of type `httpGet`, `exec`, or
+`tcpSocket` depending on the type of probe the container requires.
 
-Available configuration options for health checks are the following, including defaults:
+A liveness probe is useful for applications running for long periods of time, eventually
+transitioning to broken states and cannot recover except by restarting them.
 
-**HEALTHCHECK_URL**
+Other times, a readiness probe is useful when the container is only temporarily unable to serve,
+and will recover on its own. In this case, if a container fails its readiness probe, the container
+will not be shut down, but rather the container will stop receiving incoming requests.
 
-Path in the application to use for health check, such as /healthz - Query Parameters are not supported.
+`httpGet` probes are just as it sounds: it performs a HTTP GET operation on the Container. A
+response code inside the 200-399 range is considered a pass.
 
-This value needs to be set for any health check to happen. Needs to accept a HTTP GET request and return a HTTP status between 200-399.
+`exec` probes run a command inside the Container to determine its health, such as
+`cat /var/run/myapp.pid` or a script that determines when the application is ready. An exit code of
+zero is considered a pass, while a non-zero status code is considered a fail.
 
-**HEALTHCHECK_TIMEOUT**
+`tcpSocket` probes attempt to open a socket in the Container. The Container is only considered
+healthy if the check can establish a connection. `tcpSocket` probes accept a port number to perform
+the socket connection on the Container.
 
-Number of seconds after which the health check times out. Defaults to 50 seconds
+Health checks can be configured on a per-application basis using `deis healthchecks:set`. To
+configure a `httpGet` liveness probe:
 
-**HEALTHCHECK\_INITIAL_DELAY**
-
-Number of seconds before health checks starts checking the application after the start of the pod.
-
-This is useful to set if the application takes a while to get setup, due to migrations, cache warming or otherwise. Prevents Kubernetes (and Deis Workflow) from replacing an application pod in its setup phase.
-
-Defaults to 50 seconds
-
-**HEALTHCHECK\_PERIOD_SECONDS**
-
-How often (in seconds) to perform the health check. Defaults every 10 seconds
-
-**HEALTHCHECK\_SUCCESS_THRESHOLD**
-
-Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1 success
-
-**HEALTHCHECK\_FAILURE_THRESHOLD**
-
-Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3 failures
-
-
-Configure these health checks on a per-application basis using `deis config:set`:
 ```
-$ deis config:set HEALTHCHECK_URL=/200.html
-=== peachy-waxworks
-HEALTHCHECK_URL: /200.html
-$ deis config:set HEALTHCHECK_INITIAL_DELAY=5
-=== peachy-waxworks
-HEALTHCHECK_INITIAL_DELAY: 5
-HEALTHCHECK_URL: /200.html
-$ deis config:set HEALTHCHECK_TIMEOUT=5
-=== peachy-waxworks
-HEALTHCHECK_TIMEOUT: 5
-HEALTHCHECK_INITIAL_DELAY: 5
-HEALTHCHECK_URL: /200.html
+$ deis healthchecks:set liveness httpGet 80
+=== peachy-waxworks Healthchecks
+Liveness
+--------
+Initial Delay (seconds): 50
+Timeout (seconds): 50
+Period (seconds): 10
+Success Threshold: 1
+Failure Threshold: 3
+Exec Probe: N/A
+HTTP GET Probe: Path="/" Port=80 HTTPHeaders=[]
+TCP Socket Probe: N/A
 
-If an application times out, or responds to a health check with a response code
-outside the 200-399 range, Kubernetes will stop sending requests to the
-application and re-schedule the pod to another node.
+Readiness
+---------
+No readiness probe configured.
+```
 
-Configured health checks also modify the default application deploy behavior.
-When starting a new pod, Workflow will wait for the health check to pass before
-moving onto the next pod.
+If the application relies on certain headers being set (such as the `Host` header) or a specific
+URL path relative to the root, you can also send specific HTTP headers:
+
+```
+$ deis healthchecks:set liveness httpGet 80 \
+    --path /welcome/index.html \
+    --header "X-Client-Version=v1.0"
+=== peachy-waxworks Healthchecks
+Liveness
+--------
+Initial Delay (seconds): 50
+Timeout (seconds): 50
+Period (seconds): 10
+Success Threshold: 1
+Failure Threshold: 3
+Exec Probe: N/A
+HTTP GET Probe: Path="/welcome/index.html" Port=80 HTTPHeaders=[X-Client-Version=v1.0]
+TCP Socket Probe: N/A
+
+Readiness
+---------
+No readiness probe configured.
+```
+
+To configure an `exec` readiness probe:
+
+```
+$ deis healthchecks:set readiness exec -- /bin/echo -n hello
+=== peachy-waxworks Healthchecks
+Liveness
+--------
+No liveness probe configured.
+
+Readiness
+---------
+Initial Delay (seconds): 50
+Timeout (seconds): 50
+Period (seconds): 10
+Success Threshold: 1
+Failure Threshold: 3
+Exec Probe: Command="/bin/echo -n hello"
+HTTP GET Probe: N/A
+TCP Socket Probe: N/A
+```
+
+You can overwrite a probe by running `deis healthchecks:set` again:
+
+```
+$ deis healthchecks:set readiness httpGet 80
+=== peachy-waxworks Healthchecks
+Liveness
+--------
+No liveness probe configured.
+
+Readiness
+---------
+Initial Delay (seconds): 50
+Timeout (seconds): 50
+Period (seconds): 10
+Success Threshold: 1
+Failure Threshold: 3
+Exec Probe: N/A
+HTTP GET Probe: Path="/" Port=80 HTTPHeaders=[]
+TCP Socket Probe: N/A
+```
+
+Configured health checks also modify the default application deploy behavior. When starting a new
+Pod, Workflow will wait for the health check to pass before moving onto the next Pod.
+
 
 [attached resources]: http://12factor.net/backing-services
 [stores config in environment variables]: http://12factor.net/config
