@@ -75,9 +75,9 @@ processes.
 
 **Project Location:** [deis/minio](https://github.com/deis/minio)
 
-All of the Workflow components ship their persistent data to cluster configured
-S3 compatibile Object Storage. For example, database ships its WAL files,
-registry stores Docker images, and slugbuilder stores slugs.
+All of the Workflow components that need to persist data will ship them to the
+object storage that was configured for the cluster.For example, database ships
+its WAL files, registry stores Docker images, and slugbuilder stores slugs.
 
 Workflow supports either on or off-cluster storage. For production deployments
 we highly recommend that you configure [off-cluster object storage][configure-objectstorage].

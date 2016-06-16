@@ -10,9 +10,9 @@ Workflow makes use of [Minio][] to provide storage for the [Registry][], [Databa
 [Logger][] components. Minio is provided out of the box as a central storage compartment, but it is
 not resilient to cluster outages. If Minio is shut down, all data is lost.
 
-In production, persistent storage can be achieved by running an external S3-compatible blob store.
-For users on AWS, the convenience of Amazon S3 and make the prospect of running a Minio-less
-Workflow cluster quite reasonable.
+In production, persistent storage can be achieved by running an external object store.
+For users on AWS, GCE/GKE or Azure, the convenience of Amazon S3, Google GCS or Microsoft Azure Storage
+makes the prospect of running a Minio-less Workflow cluster quite reasonable.
 
 Running a Workflow cluster without Minio provides several advantages:
 
