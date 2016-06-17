@@ -38,25 +38,21 @@ be in a new directory called `workflow-v2.0.0`.
 
 # Step 1: Cut repo branches and push image tags
 
-  1. Once the release milestone is cleared of tickets in the workflow component repos, the release branches can be cut.  
+  Once the release milestone is cleared of tickets in the workflow component repos, the release branches can be cut.  
 
-    If only a particular repo is ready, navigate to said repo and:
+  If only a particular repo is ready, navigate to said repo and:
 
-          git checkout master && git pull upstream master
-          git checkout -b release-$WORKFLOW_RELEASE && git push upstream release-$WORKFLOW_RELEASE
+        git checkout master && git pull upstream master
+        git checkout -b release-$WORKFLOW_RELEASE && git push upstream release-$WORKFLOW_RELEASE
 
-    Otherwise, for bulk-cutting all repos at the same time, we will use [sgoings/deis-workflow-group](https://github.com/sgoings/deis-workflow-group) here and in Step 2 below:
+  Otherwise, for bulk-cutting all repos at the same time, we will use [sgoings/deis-workflow-group](https://github.com/sgoings/deis-workflow-group) here and in Step 2 below:
 
-          git clone git@github.com:sgoings/deis-workflow-group.git
-          cd deis-workflow-group
+        git clone git@github.com:sgoings/deis-workflow-group.git
+        cd deis-workflow-group
 
-          make git-update # point all repos to latest master commits
-          BRANCH="release-${WORKFLOW_RELEASE}" NEW="true" make git-checkout-branch
-          BRANCH="release-${WORKFLOW_RELEASE}" make git-push-branch #(can use DRY_RUN=true)
-
-  2. Tag and push docker images to 'staging' `deisci` org
-
-          TAG="${WORKFLOW_RELEASE}" ORG="deisci" make docker-tag docker-push #(can use DRY_RUN=true)
+        make git-update # point all repos to latest master commits
+        BRANCH="release-${WORKFLOW_RELEASE}" NEW="true" make git-checkout-branch
+        BRANCH="release-${WORKFLOW_RELEASE}" make git-push-branch #(can use DRY_RUN=true)
 
 # Step 2: Create New Helm Classic Charts
 
@@ -76,11 +72,11 @@ version of our release for testing. Here is the current process to do so:
         cp -r workflow-dev-e2e workflow-$WORKFLOW_RELEASE_SHORT-e2e
         cp -r router-dev router-$WORKFLOW_RELEASE_SHORT
 
-  4. Stage copies of all files needing release updates into the appropriate `workflow-$WORKFLOW_RELEASE_SHORT(-e2e)` chart directories:
+  4. Stage copies of all files needing release updates into the appropriate chart directories created above, supplying `--ref release-$WORKFLOW_RELEASE` to specify this branch/ref for lookup of latest commit shas (informing `generate_params.toml`), as well as `--stagingDir <appropriate staging dir>` to inform `deisrel` where to put updated files:
 
-        deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT workflow
-        deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT-e2e e2e
-        deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir router-$WORKFLOW_RELEASE_SHORT router
+        deisrel helm-stage --ref release-$WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT workflow
+        deisrel helm-stage --ref release-$WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT-e2e e2e
+        deisrel helm-stage --ref release-$WORKFLOW_RELEASE --stagingDir router-$WORKFLOW_RELEASE_SHORT router
 
   5. Delete the `KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS` env var from `workflow-$WORKFLOW_RELEASE_SHORT/tpl/deis-controller-rc.yaml`
 
@@ -146,42 +142,29 @@ Amazon S3                           |
 
     - PR the fix, get it reviewed and merged into master of component repo(s)
     - git cherry-pick <issue_fix_sha> into the `release-$WORKFLOW_RELEASE` branch(es) of component repo(s)
-    - retag the `git-<issue_fix_sha>` image with `$WORKFLOW_RELEASE` and push to 'staging' `deisci` quay org.
+    - update the appropriate component's `dockerTag` value in the release chart with the `git-<issue_fix_sha>` from the cherry-pick commit above.
+    - push updated chart change(s) to existing release branch and re-convene testing
 
-# Step 6: Tag and Push Docker Images
-
-After everyone has tested and determined that there are no show-stopping problems for this release,
-it's time to tag each individual Docker image with `$WORKFLOW_RELEASE`.
-
-To do so, simply go back to the directory where you checked out the `deis-workflow-group` repo
-and run the following two commands to tag and push updated docker images to the 'prod' `deis` quay org:
-
-```console
-BRANCH="release-$WORKFLOW_RELEASE" make git-checkout-branch
-TAG=$WORKFLOW_RELEASE ORG="deis" make docker-tag docker-push
-```
-
-# Step 7: Update Helm Classic Chart
-
-Now that new Docker images are on public Docker repositories, it's time to update the Helm Classic chart
-to reference the official images. We will use `deisrel` to do this.  The following will change every `dockerTag` value
-to the same `$WORKFLOW_RELEASE` as well as now pointing to the `deis` quay org.
-
-```console
-cd <back_to_charts_dir>
-deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT --org deis workflow
-deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir workflow-$WORKFLOW_RELEASE_SHORT-e2e --org deis e2e
-deisrel helm-stage --tag $WORKFLOW_RELEASE --stagingDir router-$WORKFLOW_RELEASE_SHORT --org deis router
-```
-
-When you're done, commit and push your changes. You should get your pull request reviewed and merged before continuing.
+When testing shows no further issues and the release chart is ready to ship, make sure the pull request is reviewed once more and merged before continuing.
 
 !!! note
 
     If non-release-specific amendments have been made to the release chart that do
     not exist in the `workflow-dev`, be sure to PR said changes for this chart as well.
 
-# Step 8: Update Changelogs
+# Step 6: Tag and Push Docker Images
+
+It's time to retag each individual Docker image with the 'official' `$WORKFLOW_RELEASE` value in the `deis` [quay.io](https://quay.io/organization/deis) org.
+
+To do so, simply go back to the directory where you checked out the `deis-workflow-group` repo
+and run the following two commands to retag the images:
+
+```console
+BRANCH="release-$WORKFLOW_RELEASE" make git-checkout-branch
+TAG=$WORKFLOW_RELEASE ORG="deis" make docker-tag docker-push
+```
+
+# Step 7: Update Changelogs
 
 At this point, part of the first part and all of the second part of the release is complete.
 That is, the Helm Classic chart for the new Workflow version is done, and new Docker versions for all
@@ -213,7 +196,7 @@ git push -u $YOUR_FORK_REMOTE release-$WORKFLOW_RELEASE_SHORT
 
 Before you continue, ensure pull requests in all applicable repositories are reviewed, and merge them.
 
-# Step 9: Tag and Push Git Repositories
+# Step 8: Tag and Push Git Repositories
 
 The final step of the release process is to tag each git repository, and push the tag to each
 GitHub project. To do so, simply run the below command in the `deisrel` repository:
@@ -222,14 +205,14 @@ GitHub project. To do so, simply run the below command in the `deisrel` reposito
 deisrel git tag --ref release-$WORKFLOW_RELEASE $WORKFLOW_RELEASE
 ```
 
-# Step 10: Close GitHub Milestones
+# Step 9: Close GitHub Milestones
 
 Close the github milestone by creating a new pull request at
 [seed-repo](https://github.com/deis/seed-repo). Any changes merged to master on that repository
 will be applied to all of the component projects. If there are open issues attached to the
 milestone, move them to the next upcoming milestone before merging the pull request.
 
-# Step 11: Let Everyone Know
+# Step 10: Let Everyone Know
 
 Jump in #company on slack and let folks know that the release has been cut! This will let
 folks in supporting functions know that they should start the release support process including
