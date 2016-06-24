@@ -27,8 +27,14 @@ IP:                     10.247.114.249
 
 The service address for the router is `10.247.114.249`.
 
-Last, we need to inform your machine how to reach the service address:
+Last, we need to inform your machine how to reach the service address.
 
+Add routes on Linux with:
+```
+$ sudo route add 10.247.114.249 gw 10.245.1.3
+```
+
+Add routes on Mac OS X with:
 ```
 $ sudo route add 10.247.114.249 10.245.1.3
 Password:
@@ -39,6 +45,13 @@ This tells your machine that the service address `10.247.114.249` can be reached
 node found at `10.245.1.3`.
 
 **Remember when you are finished experimenting, you should remove the route so you aren't confused later:**
+
+Remove routes on Linux with:
+```
+$ sudo route del 10.247.114.249
+```
+
+Remove routes on Mac OS X with:
 
 ```
 $ sudo route delete 10.247.114.249 10.245.1.3
