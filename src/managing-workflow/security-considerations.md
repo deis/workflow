@@ -47,9 +47,9 @@ $ kubectl --namespace=deis annotate replicationcontroller deis-router router.dei
 The format is the same for the controller whitelist but you need to specify the whitelist directly
 to the controller's service. For example:
 
-$ kubectl --namespace=deis annotate service deis-controller router.deis.io/whitelist="10.0.1.0/24:office_intranet,121.212.121.212:dev_jenkins"
+$ kubectl --namespace=deis annotate service deis-controller router.deis.io/whitelist="10.0.1.0/24,121.212.121.212"
 
 And the same applies to applications. For example, to apply a whitelist to an application named
 `example`:
 
-$ kubectl --namespace=example annotate service example-web router.deis.io/whitelist="10.0.1.0/24:office_intranet,121.212.121.212:dev_jenkins"
+$ kubectl --namespace=example annotate service example-web router.deis.io/whitelist="10.0.1.0/24,121.212.121.212"
