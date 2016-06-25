@@ -77,7 +77,7 @@ $ helmc generate -x manifests workflow-v2.0.0
 
 # copy your active database secrets into the helmc workspace
 $ cp ~/active-deis-database-secret-creds.yaml \
-	$(helmc home)/workspace/charts/workflow-v2.0.0-manifests/deis-database-secret-creds.yaml
+	$(helmc home)/workspace/charts/workflow-v2.0.0/manifests/deis-database-secret-creds.yaml
 
 # copy your active builder ssh keys into the helmc workspace
 $ cp ~/active-deis-builder-secret-ssh-private-keys.yaml \

@@ -34,7 +34,7 @@ There should be a fluentd pod per worker node of your Kubernetes cluster. So if 
 Once you have verified that the pods have started correctly you will need to restart your controller pod so that it can capture the correct information about how to talk to the logger pod.
 
 ```
-kubectl delete pod <deis-controller-pod>
+kubectl --namespace=deis delete pods <deis-controller-pod>
 ```
 
 The replication controller will restart a new pod with all of the correct information.
