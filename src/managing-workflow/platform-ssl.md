@@ -65,8 +65,8 @@ metadata:
   namespace: deis
 type: Opaque
 data:
-  cert: LS0...tCg==
-  key: LS0...LQo=
+  tls.crt: LS0...tCg==
+  tls.key: LS0...LQo=
 ```
 
 Once you've created the `deis-router-plaform-cert.yaml` file, you can install the manifest with `kubectl create -f
