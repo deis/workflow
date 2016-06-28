@@ -142,7 +142,7 @@ Timeout (seconds): 50
 Period (seconds): 10
 Success Threshold: 1
 Failure Threshold: 3
-Exec Probe: Command="/bin/echo -n hello"
+Exec Probe: Command=[/bin/echo -n hello]
 HTTP GET Probe: N/A
 TCP Socket Probe: N/A
 ```
