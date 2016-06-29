@@ -40,7 +40,7 @@ be in a new directory called `workflow-v2.0.0`.
 
 # Step 1: Cut repo branches and push image tags
 
-  Once the release milestone is cleared of tickets in the workflow component repos, the release branches can be cut.  
+  Once the release milestone is cleared of tickets in the workflow component repos, the release branches can be cut.
 
   If only a particular repo is ready, navigate to said repo and:
 
@@ -159,12 +159,10 @@ When testing shows no further issues and the release chart is ready to ship, mak
 
 It's time to retag each individual Docker image with the 'official' `$WORKFLOW_RELEASE` value in the `deis` [quay.io](https://quay.io/organization/deis) org.
 
-To do so, simply go back to the directory where you checked out the `deis-workflow-group` repo
-and run the following two commands to retag the images:
+To do so, simply run the following `deisrel` command:
 
 ```console
-BRANCH="release-$WORKFLOW_RELEASE" make git-checkout-branch
-TAG=$WORKFLOW_RELEASE ORG="deis" make docker-tag docker-push
+deisrel docker retag $WORKFLOW_RELEASE --new-org="deis -ref release-$WORKFLOW_RELEASE"
 ```
 
 # Step 7: Update Changelogs
