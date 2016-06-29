@@ -30,6 +30,7 @@ pages:
     - Installing Workflow: installing-workflow/index.md
     - System Requirements: installing-workflow/system-requirements.md
     - Configuring Object Storage: installing-workflow/configuring-object-storage.md
+    - Configuring Postgres: installing-workflow/configuring-postgres.md
   - Users:
     - Command Line Interface: users/cli.md
     - Users and Registration: users/registration.md
