@@ -17,7 +17,7 @@ The helm classic chart for Deis Workflow can be easily configured to connect Wor
     * Note: Depending on your chosen object storage you may need to provide globally unique bucket names.
     * Note: If you provide credentials with sufficient access to the underlying storage, Workflow components will create the buckets if they do not exist.
 * **Step 2:** If applicable, generate credentials that have write access to the storage buckets created in Step 1
-* **Step 3:** If you haven't already fetched the helm classic chart, do so with `helmc fetch deis/workflow-v2.0.0`
+* **Step 3:** If you haven't already fetched the helm classic chart, do so with `helmc fetch deis/workflow-v2.1.0`
 * **Step 4:** Update storage details either by setting the appropriate environment variables or by modifying the template file `tpl/generate_params.toml`
     * **1.** Using environment variables:
         * Set `STORAGE_TYPE` to `s3`, `azure` or `gcs`, then set the following environment variables accordingly.
@@ -41,14 +41,14 @@ The helm classic chart for Deis Workflow can be easily configured to connect Wor
             ```
 
     * **2.** Using template file `tpl/generate_params.toml`:
-        * Open the helm classic chart with `helmc edit workflow-v2.0.0` and look for the template file `tpl/generate_params.toml`
+        * Open the helm classic chart with `helmc edit workflow-v2.1.0` and look for the template file `tpl/generate_params.toml`
         * Update the `storage` parameter to reference the storage platform you are using: `s3`, `azure`, `gcs`
         * Update the values in the section which corresponds to your storage type, including region, bucket names and access credentials
     * Note: you do not need to base64 encode any of these values as Helm Classic will handle encoding automatically
-* **Step 5:** Save your changes and re-generate the helm classic chart by running `helmc generate -x manifests workflow-v2.0.0`
+* **Step 5:** Save your changes and re-generate the helm classic chart by running `helmc generate -x manifests workflow-v2.1.0`
 * **Step 6:** Check the generated file in your manifests directory, you should see `deis-objectstorage-secret.yaml`
 
-You are now ready to `helmc install workflow-v2.0.0` using your desired object storage.
+You are now ready to `helmc install workflow-v2.1.0` using your desired object storage.
 
 ## Object Storage Configuration and Credentials
 

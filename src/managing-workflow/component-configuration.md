@@ -5,8 +5,8 @@ or service. Helm is heavily influenced by [Homebrew](http://brew.sh/), including
 [formula model](https://github.com/Homebrew/homebrew-core). A Helm chart is to Helm as a Formula
 is to Homebrew.
 
-When you run `helmc fetch deis/workflow-v2.0.0`, you can customize the chart with
-`helmc edit workflow-v2.0.0`. To customize the respective component, edit
+When you run `helmc fetch deis/workflow-v2.1.0`, you can customize the chart with
+`helmc edit workflow-v2.1.0`. To customize the respective component, edit
 `manifests/deis-<component>-rc.yaml` and modify the `env` section of the component to tune these
 settings.
 
