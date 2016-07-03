@@ -71,7 +71,7 @@ your instance sizes and worker count.
 export MASTER_SIZE=t2.medium
 export NODE_SIZE=t2.large
 export NUM_NODES=2
-export MINION_ROOT_DISK_SIZE=100
+export NODE_ROOT_DISK_SIZE=100
 ```
 
 Last, so you can easily identify instances in the AWS Console, specify an instance prefix:
