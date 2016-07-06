@@ -2,7 +2,7 @@
 
 ## Description
 
-With the release of Workflow Beta4 we now include a monitoring stack for introspection on a running Kubernetes cluster. The stack includes 4 components:
+With the release of Deis Workflow, we now include a monitoring stack for introspection on a running Kubernetes cluster. The stack includes 4 components:
 
 * [Telegraf](https://docs.influxdata.com/telegraf/v0.12/) - Metrics collection daemon written by team behind InfluxDB.
 * [InfluxDB](https://docs.influxdata.com/influxdb/v0.12/) - Time series database
