@@ -106,7 +106,7 @@ version of our release for testing. Here is the current process to do so:
 
 # Step 3: Kick off Jenkins Jobs
 
-Navigate to https://ci.deis.io/job/workflow-test-release/ and kick off a new job with appropriate build parameters filled out, i.e. `HELM_REMOTE_BRANCH=$WORKFLOW_RELEASE` and `RELEASE=$WORKFLOW_RELEASE_SHORT`
+Navigate to https://ci.deis.io/job/workflow-test-release/ and kick off a new job with the appropriate build parameters filled out, i.e. `WORKFLOW_BRANCH=release-$WORKFLOW_RELEASE`, `WORKFLOW_E2E_BRANCH=release-$WORKFLOW_RELEASE` and `RELEASE=$WORKFLOW_RELEASE_SHORT`.
 
 As of this writing, the e2e tests in this job are run on a GKE cluster using default (minio) storage. To kick off the supported external storage permutations, run https://ci.deis.io/job/storage_backend_e2e/ w/ `STORAGE_TYPE` of 'gcs' and 'aws', along with the other
 values used in job above.
@@ -145,7 +145,8 @@ Amazon S3                           |
 
     - PR the fix, get it reviewed and merged into master of component repo(s)
     - git cherry-pick <issue_fix_sha> into the `release-$WORKFLOW_RELEASE` branch(es) of component repo(s)
-    - update the appropriate component's `dockerTag` value in the release chart with the `git-<issue_fix_sha>` from the cherry-pick commit above.
+    - the component's `<component>-release` [Jenkins job](https://ci.deis.io) watches for the push to the release branch and will trigger building and deploying  the `git-<issue_fix_sha>` Docker image.
+    - update the appropriate component's `dockerTag` value in the release chart with the `git-<issue_fix_sha>` as deployed above.
     - push updated chart change(s) to existing release branch and re-convene testing
 
 When testing shows no further issues and the release chart is ready to ship, make sure the pull request is reviewed once more and merged before continuing.
