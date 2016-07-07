@@ -56,7 +56,20 @@ be in a new directory called `workflow-v2.0.0`.
         BRANCH="release-${WORKFLOW_RELEASE}" NEW="true" make git-checkout-branch
         BRANCH="release-${WORKFLOW_RELEASE}" make git-push-branch #(can use DRY_RUN=true)
 
-# Step 2: Create New Helm Classic Charts
+# Step 2: Update Jenkins Jobs
+
+We'll need to update the `WORKFLOW_RELEASE` value used by all relevant Jenkins jobs, particularly so the [workflow-test-release](https://ci.deis.io/job/workflow-test-release/) job can kick off automatically once the `release-${WORKFLOW_RELEASE}` branch is pushed to in `Step 3` below.  Update this value in the [common.groovy](https://github.com/deis/jenkins-jobs/blob/master/common.groovy) file and push this change to master:
+
+      git clone git@github.com:deis/jenkins-jobs.git
+      # update WORKFLOW_RELEASE value
+      git commit -a -m "chore(workflow-$WORKFLOW_RELEASE_SHORT): update WORKFLOW_RELEASE"
+      git push upstream HEAD:master
+
+!!! note
+
+    As of this writing, the e2e tests run on a GKE cluster using default internal (minio) storage. The e2e tests can run using supported external storage permutations via the [storage_backend_e2e](https://ci.deis.io/job/storage_backend_e2e/) job, providing `STORAGE_TYPE` of 'gcs' and 'aws', along with the `HELM_REMOTE_BRANCH` updated to `release-${WORKFLOW_RELEASE}` after the release chart is created in `Step 3` below.
+
+# Step 3: Create New Helm Classic Charts
 
 Next, we'll create new [Helm Classic](https://github.com/helm/helm-classic) charts so that we can "stage" a
 version of our release for testing. Here is the current process to do so:
@@ -104,13 +117,6 @@ version of our release for testing. Here is the current process to do so:
 
   9. Open a pull request from your branch to merge into `master` on https://github.com/deis/charts
 
-# Step 3: Kick off Jenkins Jobs
-
-Navigate to https://ci.deis.io/job/workflow-test-release/ and kick off a new job with the appropriate build parameters filled out, i.e. `WORKFLOW_BRANCH=release-$WORKFLOW_RELEASE`, `WORKFLOW_E2E_BRANCH=release-$WORKFLOW_RELEASE` and `RELEASE=$WORKFLOW_RELEASE_SHORT`.
-
-As of this writing, the e2e tests in this job are run on a GKE cluster using default (minio) storage. To kick off the supported external storage permutations, run https://ci.deis.io/job/storage_backend_e2e/ w/ `STORAGE_TYPE` of 'gcs' and 'aws', along with the other
-values used in job above.
-
 # Step 4: Update Documentation
 
 Create a new pull request against deis/workflow, updating all references of the old release to
@@ -124,7 +130,7 @@ Also, note there may be occurrences of an older release (prior to
 # Step 5: Manual Testing
 
 After the chart is created with the immutable Docker image tags that represent the final images
-(i.e. the ones that will be re-tagged to the immutable release tag, such as `2.0.0-v2.0.0`), it
+(i.e. the ones that will be re-tagged to the immutable release tag, such as `v2.0.0`), it
 should be manually tested by as many people as possible. Special attention should be paid to the
 user experience, both from an operator and developer perspective.
 
