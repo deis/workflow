@@ -28,23 +28,23 @@ Changes to any Deis Workflow component that could affect a user's experience als
 
 ## Cross-repo commits
 
-If a pull request is part of a larger piece of work involving one or more additional commits in other Workflow repositories, these commits can be referenced in the last PR to be submitted.  The downstream [e2e test job](https://ci.deis.io/job/workflow-test-pr/) will then supply every referenced commit to the test runner so it can source the necessary Docker images for inclusion in the generated Workflow chart to be tested.
+If a pull request is part of a larger piece of work involving one or more additional commits in other Workflow repositories, these commits can be referenced in the last PR to be submitted.  The downstream [e2e test job](https://ci.deis.io/job/workflow-test-pr/) will then supply every referenced commit (derived from PR issue number supplied) to the test runner so it can source the necessary Docker images for inclusion in the generated Workflow chart to be tested.
 
 For example, consider paired commits in [deis/controller](https://github.com/deis/controller) and [deis/workflow-e2e](https://github.com/deis/workflow-e2e).  The commit body for the first PR in `deis/workflow-e2e` would look like:
 
 ```
 feat(foo_test): add e2e test for feature foo
 
-[skip e2e] test for controller PR #42
+[skip e2e] test for controller#42
 ```
 Adding `[skip e2e]` forgoes the e2e tests on this commit. This and any other required PRs aside from the final PR should be submitted first, so that their respective build and image push jobs run.
 
-Lastly, the final PR in `deis/controller` should be created with the required commits listed, for use by the downstream e2e run.
+Lastly, the final PR in `deis/controller` should be created with the required PR number(s) listed, in the form of `[Rr]equires <repoName>#<pullRequestNumber>`, for use by the downstream e2e run.
 
 ```
 feat(foo): add feature foo
 
-Requires workflow-e2e#abc1234
+Requires workflow-e2e#42
 ```
 
 ## Code Standards
