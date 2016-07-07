@@ -47,14 +47,11 @@ be in a new directory called `workflow-v2.0.0`.
         git checkout master && git pull upstream master
         git checkout -b release-$WORKFLOW_RELEASE && git push upstream release-$WORKFLOW_RELEASE
 
-  Otherwise, for bulk-cutting all repos at the same time, we will use [sgoings/deis-workflow-group](https://github.com/sgoings/deis-workflow-group) here and in Step 2 below:
+  Otherwise, for bulk-cutting all repos at the same time, run the following command:
 
-        git clone git@github.com:sgoings/deis-workflow-group.git
-        cd deis-workflow-group
-
-        make git-update # point all repos to latest master commits
-        BRANCH="release-${WORKFLOW_RELEASE}" NEW="true" make git-checkout-branch
-        BRANCH="release-${WORKFLOW_RELEASE}" make git-push-branch #(can use DRY_RUN=true)
+  ```console
+  deisrel branches create --name="release-${WORKFLOW_RELEASE} --ref="master" --yes=true
+  ```
 
 # Step 2: Update Jenkins Jobs
 
