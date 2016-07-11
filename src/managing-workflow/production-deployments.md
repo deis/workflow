@@ -49,7 +49,7 @@ crucial. See [Platform SSL][] for the platform.
 
 
 [configuring object storage]: ../installing-workflow/configuring-object-storage.md
-[customizing controller]: component-configuration.md#customizing-the-controller
+[customizing controller]: tuning-component-settings.md#customizing-the-controller
 [database]: ../understanding-workflow/components.md#database
 [logger]: ../understanding-workflow/components.md#logger
 [minio]: ../understanding-workflow/components.md#minio
