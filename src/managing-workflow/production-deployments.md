@@ -12,7 +12,8 @@ not resilient to cluster outages. If Minio is shut down, all data is lost.
 
 In production, persistent storage can be achieved by running an external object store.
 For users on AWS, GCE/GKE or Azure, the convenience of Amazon S3, Google GCS or Microsoft Azure Storage
-makes the prospect of running a Minio-less Workflow cluster quite reasonable.
+makes the prospect of running a Minio-less Workflow cluster quite reasonable. For users who have restriction
+on using external object storage using swift object storage can be an option.
 
 Running a Workflow cluster without Minio provides several advantages:
 

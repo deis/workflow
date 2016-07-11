@@ -11,7 +11,7 @@ Every component that relies on object storage uses two inputs for configuration:
 1. Component-specific environment variables (e.g. `BUILDER_STORAGE` and `REGISTRY_STORAGE`)
 2. Access credentials stored as a Kubernetes secret named `objectstorage-keyfile`
 
-The helm classic chart for Deis Workflow can be easily configured to connect Workflow components to off-cluster object storage. Deis Workflow currently supports Google Compute Storage, Amazon S3 and Azure Blob Storage.
+The helm classic chart for Deis Workflow can be easily configured to connect Workflow components to off-cluster object storage. Deis Workflow currently supports Google Compute Storage, Amazon S3, Azure Blob Storage and OpenStack Swift Storage.
 
 * **Step 1:** Create storage buckets for each of the Workflow subsystems: builder, registry and database
     * Note: Depending on your chosen object storage you may need to provide globally unique bucket names.
@@ -40,6 +40,13 @@ The helm classic chart for Deis Workflow can be easily configured to connect Wor
             export AZURE_ACCOUNT_NAME, AZURE_ACCOUNT_KEY, AZURE_REGISTRY_CONTAINER, AZURE_DATABASE_CONTAINER, AZURE_BUILDER_CONTAINER
             ```
 
+          * For `STORAGE_TYPE=swift`:
+
+            ```
+            export SWIFT_USERNAME, SWIFT_PASSWORD, SWIFT_AUTHURL, SWIFT_AUTHVERSION, SWIFT_REGISTRY_CONTAINER, SWIFT_DATABASE_CONTAINER, SWIFT_BUILDER_CONTAINER
+            ```
+              * To specify tenant set `SWIFT_TENANT` if the auth version is 2 or more.
+
     * **2.** Using template file `tpl/generate_params.toml`:
         * Open the helm classic chart with `helmc edit workflow-v2.1.0` and look for the template file `tpl/generate_params.toml`
         * Update the `storage` parameter to reference the storage platform you are using: `s3`, `azure`, `gcs`
@@ -62,6 +69,7 @@ During the `helmc generate` step, Helm Classic creates a Kubernetes secret in th
 # - azure: Store persistent data in Azure's object storage
 # - gcs: Store persistent data in Google Cloud Storage
 # - minio: Store persistent data on in-cluster Minio server
+# - swift: Store persistent data in OpenStack Swift object storage cluster
 storage = "minio"
 ```
 
@@ -141,6 +149,15 @@ Azure (`DATABASE_STORAGE=azure`):
 
 * `WABS_ACCOUNT_NAME` via /var/run/secrets/deis/objectstore/creds/accountname
 * `WABS_ACCESS_KEY` via /var/run/secrets/deis/objectstore/creds/accountkey
+* `BUCKET_NAME` via /var/run/secrets/deis/objectstore/creds/database-container
+
+Swift (`DATABASE_STORAGE=swift`):
+
+* `SWIFT_USERNAME` via /var/run/secrets/deis/objectstore/creds/username
+* `SWIFT_PASSWORD` via /var/run/secrets/deis/objectstore/creds/password
+* `SWIFT_AUTHURL` via /var/run/secrets/deis/objectstore/creds/authurl
+* `SWIFT_AUTHVERSION` via /var/run/secrets/deis/objectstore/creds/authversion
+* `SWIFT_TENANT` via /var/run/secrets/deis/objectstore/creds/tenant
 * `BUCKET_NAME` via /var/run/secrets/deis/objectstore/creds/database-container
 
 [minio]: ../understanding-workflow/components.md#object-storage
