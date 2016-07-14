@@ -93,9 +93,13 @@ configure minio to use persistent storage available in your environment.
 **Project Location:** [deis/registry](https://github.com/deis/registry)
 
 The registry component is a managed docker registry which holds application
-images generated from the builder component. Registry persists the Docker image
-iamges to either local storage (in development mode) or to object storage
-configured for the cluster.
+images generated from the builder component. Registry persists the Docker
+images to either local storage (in development mode) or to object storage
+configured for the cluster. Starting with release v2.2.0, the component also runs a
+[proxy](https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/registry/images)
+daemon to expose the registry service as `localhost` on each node. The proxy daemon uses
+[HAProxy](http://www.haproxy.org/) to route the incoming registry requests on `localhost` to the
+registry service removing the necessity of setting `--insecure-registry` for docker daemon.
 
 ## Router
 
