@@ -54,7 +54,32 @@ image in development or in your CI pipeline as you are in production.
 
 Learn how to deploy applications [using Docker images](../applications/using-docker-images.md).
 
+## Tuning Application Settings
+
+It is possible to configure a few of the [globally tunable](../applications/managing-app-configuration.md) settings on per application basis using `config:set`.
+
+Setting                                         | Description
+----------------------------------------------- | ---------------------------------
+DEIS_DEPLOY_BATCHES                             | the number of pods to bring up and take down sequentially during a scale (default: number of available nodes)
+DEIS_KUBERNETES_DEPLOYMENTS                     | if enabled [Deployments][] is used to handle an application deploy instead of [ReplicationControllers][]
+                                                | any value is acceptable to turn on [Deployments][], to turn it off either remove or pass an empty string (default: off)
+KUBERNETES_DEPLOYMENTS_REVISION_HISTORY_LIMIT   | how many [revisions][[kubernetes-deployment-revision]] Kubernetes keeps around of a given Deployment (default: all revisions)
+
+When `DEIS_KUBERNETES_DEPLOYMENTS=1` is set on an application then Deis Workflow will use [Deployments][] internally instead of [ReplicationControllers][].
+
+The advantage of that is that rolling-updates will happen server-side in Kubernetes instead of in Deis Workflow Controller,
+along with a few other Pod management related functionality. This allows a deploy to continue even when the CLI connection is interrupted.
+
+Deis Workflow will behave the same way with `DEIS_KUBERNETES_DEPLOYMENTS` enabled or disabled. The changes are behind the scenes.
+Where you will see differences while using the CLI is `deis ps:list` will output Pod names differently.
+
+Behind the scenes your application deploy will be built up of a Deployment object per process type,
+each having multiple ReplicaSets (one per release) which in turn manage the Pods running your application.
+
 [install client]: ../users/cli.md#installation
 [application]: ../reference-guide/terms.md#application
 [controller]: ../understanding-workflow/components.md#controller
 [Twelve-Factor App]: http://12factor.net/
+[Deployments]: http://kubernetes.io/docs/user-guide/deployments/
+[kubernetes-deployment-revision]: http://kubernetes.io/docs/user-guide/deployments/#revision-history-limit
+[ReplicationControllers]: http://kubernetes.io/docs/user-guide/replication-controller/

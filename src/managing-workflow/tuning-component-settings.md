@@ -5,7 +5,7 @@ application or service. Helm is heavily influenced by [Homebrew](http://brew.sh/
 [formula model](https://github.com/Homebrew/homebrew-core). A Helm Chart is to Helm as a Formula
 is to Homebrew.
 
-After you cetch the Workflow chart, you can customize the chart using `helmc edit` before using
+After you fetch the Workflow chart, you can customize the chart using `helmc edit` before using
 `helmc generate` and `helmc install` to complete the installation. To customize the respective
 component, edit `tpl/deis-<component>-rc.yaml` and modify the `env` section of the component to
 tune these settings.
@@ -39,7 +39,10 @@ RESERVED_NAMES                                  | a comma-separated list of name
 SLUGRUNNER_IMAGE_NAME                           | the image used to run buildpack application slugs (default: "quay.io/deisci/slugrunner:canary")
 SLUG_BUILDER_IMAGE_PULL_POLICY                  | the kubernetes [image pull policy][pull-policy] for slugbuilder (default: "Always")
 DOCKER_BUILDER_IMAGE_PULL_POLICY                | the kubernetes [image pull policy][pull-policy] for dockerbuilder (default: "Always")
-DEIS_DEPLOY_BATCHES                             | the number of pods to bring up and take down sequentially during a scale (default: all)
+DEIS_DEPLOY_BATCHES                             | the number of pods to bring up and take down sequentially during a scale (default: number of available nodes)
+DEIS_KUBERNETES_DEPLOYMENTS                     | if enabled [Deployments][] is used to handle an application deploy platform wide instead of [ReplicationControllers][]
+                                                | any value is acceptable to turn on [Deployments][], to turn it off either remove or pass an empty string (default: off)
+KUBERNETES_DEPLOYMENTS_REVISION_HISTORY_LIMIT   | how many [revisions][[kubernetes-deployment-revision]] Kubernetes keeps around of a given Deployment (default: all revisions)
 KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS | how many seconds kubernetes waits for a pod to finish work after a SIGTERM before sending SIGKILL (default: 30)
 
 ## Customizing the Database
@@ -109,11 +112,14 @@ API_VERSION       | The version number Workflow Manager sends to the versions AP
 [builder]: ../understanding-workflow/components.md#builder
 [controller]: ../understanding-workflow/components.md#controller
 [database]: ../understanding-workflow/components.md#database
+[Deployments]: http://kubernetes.io/docs/user-guide/deployments/
 [downward-api]: http://kubernetes.io/docs/user-guide/downward-api/
 [gunicorn]: http://gunicorn.org/
+[kubernetes-deployment-revision]: http://kubernetes.io/docs/user-guide/deployments/#revision-history-limit
 [logger]: ../understanding-workflow/components.md#logger-fluentd-logger
 [monitor]: ../understanding-workflow/components.md#monitor
 [pull-policy]: http://kubernetes.io/docs/user-guide/images/
 [registry]: ../understanding-workflow/components.md#registry
+[ReplicationControllers]: http://kubernetes.io/docs/user-guide/replication-controller/
 [router]: ../understanding-workflow/components.md#router
 [workflow manager]: ../understanding-workflow/components.md#workflow-manager
