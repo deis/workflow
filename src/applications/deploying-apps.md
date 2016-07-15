@@ -61,9 +61,33 @@ It is possible to configure a few of the [globally tunable](../applications/mana
 Setting                                         | Description
 ----------------------------------------------- | ---------------------------------
 DEIS_DEPLOY_BATCHES                             | the number of pods to bring up and take down sequentially during a scale (default: number of available nodes)
+DEIS_DEPLOY_TIMEOUT                             | deploy timeout in seconds - there are 2 deploy methods, current (RC) and Deployments (see below) and this setting affects those a bit differently (default: 120)
 DEIS_KUBERNETES_DEPLOYMENTS                     | if enabled [Deployments][] is used to handle an application deploy instead of [ReplicationControllers][]
                                                 | any value is acceptable to turn on [Deployments][], to turn it off either remove or pass an empty string (default: off)
 KUBERNETES_DEPLOYMENTS_REVISION_HISTORY_LIMIT   | how many [revisions][[kubernetes-deployment-revision]] Kubernetes keeps around of a given Deployment (default: all revisions)
+
+### Deploy Timeout
+
+Deploy timeout in seconds - There are 2 deploy methods, current (RC) and Deployments (see below) and this setting affects those a bit differently.
+
+#### RC deploy
+
+This deploy timeout defines how long to wait for each batch to complete in `DEIS_DEPLOY_BATCHES`
+
+#### Deployments
+
+Deployments behave a little bit differently from the RC based deployment strategy.
+
+Kubernetes takes care of the entire deploy, doing rolling updates in the background. As a result, there is only an overall deployment timeout instead of a configurable per-batch timeout.
+
+The base timeout is multiplied with `DEIS_DEPLOY_BATCHES` to create an overall timeout. This would be 240 (timeout) * 4 (batches) = 960 second overall timeout.
+
+#### Additions to the base timeout
+
+The base timeout is extended as well with healthchecks using `initialDelaySeconds` on `liveness` and `readiness` where the bigger of those two is applied.
+Additionally the timeout system accounts for slow image pulls by adding an additional 10 minutes when it has seen an image pull take over 1 minute. This allows the timeout values to be reasonable without having to account for image pull slowness in the base deploy timeout.
+
+### Deployments
 
 When `DEIS_KUBERNETES_DEPLOYMENTS=1` is set on an application then Deis Workflow will use [Deployments][] internally instead of [ReplicationControllers][].
 
