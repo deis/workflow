@@ -38,7 +38,27 @@ A release consists of the following artifacts:
 images referenced above. For example, if `$WORKFLOW_RELEASE` is `2.0.0-v2.0.0`, the new chart would
 be in a new directory called `workflow-v2.0.0`.
 
-# Step 1: Cut repo branches and push image tags
+# Step 1: Bump Client and Server Versions
+
+Before cutting the repo branches, the client and server versions need to be updated to the new
+version.
+
+  1. Make a PR to bump [the client version][client-platform-version]
+  2. Make a PR to bump [the server version][server-platform-version]
+
+If necessary, you will also need to bump the API version. This version number is only bumped if any
+API-related changes have been made this release. To do this:
+
+  1. Make a PR to bump [the SDK API version](https://github.com/deis/controller-sdk-go/blob/master/deis.go#L92)
+  2. Make a PR to bump [the client version of the SDK](https://github.com/deis/workflow-cli/blob/master/glide.yaml#L18) and run `glide up`
+  3. Make a PR to bump [the server API version](https://github.com/deis/controller/blob/master/rootfs/api/__init__.py#L5)
+  4. Make a PR to add [documentation for the new API version](https://github.com/deis/workflow/pull/357)
+
+!!! important
+
+    make sure to get all these PRs merged before proceeding to the next step.
+
+# Step 2: Cut repo branches and push image tags
 
   Once the release milestone is cleared of tickets in the workflow component repos, the release branches can be cut.
 
@@ -53,7 +73,7 @@ be in a new directory called `workflow-v2.0.0`.
   deisrel branches create --name="release-${WORKFLOW_RELEASE} --ref="master" --yes=true
   ```
 
-# Step 2: Update Jenkins Jobs
+# Step 3: Update Jenkins Jobs
 
 We'll need to update the `WORKFLOW_RELEASE` value used by all relevant Jenkins jobs, particularly so the [workflow-test-release](https://ci.deis.io/job/workflow-test-release/) job can kick off automatically once the `release-${WORKFLOW_RELEASE}` branch is pushed to in `Step 3` below.  Update this value in the [common.groovy](https://github.com/deis/jenkins-jobs/blob/master/common.groovy) file and push this change to master:
 
@@ -66,7 +86,7 @@ We'll need to update the `WORKFLOW_RELEASE` value used by all relevant Jenkins j
 
     As of this writing, the e2e tests run on a GKE cluster using default internal (minio) storage. The e2e tests can run using supported external storage permutations via the [storage_backend_e2e](https://ci.deis.io/job/storage_backend_e2e/) job, providing `STORAGE_TYPE` of 'gcs' and 'aws', along with the `HELM_REMOTE_BRANCH` updated to `release-${WORKFLOW_RELEASE}` after the release chart is created in `Step 3` below.
 
-# Step 3: Create New Helm Classic Charts
+# Step 4: Create New Helm Classic Charts
 
 Next, we'll create new [Helm Classic](https://github.com/helm/helm-classic) charts so that we can "stage" a
 version of our release for testing. Here is the current process to do so:
@@ -114,7 +134,7 @@ version of our release for testing. Here is the current process to do so:
 
   9. Open a pull request from your branch to merge into `master` on https://github.com/deis/charts
 
-# Step 4: Update Documentation
+# Step 5: Update Documentation
 
 Create a new pull request against deis/workflow, updating all references of the old release to
 `$WORKFLOW_RELEASE`. Use `git grep $WORKFLOW_PREV_RELEASE` and `git grep
@@ -124,7 +144,7 @@ Also, note there may be occurrences of an older release (prior to
 `$WORKFLOW_PREV_RELEASE`) in `upgrading-workflow.md`. These should be changed to
 `$WORKFLOW_PREV_RELEASE`.
 
-# Step 5: Manual Testing
+# Step 6: Manual Testing
 
 After the chart is created with the immutable Docker image tags that represent the final images
 (i.e. the ones that will be re-tagged to the immutable release tag, such as `v2.0.0`), it
@@ -159,7 +179,7 @@ When testing shows no further issues and the release chart is ready to ship, mak
     If non-release-specific amendments have been made to the release chart that do
     not exist in the `workflow-dev`, be sure to PR said changes for this chart as well.
 
-# Step 6: Tag and Push Docker Images
+# Step 7: Tag and Push Docker Images
 
 It's time to retag each individual Docker image with the 'official' `$WORKFLOW_RELEASE` value in the `deis` [quay.io](https://quay.io/organization/deis) org.
 
@@ -169,7 +189,7 @@ To do so, simply run the following `deisrel` command:
 deisrel docker retag $WORKFLOW_RELEASE --new-org="deis -ref release-$WORKFLOW_RELEASE"
 ```
 
-# Step 7: Update Changelogs
+# Step 8: Update Changelogs
 
 At this point, part of the first part and all of the second part of the release is complete.
 That is, the Helm Classic chart for the new Workflow version is done, and new Docker versions for all
@@ -201,7 +221,7 @@ git push -u $YOUR_FORK_REMOTE release-$WORKFLOW_RELEASE_SHORT
 
 Before you continue, ensure pull requests in all applicable repositories are reviewed, and merge them.
 
-# Step 8: Tag and Push Git Repositories
+# Step 9: Tag and Push Git Repositories
 
 The final step of the release process is to tag each git repository, and push the tag to each
 GitHub project. To do so, simply run the below command in the `deisrel` repository:
@@ -210,14 +230,14 @@ GitHub project. To do so, simply run the below command in the `deisrel` reposito
 deisrel git tag --ref release-$WORKFLOW_RELEASE $WORKFLOW_RELEASE
 ```
 
-# Step 9: Close GitHub Milestones
+# Step 10: Close GitHub Milestones
 
 Close the github milestone by creating a new pull request at
 [seed-repo](https://github.com/deis/seed-repo). Any changes merged to master on that repository
 will be applied to all of the component projects. If there are open issues attached to the
 milestone, move them to the next upcoming milestone before merging the pull request.
 
-# Step 10: Let Everyone Know
+# Step 11: Let Everyone Know
 
 Jump in #company on slack and let folks know that the release has been cut! This will let
 folks in supporting functions know that they should start the release support process including
@@ -230,3 +250,14 @@ deisrel changelog global $PREVIOUS_TAG $WORKFLOW_RELEASE
 ```
 
 You are now done with the release.
+
+# Step 12: Bump Client and Server Versions to the Next Development Version
+
+After finishing the release, you'll now need to advance the client and server versions to the next
+targeted release. For example, if `v2.1.0` was just cut and the next release on the roadmap is
+`v2.2.0`, make a PR to bump the [client][client-platform-version] and
+[server][server-platform-version] versions to `v2.2.0-dev`.
+
+
+[client-platform-version]: https://github.com/deis/workflow-cli/blob/master/version/version.go#L4
+[server-platform-version]: https://github.com/deis/controller/blob/master/rootfs/deis/__init__.py#L7
