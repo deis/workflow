@@ -4,7 +4,7 @@ To run Deis Workflow on a Kubernetes cluster, there are a few requirements to ke
 
 ## Kubernetes Versions
 
-Deis Workflow has been tested with the **Kubernetes v1.2** release line. It is incompatible with Kubernetes v1.1 and earlier.
+Deis Workflow has been tested with the **Kubernetes v1.2** release line. It is incompatible with Kubernetes v1.1 and earlier. Kubernetes v1.3.0 introduces [a bug when mounting secrets](https://github.com/deis/workflow/issues/372) which prevents Deis Workflow from starting; hopefully this will be fixed in future releases of Kubernetes.
 
 ## Resource Requirements
 
@@ -37,4 +37,4 @@ If you are using Docker with OverlayFS, you must disable SELinux by adding `--se
 `EXTRA_DOCKER_OPTS`. For more background information, see:
 
 * [https://github.com/docker/docker/issues/7952](https://github.com/docker/docker/issues/7952)
-* [https://github.com/deis/postgres/issues/63](https://github.com/deis/postgres/issues/63)
+* [https://github.com/deis/workflow/issues/63](https://github.com/deis/postgres/issues/63)
