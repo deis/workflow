@@ -10,7 +10,7 @@ Install the latest `deis` client for Linux or Mac OS X with:
 The installer places the `deis` binary in your current directory, but you
 should move it somewhere in your $PATH:
 
-    $ ln -fs $PWD/deis /usr/local/bin/deis
+    $ sudo mv $PWD/deis /usr/local/bin/deis
 
 Check your work by running `deis version`:
 
@@ -25,12 +25,10 @@ Install the latest `helmc` cli for Linux or Mac OS X with:
 
     $ curl -sSL https://get.helm.sh | bash
 
-*or*:
+The installer places the `helm` binary in your current directory, but you
+should move it somewhere in your $PATH:
 
-1. Grab a prebuilt binary from:
-  - the latest release: [ ![Download](https://api.bintray.com/packages/deis/helm/helmc/images/download.svg) ](https://bintray.com/deis/helm/helmc/_latestVersion#files)
-  - the CI build pipeline: [ ![Download](https://api.bintray.com/packages/deis/helm-ci/helmc/images/download.svg) ](https://bintray.com/deis/helm-ci/helmc/_latestVersion#files)
-2. Unzip the package and make sure `helmc` is available on the PATH.
+    $ sudo mv $PWD/helmc /usr/local/bin/helmc
 
 Check your work by running `helmc --version`:
 
