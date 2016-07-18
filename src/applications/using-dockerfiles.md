@@ -19,6 +19,7 @@ In order to deploy Dockerfile applications, they must conform to the following r
 * The Dockerfile must use the `EXPOSE` directive to expose exactly one port.
 * That port must be listening for an HTTP connection.
 * The Dockerfile must use the `CMD` directive to define the default process that will run within the container.
+* If Procfile is used then Docker image should contain Bash for successfull run.
 
 
 ## Create an Application
