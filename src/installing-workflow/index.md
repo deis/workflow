@@ -1,6 +1,6 @@
 # Installing Deis Workflow
 
-This document is aimed at those who have already provisioned a Kubernetes cluster and want to install Deis Workflow. If
+This document is aimed at those who have already provisioned a Kubernetes v1.2.x cluster and want to install Deis Workflow. If
 you are just getting started with Kubernetes and Deis Workflow, follow our [quickstart guide](../quickstart/index.md)
 with help booting Kubernetes and installing Workflow.
 
