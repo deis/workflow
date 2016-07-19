@@ -26,7 +26,7 @@ In order to deploy Docker images, they must conform to the following requirement
 * The Dockerfile must use the `EXPOSE` directive to expose exactly one port.
 * That port must be listening for an HTTP connection.
 * The Dockerfile must use the `CMD` directive to define the default process that will run within the container.
-* If Procfile is used then Docker image should contain Bash for successfull run.
+* The Docker image must contain [bash](https://www.gnu.org/software/bash/) to run processes.
 
 
 ## Create an Application
