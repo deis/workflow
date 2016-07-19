@@ -81,7 +81,7 @@ We are now ready to boot our first Kubernetes cluster on AWS!
 Since this script does a **lot** of stuff, we'll break it into sections.
 
 ```
-$ ./clusters/kube-up.sh
+$ ./cluster/kube-up.sh
 Creating a kubernetes on aws...
 ... Starting cluster in us-west-1c using provider aws
 ... calling verify-prereqs
