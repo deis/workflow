@@ -25,11 +25,11 @@ A release consists of the following artifacts:
   - [minio](https://github.com/deis/minio)
   - [monitor](https://github.com/deis/monitor)
   - [postgres](https://github.com/deis/postgres)
+  - [redis](https://github.com/deis/redis)
   - [registry](https://github.com/deis/registry)
   - [router](https://github.com/deis/router)
   - [slugbuilder](https://github.com/deis/slugbuilder)
   - [slugrunner](https://github.com/deis/slugrunner)
-  - [stdout-metrics](https://github.com/deis/stdout-metrics)
   - [workflow](https://github.com/deis/workflow)
   - [workflow-e2e](https://github.com/deis/workflow-e2e)
   - [workflow-manager](https://github.com/deis/workflow-manager)
@@ -91,7 +91,7 @@ We'll need to update the `WORKFLOW_RELEASE` value used by all relevant Jenkins j
 Next, we'll create new [Helm Classic](https://github.com/helm/helm-classic) charts so that we can "stage" a
 version of our release for testing. Here is the current process to do so:
 
-  1. Checkout the `release-$WORKFLOW_RELEASE` branch in [deis/charts](https://github.com/deis/charts) (created in Step 1.1 above):
+  1. Checkout the `release-$WORKFLOW_RELEASE` branch in [deis/charts](https://github.com/deis/charts) (created in Step 2.2 above):
 
         git fetch upstream
         git checkout release-$WORKFLOW_RELEASE
@@ -172,7 +172,7 @@ Amazon S3                           |
     - update the appropriate component's `dockerTag` value in the release chart with the `git-<issue_fix_sha>` as deployed above.
     - push updated chart change(s) to existing release branch and re-convene testing
 
-When testing shows no further issues and the release chart is ready to ship, make sure the pull request is reviewed once more and merged before continuing.
+The pull request should **not** be merged yet--it will be updated with SemVer-tagged docker images in the next step.
 
 !!! note
 
@@ -189,6 +189,8 @@ To do so, simply run the following `deisrel` command:
 deisrel docker retag $WORKFLOW_RELEASE --new-org="deis -ref release-$WORKFLOW_RELEASE"
 ```
 
+Update the PR by replacing all `dockerTag` values with the `$WORKFLOW_RELEASE` tag. Make sure the pull request is reviewed once more and merged before continuing.
+
 # Step 8: Update Changelogs
 
 At this point, part of the first part and all of the second part of the release is complete.
@@ -197,12 +199,6 @@ components are done.
 
 The remaining work is simply generating changelogs and tagging each component's GitHub repository.
 
-First, create a branch for the new changelog:
-
-```console
-git checkout -b release-$WORKFLOW_RELEASE_SHORT
-```
-
 To generate changelogs, run the below command in each repository. Ensure that `$PREVIOUS_TAG` is
 the previous tag that was generated in the repository.
 
@@ -210,16 +206,9 @@ the previous tag that was generated in the repository.
 deisrel changelog individual $REPO_NAME $PREVIOUS_TAG $CURRENT_SHA $WORKFLOW_RELEASE
 ```
 
-This command will output the new changelog entry to STDOUT. Copy it and prepend it to the existing `CHANGELOG.md` file.
+This command will output the new changelog entry to STDOUT. Copy it and paste into the GitHub release notes section for the release tag.
 
-Finally, commit, push and submit a pull request for your changes:
-
-```console
-git commit CHANGELOG.md -m "doc(CHANGELOG.md): add entry for $WORKFLOW_RELEASE"
-git push -u $YOUR_FORK_REMOTE release-$WORKFLOW_RELEASE_SHORT
-```
-
-Before you continue, ensure pull requests in all applicable repositories are reviewed, and merge them.
+Repeat these steps to create the changelog content for every Workflow component's release notes.
 
 # Step 9: Tag and Push Git Repositories
 
