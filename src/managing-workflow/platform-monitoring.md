@@ -2,6 +2,7 @@
 
 ## Description
 We now include a monitoring stack for introspection on a running Kubernetes cluster. The stack includes 3 components:
+
 * [Telegraf](https://docs.influxdata.com/telegraf/v0.12/) - Metrics collection daemon written by team behind InfluxDB.
 * [InfluxDB](https://docs.influxdata.com/influxdb/v0.12/) - Time series database
 * [Grafana](http://grafana.org/) - Graphing tool for time series data
@@ -80,6 +81,4 @@ It is possible to send these metrics to other endpoints besides InfluxDB. For mo
 
 ### Customizing
 
-Each of these components allows for customization via environment variables. If you would like to learn more please visit the following github repositories:
-
-* [monitor](https://github.com/deis/monitor)
+To learn more about customizing each of the above components please visit the [monitor](https://github.com/deis/monitor) repository for more information.
