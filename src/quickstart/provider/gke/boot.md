@@ -34,6 +34,12 @@ For development and testing, we recommend you use the `n1-standard-2` machine ty
 
 Click "Create" and Google Container Engine will provision your cluster. The process will take a few minutes to complete.
 
+## Check Kubernetes version
+
+![](images/gke-node-version.jpg)]
+
+After the cluster is created, check the node version. If you are on 1.3.x, **downgrade the node version to 1.2.5**. See [Kubernetes Versions](https://deis.com/docs/workflow/installing-workflow/system-requirements/#kubernetes-versions) under System Requirements for more details.
+
 ## Install and configure the Google Cloud CLI
 
 While your container cluster is booting. You will need to install the Google Cloud CLI tools. We will use the tools to fetch cluster credentials to authenitcate to your new Kubernetes cluster.
