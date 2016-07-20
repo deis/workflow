@@ -26,10 +26,14 @@ application footprint as well.
 Running smaller machines will likely result in increased system load and has been known to result in component failures
 and instability.
 
-!!! warning
+## Docker Insecure Registry
 
-    Versions prior to 2.2 require '--insecure-registry' to function properly. Depending on your Kubernetes and Docker configuration,
-    setting `EXTRA_DOCKER_OPTS="--insecure-registry=10.0.0.0/8"` may be sufficient.
+The on-cluster Docker registry is not deployed with TLS enabled. As such, all Kubernetes worker nodes must have their
+Docker daemons configured to use an **insecure registry**. The configured subnet should encompass any private networks
+used by your worker nodes, including overlay networks.
+
+Depending on your Kubernetes and Docker configuration, setting `EXTRA_DOCKER_OPTS="--insecure-registry=10.0.0.0/8"` may
+be sufficient.
 
 ## SELinux + OverlayFS
 
