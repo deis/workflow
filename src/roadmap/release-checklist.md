@@ -243,9 +243,9 @@ You are now done with the release.
 # Step 12: Bump Client and Server Versions to the Next Development Version
 
 After finishing the release, you'll now need to advance the client and server versions to the next
-targeted release. For example, if `v2.1.0` was just cut and the next release on the roadmap is
-`v2.2.0`, make a PR to bump the [client][client-platform-version] and
-[server][server-platform-version] versions to `v2.2.0-dev`.
+targeted release. For example, if `v2.2.0` was just cut and the next release on the roadmap is
+`v2.3.0`, make a PR to bump the [client][client-platform-version] and
+[server][server-platform-version] versions to `v2.3.0-dev`.
 
 
 [client-platform-version]: https://github.com/deis/workflow-cli/blob/master/version/version.go#L4

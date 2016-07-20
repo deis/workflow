@@ -67,27 +67,27 @@ $ kubectl --namespace=deis get secret database-creds -o yaml > ~/active-deis-dat
 $ kubectl --namespace=deis get secret builder-ssh-private-keys -o yaml > ~/active-deis-builder-secret-ssh-private-keys.yaml
 
 # fetch new chart
-$ helmc fetch deis/workflow-v2.1.0
+$ helmc fetch deis/workflow-v2.2.0
 
 # update your off-cluster storage configuration
-$ $EDITOR $(helmc home)/workspace/charts/workflow-v2.1.0/tpl/generate_params.toml
+$ $EDITOR $(helmc home)/workspace/charts/workflow-v2.2.0/tpl/generate_params.toml
 
 # generate new templates
-$ helmc generate -x manifests workflow-v2.1.0
+$ helmc generate -x manifests workflow-v2.2.0
 
 # copy your active database secrets into the helmc workspace
 $ cp ~/active-deis-database-secret-creds.yaml \
-	$(helmc home)/workspace/charts/workflow-v2.1.0/manifests/deis-database-secret-creds.yaml
+	$(helmc home)/workspace/charts/workflow-v2.2.0/manifests/deis-database-secret-creds.yaml
 
 # copy your active builder ssh keys into the helmc workspace
 $ cp ~/active-deis-builder-secret-ssh-private-keys.yaml \
-	$(helmc home)/workspace/charts/workflow-v2.1.0/manifests/deis-builder-secret-ssh-private-keys.yaml
+	$(helmc home)/workspace/charts/workflow-v2.2.0/manifests/deis-builder-secret-ssh-private-keys.yaml
 
 # uninstall workflow
-$ helmc uninstall workflow-v2.0.0 -n deis
+$ helmc uninstall workflow-v2.1.0 -n deis
 
-# install workflow v2.1.0
-$ helmc install workflow-v2.1.0
+# install workflow v2.2.0
+$ helmc install workflow-v2.2.0
 ```
 
 Make sure to copy the existing `deis-database-secret-creds.yaml` manifest into the new chart
