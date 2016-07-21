@@ -31,7 +31,7 @@ intact so routing and DNS are preserved while reinstalling Workflow.
 To remove Workflow completely from a Kubernetes cluster, run the following:
 
 ```
-$ helmc uninstall -n deis -y workflow-dev
+$ helmc uninstall -n deis -y workflow-v2.1.0  # or the installed Workflow version
 $ kubectl delete ns deis  # Be sure you want to delete the
                           # Namespace and all its contents!
 ```
