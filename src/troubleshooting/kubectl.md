@@ -4,7 +4,7 @@ This document describes how one can use `kubectl` to debug any issues with the c
 
 ## Diving into the Components
 
-Using `kubectl`, one can inspect the cluster's current state. When `helmc install workflow-v2.1.0`
+Using `kubectl`, one can inspect the cluster's current state. When `helmc install workflow-v2.2.0`
 is invoked, Workflow is installed into the `deis` namespace. To inspect if Workflow is running,
 run:
 
