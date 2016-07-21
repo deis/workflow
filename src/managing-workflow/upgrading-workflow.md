@@ -18,7 +18,7 @@ See [Configuring Object Storage][] to learn how to store your Workflow data off-
 ## Keeping Essential Components
 
 !!! note
-    "Keeper" upgrade behavior requires Helm Classic 0.8.0 or newer and the workflow-rc1
+    "Keeper" upgrade behavior requires Helm Classic 0.8.0 or newer and the workflow-v2.0.0
     or newer chart.
 
 Helm Classic recognizes when a manifest inside a chart is marked as a "keeper"
