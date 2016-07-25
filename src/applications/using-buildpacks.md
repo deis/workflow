@@ -99,6 +99,21 @@ To use a custom buildpack, set the `BUILDPACK_URL` environment variable.
 
 On your next `git push`, the custom buildpack will be used.
 
+
+## Compile Hooks
+
+Sometimes, an application needs a way to stop or check if a service is running before building an
+app, and sometimes it requires notifying a service that the [Builder][] has finished compiling the
+app. In order to do this, an app can provide two files in their `bin/` directory:
+
+```
+bin/pre-compile
+bin/post-compile
+```
+
+The builder will run these commands before and after the build process, respectively.
+
+
 ## Using Private Repositories
 
 To pull code from private repositories, set the `SSH_KEY` environment variable to a private key
