@@ -62,8 +62,7 @@ Setting                                         | Description
 ----------------------------------------------- | ---------------------------------
 DEIS_DEPLOY_BATCHES                             | the number of pods to bring up and take down sequentially during a scale (default: number of available nodes)
 DEIS_DEPLOY_TIMEOUT                             | deploy timeout in seconds - there are 2 deploy methods, current (RC) and Deployments (see below) and this setting affects those a bit differently (default: 120)
-DEIS_KUBERNETES_DEPLOYMENTS                     | if enabled [Deployments][] is used to handle an application deploy instead of [ReplicationControllers][]
-                                                | any value is acceptable to turn on [Deployments][], to turn it off either remove or pass an empty string (default: off)
+DEIS_KUBERNETES_DEPLOYMENTS                     | if enabled, [Deployments][] is used to handle an application deploy instead of [ReplicationControllers][]. Any value is acceptable to enable [Deployments][]. (default: off)
 KUBERNETES_DEPLOYMENTS_REVISION_HISTORY_LIMIT   | how many [revisions][kubernetes-deployment-revision] Kubernetes keeps around of a given Deployment (default: all revisions)
 
 ### Deploy Timeout
