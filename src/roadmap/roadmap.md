@@ -4,7 +4,7 @@ The Deis Roadmap is a community document created as part of the open [Planning P
 Each roadmap item describes a high-level capability or grouping of features
 that are deemed important to the future of Deis.
 
-Given the project's rapid [Release Schedule](release-schedule.md), roadmap
+Given the project's rapid [Release Schedule](releases.md), roadmap
 items are designed to provide a sense of direction over many releases.
 
 ## Deis v2

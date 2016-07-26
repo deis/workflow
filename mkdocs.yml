@@ -62,8 +62,7 @@ pages:
   - Roadmap:
     - Planning Process: roadmap/planning-process.md
     - Roadmap: roadmap/roadmap.md
-    - Release Schedule: roadmap/release-schedule.md
-    - Release Checklist: roadmap/release-checklist.md
+    - Releases: roadmap/releases.md
   - Contributing:
     - Overview: contributing/overview.md
     - Design Documents: contributing/design-documents.md
