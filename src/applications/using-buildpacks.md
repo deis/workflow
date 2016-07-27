@@ -103,8 +103,8 @@ On your next `git push`, the custom buildpack will be used.
 ## Compile Hooks
 
 Sometimes, an application needs a way to stop or check if a service is running before building an
-app, and sometimes it requires notifying a service that the [Builder][] has finished compiling the
-app. In order to do this, an app can provide two files in their `bin/` directory:
+app, which may require notifying a service that the [Builder][] has finished compiling the app. In
+order to do this, an app can provide two files in their `bin/` directory:
 
 ```
 bin/pre-compile
