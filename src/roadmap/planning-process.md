@@ -34,4 +34,4 @@ Thanks to [Amy Lindburg][] and our friends at [Docker][] for their inspiration.
 [Docker]: https://www.docker.com/
 [event]: https://goo.gl/q27Jyh
 [Maintainers]: ../contributing/maintainers.md
-[Release Schedule]: release-schedule.md
+[Release Schedule]: releases.md
