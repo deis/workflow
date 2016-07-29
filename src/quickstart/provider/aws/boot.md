@@ -51,11 +51,6 @@ LICENSES     README.md    Vagrantfile  cluster/     contrib/     docs/        ex
 Before calling the Kubernetes setup scripts, we need to change a few defaults so that Deis Workflow works best. Type
 each of these commands into your terminal application before calling `kube-up.sh`.
 
-First, enable insecure registry support for Docker:
-```
-$ export KUBE_ENABLE_INSECURE_REGISTRY=true
-```
-
 Next, pick the AWS Availability Zone you would like to use. The boot script will create a new VPC in that region.
 
 ```
