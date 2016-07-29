@@ -39,9 +39,9 @@ LICENSES     README.md    Vagrantfile  cluster/     contrib/     docs/        ex
 Before calling the Kubernetes setup scripts, we need to change a few defaults so that Deis Workflow works best. Type
 each of these commands into your terminal application before calling `kube-up.sh`.
 
-First, enable insecure registry support for Docker and use Vagrant as the provider:
+First, use Vagrant as the provider:
+
 ```
-$ export KUBE_ENABLE_INSECURE_REGISTRY=true
 $ export KUBERNETES_PROVIDER=vagrant
 ```
 
