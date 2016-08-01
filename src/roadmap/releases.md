@@ -144,11 +144,39 @@ cp -r workflow-dev-e2e workflow-$WORKFLOW_RELEASE-e2e
 cp -r router-dev router-$WORKFLOW_RELEASE
 ```
 
+Use the `deisrel` tool to determine the latest component releases:
+```bash
+export GH_TOKEN=<my_github_api_token>  # set token to avoid rate-limiting errors
+# Create a JSON file with the components for the new release
+cat > components.json <<EOF
+{
+  "builder": ["builder"],
+  "controller": ["controller"],
+  "dockerbuilder": ["dockerbuilder"],
+  "fluentd": ["fluentd"],
+  "monitor": ["influxdb", "grafana", "telegraf"],
+  "logger": ["logger"],
+  "minio": ["minio"],
+  "nsq": ["nsqd"],
+  "postgres": ["database"],
+  "redis": ["loggerRedis"],
+  "registry": ["registry"],
+  "registry-proxy": ["registry_proxy"],
+  "router": ["router"],
+  "slugbuilder": ["slugbuilder"],
+  "slugrunner": ["slugrunner"],
+  "workflow-manager": ["workflowManager"]
+}
+EOF
+deisrel $HOME/.helmc/workspace/charts/workflow-$WORKFLOW_PREV_RELEASE/tpl/generate_params.toml \
+  components.json
+```
+
 Change the `generate_params.toml` file in **each** new chart as follows:
 
-  1. Set all `imagePullPolicy` values to `IfNotPresent`
+  1. Set all `dockerTag` values to latest releases for each component, as determined above
   1. Set all `org` values to `"deis"`
-  1. Set all `dockerTag` values to latest releases for each component
+  1. Set all `imagePullPolicy` values to `IfNotPresent`
   1. If there's a `[workflowManager]` section, change `versionsApiURL` to
      `"https://versions.deis.com"` and `doctorApiURL` to `"https://doctor.deis.com"`
 
