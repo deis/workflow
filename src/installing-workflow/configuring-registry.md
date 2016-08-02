@@ -11,7 +11,9 @@ Every component that relies on registry uses two inputs for configuration:
 1. Registry Location environment variable named `DEIS_REGISTRY_LOCATION`
 2. Access credentials stored as a Kubernetes secret named `registry-secret`
 
-The helm classic chart for Deis Workflow can be easily configured to connect Workflow components to off-cluster registry. Deis Workflow supports external registries which provide either short lived tokens which are valid only for a specified amount of time or long lived tokens(basic username/password) which are valid forever for authenticating to them. For those registries which provide short lived tokens for authentication Deis Workflow will generate and refresh them such that the deployed apps will only have access to the short lived tokens and not to the actual credentials for the registries.  
+The helm classic chart for Deis Workflow can be easily configured to connect Workflow components to off-cluster registry. Deis Workflow supports external registries which provide either short lived tokens which are valid only for a specified amount of time or long lived tokens(basic username/password) which are valid forever for authenticating to them. For those registries which provide short lived tokens for authentication Deis Workflow will generate and refresh them such that the deployed apps will only have access to the short lived tokens and not to the actual credentials for the registries.
+
+When using a private registry the docker images are no longer pulled by Deis Workflow Controller but rather is managed by Kubernetes. This will increase security and overall speed, however the `port` information can no longer be discovered. Instead the `port` information can be set via `deis config:set PORT=<port>` prior to deploying the application.  
 Deis Workflow currently supports
   1. Google Container Registry([gcr][gcr]).
   2. EC2 Container Registry([ecr][ecr]).
