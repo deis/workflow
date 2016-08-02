@@ -126,7 +126,16 @@ git commit -a -m "chore(workflow-$WORKFLOW_RELEASE): update WORKFLOW_RELEASE"
 git push upstream HEAD:master
 ```
 
-### Step 3: Create Helm Charts
+### Step 3: Tag Supporting Repositories
+
+Some Workflow components not in the Helm chart must also be tagged in sync with the release.
+Follow the [component release process](#how-to-release-a-component) above and ensure that
+these components are tagged:
+- [deis/workflow][]
+- [deis/workflow-cli][]
+- [deis/workflow-e2e][]
+
+### Step 4: Create Helm Charts
 
 For a patch release, check out the previous tag and cherry-pick commits onto it:
 
@@ -193,7 +202,7 @@ git push origin HEAD:release-$WORKFLOW_RELEASE
 
 Open a pull request at [deis/charts][] to merge this branch into master.
 
-### Step 4: Manual Testing
+### Step 5: Manual Testing
 
 Now it's time to go above and beyond current CI tests. Create a testing matrix spreadsheet (copying
 from the previous document is a good start) and sign up testers to cover all permutations.
@@ -210,7 +219,7 @@ When showstopper-level bugs are found, the process is as follows:
 1. Update that component's `dockerTag` value in the release chart(s) to the new semver tag
 1. Commit and push the chart changes to the release branch and restart testing
 
-### Step 5: Merge and Put CHANGELOG in GitHub Release Notes
+### Step 6: Merge and Put CHANGELOG in GitHub Release Notes
 
 When testing has completed without uncovering any new showstopper bugs and the charts PR has been
 reviewed successfully, merge it to master. Then update your local master branch, tag it with the
@@ -230,11 +239,6 @@ the project & component with its release, such as "Deis Workflow v2.3.0":
 deisrel changelog individual workflow $WORKFLOW_PREV_RELEASE HEAD $WORKFLOW_RELEASE | pbcopy
 open https://github.com/deis/workflow/releases/new?tag=$WORKFLOW_RELEASE
 ```
-
-### Step 6: Close GitHub Milestone
-
-Close the GitHub milestone for [deis/charts][] and for [deis/workflow][] and create new ones for
-the next planned release.
 
 ### Step 7: Update Documentation
 
@@ -278,5 +282,7 @@ You're done with the release. Nice job!
 [continuous delivery]: https://en.wikipedia.org/wiki/Continuous_delivery
 [deis/charts]: https://github.com/deis/charts
 [deis/workflow]: https://github.com/deis/workflow
+[deis/workflow-cli]: https://github.com/deis/workflow-cli
+[deis/workflow-e2e]: https://github.com/deis/workflow-e2e
 [Helm classic]: https://github.com/helm/helm-classic
 [semantic version]: http://semver.org
