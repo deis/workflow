@@ -251,7 +251,17 @@ bodies of each component's release notes should be concatenated into a single gi
 may be more than one release per component--and more than one set of release notes--included in the
 Workflow release.
 
-### Step 9: Let Everyone Know
+### Step 9: Close GitHub Milestones
+
+Create a pull request at [seed-repo](https://github.com/deis/seed-repo) to close the release
+milestone and create the next one. When changes are merged to seed-repo, milestones on all
+relevant projects will be updated. If there are open issues attached to the milestone, move them
+to the next upcoming milestone before merging the pull request.
+
+Milestones map to Deis Workflow releases in [deis/charts][]. These milestones do not correspond
+to individual component release tags.
+
+### Step 10: Let Everyone Know
 
 Let the rest of the team know they can start blogging and tweeting about the new Workflow release.
 Post a message to the #company channel on Slack. Include a link to the released chart and to the
