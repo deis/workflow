@@ -240,12 +240,7 @@ deisrel changelog individual workflow $WORKFLOW_PREV_RELEASE HEAD $WORKFLOW_RELE
 open https://github.com/deis/workflow/releases/new?tag=$WORKFLOW_RELEASE
 ```
 
-### Step 7: Close GitHub Milestone
-
-Close the GitHub milestone for [deis/charts][] and for [deis/workflow][] and create new ones for
-the next planned release.
-
-### Step 8: Update Documentation
+### Step 7: Update Documentation
 
 Create a new pull request at [deis/workflow][] that updates version references to the new release.
 Use `git grep $WORKFLOW_PREV_RELEASE` to find any references, but be careful not to change
@@ -253,14 +248,14 @@ Use `git grep $WORKFLOW_PREV_RELEASE` to find any references, but be careful not
 older releases to `$WORKFLOW_PREV_RELEASE`, so the documentation always describes upgrading
 between recent versions.
 
-### Step 9: Assemble Master Changelog
+### Step 8: Assemble Master Changelog
 
 Each component already updated its release notes on GitHub with CHANGELOG content. The
 bodies of each component's release notes should be concatenated into a single gist. Note that there
 may be more than one release per component--and more than one set of release notes--included in the
 Workflow release.
 
-### Step 10: Close GitHub Milestones
+### Step 9: Close GitHub Milestones
 
 Create a pull request at [seed-repo](https://github.com/deis/seed-repo) to close the release
 milestone and create the next one. When changes are merged to seed-repo, milestones on all
@@ -270,7 +265,7 @@ to the next upcoming milestone before merging the pull request.
 Milestones map to Deis Workflow releases in [deis/charts][]. These milestones do not correspond
 to individual component release tags.
 
-### Step 11: Let Everyone Know
+### Step 10: Let Everyone Know
 
 Let the rest of the team know they can start blogging and tweeting about the new Workflow release.
 Post a message to the #company channel on Slack. Include a link to the released chart and to the
