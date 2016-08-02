@@ -80,12 +80,14 @@ zero is considered a pass, while a non-zero status code is considered a fail.
 healthy if the check can establish a connection. `tcpSocket` probes accept a port number to perform
 the socket connection on the Container.
 
-Health checks can be configured on a per-application basis using `deis healthchecks:set`. To
+Health checks can be configured on a per-proctype basis for each application using `deis healthchecks:set`. If no type is mentioned then the health checks are applied to default proc types, web or cmd, whichever is present. To
 configure a `httpGet` liveness probe:
 
 ```
-$ deis healthchecks:set liveness httpGet 80
+$ deis healthchecks:set liveness httpGet 80 --type cmd
 === peachy-waxworks Healthchecks
+
+cmd:
 Liveness
 --------
 Initial Delay (seconds): 50
@@ -110,6 +112,8 @@ $ deis healthchecks:set liveness httpGet 80 \
     --path /welcome/index.html \
     --header "X-Client-Version=v1.0"
 === peachy-waxworks Healthchecks
+
+web/cmd:
 Liveness
 --------
 Initial Delay (seconds): 50
@@ -129,8 +133,10 @@ No readiness probe configured.
 To configure an `exec` readiness probe:
 
 ```
-$ deis healthchecks:set readiness exec -- /bin/echo -n hello
+$ deis healthchecks:set readiness exec -- /bin/echo -n hello --type cmd
 === peachy-waxworks Healthchecks
+
+cmd:
 Liveness
 --------
 No liveness probe configured.
@@ -150,8 +156,10 @@ TCP Socket Probe: N/A
 You can overwrite a probe by running `deis healthchecks:set` again:
 
 ```
-$ deis healthchecks:set readiness httpGet 80
+$ deis healthchecks:set readiness httpGet 80 --type cmd
 === peachy-waxworks Healthchecks
+
+cmd:
 Liveness
 --------
 No liveness probe configured.
