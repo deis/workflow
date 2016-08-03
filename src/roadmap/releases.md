@@ -72,17 +72,21 @@ export NEW_RELEASE=v2.2.1  # changelog agrees it's a patch release
 
 ### Step 2: Push the Release Tag
 
-Push the new release tag to the GitHub repository:
+Generate the CHANGELOG with the [`deisrel`](https://github.com/deis/deisrel.git) tool and paste
+it into an annotation on the new release tag. Edit out any unnecessary blank lines. Then push the
+new release tag to the GitHub repository:
 
 ```bash
-git tag $NEW_RELEASE && git push upstream $NEW_RELEASE
+deisrel changelog individual $COMPONENT $OLD_RELEASE $NEW_SHA $NEW_RELEASE | pbcopy
+git tag -a $NEW_RELEASE  # paste the CHANGELOG into your editor and save
+git push upstream $NEW_RELEASE
 ```
 
 ### Step 3: Put CHANGELOG in GitHub Release Notes
 
-Generate the CHANGELOG with the [`deisrel`](https://github.com/deis/deisrel.git) tool and paste
-it into the body of release notes for the component in GitHub. In the "Release Title" field, use
-the project & component with its release, such as "Deis Controller v2.2.1":
+Paste the same CHANGELOG from the previous step into the body of release notes for the component
+in GitHub. In the "Release Title" field, use the project & component with its release, such as
+"Deis Controller v2.2.1":
 
 ```bash
 deisrel changelog individual $COMPONENT $OLD_RELEASE $NEW_SHA $NEW_RELEASE | pbcopy
@@ -222,18 +226,20 @@ When showstopper-level bugs are found, the process is as follows:
 ### Step 6: Merge and Put CHANGELOG in GitHub Release Notes
 
 When testing has completed without uncovering any new showstopper bugs and the charts PR has been
-reviewed successfully, merge it to master. Then update your local master branch, tag it with the
-release, and push the tag:
+reviewed successfully, merge it to master. Then update your local master branch and generate the
+CHANGELOG with the [`deisrel`](https://github.com/deis/deisrel.git) tool. Paste that content into
+an annotation on the new release tag, then push the tag:
 
 ```bash
 git checkout master && git fetch --tags upstream master && git merge upstream/master
-git tag $WORKFLOW_RELEASE
+deisrel changelog individual workflow $WORKFLOW_PREV_RELEASE HEAD $WORKFLOW_RELEASE | pbcopy
+git tag -a $WORKFLOW_RELEASE  # paste the CHANGELOG into your editor and save
 git push upstream $WORKFLOW_RELEASE
 ```
 
-Generate the CHANGELOG with the [`deisrel`](https://github.com/deis/deisrel.git) tool and paste
-it into the body of release notes for [deis/charts][] in GitHub. In the "Release Title" field, use
-the project & component with its release, such as "Deis Workflow v2.3.0":
+Paste the same CHANGELOG from the previous step into the body of release notes for [deis/charts][]
+in GitHub. In the "Release Title" field, use the project & component with its release, such as
+"Deis Workflow v2.3.0":
 
 ```bash
 deisrel changelog individual workflow $WORKFLOW_PREV_RELEASE HEAD $WORKFLOW_RELEASE | pbcopy
