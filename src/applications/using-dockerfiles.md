@@ -11,7 +11,7 @@ For **Dockerfile** based application deploys via `git push`, Deis Workflow ident
 
 - Run `deis keys:add` to upload your SSH key to Deis Workflow.
 
-- ```
+```
 $ deis keys:add ~/.ssh/id_deis.pub
 Uploading id_deis.pub to deis... done
 ```
