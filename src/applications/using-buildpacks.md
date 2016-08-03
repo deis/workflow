@@ -2,6 +2,21 @@
 
 Deis supports deploying applications via [Heroku Buildpacks][]. Buildpacks are useful if you're interested in following Heroku's best practices for building applications or if you are deploying an application that already runs on Heroku.
 
+## Add SSH Key
+ 
+For **Buildpack** based application deploys via `git push`, Deis Workflow identifies users via SSH keys. SSH keys are pushed to the platform and must be unique to each user.
+
+- See [this document](../users/ssh-keys.md/#generate-an-ssh-key) for instructions on how to generate an SSH key.
+
+- Run `deis keys:add` to upload your SSH key to Deis Workflow.
+
+- ```
+$ deis keys:add ~/.ssh/id_deis.pub
+Uploading id_deis.pub to deis... done
+```
+
+Read more about adding/removing SSH Keys [here](../users/ssh-keys.md/#adding-and-removing-ssh-keys).
+
 ## Prepare an Application
 
 If you do not have an existing application, you can clone an example application that demonstrates the Heroku Buildpack workflow.
@@ -12,7 +27,7 @@ If you do not have an existing application, you can clone an example application
 
 ## Create an Application
 
-Use `deis create` to create an application on the [controller][].
+Use `deis create` to create an application on the [Controller][].
 
     $ deis create
     Creating application... done, created skiing-keypunch
