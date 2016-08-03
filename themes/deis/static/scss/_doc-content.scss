@@ -19,12 +19,11 @@
     // link styles
     a {
         background-color: lighten($light1, 4%);
-        box-shadow: 0 0 0 3px lighten($light1, 4%);
         color: darken($blue, 3.5%);
         @include transition;
 
         &:hover {
-            color: $blue;
+            color: $lightblue;
         }
     }
 
