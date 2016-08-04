@@ -28,14 +28,6 @@ The Workflow Chart marks the "deis" Kubernetes `Namespace` and the `Service`
 for the registry and router as keepers. This leaves the external `LoadBalancer`
 intact so routing and DNS are preserved while reinstalling Workflow.
 
-To remove Workflow completely from a Kubernetes cluster, run the following:
-
-```
-$ helmc uninstall -n deis -y workflow-v2.1.0  # or the installed Workflow version
-$ kubectl delete ns deis  # Be sure you want to delete the
-                          # Namespace and all its contents!
-```
-
 See the Helm Classic documentation for more detail about [keeper manifests].
 
 ## Process
