@@ -114,7 +114,7 @@ specific commits from master.
 Export two environment variables that will be used in later steps:
 
 ```bash
-export WORKFLOW_RELEASE=v2.3.0 WORKFLOW_PREV_RELEASE=v2.2.0  # for example
+export WORKFLOW_RELEASE=v2.4.0 WORKFLOW_PREV_RELEASE=v2.3.0  # for example
 ```
 
 ### Step 2: Update Jenkins Jobs
@@ -278,8 +278,8 @@ Post a message to the #company channel on Slack. Include a link to the released 
 master CHANGELOG:
 
 ```
-@here Deis Workflow v2.3.0 is now live!
-Release notes: https://github.com/deis/charts/releases/tag/v2.3.0
+@here Deis Workflow v2.4.0 is now live!
+Release notes: https://github.com/deis/charts/releases/tag/v2.4.0
 Master CHANGELOG: https://gist.github.com/mboersma/dcb300c1530552dc612b19f418731234
 ```
 
