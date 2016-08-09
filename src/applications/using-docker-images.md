@@ -84,7 +84,7 @@ the Deis Workflow Controller but rather is managed by Kubernetes. This will incr
 however the `port` information can no longer be discovered. Instead the `port` information can be set via
 `deis config:set PORT=80` prior to setting the registry information.
 
-**NOTE:**
+!!! note
     Currently [GCR.io][] and [ECR][] in short lived auth token mode are not supported.
 
 [container]: ../reference-guide/terms.md#container
