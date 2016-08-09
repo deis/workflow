@@ -55,9 +55,11 @@ The Controller stack includes:
 
 - Django API Server for handling API calls
 
+
 ## Key
 
 Deis keys are SSH Keys used during the git push process. Each user can use the client to manage a list of keys on the Controller.
+
 
 ## Release
 
@@ -73,3 +75,8 @@ The Scheduler is responsible for creating, starting, stopping, and destroying Co
 The Scheduler must decide which machines are eligible to run these container jobs. Scheduler backends vary in the details of their job allocation policies and whether or not they are resource-aware, among other features.
 
 The Deis scheduler client is implemented in the Controller component.
+
+
+## Service
+
+A Kubernetes Service is an abstraction which defines a logical set of Pods and a policy by which to access them. In Workflow, a Service is used to load-balance an application's [Containers](#containers) internally through a virtual IP address.
