@@ -1,24 +1,107 @@
-# Deis Roadmap
+# Deis Workflow Roadmap
 
-The Deis Roadmap is a community document created as part of the open [Planning Process][].
-Each roadmap item describes a high-level capability or grouping of features
-that are deemed important to the future of Deis.
+The Deis Workflow Roadmap is a community document created as part of the open
+[Planning Process](planning-process.md). Each roadmap item describes a high-level capability or
+grouping of features that are deemed important to the future of Deis.
 
 Given the project's rapid [Release Schedule](releases.md), roadmap
 items are designed to provide a sense of direction over many releases.
 
-## Deis v2
+## Deployments
 
-A complete roadmap for post 2.0 will be provided once we are closer to release.
+Deis Workflow should use Kubernetes-native constructs wherever possible. By
+switching to `Deployments`, the controller component will no longer need to
+orchestrate rolling deploys. Instead, controller can delegate that work to
+Kubernetes control loops.
 
-Much of the Deis team's efforts are focused on Deis v2, which will see the Deis
-platform running on Kubernetes.
+* [X] Support Kubernetes Deployments <https://github.com/deis/controller/pull/854>
+* [ ] Kubernetes Deployments by default
 
-For details on Deis v2, see the [Deis v2 Design Document][].
+## Private Registry and Native IaaS Registry Support
 
-* [Alpha Issues](https://github.com/deis/deis/issues/4743)
-* [Beta Issues](https://github.com/deis/deis/issues/4809)
-* [Release Candidate Issues]()
+Many users of Deis v1 requested the ability to push and pull application
+artifacts from private Docker registries. While v1 supported a
+[workaround](https://github.com/deis/deis/issues/2232) or two, operators
+usually had to intervene or build custom tooling. Deis Workflow aims to make it
+simple to configure your Workflow install to pull and push images to private
+registries.
 
-[deis v2 design document]: https://github.com/deis/deis/issues/4582
-[v2]: https://github.com/deis/deis/labels/v2
+* [X] Pull from private registry <https://github.com/deis/workflow/pull/201>
+* [ ] Push to private registry for builder
+* [ ] Support native auth strategies for ECR and GCR
+
+## Application Management
+
+Various application-related features that give developers and operators
+flexibility in how applications are managed by the platform:
+
+* [ ] Per-process type health checks: <https://github.com/deis/controller/issues/881>
+* [ ] Application Maintenance Mode: <https://github.com/deis/deis/issues/3722>
+* [ ] Enforce SSL Per-Application: <https://github.com/deis/router/issues/148>
+* [ ] Per-application IP Whitelisting via CLI: <https://github.com/deis/controller/issues/240>
+* [ ] Per-application Kubernetes Network Policy:
+
+### Private Application Support
+
+* [ ] Private Application Support: <https://github.com/deis/controller/pull/934>
+
+Related issues:
+
+* <https://github.com/deis/deis/issues/4391>
+* <https://github.com/deis/deis/issues/2715>
+
+## Application Autoscaling
+
+Developers should be able to define an autoscaling policy per application
+process type. Under the covers, Workflow should use HorizontalPodAutoscaling.
+
+* [ ] Application Autoscaling <https://github.com/deis/workflow/issues/403>
+
+## Interactive `deis run /bin/bash`
+
+Provide the ability for developers to launch an interactive terminal session in
+their application environment.
+
+Related issues:
+
+* <https://github.com/deis/workflow-cli/issues/98>
+* <https://github.com/deis/deis/issues/117>
+
+## Log Streaming
+
+Stream application logs via `deis logs -f` <https://github.com/deis/deis/issues/465>
+
+## Teams and Permissions
+
+Teams and Permissions represents a more flexible permissions model to allow
+more nuanced control to applications, capabilities and resources on the
+platform. There have been a number of proposals in this area which need to be
+reconciled for Deis Workflow before we begin implementation.
+
+Related issues:
+
+* Deploy Keys: <https://github.com/deis/deis/issues/3875>
+* Teams: <https://github.com/deis/deis/issues/4173>
+* Fine grained permissions: <https://github.com/deis/deis/issues/4150>
+* Admins create apps only: <https://github.com/deis/deis/issues/4052>
+* Admin Certificate Permissions: <https://github.com/deis/deis/issues/4576#issuecomment-170987223>
+
+## Monitoring
+
+* [ ] deis/controller emitting metrics
+* [ ] Define and deliver alerts with Kapacitor: <https://github.com/deis/monitor/issues/44>
+
+## Workflow Addons/Services
+
+Developers should be able to quickly and easily provision application
+dependencies using a services or addon abstraction.
+<https://github.com/deis/deis/issues/231>
+
+## Inbound/Outbound Webhooks
+
+Deis Workflow should be able to send and receive webhooks from external
+systems. Facilitating integration with third party services like GitHub,
+Gitlab, Slack, Hipchat.
+
+* [ ] Send webhook on platform events: <https://github.com/deis/deis/issues/1486>
+* [ ] Trigger automatic deploy from GitHub Deployments API
