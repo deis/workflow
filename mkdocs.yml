@@ -76,8 +76,9 @@ pages:
     - Conduct: contributing/conduct.md
     - Maintainers: contributing/maintainers.md
   - Reference Guide:
-    - Terms: reference-guide/terms.md
+    - Migrating from Deis v1: reference-guide/migration.md
     - Creating a Self-Signed SSL Certificate: reference-guide/creating-a-self-signed-ssl-certificate.md
+    - Terms: reference-guide/terms.md
     # FIXME (bacongobbler): our custom deis theme only supports a toctree depth of 2 due to css issues
     - Controller API v2.0: reference-guide/controller-api/v2.0.md
     - Controller API v2.1: reference-guide/controller-api/v2.1.md
