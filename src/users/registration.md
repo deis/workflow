@@ -62,11 +62,11 @@ Deis Workflow supports three registration modes:
 | admin\_only       | Only existing admins may register new users     |
 
 To modify the registration mode for Workflow you may add or modify the `REGISTRATION_MODE` environment variable for the
-controller component. If Deis Workflow is already running, use `kubectl --namespace=deis edit deployment deis-controller`:
+controller component. If Deis Workflow is already running, use:
 
-Find the `REGISTRATION_MODE` environment variable in the template file or add the appropriate section:
+`kubectl patch deployments deis-controller -p '{"spec":{"template":{"spec":{"containers":[{"name":"deis-controller","env":[{"name":"REGISTRATION_MODE","value":"disabled"}]}]}}}}'`
 
-![](../images/controller-registration-mode.png)
+Modify the `value` portion to match the desired mode.
 
 Kubernetes will automatically deploy a new ReplicaSet and corresponding Pod with the new environment variables set.
 
