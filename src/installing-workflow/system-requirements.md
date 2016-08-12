@@ -9,6 +9,17 @@ Kubernetes v1.1, and Kubernetes v1.3.0 through v1.3.3 have
 [a bug when mounting secrets](https://github.com/deis/workflow/issues/372) which prevents Deis
 Workflow from starting.
 
+## Storage Requirements
+
+A variety of Deis Workflow components rely on an object storage system to do their work, including storing application
+slugs, Docker images and database logs.
+
+Deis Workflow ships with Minio by default, which provides in-cluster, ephemeral object storage. This means that if the
+Minio server crashes, all data will be lost. Therefore, Minio should be used for development or testing only.
+
+Workflow supports Amazon Simple Storage Service (S3), Google Cloud Storage (GCS), OpenShift Swift, and Azure Blob
+Storage. See [configuring object storage][storage-configuration] for setup instructions.
+
 ## Resource Requirements
 
 When deploying Deis Workflow, it's important to provision machines with adequate resources. Deis is a highly-available
@@ -39,5 +50,6 @@ and instability.
 If you are using Docker with OverlayFS, you must disable SELinux by adding `--selinux-enabled=false` to
 `EXTRA_DOCKER_OPTS`. For more background information, see:
 
+* [storage-configuration](configuring-object-storage.md)
 * [https://github.com/docker/docker/issues/7952](https://github.com/docker/docker/issues/7952)
 * [https://github.com/deis/workflow/issues/63](https://github.com/deis/postgres/issues/63)
