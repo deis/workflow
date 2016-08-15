@@ -7,6 +7,12 @@ Common issues that users have run into when provisioning Workflow are detailed b
 For information on troubleshooting a failing component, see
 [Troubleshooting with Kubectl][kubectl].
 
+## An Application Fails to Start
+
+For information on troubleshooting application deployment issues, see
+[Troubleshooting Applications][troubleshooting-app].
+
+
 ## Permission denied (publickey)
 
 The most common problem for this issue is the user forgetting to run `deis keys:add` or add their
@@ -21,3 +27,4 @@ Running into something not detailed here? Please [open an issue][issue] or hop i
 [kubectl]: kubectl.md
 [issue]: https://github.com/deis/workflow/issues/new
 [slack]: http://slack.deis.io/
+[troubleshooting-app]: applications.md

@@ -60,6 +60,7 @@ pages:
   - Troubleshooting:
     - Troubleshooting Workflow: troubleshooting/index.md
     - Troubleshooting using Kubectl: troubleshooting/kubectl.md
+    - Toubleshooting Applications: troubleshooting/applications.md
   - Roadmap:
     - Planning Process: roadmap/planning-process.md
     - Roadmap: roadmap/roadmap.md
