@@ -51,21 +51,31 @@ To get help on subcommands, use `deis help [subcommand]`:
 
 ## Support for Multiple Profiles
 
-The CLI reads from the default `client` profile which is located on your
+The CLI reads from the default `client` profile, which is located on your
 workstation at `$HOME/.deis/client.json`.
 
 Easily switch between multiple Deis Workflow installations or users by setting
-the `$DEIS_PROFILE` environment variable.
+the `$DEIS_PROFILE` environment variable or by using the `-c` flag.
 
-    $ cat ~/.deis/production.json && echo
-    {"username":"deis","controller":"http://deis-prod.example.com","token":"37de3...8776"}
-    $ DEIS_PROFILE=production deis whoami
-    You are deis at http://deis-prod.example.com
+There are two ways to set the `$DEIS_PROFILE` option.
 
-    $ cat ~/.deis/staging.json && echo
-    {"username":"deis","controller":"http://deis-prod.example.com","token":"67bdc...196a"}
-    $ DEIS_PROFILE=staging deis whoami
-    You are deis at http://deis-staging.example.com
+1. Path to a json configuration file.
+2. Profile name. If you set profile to just a name, it will be saved alongside the default profile,
+   in `$HOME/.deis/<name>.json`.
+
+Examples:
+
+    $ DEIS_PROFILE=production deis login deis.production.com
+    ...
+    Configuration saved to /home/testuser/.deis/production.json
+    $ DEIS_PROFILE=~/config.json deis login deis.example.com
+    ...
+    Configuration saved to /home/testuser/config.json
+
+The configuration flag works identically to and overrides `$DEIS_PROFILE`:
+
+    $ deis whoami -c ~/config.json
+    You are deis at deis.example.com
 
 ## Proxy Support
 
