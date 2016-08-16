@@ -99,15 +99,6 @@ Where you will see differences while using the CLI is `deis ps:list` will output
 Behind the scenes your application deploy will be built up of a Deployment object per process type,
 each having multiple ReplicaSets (one per release) which in turn manage the Pods running your application.
 
-!!! important
-	If `DEIS_KUBERNETES_DEPLOYMENTS` is enabled and there is a deployment in progress when the
-	controller starts, the controller will crash until the deployment is finished. This issue can
-	specifically manifest itself if the controller crashes while you are scaling an app.
-	Kubernetes will automatically restart the controller, but it will not start back up properly
-	until the scale operation (which will complete in the background) completes.
-	We intend to fix this issue soon and are tracking the work in
-	[https://github.com/deis/controller/issues/903](https://github.com/deis/controller/issues/903).
-
 [install client]: ../users/cli.md#installation
 [application]: ../reference-guide/terms.md#application
 [controller]: ../understanding-workflow/components.md#controller
