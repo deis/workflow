@@ -13,47 +13,74 @@ Every component that relies on object storage uses two inputs for configuration:
 
 The helm classic chart for Deis Workflow can be easily configured to connect Workflow components to off-cluster object storage. Deis Workflow currently supports Google Compute Storage, Amazon S3, Azure Blob Storage and OpenStack Swift Storage.
 
-* **Step 1:** Create storage buckets for each of the Workflow subsystems: builder, registry and database
-    * Note: Depending on your chosen object storage you may need to provide globally unique bucket names.
-    * Note: If you provide credentials with sufficient access to the underlying storage, Workflow components will create the buckets if they do not exist.
-* **Step 2:** If applicable, generate credentials that have write access to the storage buckets created in Step 1
-* **Step 3:** If you haven't already fetched the helm classic chart, do so with `helmc fetch deis/workflow-v2.3.0`
-* **Step 4:** Update storage details either by setting the appropriate environment variables or by modifying the template file `tpl/generate_params.toml`
-    * **1.** Using environment variables:
-        * Set `STORAGE_TYPE` to `s3`, `azure` or `gcs`, then set the following environment variables accordingly.
-          * For `STORAGE_TYPE=gcs`:
+### Step 1: Create storage buckets
 
-            ```
-            export GCS_KEY_JSON, GCS_REGISTRY_BUCKET, GCS_DATABASE_BUCKET, GCS_BUILDER_BUCKET
-            ```
+Create storage buckets for each of the Workflow subsystems: `builder`, `registry`, and `database`.
 
-          * For `STORAGE_TYPE=s3`:
+Depending on your chosen object storage you may need to provide globally unique bucket names.
 
-            ```
-            export AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_REGISTRY_BUCKET, AWS_DATABASE_BUCKET, AWS_BUILDER_BUCKET, S3_REGION
-            ```
-              * To use [IAM credentials][aws-iam], it is not necessary to set `AWS_ACCESS_KEY` or `AWS_SECRET_KEY`.
+If you provide credentials with sufficient access to the underlying storage, Workflow components will create the buckets if they do not exist.
 
-          * For `STORAGE_TYPE=azure`:
+### Step 2: Generate storage credentials
 
-            ```
-            export AZURE_ACCOUNT_NAME, AZURE_ACCOUNT_KEY, AZURE_REGISTRY_CONTAINER, AZURE_DATABASE_CONTAINER, AZURE_BUILDER_CONTAINER
-            ```
+If applicable, generate credentials that have create and write access to the storage buckets created in Step 1.
 
-          * For `STORAGE_TYPE=swift`:
+If you are using AWS S3 and your Kubernetes nodes are configured with appropriate IAM API keys via InstanceRoles, you do not need to create API credentials. Do, however, validate that the InstanceRole has appropriate permissions to the configured buckets!
 
-            ```
-            export SWIFT_USERNAME, SWIFT_PASSWORD, SWIFT_AUTHURL, SWIFT_AUTHVERSION, SWIFT_REGISTRY_CONTAINER, SWIFT_DATABASE_CONTAINER, SWIFT_BUILDER_CONTAINER
-            ```
-              * To specify tenant set `SWIFT_TENANT` if the auth version is 2 or more.
+### Step 3: Fetch Workflow charts
 
-    * **2.** Using template file `tpl/generate_params.toml`:
-        * Open the helm classic chart with `helmc edit workflow-v2.3.0` and look for the template file `tpl/generate_params.toml`
-        * Update the `storage` parameter to reference the storage platform you are using: `s3`, `azure`, `gcs`
-        * Update the values in the section which corresponds to your storage type, including region, bucket names and access credentials
-    * Note: you do not need to base64 encode any of these values as Helm Classic will handle encoding automatically
-* **Step 5:** Save your changes and re-generate the helm classic chart by running `helmc generate -x manifests workflow-v2.3.0`
-* **Step 6:** Check the generated file in your manifests directory, you should see `deis-objectstorage-secret.yaml`
+If you haven't already fetched the Helm Classic chart, do so with `helmc fetch deis/workflow-v2.3.0`
+
+### Step 4: Configure Workflow charts
+
+Operators should configure object storage by either populating a set of environment variables or editing the the Helm Classic parameters file before running `helmc generate`. Both options are documented below:
+
+**Option 1:** Using environment variables
+
+| Storage Type | Required Variables                                                                                                                                          | Notes                                                                                               |
+| ---          | ---                                                                                                                                                         | ---                                                                                                 |
+| s3           | `AWS_ACCESS_KEY`, `AWS_SECRET_KEY`, `AWS_REGISTRY_BUCKET`, `AWS_DATABASE_BUCKET`, `AWS_BUILDER_BUCKET`, `S3_REGION`                                         | To use [IAM credentials][aws-iam], it is not necessary to set `AWS_ACCESS_KEY` or `AWS_SECRET_KEY`. |
+| gcs          | `GCS_KEY_JSON`, `GCS_REGISTRY_BUCKET`, `GCS_DATABASE_BUCKET`, `GCS_BUILDER_BUCKET`                                                                          |                                                                                                     |
+| azure        | `AZURE_ACCOUNT_NAME`, `AZURE_ACCOUNT_KEY`, `AZURE_REGISTRY_CONTAINER`, `AZURE_DATABASE_CONTAINER`, `AZURE_BUILDER_CONTAINER`                                |                                                                                                     |
+| swift        | `SWIFT_USERNAME`, `SWIFT_PASSWORD`, `SWIFT_AUTHURL`, `SWIFT_AUTHVERSION`, `SWIFT_REGISTRY_CONTAINER`, `SWIFT_DATABASE_CONTAINER`, `SWIFT_BUILDER_CONTAINER` | To specify tenant set `SWIFT_TENANT` if the auth version is 2 or later.                             |
+
+!!! note
+	These environment variables should be set **before** running `helmc generate` in Step 5.
+
+**Option 2:** Using template file `tpl/generate_params.toml`
+
+* Edit Helm Classic chart by running `helmc edit workflow-v2.3.0` and look for the template file `tpl/generate_params.toml`
+* Update the `storage` parameter to reference the platform you are using, e.g. `s3`, `azure`, `gcs`, or `swift`
+* Find the corresponding section for your storage type and provide appropriate values including region, bucket names, and access credentials.
+* Save your changes to `tpl/generate_params.toml`.
+
+!!! note
+	You do not need to base64 encode any of these values as Helm Classic will handle encoding automatically.
+
+### Step 5: Generate manifests
+
+Generate the Workflow chart by running `helmc generate -x manifests workflow-v2.3.0`.
+
+### Step 6: Verify credentials
+
+Helm Classic stores the object storage configuration as a Kubernetes secret.
+
+You may check the contents of the generated file named `deis-objectstorage-secret.yaml` in the `helmc` workspace directory:
+```
+$ cat $(helmc home)/workspace/charts/workflow-v2.3.0/manifests/deis-objectstorage-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: objectstorage-keyfile
+...
+data:
+  accesskey: bm9wZSBub3BlCg==
+  secretkey: c3VwZXIgbm9wZSBub3BlIG5vcGUgbm9wZSBub3BlCg==
+  region: ZWFyZgo=
+  registry-bucket: bXlmYW5jeS1yZWdpc3RyeS1idWNrZXQK
+  database-bucket: bXlmYW5jeS1kYXRhYmFzZS1idWNrZXQK
+  builder-bucket: bXlmYW5jeS1idWlsZGVyLWJ1c2tldAo=
+```
 
 You are now ready to `helmc install workflow-v2.3.0` using your desired object storage.
 
@@ -90,7 +117,8 @@ If you are using slugbuilder as a standalone component the following configurati
 - `TAR_PATH` - The location of the application `.tar` archive, relative to the configured bucket for builder e.g. `home/burley-yeomanry:git-3865c987/tar`
 - `PUT_PATH` - The location to upload the finished slug, relative to the configured bucket fof builder e.g. `home/burley-yeomanry:git-3865c987/push`
 
-**Note: these environment variables are case-sensitive**
+!!! note
+	These environment variables are case-sensitive.
 
 ### [deis/slugrunner](https://github.com/deis/slugrunner)
 
