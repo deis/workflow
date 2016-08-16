@@ -19,6 +19,23 @@ env:
     value: "admin_only"
 ```
 
+## Setting Resource limits
+
+You can set resource limits to Workflow components by modifying the template file `tpl/generate_params.toml`.
+This file has a section for each Workflow component. To set a limit to any Workflow component just add `limits_cpu`, `limits_memory`
+in the section and set them to the appropriate values.
+
+Below is an example of how the builder section of `tpl/generate_params.toml` might look with CPU and memory limits set:
+
+```
+[builder]
+org = "deisci"
+pullPolicy = "Always"
+dockerTag = "canary"
+limits_cpu = "100m"
+limits_memory = "50Mi"
+```
+
 ## Customizing the Builder
 
 The following environment variables are tunable for the [Builder][] component:
