@@ -61,8 +61,7 @@ It is possible to configure a few of the [globally tunable](../applications/mana
 Setting                                         | Description
 ----------------------------------------------- | ---------------------------------
 DEIS_DEPLOY_BATCHES                             | the number of pods to bring up and take down sequentially during a scale (default: number of available nodes)
-DEIS_DEPLOY_TIMEOUT                             | deploy timeout in seconds - there are 2 deploy methods, current (RC) and Deployments (see below) and this setting affects those a bit differently (default: 120)
-DEIS_KUBERNETES_DEPLOYMENTS                     | if enabled, [Deployments][] is used to handle an application deploy instead of [ReplicationControllers][]. Any value is acceptable to enable [Deployments][]. (default: off)
+DEIS_DEPLOY_TIMEOUT                             | deploy timeout in seconds per deploy batch (default: 120)
 KUBERNETES_DEPLOYMENTS_REVISION_HISTORY_LIMIT   | how many [revisions][kubernetes-deployment-revision] Kubernetes keeps around of a given Deployment (default: all revisions)
 
 ### Deploy Timeout
@@ -88,16 +87,16 @@ Additionally the timeout system accounts for slow image pulls by adding an addit
 
 ### Deployments
 
-When `DEIS_KUBERNETES_DEPLOYMENTS=1` is set on an application then Deis Workflow will use [Deployments][] internally instead of [ReplicationControllers][].
+Workflow uses [Deployments][] for deploys. In prior versions [ReplicationControllers][] were used with the ability to turn on Deployments via `DEIS_KUBERNETES_DEPLOYMENTS=1`.
 
-The advantage of that is that rolling-updates will happen server-side in Kubernetes instead of in Deis Workflow Controller,
+The advantage of [Deployments][] is that rolling-updates will happen server-side in Kubernetes instead of in Deis Workflow Controller,
 along with a few other Pod management related functionality. This allows a deploy to continue even when the CLI connection is interrupted.
-
-Deis Workflow will behave the same way with `DEIS_KUBERNETES_DEPLOYMENTS` enabled or disabled. The changes are behind the scenes.
-Where you will see differences while using the CLI is `deis ps:list` will output Pod names differently.
 
 Behind the scenes your application deploy will be built up of a Deployment object per process type,
 each having multiple ReplicaSets (one per release) which in turn manage the Pods running your application.
+
+Deis Workflow will behave the same way with `DEIS_KUBERNETES_DEPLOYMENTS` enabled or disabled (only applicable to versions prior to 2.4).
+The changes are behind the scenes. Where you will see differences while using the CLI is `deis ps:list` will output Pod names differently.
 
 [install client]: ../users/cli.md#installation
 [application]: ../reference-guide/terms.md#application
