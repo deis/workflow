@@ -239,7 +239,7 @@ git push upstream $WORKFLOW_RELEASE
 
 Paste the same CHANGELOG from the previous step into the body of release notes for [deis/charts][]
 in GitHub. In the "Release Title" field, use the project & component with its release, such as
-"Deis Workflow v2.3.0":
+"Deis Workflow v2.4.0":
 
 ```bash
 deisrel changelog individual workflow $WORKFLOW_PREV_RELEASE HEAD $WORKFLOW_RELEASE | pbcopy
