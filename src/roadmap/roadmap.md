@@ -14,8 +14,8 @@ switching to `Deployments`, the controller component will no longer need to
 orchestrate rolling deploys. Instead, controller can delegate that work to
 Kubernetes control loops.
 
-* [X] Support Kubernetes Deployments <https://github.com/deis/controller/pull/854>
-* [ ] Kubernetes Deployments by default
+* [X] Support Kubernetes Deployments <https://github.com/deis/controller/pull/854> (Workflow 2.2)
+* [X] Kubernetes Deployments by default (Workflow 2.4)
 
 ## Private Registry and Native IaaS Registry Support
 
@@ -26,24 +26,24 @@ usually had to intervene or build custom tooling. Deis Workflow aims to make it
 simple to configure your Workflow install to pull and push images to private
 registries.
 
-* [X] Pull from private registry <https://github.com/deis/workflow/pull/201>
-* [ ] Push to private registry for builder
-* [ ] Support native auth strategies for ECR and GCR
+* [X] Pull from private registry <https://github.com/deis/workflow/pull/201> (Workflow 2.0)
+* [X] Push to private registry for builder (Workflow 2.3)
+* [X] Support native auth strategies for ECR and GCR (Workflow 2.4)
 
 ## Application Management
 
 Various application-related features that give developers and operators
 flexibility in how applications are managed by the platform:
 
-* [ ] Per-process type health checks: <https://github.com/deis/controller/issues/881>
-* [ ] Application Maintenance Mode: <https://github.com/deis/deis/issues/3722>
+* [X] Per-process type health checks: <https://github.com/deis/controller/issues/881> (Workflow 2.4)
+* [X] Application Maintenance Mode: <https://github.com/deis/deis/issues/3722> (Workflow 2.4)
 * [ ] Enforce SSL Per-Application: <https://github.com/deis/router/issues/148>
 * [ ] Per-application IP Whitelisting via CLI: <https://github.com/deis/controller/issues/240>
 * [ ] Per-application Kubernetes Network Policy:
 
 ### Private Application Support
 
-* [ ] Private Application Support: <https://github.com/deis/controller/pull/934>
+* [X] Private Application Support: <https://github.com/deis/controller/pull/934> (Workflow 2.4)
 
 Related issues:
 
