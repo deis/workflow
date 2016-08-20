@@ -54,7 +54,7 @@ Error: There are currently no log messages. Please check the following things:
 ## Default Configuration
 By default the Fluentd pod can be configured to talk to numerous syslog endpoints. So for example it is possible to have Fluentd send log messages to both the Logger component and [Papertrail](https://papertrailapp.com/). This allows production deployments of Deis to satisfy stringent logging requirements such as offsite backups of log data.
 
-Configuring Fluentd to talk to multiple syslog endpoints means adding the following stanzas to the [Fluentd daemonset manifest](https://github.com/deis/charts/blob/master/workflow-v2.4.0/tpl/deis-logger-fluentd-daemon.yaml) -
+Configuring Fluentd to talk to multiple syslog endpoints means adding the following stanzas to the [Fluentd daemonset manifest](https://github.com/deis/charts/blob/master/workflow-v2.4.1/tpl/deis-logger-fluentd-daemon.yaml) -
 
 ```
 env:

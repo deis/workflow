@@ -42,10 +42,10 @@ $ helmc repo add deis https://github.com/deis/charts
 Now that you have Helm Classic installed and have added the Deis Chart Repository, install Workflow by running:
 
 ```
-$ helmc fetch deis/workflow-v2.4.0            # fetches the chart into a
+$ helmc fetch deis/workflow-v2.4.1            # fetches the chart into a
                                               # local workspace
-$ helmc generate -x manifests workflow-v2.4.0 # generates various secrets
-$ helmc install workflow-v2.4.0               # injects resources into
+$ helmc generate -x manifests workflow-v2.4.1 # generates various secrets
+$ helmc install workflow-v2.4.1               # injects resources into
                                               # your cluster
 ```
 

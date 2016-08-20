@@ -53,7 +53,7 @@ Exporting environment variables for the previous and latest versions will help r
 
 ```
 $ export PREVIOUS_WORKFLOW_RELEASE=v2.3.0
-$ export DESIRED_WORKFLOW_RELEASE=v2.4.0
+$ export DESIRED_WORKFLOW_RELEASE=v2.4.1
 ```
 
 ### Step 2: Fetch new charts

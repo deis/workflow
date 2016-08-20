@@ -114,7 +114,7 @@ specific commits from master.
 Export two environment variables that will be used in later steps:
 
 ```bash
-export WORKFLOW_RELEASE=v2.4.0 WORKFLOW_PREV_RELEASE=v2.3.0  # for example
+export WORKFLOW_RELEASE=v2.4.1 WORKFLOW_PREV_RELEASE=v2.3.0  # for example
 ```
 
 ### Step 2: Update Jenkins Jobs
@@ -239,7 +239,7 @@ git push upstream $WORKFLOW_RELEASE
 
 Paste the same CHANGELOG from the previous step into the body of release notes for [deis/charts][]
 in GitHub. In the "Release Title" field, use the project & component with its release, such as
-"Deis Workflow v2.4.0":
+"Deis Workflow v2.4.1":
 
 ```bash
 deisrel changelog individual workflow $WORKFLOW_PREV_RELEASE HEAD $WORKFLOW_RELEASE | pbcopy
@@ -278,8 +278,8 @@ Post a message to the #company channel on Slack. Include a link to the released 
 master CHANGELOG:
 
 ```
-@here Deis Workflow v2.4.0 is now live!
-Release notes: https://github.com/deis/charts/releases/tag/v2.4.0
+@here Deis Workflow v2.4.1 is now live!
+Release notes: https://github.com/deis/charts/releases/tag/v2.4.1
 Master CHANGELOG: https://gist.github.com/mboersma/dcb300c1530552dc612b19f418731234
 ```
 

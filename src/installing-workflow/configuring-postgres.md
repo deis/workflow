@@ -31,7 +31,7 @@ $ psql -h <host> -p <port> -d postgres -U <"postgres" or your own username>
 
 The Helm Classic chart for Deis Workflow can be easily configured to connect the Workflow controller component to an off-cluster PostgreSQL database.
 
-* **Step 1:** If you haven't already fetched the Helm Classic chart, do so with `helmc fetch deis/workflow-v2.4.0`
+* **Step 1:** If you haven't already fetched the Helm Classic chart, do so with `helmc fetch deis/workflow-v2.4.1`
 * **Step 2:** Update database connection details either by setting the appropriate environment variables _or_ by modifying the template file `tpl/generate_params.toml`. Note that environment variables take precedence over settings in `tpl/generate_params.toml`.
     * **1.** Using environment variables:
         * Set `DATABASE_LOCATION` to `off-cluster`.
@@ -41,18 +41,18 @@ The Helm Classic chart for Deis Workflow can be easily configured to connect the
         * Set `DATABASE_USERNAME` to the username of the database user that owns the database-- typically `deis`.
         * Set `DATABASE_PASSWORD` to the password for the database user that owns the database.
     * **2.** Using template file `tpl/generate_params.toml`:
-        * Open the Helm Classic chart with `helmc edit workflow-v2.4.0` and look for the template file `tpl/generate_params.toml`
+        * Open the Helm Classic chart with `helmc edit workflow-v2.4.1` and look for the template file `tpl/generate_params.toml`
         * Update the `database_location` parameter to `off-cluster`.
         * Update the values in the `[database]` configuration section to properly reflect all connection details.
         * Save your changes.
     * Note: Whether using environment variables or `tpl/generate_params.toml`, you do not need to (and must not) base64 encode any values, as the Helm Classic chart will automatically handle encoding as necessary.
-* **Step 3:** Re-generate the Helm Classic chart by running `helmc generate -x manifests workflow-v2.4.0`
+* **Step 3:** Re-generate the Helm Classic chart by running `helmc generate -x manifests workflow-v2.4.1`
 * **Step 4:** Check the generated files in your `manifests` directory. You should see:
     * `deis-controller-rc.yaml` contains relevant connection details.
     * `deis-database-secret-creds.yaml` exists and contains base64 encoded database username and password.
     * No other database-related Kubernetes resources are defined. i.e. none of `database-database-service-account.yaml`, `database-database-service.yaml`, or `database-database-rc.yaml` exist.
 
-You are now ready to `helmc install workflow-v2.4.0` [as usual][installing].
+You are now ready to `helmc install workflow-v2.4.1` [as usual][installing].
 
 [database]: ../understanding-workflow/components.md#database
 [object storage]: configuring-object-storage.md

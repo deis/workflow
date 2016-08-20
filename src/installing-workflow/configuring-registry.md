@@ -19,7 +19,7 @@ Deis Workflow currently supports
   2. EC2 Container Registry([ecr][ecr]).
   3. off-cluster storage providers like dockerhub, quay.io, etc., or self hosted docker registry.
 
-* **Step 1:** If you haven't already fetched the Helm Classic chart, do so with `helmc fetch deis/workflow-v2.4.0`
+* **Step 1:** If you haven't already fetched the Helm Classic chart, do so with `helmc fetch deis/workflow-v2.4.1`
 * **Step 2:** Update registry location details either by setting the appropriate environment variables _or_ by modifying the template file `tpl/generate_params.toml`. Note that environment variables take precedence over settings in `tpl/generate_params.toml`.
     * **1.** Using environment variables: Set `REGISTRY_LOCATION` to `off-cluster`, `ecr` or `gcr`, then set the following environment variables accordingly.
           * For `REGISTRY_LOCATION=gcr`:
@@ -52,14 +52,14 @@ Deis Workflow currently supports
             `REGISTRY_ORGANIZATION` can be left empty if there is no namespacing in the registry. A [namespace][namespace] is a collection of repositories with a common name prefix.
 
     * **2.** Using template file `tpl/generate_params.toml`:
-          * Open the helm classic chart with `helmc edit workflow-v2.4.0` and look for the template file `tpl/generate_params.toml`
+          * Open the helm classic chart with `helmc edit workflow-v2.4.1` and look for the template file `tpl/generate_params.toml`
           * Update the `registry_location` parameter to reference the registry location you are using: `off-cluster`, `ecr`, `gcr`
           * Update the values in the section which corresponds to your registry location type.
       * Note: you do not need to base64 encode any of these values as Helm Classic will handle encoding automatically
-* **Step 3:** Save your changes and re-generate the helm classic chart by running `helmc generate -x manifests workflow-v2.4.0`
+* **Step 3:** Save your changes and re-generate the helm classic chart by running `helmc generate -x manifests workflow-v2.4.1`
 * **Step 4:** Check the generated file in your manifests directory, you should see `deis-registry-secret.yaml`
 
-        You are now ready to `helmc install workflow-v2.4.0` using your desired registry.
+        You are now ready to `helmc install workflow-v2.4.1` using your desired registry.
 
 [registry]: ../understanding-workflow/components.md#registry
 [storage]: configuring-object-storage

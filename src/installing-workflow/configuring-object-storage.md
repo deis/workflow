@@ -29,7 +29,7 @@ If you are using AWS S3 and your Kubernetes nodes are configured with appropriat
 
 ### Step 3: Fetch Workflow charts
 
-If you haven't already fetched the Helm Classic chart, do so with `helmc fetch deis/workflow-v2.4.0`
+If you haven't already fetched the Helm Classic chart, do so with `helmc fetch deis/workflow-v2.4.1`
 
 ### Step 4: Configure Workflow charts
 
@@ -49,7 +49,7 @@ Operators should configure object storage by either populating a set of environm
 
 **Option 2:** Using template file `tpl/generate_params.toml`
 
-* Edit Helm Classic chart by running `helmc edit workflow-v2.4.0` and look for the template file `tpl/generate_params.toml`
+* Edit Helm Classic chart by running `helmc edit workflow-v2.4.1` and look for the template file `tpl/generate_params.toml`
 * Update the `storage` parameter to reference the platform you are using, e.g. `s3`, `azure`, `gcs`, or `swift`
 * Find the corresponding section for your storage type and provide appropriate values including region, bucket names, and access credentials.
 * Save your changes to `tpl/generate_params.toml`.
@@ -59,7 +59,7 @@ Operators should configure object storage by either populating a set of environm
 
 ### Step 5: Generate manifests
 
-Generate the Workflow chart by running `helmc generate -x manifests workflow-v2.4.0`.
+Generate the Workflow chart by running `helmc generate -x manifests workflow-v2.4.1`.
 
 ### Step 6: Verify credentials
 
@@ -67,7 +67,7 @@ Helm Classic stores the object storage configuration as a Kubernetes secret.
 
 You may check the contents of the generated file named `deis-objectstorage-secret.yaml` in the `helmc` workspace directory:
 ```
-$ cat $(helmc home)/workspace/charts/workflow-v2.4.0/manifests/deis-objectstorage-secret.yaml
+$ cat $(helmc home)/workspace/charts/workflow-v2.4.1/manifests/deis-objectstorage-secret.yaml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -82,7 +82,7 @@ data:
   builder-bucket: bXlmYW5jeS1idWlsZGVyLWJ1c2tldAo=
 ```
 
-You are now ready to `helmc install workflow-v2.4.0` using your desired object storage.
+You are now ready to `helmc install workflow-v2.4.1` using your desired object storage.
 
 ## Object Storage Configuration and Credentials
 
