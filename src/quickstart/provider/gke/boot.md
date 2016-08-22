@@ -38,7 +38,7 @@ Click "Create" and Google Container Engine will provision your cluster. The proc
 
 ![](images/gke-node-version.jpg)]
 
-After the cluster is created, check the node version. If you are on 1.3.x, **downgrade the node version to 1.2.5**. See [Kubernetes Versions](https://deis.com/docs/workflow/installing-workflow/system-requirements/#kubernetes-versions) under System Requirements for more details.
+After the cluster is created, check the node version. See [Kubernetes Versions](https://deis.com/docs/workflow/installing-workflow/system-requirements/#kubernetes-versions) under System Requirements for more details.
 
 ## Install and configure the Google Cloud CLI
 
