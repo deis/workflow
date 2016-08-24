@@ -132,7 +132,7 @@ DOCTOR_API_URL    | The doctor API URL (default: "<https://doctor-staging.deis.c
 API_VERSION       | The version number Workflow Manager sends to the versions API (default: "v2")
 
 
-[Deploying Apps][]: ../applications/deploying-apps.md
+[Deploying Apps]: ../applications/deploying-apps.md
 [builder]: ../understanding-workflow/components.md#builder
 [controller]: ../understanding-workflow/components.md#controller
 [database]: ../understanding-workflow/components.md#database
