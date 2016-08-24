@@ -124,6 +124,21 @@ Pay attention to the output. It should print `SSL certificate verify ok`. If it 
 like `common name: www.example.com (does not match 'www.somedomain.com')` then something is not
 configured correctly.
 
+## Enforcing SSL at the Router
+
+To enforce all HTTP requests be redirected to HTTPS, TLS can be enforced at the router level by
+running
+
+    $ deis tls:enable -a foo
+    Enabling https-only requests for foo... done
+
+Users hitting the HTTP endpoint for the application will now receive a 301 redirect to the HTTPS
+endpoint.
+
+To disable enforced TLS, run
+
+    $ deis tls:disable -a foo
+    Disabling https-only requests for foo... done
 
 ## Remove Certificate
 
