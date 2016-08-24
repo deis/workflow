@@ -60,8 +60,9 @@ security     | Security-related issues such as TLS encryption, network segregati
 
 When attached to a specific milestone, an issue can be attributed one of the following labels to indicate their degree of priority.
 
-Priority    | Description
-------------|---------------------------------------------------------------------------------------------------------------------------------------------
-showstopper | Urgent: Security, critical bugs, blocking issues. "showstopper" basically means drop everything you are doing until this issue is addressed.
+Priority   | Description
+-----------|-----------------------------------------------------------------------------------------------------------------------------------
+priority&nbsp;0 | Urgent: Security, critical bugs, blocking issues. Drop everything and fix this today, then consider creating a patch release.
+priority&nbsp;1 | Serious: Impedes user actions or is a regression. Fix this before the next planned release.
 
 And that's it. That should be all the information required for a new or existing contributor to come in an resolve an issue.
