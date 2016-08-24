@@ -2,8 +2,14 @@
 
 The first user to register against Deis Workflow will automatically be given administrative privileges.
 
+If you installed Deis on GKE or AWS, Deis automatically creates a load balancer for the cluster. To get the IP of this load balancer, run `kubectl --namespace=deis describe svc deis-router`.
 
-Using the DNS hostname from the previous step, let's create our admin user:
+If you do not have an load balancer IP, the router automatically forwards traffic from a kuberentes node to the router. In this case, use the IP of a kuberentes node and the node
+port that routes to port 80 on the controller.
+
+Deis requires a wildcard DNS record to dynamically map app names to the router. Instead of setting up DNS records, this example will use `nip.io`. If your router IP is `1.1.1.1`, its url will be `1.1.1.1.nip.io`. The URL of the controller component will be `deis.1.1.1.1.nip.io`.
+
+Use the controller url to register a user in the cluster.
 
 ```
 $ deis register http://deis.104.197.125.75.nip.io
