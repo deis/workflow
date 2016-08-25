@@ -173,3 +173,11 @@ deis-workflow-manager-2654760652-kitf9   1/1       Running   0          5m
 [configuring object storage]: ../installing-workflow/configuring-object-storage.md
 [keeper manifests]: http://helm-classic.readthedocs.io/en/latest/awesome/#keeper-manifests
 [minio]: https://github.com/deis/minio
+
+### Step 7: Upgrade the deis client
+
+Your deis platform users should now upgrade their deis client to avoid getting `WARNING: Client and server API versions do not match. Please consider upgrading.` warnings.
+
+```
+curl -sSL http://deis.io/deis-cli/install-v2.sh | bash && sudo mv deis $(which deis)
+```
