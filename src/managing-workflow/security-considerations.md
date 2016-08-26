@@ -41,15 +41,27 @@ that hosts applications intended for a limited audience-- e.g. applications for 
 an organization. You can enforce cluster-wide IP whitelisting by enabling whitelists, then
 attaching an annotation to the router:
 
-$ kubectl --namespace=deis annotate replicationcontroller deis-router router.deis.io/nginx.enforceWhitelists=true
-$ kubectl --namespace=deis annotate replicationcontroller deis-router router.deis.io/nginx.defaultWhitelist="0.0.0.0/0"
+    $ kubectl --namespace=deis annotate deployments/deis-router router.deis.io/nginx.enforceWhitelists=true
+    $ kubectl --namespace=deis annotate deployments/deis-router router.deis.io/nginx.defaultWhitelist="0.0.0.0/0"
 
 The format is the same for the controller whitelist but you need to specify the whitelist directly
 to the controller's service. For example:
 
-$ kubectl --namespace=deis annotate service deis-controller router.deis.io/whitelist="10.0.1.0/24,121.212.121.212"
+    $ kubectl --namespace=deis annotate service deis-controller router.deis.io/whitelist="10.0.1.0/24,121.212.121.212"
 
 And the same applies to applications. For example, to apply a whitelist to an application named
 `example`:
 
-$ kubectl --namespace=example annotate service example-web router.deis.io/whitelist="10.0.1.0/24,121.212.121.212"
+    $ kubectl --namespace=example annotate service example-web router.deis.io/whitelist="10.0.1.0/24,121.212.121.212"
+
+Application level whitelisting can also be done using the Deis client. To add/remove/list addresses of an application whitelist, use `deis whitelist`:
+
+    $ deis whitelist:add 10.0.1.0/24,121.212.121.212 -a drafty-zaniness
+    Adding 10.0.1.0/24,121.212.121.212 to drafty-zaniness whitelist...done
+
+    $ deis whitelist:remove 121.212.121.212 -a drafty-zaniness
+    Removing 121.212.121.212 from drafty-zaniness whitelist... done
+
+    $ deis whitelist -a drafty-zaniness
+    === drafty-zaniness Whitelisted Addresses
+    10.0.1.0/24
