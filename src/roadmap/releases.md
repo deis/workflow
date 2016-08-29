@@ -246,7 +246,14 @@ deisrel changelog individual workflow $WORKFLOW_PREV_RELEASE HEAD $WORKFLOW_RELE
 open https://github.com/deis/workflow/releases/new?tag=$WORKFLOW_RELEASE
 ```
 
-### Step 7: Update Documentation
+### Step 7: Assemble Master Changelog
+
+Each component already updated its release notes on GitHub with CHANGELOG content. The
+bodies of each component's release notes should be concatenated into a single gist. Note that there
+may be more than one release per component--and more than one set of release notes--included in the
+Workflow release.
+
+### Step 8: Update Documentation
 
 Create a new pull request at [deis/workflow][] that updates version references to the new release.
 Use `git grep $WORKFLOW_PREV_RELEASE` to find any references, but be careful not to change
@@ -254,12 +261,15 @@ Use `git grep $WORKFLOW_PREV_RELEASE` to find any references, but be careful not
 older releases to `$WORKFLOW_PREV_RELEASE`, so the documentation always describes upgrading
 between recent versions.
 
-### Step 8: Assemble Master Changelog
+Create a new documentation page under the Changelogs section. The page should
+be named after the release version, e.g. `changelogs/v2.5.1`. The contents of
+this page should be the consolidated changelog generated in Step 7. Makes sure
+to edit or add a header to the page to make it clear that this is for a
+Workflow release, e.g.:
 
-Each component already updated its release notes on GitHub with CHANGELOG content. The
-bodies of each component's release notes should be concatenated into a single gist. Note that there
-may be more than one release per component--and more than one set of release notes--included in the
-Workflow release.
+```
+## Workflow v2.4.x -> v2.5.1
+```
 
 ### Step 9: Close GitHub Milestones
 
