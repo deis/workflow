@@ -8,15 +8,14 @@ This is useful for integrating Deis into Docker-based CI/CD pipelines.
 
 Start by cloning an example application:
 
-    $ git clone https://github.com/deis/example-go.git
-    $ cd example-go
-    $ git checkout docker
+    $ git clone https://github.com/deis/example-dockerfile-http.git
+    $ cd example-dockerfile-http
 
 Next use your local `docker` client to build the image and push
 it to [DockerHub][].
 
-    $ docker build -t <username>/example-go .
-    $ docker push <username>/example-go
+    $ docker build -t <username>/example-dockerfile-http .
+    $ docker push <username>/example-dockerfile-http
 
 
 ### Docker Image Requirements
@@ -33,9 +32,9 @@ In order to deploy Docker images, they must conform to the following requirement
 
 Use `deis create` to create an application on the [controller][].
 
-    $ mkdir -p /tmp/example-go && cd /tmp/example-go
-    $ deis create example-go --no-remote
-    Creating application... done, created example-go
+    $ mkdir -p /tmp/example-dockerfile-http && cd /tmp/example-dockerfile-http
+    $ deis create example-dockerfile-http --no-remote
+    Creating application... done, created example-dockerfile-http
 
 !!! note
     For all commands except for `deis create`, the `deis` client uses the name of the current directory
@@ -47,10 +46,10 @@ Use `deis create` to create an application on the [controller][].
 Use `deis pull` to deploy your application from [DockerHub][] or
 a public registry.
 
-    $ deis pull gabrtv/example-go:latest
+    $ deis pull <username>/example-dockerfile-http:latest
     Creating build...  done, v2
 
-    $ curl -s http://example-go.local3.deisapp.com
+    $ curl -s http://example-dockerfile-http.local3.deisapp.com
     Powered by Deis
 
 Because you are deploying a Docker image, the `cmd` process type is automatically scaled to 1 on first deploy.
