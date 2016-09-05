@@ -64,7 +64,7 @@ Deis Workflow supports three registration modes:
 To modify the registration mode for Workflow you may add or modify the `REGISTRATION_MODE` environment variable for the
 controller component. If Deis Workflow is already running, use:
 
-`kubectl patch deployments deis-controller -p '{"spec":{"template":{"spec":{"containers":[{"name":"deis-controller","env":[{"name":"REGISTRATION_MODE","value":"disabled"}]}]}}}}'`
+`kubectl --namespace=deis patch deployments deis-controller -p '{"spec":{"template":{"spec":{"containers":[{"name":"deis-controller","env":[{"name":"REGISTRATION_MODE","value":"disabled"}]}]}}}}'`
 
 Modify the `value` portion to match the desired mode.
 
