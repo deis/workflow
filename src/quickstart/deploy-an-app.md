@@ -4,7 +4,7 @@ The first user to register against Deis Workflow will automatically be given adm
 
 If you installed Deis on GKE or AWS, Deis automatically creates a load balancer for the cluster. To get the IP of this load balancer, run `kubectl --namespace=deis describe svc deis-router`.
 
-If you do not have an load balancer IP, the router automatically forwards traffic from a kuberentes node to the router. In this case, use the IP of a kuberentes node and the node
+If you do not have an load balancer IP, the router automatically forwards traffic from a kubernetes node to the router. In this case, use the IP of a kubernetes node and the node
 port that routes to port 80 on the controller.
 
 Deis requires a wildcard DNS record to dynamically map app names to the router. Instead of setting up DNS records, this example will use `nip.io`. If your router IP is `1.1.1.1`, its url will be `1.1.1.1.nip.io`. The URL of the controller component will be `deis.1.1.1.1.nip.io`.
