@@ -119,14 +119,14 @@ export WORKFLOW_RELEASE=v2.5.0 WORKFLOW_PREV_RELEASE=v2.4.2  # for example
 
 ### Step 2: Update Jenkins Jobs
 
-Update the `WORKFLOW_RELEASE` value in the
+Update the Workflow chart release value in the
 [common.groovy](https://github.com/deis/jenkins-jobs/blob/master/common.groovy) file so the [workflow-test-release](https://ci.deis.io/job/workflow-test-release/) job will kick off
 automatically when the `release-${WORKFLOW_RELEASE}` branch is pushed:
 
 ```bash
 git clone git@github.com:deis/jenkins-jobs.git
-# update WORKFLOW_RELEASE value
-git commit -a -m "chore(workflow-$WORKFLOW_RELEASE): update WORKFLOW_RELEASE"
+perl -i -0pe "s/${WORKFLOW_PREV_RELEASE}/${WORKFLOW_RELEASE}/" common.groovy
+git commit -a -m "chore(workflow-$WORKFLOW_RELEASE): update workflow chart release value"
 git push upstream HEAD:master
 ```
 
