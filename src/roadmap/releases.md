@@ -66,7 +66,7 @@ Double-check that `git log` looks correct, then set some environment variables:
 export COMPONENT=${PWD##*/}
 export OLD_RELEASE=$(git describe --abbrev=0 --tags)
 export NEW_SHA=$(git rev-parse --short HEAD)
-deisrel changelog individual $COMPONENT $OLD_RELEASE $NEW_SHA unknown
+deisrel changelog individual $COMPONENT unknown
 export NEW_RELEASE=v2.2.1  # changelog agrees it's a patch release
 ```
 
@@ -77,7 +77,7 @@ it into an annotation on the new release tag. Edit out any unnecessary blank lin
 new release tag to the GitHub repository:
 
 ```bash
-deisrel changelog individual $COMPONENT $OLD_RELEASE $NEW_SHA $NEW_RELEASE | pbcopy
+deisrel changelog individual $COMPONENT $NEW_RELEASE | pbcopy
 git tag -a $NEW_RELEASE  # paste the CHANGELOG into your editor and save
 git push upstream $NEW_RELEASE
 ```
