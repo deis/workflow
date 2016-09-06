@@ -63,14 +63,11 @@ Setting                                         | Description
 DEIS_DEPLOY_BATCHES                             | the number of pods to bring up and take down sequentially during a scale (default: number of available nodes)
 DEIS_DEPLOY_TIMEOUT                             | deploy timeout in seconds per deploy batch (default: 120)
 KUBERNETES_DEPLOYMENTS_REVISION_HISTORY_LIMIT   | how many [revisions][kubernetes-deployment-revision] Kubernetes keeps around of a given Deployment (default: all revisions)
+KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS | how many seconds kubernetes waits for a pod to finish work after a SIGTERM before sending SIGKILL (default: 30)
 
 ### Deploy Timeout
 
-Deploy timeout in seconds - There are 2 deploy methods, current (RC) and Deployments (see below) and this setting affects those a bit differently.
-
-#### RC deploy
-
-This deploy timeout defines how long to wait for each batch to complete in `DEIS_DEPLOY_BATCHES`
+Deploy timeout in seconds - There are 2 deploy methods, Deployments (see below) and RC (versions prior to 2.4) and this setting affects those a bit differently.
 
 #### Deployments
 
@@ -79,6 +76,10 @@ Deployments behave a little bit differently from the RC based deployment strateg
 Kubernetes takes care of the entire deploy, doing rolling updates in the background. As a result, there is only an overall deployment timeout instead of a configurable per-batch timeout.
 
 The base timeout is multiplied with `DEIS_DEPLOY_BATCHES` to create an overall timeout. This would be 240 (timeout) * 4 (batches) = 960 second overall timeout.
+
+#### RC deploy
+
+This deploy timeout defines how long to wait for each batch to complete in `DEIS_DEPLOY_BATCHES`.
 
 #### Additions to the base timeout
 
