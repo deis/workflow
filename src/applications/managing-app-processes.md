@@ -85,9 +85,9 @@ Scaling processes... but first, coffee!
 done in 0s
 === steely-mainsail Processes
 --- cmd:
-steely-mainsail-v3-cmd-nyrim up (v3)
+steely-mainsail-cmd-3291896318-nyrim up (v3)
 --- sleeper:
-steely-mainsail-v3-sleeper-oq1jr up (v3)
+steely-mainsail-sleeper-3291896318-oq1jr up (v3)
 ```
 
 !!! note
@@ -102,13 +102,13 @@ Scaling processes... but first, coffee!
 done in 3s
 === steely-mainsail Processes
 --- cmd:
-steely-mainsail-v3-cmd-nyrim up (v3)
+steely-mainsail-cmd-3291896318-nyrim up (v3)
 ```
 
 ## Scaling Processes
 
-Applications deployed on Deis Workflow [scale out via the process model][]. Use `deis scale` to control the number of
-[Containers][container] that power your app.
+Applications deployed on Deis Workflow scale out via the [process model][]. Use `deis scale` to control the number of
+[containers][container] that power your app.
 
 ```
 $ deis scale cmd=5 -a iciest-waggoner
@@ -116,11 +116,11 @@ Scaling processes... but first, coffee!
 done in 3s
 === iciest-waggoner Processes
 --- cmd:
-iciest-waggoner-v2-cmd-09j0o up (v2)
-iciest-waggoner-v2-cmd-3r7kp up (v2)
-iciest-waggoner-v2-cmd-gc4xv up (v2)
-iciest-waggoner-v2-cmd-lviwo up (v2)
-iciest-waggoner-v2-cmd-kt7vu up (v2)
+iciest-waggoner-web-3291896318-09j0o up (v2)
+iciest-waggoner-web-3291896318-3r7kp up (v2)
+iciest-waggoner-web-3291896318-gc4xv up (v2)
+iciest-waggoner-web-3291896318-lviwo up (v2)
+iciest-waggoner-web-3291896318-kt7vu up (v2)
 ```
 
 If you have multiple process types for your application you may scale the process count for each type separately. For
@@ -135,13 +135,13 @@ Scaling processes... but first, coffee!
 done in 4s
 === scenic-icehouse Processes
 --- web:
-scenic-icehouse-v2-web-7lord up (v2)
-scenic-icehouse-v2-web-jn957 up (v2)
-scenic-icehouse-v2-web-rsekj up (v2)
-scenic-icehouse-v2-web-vwhnh up (v2)
-scenic-icehouse-v2-web-vokg7 up (v2)
+scenic-icehouse-web-3291896318-7lord up (v2)
+scenic-icehouse-web-3291896318-jn957 up (v2)
+scenic-icehouse-web-3291896318-rsekj up (v2)
+scenic-icehouse-web-3291896318-vwhnh up (v2)
+scenic-icehouse-web-3291896318-vokg7 up (v2)
 --- background:
-scenic-icehouse-v2-background-yf8kh up (v2)
+scenic-icehouse-web-3291896318-background-yf8kh up (v2)
 ```
 
 !!! note
@@ -159,12 +159,50 @@ Scaling processes... but first, coffee!
 done in 1s
 === scenic-icehouse Processes
 --- background:
-scenic-icehouse-v2-background-yf8kh up (v2)
+scenic-icehouse-web-3291896318-background-yf8kh up (v2)
 --- web:
-scenic-icehouse-v2-web-7lord up (v2)
-scenic-icehouse-v2-web-rsekj up (v2)
-scenic-icehouse-v2-web-vokg7 up (v2)
+scenic-icehouse-web-3291896318-7lord up (v2)
+scenic-icehouse-web-3291896318-rsekj up (v2)
+scenic-icehouse-web-3291896318-vokg7 up (v2)
 ```
+
+## Autoscale
+
+Autoscale allows adding a minimum and maximum number of pods on a per process type basis. This is accomplished by specifying a target CPU usage across all available pods.
+
+This feature is built on top of [Horizontal Pod Autoscaling][HPA] in Kubernetes or [HPA][] for short.
+
+!!! note
+	This is an alpha feature. It is recommended to be on the latest Kubernetes when using this feature.
+
+```
+$ deis autoscale:set web --min=3 --max=8 --cpu-percent=75
+Applying autoscale settings for process type web on scenic-icehouse... done
+
+```
+And then review the scaling rule that was created for `web`
+
+```
+$ deis autoscale:list
+=== scenic-icehouse Autoscale
+
+--- web:
+Min Replicas: 3
+Max Replicas: 8
+CPU: 75%
+```
+
+Remove scaling rule
+
+```
+$ deis autoscale:unset web
+Removing autoscale for process type web on scenic-icehouse... done
+```
+
+For autoscaling to work CPU requests have to be specified on each application Pod (can be done via `deis limits --cpu`). This allows the autoscale policies to do the [appropriate calculations][autoscale-algo] and make decisions on when to scale up and down.
+
+Scale up can only happen if there was no rescaling within the last 3 minutes. Scale down will wait for 5 minutes from the last rescaling. That information and more can be found at [HPA algorithm page][autoscale-algo].
+
 
 ## Web vs Cmd Process Types
 
@@ -189,21 +227,21 @@ Kubernetes to terminate the old process and launch a new one in its place.
 $ deis ps
 === scenic-icehouse Processes
 --- web:
-scenic-icehouse-v2-web-7lord up (v2)
-scenic-icehouse-v2-web-rsekj up (v2)
-scenic-icehouse-v2-web-vokg7 up (v2)
+scenic-icehouse-web-3291896318-7lord up (v2)
+scenic-icehouse-web-3291896318-rsekj up (v2)
+scenic-icehouse-web-3291896318-vokg7 up (v2)
 --- background:
-scenic-icehouse-v2-background-yf8kh up (v2)
-$ deis ps:restart scenic-icehouse-v2-background-yf8kh
+scenic-icehouse-background-3291896318-yf8kh up (v2)
+$ deis ps:restart scenic-icehouse-background-3291896318-yf8kh
 Restarting processes... but first, coffee!
 done in 6s
 === scenic-icehouse Processes
 --- background:
-scenic-icehouse-v2-background-yd87g up (v2)
+scenic-icehouse-background-3291896318-yd87g up (v2)
 ```
 
-Notice that the process name has changed from `scenic-icehouse-v2-background-yf8kh` to
-`scenic-icehouse-v2-background-yd87g`. In a multi-node Kubernetes cluster, this may also have the effect of scheduling
+Notice that the process name has changed from `scenic-icehouse-background-3291896318-yf8kh` to
+`scenic-icehouse-background-3291896318-yd87g`. In a multi-node Kubernetes cluster, this may also have the effect of scheduling
 the Pod to a new node.
 
 [container]: ../reference-guide/terms.md#container
@@ -211,3 +249,5 @@ the Pod to a new node.
 [buildpacks]: ../applications/using-buildpacks.md
 [dockerfile]: ../applications/using-dockerfiles.md
 [docker image]: ../applications/using-docker-images.md
+[HPA]: http://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling/
+[autoscale-algo]: https://github.com/kubernetes/kubernetes/blob/master/docs/design/horizontal-pod-autoscaler.md#autoscaling-algorithm
