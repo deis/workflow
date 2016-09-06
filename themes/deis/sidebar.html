@@ -1,0 +1,28 @@
+<nav class="sidebar hide-for-small">
+  <div class="sidebar-inner">
+    <h1><a href="/" class="logo"><img src="{{ base_url }}/static/img/svg/logo.svg" width="128px" height="41px" alt="Deis"></a></h1>
+
+    <ul class="current sidebar-main">
+      {%- include "nav.html" %}
+      <li class="toctree-l1">
+        {% if READTHEDOCS %}
+        <a class="reference internal" href="../" state="open">Versions</a>
+          <ul class="current">
+            {% for slug, url in versions %}
+            <li class="toctree-l2"><a href="{{ url }}{%- for word in pagename.split('/') -%}
+              {%- if word != 'index' -%}
+              {%- if word != '' -%}
+              {{ word }}/
+              {%- endif -%}
+              {%- endif -%}
+              {%- endfor -%}"
+              title="Switch to {{ slug }}">{{ slug }}</a></li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    </ul>
+  </div>
+
+  <div class="sidebar-bg"></div>
+</nav>
