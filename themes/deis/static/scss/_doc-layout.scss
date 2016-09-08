@@ -1,5 +1,11 @@
-html, body{
+html,
+body {
   height:100%;
+}
+
+.off-canvas-wrap,
+.inner-wrap {
+    min-height: 100%;
 }
 
 body {
@@ -20,7 +26,14 @@ body {
 .content-wrap {
     position: relative;
     padding-left: 320px;
-    padding-bottom: 10em;
+    min-height: 100%;
+    margin-bottom: -335px;
+
+    &:after {
+        content: "";
+        display: block;
+        height: 390px;
+    }
 }
 
 .content-inner {
@@ -29,6 +42,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     padding-top: 128px;
+    padding-bottom: 128px;
 }
 
 .sidebar {

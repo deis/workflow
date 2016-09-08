@@ -20,12 +20,53 @@
     }
   }
 
+  .content-wrap {
+    margin-bottom: -225px !important;
+  }
+
+  footer {
+    height: 225px !important;
+  }
+
   .shape-position.shape-position-bottom {
     bottom: -3.5em;
     width: 117.5%;
     z-index: 150;
   }
 
+  .off-canvas-wrap.move-right,
+  .off-canvas-wrap.move-left {
+    height: 100%;
+
+    .inner-wrap,
+    .content-wrap {
+      height: 100%;
+
+      & + footer {
+        display: none;
+      }
+    }
+  }
+
+  aside.right-off-canvas-menu {
+
+    ul:first-child {
+      height: 100%;
+      max-height: 100%;
+      overflow-y: scroll;
+
+      ul {
+        height: auto;
+        margin: 0 0 1.25em 0;
+      }
+
+      ul li a {
+        font-size: 0.875em;
+        padding-left: 2.75rem;
+        opacity: 0.75;
+      }
+    }
+  }
 }
 
 @media only screen and (max-width: 64.063em) {
