@@ -143,7 +143,6 @@ Verify that all components have started and passed their readiness checks:
 
 ```
 $ kubectl --namespace=deis get pods
-$ kd get po
 NAME                                     READY     STATUS    RESTARTS   AGE
 deis-builder-2448122224-3cibz            1/1       Running   0          5m
 deis-controller-1410285775-ipc34         1/1       Running   3          5m
