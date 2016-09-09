@@ -37,8 +37,8 @@ flexibility in how applications are managed by the platform:
 
 * [X] Per-process type health checks: <https://github.com/deis/controller/issues/881> (Workflow 2.4)
 * [X] Application Maintenance Mode: <https://github.com/deis/deis/issues/3722> (Workflow 2.4)
-* [ ] Enforce SSL Per-Application: <https://github.com/deis/router/issues/148>
-* [ ] Per-application IP Whitelisting via CLI: <https://github.com/deis/controller/issues/240>
+* [X] Enforce SSL Per-Application: <https://github.com/deis/router/issues/148> (Workflow 2.5)
+* [X] Per-application IP Whitelisting via CLI: <https://github.com/deis/controller/issues/240> (Workflow 2.5)
 * [ ] Per-application Kubernetes Network Policy:
 
 ### Private Application Support
@@ -55,7 +55,7 @@ Related issues:
 Developers should be able to define an autoscaling policy per application
 process type. Under the covers, Workflow should use HorizontalPodAutoscaling.
 
-* [ ] Application Autoscaling <https://github.com/deis/workflow/issues/403>
+* [X] Application Autoscaling <https://github.com/deis/workflow/issues/403> (Alpha, Workflow 2.5)
 
 ## Interactive `deis run /bin/bash`
 
