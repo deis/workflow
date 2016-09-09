@@ -134,7 +134,7 @@ documentation][logger-documentation].
 ## See Also
 
 * [Workflow Concepts][concepts]
-* [Workflow Components][components]
+* [Workflow Architecture][architecture]
 
 [Application]: ../reference-guide/terms.md#application
 [Config]: ../reference-guide/terms.md#config
@@ -143,7 +143,6 @@ documentation][logger-documentation].
 [PostgreSQL]: http://www.postgresql.org/
 [WAL-E]: https://github.com/wal-e/wal-e
 [architecture]: architecture.md
-[components]: components.md
 [concepts]: concepts.md
 [configure-objectstorage]: ../installing-workflow/configuring-object-storage.md
 [logger-documentation]: https://github.com/deis/logger
