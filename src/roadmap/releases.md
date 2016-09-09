@@ -281,7 +281,20 @@ to the next upcoming milestone before merging the pull request.
 Milestones map to Deis Workflow releases in [deis/charts][]. These milestones do not correspond
 to individual component release tags.
 
-### Step 10: Let Everyone Know
+### Step 10: Release Workflow CLI Stable
+
+Now that the `$WORKFLOW_RELEASE` version of Workflow CLI has been vetted, we can push `stable` artifacts based on this version.
+
+Kick off https://ci.deis.io/job/workflow-cli-build-stable/ with the `TAG` build parameter of `$WORKFLOW_RELEASE`
+and then verify `stable` artifacts are available and appropriately updated after the job completes:
+
+```
+$ curl -sSL http://deis.io/deis-cli/install-v2.sh | bash
+$ ./deis version
+# (Should show $WORKFLOW_RELEASE)
+```
+
+### Step 11: Let Everyone Know
 
 Let the rest of the team know they can start blogging and tweeting about the new Workflow release.
 Post a message to the #company channel on Slack. Include a link to the released chart and to the
