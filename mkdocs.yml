@@ -90,6 +90,7 @@ pages:
     - v2.4.0: changelogs/v2.4.0.md
     - v2.4.1: changelogs/v2.4.1.md
     - v2.4.2: changelogs/v2.4.2.md
+    - v2.5.0: changelogs/v2.5.0.md
 theme_dir: themes/deis
 docs_dir: src
 markdown_extensions:
