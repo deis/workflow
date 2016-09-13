@@ -54,8 +54,6 @@ REGISTRATION_MODE                               | set registration to "enabled",
 GUNICORN_WORKERS                                | number of [gunicorn][] workers spawned to process requests (default: CPU cores * 4 + 1)
 RESERVED_NAMES                                  | a comma-separated list of names which applications cannot reserve for routing (default: "deis, deis-builder, deis-workflow-manager")
 SLUGRUNNER_IMAGE_NAME                           | the image used to run buildpack application slugs (default: "quay.io/deisci/slugrunner:canary")
-SLUG_BUILDER_IMAGE_PULL_POLICY                  | the kubernetes [image pull policy][pull-policy] for slugbuilder (default: "Always")
-DOCKER_BUILDER_IMAGE_PULL_POLICY                | the kubernetes [image pull policy][pull-policy] for dockerbuilder (default: "Always")
 
 ### Global and per application settings
 
@@ -63,6 +61,7 @@ Setting                                         | Description
 ----------------------------------------------- | ---------------------------------
 DEIS_DEPLOY_BATCHES                             | the number of pods to bring up and take down sequentially during a scale (default: number of available nodes)
 DEIS_DEPLOY_TIMEOUT                             | deploy timeout in seconds per deploy batch (default: 120)
+IMAGE_PULL_POLICY                               | the kubernetes [image pull policy][pull-policy] for application images (default: "IfNotPresent") (allowed values: "Always", "IfNotPresent")
 KUBERNETES_DEPLOYMENTS_REVISION_HISTORY_LIMIT   | how many [revisions][[kubernetes-deployment-revision]] Kubernetes keeps around of a given Deployment (default: all revisions)
 KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS | how many seconds kubernetes waits for a pod to finish work after a SIGTERM before sending SIGKILL (default: 30)
 
