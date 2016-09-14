@@ -37,9 +37,11 @@ Deis Workflow currently supports
             export ECR_ACCESS_KEY, ECR_SECRET_KEY, ECR_REGION, ECR_REGISTRY_ID, ECR_HOSTNAME
             ```
 
-              To use [IAM credentials][aws-iam], it is not necessary to set `ECR_ACCESS_KEY` or `ECR_SECRET_KEY`. `ECR_ACCESS_KEY` and `ECR_SECRET_KEY` are the Access Key ID and Secret Access Key which have access to the container registry.  
-              If `ECR_REGISTRY_ID` is left empty then default registry of the account will be used.  
-              `ECR_HOSTNAME` needs to be set if the default hostname is an alias (CNAME) or the cluster is behind a proxy.  
+              `ECR_ACCESS_KEY` and `ECR_SECRET_KEY` are an AWS access key ID and secret access key with permission to use the container registry. To use [IAM credentials][aws-iam], it is not necessary to set either value, in which case the credentials used to provision the cluster will be used.
+
+              If `ECR_REGISTRY_ID` is empty, the default registry for the provisioning account will be used.
+
+              `ECR_HOSTNAME` only needs to be set if the default hostname is an alias (CNAME) or if the cluster is behind a proxy.
 
 
           * For `REGISTRY_LOCATION=off-cluster`:
