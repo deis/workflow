@@ -52,6 +52,32 @@ the application to an external PostgreSQL database.
 Detachments can be performed with `deis config:unset`.
 
 
+## Slugbuilder Cache
+
+By default, apps using the [Slugbuilder][] will have caching turned on. This means that Deis will
+persist all data being written to `CACHE_DIR` inside the buildpack will be persisted between
+deploys. When deploying applications that depend on third-party libraries that have to be fetched,
+this could speed up deployments a lot. In order to make use of this, the buildpack must implement
+the cache by writing to the cache directory. Most buildpacks already implement this, but when using
+custom buildpacks, it might need to be changed to make full use of the cache.
+
+### Disabling and re-enabling the cache
+
+In some cases, cache might not speed up your application. To disable caching, you can set the
+`DEIS_DISABLE_CACHE` variable with `deis config:set DEIS_DISABLE_CACHE=1`. When you disable the
+cache, Deis will clear up files it created to store the cache. After having it turned off, run
+`deis config:unset DEIS_DISABLE_CACHE` to re-enable the cache.
+
+### Clearing the cache
+
+Use the following procedure to clear the cache:
+
+    $ deis config:set DEIS_DISABLE_CACHE=1
+    $ git commit --allow-empty -m "Clearing Deis cache"
+    $ git push deis # (if you use a different remote, you should use your remote name)
+    $ deis config:unset DEIS_DISABLE_CACHE
+
+
 ## Custom Health Checks
 
 By default, Workflow only checks that the application starts in their Container. If it is preferred
@@ -179,7 +205,7 @@ TCP Socket Probe: N/A
 Configured health checks also modify the default application deploy behavior. When starting a new
 Pod, Workflow will wait for the health check to pass before moving onto the next Pod.
 
-
+[Slugbuilder]: ../understanding-workflow/components.md#builder-builder-slugbuilder-and-dockerbuilder
 [attached resources]: http://12factor.net/backing-services
 [stores config in environment variables]: http://12factor.net/config
 [release]: ../reference-guide/terms.md#release

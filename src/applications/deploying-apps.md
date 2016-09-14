@@ -60,6 +60,7 @@ It is possible to configure a few of the [globally tunable](../applications/mana
 
 Setting                                         | Description
 ----------------------------------------------- | ---------------------------------
+DEIS_DISABLE_CACHE                              | if set, this will disable the [slugbuilder cache][] (default: not set)
 DEIS_DEPLOY_BATCHES                             | the number of pods to bring up and take down sequentially during a scale (default: number of available nodes)
 DEIS_DEPLOY_TIMEOUT                             | deploy timeout in seconds per deploy batch (default: 120)
 IMAGE_PULL_POLICY                               | the kubernetes [image pull policy][pull-policy] for application images (default: "IfNotPresent") (allowed values: "Always", "IfNotPresent")
@@ -100,6 +101,7 @@ each having multiple ReplicaSets (one per release) which in turn manage the Pods
 Deis Workflow will behave the same way with `DEIS_KUBERNETES_DEPLOYMENTS` enabled or disabled (only applicable to versions prior to 2.4).
 The changes are behind the scenes. Where you will see differences while using the CLI is `deis ps:list` will output Pod names differently.
 
+[slugbuilder cache]: ./managing-app-configuration.md#slugbuilder-cache
 [install client]: ../users/cli.md#installation
 [application]: ../reference-guide/terms.md#application
 [controller]: ../understanding-workflow/components.md#controller

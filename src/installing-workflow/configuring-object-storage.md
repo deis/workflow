@@ -115,7 +115,8 @@ Slugbuilder is configured and launched by the builder component. Slugbuilder rea
 If you are using slugbuilder as a standalone component the following configuration is important:
 
 - `TAR_PATH` - The location of the application `.tar` archive, relative to the configured bucket for builder e.g. `home/burley-yeomanry:git-3865c987/tar`
-- `PUT_PATH` - The location to upload the finished slug, relative to the configured bucket fof builder e.g. `home/burley-yeomanry:git-3865c987/push`
+- `PUT_PATH` - The location to upload the finished slug, relative to the configured bucket of builder e.g. `home/burley-yeomanry:git-3865c987/push`
+- `CACHE_PATH` - The location to upload the cache, relative to the configured bucket of builder e.g. `home/burley-yeomanry/cache`
 
 !!! note
 	These environment variables are case-sensitive.
