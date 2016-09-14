@@ -66,4 +66,5 @@ Deis Workflow currently supports
 [ecr]: http://docs.aws.amazon.com/AmazonECR/latest/userguide/ECR_GetStarted.html
 [gcr]: https://cloud.google.com/container-registry/
 [srvAccount]: https://support.google.com/cloud/answer/6158849#serviceaccounts
+[aws-iam]: https://aws.amazon.com/iam/
 [namespace]: https://docs.docker.com/registry/spec/api/#/overview
