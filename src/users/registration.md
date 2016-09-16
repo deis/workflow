@@ -123,4 +123,23 @@ If there is a cluster wide security breach, an administrator can regenerate ever
     $ deis auth:regenerate --all=true
 
 
+## Changing Account Password
+
+A user can change their own account's password like this:
+
+```
+$ deis auth:passwd
+current password:
+new password:
+new password (confirm):
+```
+
+An administrator can change the password of another user's account like this:
+
+```
+$ deis auth:passwd --username=<username>
+new password:
+new password (confirm):
+```
+
 [controller]: ../understanding-workflow/components.md#controller
