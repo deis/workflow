@@ -6,6 +6,7 @@ Deis Workflow releases may be upgraded in-place with minimal downtime. This upgr
 * Configured Off-Cluster Storage
 * A copy of the database and builder secrets from your running cluster
 * Workflow manifests annotated with `helm-keep: true` (rc1 or later)
+* A Kubernetes cluster with more than one node is required for the rolling upgrade of the deis-router (as it is a rolling upgrade with host ports)
 
 ## Off-Cluster Storage Required
 
