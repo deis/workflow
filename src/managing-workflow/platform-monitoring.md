@@ -43,7 +43,7 @@ We now include a monitoring stack for introspection on a running Kubernetes clus
 Deis Workflow exposes Grafana through the router using [service annotations](https://github.com/deis/router#how-it-works). This
 allows users to access the Grafana UI at `http://grafana.mydomain.com`. The default username/password of
 `admin/admin` can be overridden at any time by setting the following environment variables in
-`$CHART_HOME/workspace/workflow-$WORKFLOW_RELEASE/manifests/deis-monitor-grafana-rc.yaml`: `GRAFANA_USER` and
+`$CHART_HOME/workspace/workflow-$WORKFLOW_RELEASE/manifests/deis-monitor-grafana-deployment.yaml`: `GRAFANA_USER` and
 `GRAFANA_PASSWD`.
 
 Grafana will preload several dashboards to help operators get started with monitoring Kubernetes and Deis Workflow.
