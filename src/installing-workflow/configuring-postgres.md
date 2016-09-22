@@ -48,9 +48,9 @@ The Helm Classic chart for Deis Workflow can be easily configured to connect the
     * Note: Whether using environment variables or `tpl/generate_params.toml`, you do not need to (and must not) base64 encode any values, as the Helm Classic chart will automatically handle encoding as necessary.
 * **Step 3:** Re-generate the Helm Classic chart by running `helmc generate -x manifests workflow-v2.5.0`
 * **Step 4:** Check the generated files in your `manifests` directory. You should see:
-    * `deis-controller-rc.yaml` contains relevant connection details.
+    * `deis-controller-deployment.yaml` contains relevant connection details.
     * `deis-database-secret-creds.yaml` exists and contains base64 encoded database username and password.
-    * No other database-related Kubernetes resources are defined. i.e. none of `database-database-service-account.yaml`, `database-database-service.yaml`, or `database-database-rc.yaml` exist.
+    * No other database-related Kubernetes resources are defined. i.e. none of `database-database-service-account.yaml`, `database-database-service.yaml`, or `database-database-deployment.yaml` exist.
 
 You are now ready to `helmc install workflow-v2.5.0` [as usual][installing].
 

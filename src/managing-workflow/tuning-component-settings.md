@@ -7,11 +7,11 @@ is to Homebrew.
 
 After you fetch the Workflow chart, you can customize the chart using `helmc edit` before using
 `helmc generate` and `helmc install` to complete the installation. To customize the respective
-component, edit `tpl/deis-<component>-rc.yaml` and modify the `env` section of the component to
+component, edit `tpl/deis-<component>-deployment.yaml` and modify the `env` section of the component to
 tune these settings.
 
 For example, to allow only administrators to register new accounts in the controller,
-edit `tpl/deis-controller-rc.yaml` and add the following under the `env` section:
+edit `tpl/deis-controller-deployment.yaml` and add the following under the `env` section:
 
 ```
 env:

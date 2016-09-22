@@ -193,7 +193,7 @@ Change the `generate_params.toml` file in **each** new chart as follows:
   1. If there's a `[workflowManager]` section, change `versionsApiURL` to
      `"https://versions.deis.com"` and `doctorApiURL` to `"https://doctor.deis.com"`
 
-Change the `workflow-$WORKFLOW_RELEASE/tpl/deis-controller-rc.yaml` file:
+Change the `workflow-$WORKFLOW_RELEASE/tpl/deis-controller-deployment.yaml` file:
 
   1. Remove the `KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS` env var
 
