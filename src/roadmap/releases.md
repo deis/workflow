@@ -93,12 +93,6 @@ deisrel changelog individual $COMPONENT $OLD_RELEASE $NEW_SHA $NEW_RELEASE | pbc
 open https://github.com/deis/$COMPONENT/releases/new?tag=$NEW_RELEASE
 ```
 
-### Step 4: Publish Release to Versions Server
-
-Finally, use the Workflow Manager API publishing tool to add the new component release to the
-versions server. This step is described in the workflow-manager-api-publish docs and must be done
-by a Deis maintainer.
-
 
 ## How to Release Workflow
 
