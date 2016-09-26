@@ -89,7 +89,7 @@ in GitHub. In the "Release Title" field, use the project & component with its re
 "Deis Controller v2.2.1":
 
 ```bash
-deisrel changelog individual $COMPONENT $OLD_RELEASE $NEW_SHA $NEW_RELEASE | pbcopy
+deisrel changelog individual $COMPONENT $NEW_RELEASE | pbcopy
 open https://github.com/deis/$COMPONENT/releases/new?tag=$NEW_RELEASE
 ```
 
