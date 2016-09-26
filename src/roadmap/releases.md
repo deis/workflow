@@ -55,6 +55,12 @@ upgrading to a patch or to a minor release will not break anything.
 Most Deis projects are "components" which produce a Docker image or binary executable as a
 deliverable. This section leads a maintainer through creating a component release.
 
+For flow diagrams representing the stages a component code change may take on its path to production,
+please see [this link](https://github.com/deis/jenkins-jobs/#flow).  One common release pipeline
+failure that can occur is if a release candidate cannot be located.  This would be due to a failing
+[master merge pipeline](https://github.com/deis/jenkins-jobs/#when-a-component-pr-is-merged-to-master)
+and so this pipeline would need to be rerun to success - using the commit to be tagged in Step 2 below - before the release can be (re-)initiated.
+
 ### Step 1: Update Code and Set Environment variables
 
 In the component repository, update from the GitHub remote and ensure `HEAD` is the commit
