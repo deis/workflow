@@ -53,8 +53,8 @@ namespace "deis" annotated
 Exporting environment variables for the previous and latest versions will help reduce confusion later on:
 
 ```
-$ export PREVIOUS_WORKFLOW_RELEASE=v2.4.2
-$ export DESIRED_WORKFLOW_RELEASE=v2.5.0
+$ export PREVIOUS_WORKFLOW_RELEASE=v2.5.0
+$ export DESIRED_WORKFLOW_RELEASE=v2.6.0
 ```
 
 ### Step 2: Fetch new charts

@@ -15,7 +15,7 @@ Check that the `helmc` command is available and the version is 0.8 or newer.
 
 ```
 $ helmc --version
-helmc version 0.8.0+f3cafbc
+helmc version 0.8.1+a9c55cf
 ```
 
 Ensure the `kubectl` client is installed and can connect to your Kubernetes cluster. `helmc` uses `kubectl` to interact
@@ -68,10 +68,10 @@ $ helmc repo add deis https://github.com/deis/charts
 Now that you have Helm Classic installed and have added the Deis Chart Repository, install Workflow by running:
 
 ```
-$ helmc fetch deis/workflow-v2.5.0            # fetches the chart into a
+$ helmc fetch deis/workflow-v2.6.0            # fetches the chart into a
                                               # local workspace
-$ helmc generate -x manifests workflow-v2.5.0 # generates various secrets
-$ helmc install workflow-v2.5.0               # injects resources into
+$ helmc generate -x manifests workflow-v2.6.0 # generates various secrets
+$ helmc install workflow-v2.6.0               # injects resources into
                                               # your cluster
 ```
 
