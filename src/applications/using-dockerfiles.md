@@ -4,7 +4,7 @@ Deis supports deploying applications via Dockerfiles.  A [Dockerfile][] automate
 Dockerfiles are incredibly powerful but require some extra work to define your exact application runtime environment.
 
 ## Add SSH Key
- 
+
 For **Dockerfile** based application deploys via `git push`, Deis Workflow identifies users via SSH keys. SSH keys are pushed to the platform and must be unique to each user.
 
 - See [this document](../users/ssh-keys.md/#generate-an-ssh-key) for instructions on how to generate an SSH key.
@@ -35,6 +35,9 @@ In order to deploy Dockerfile applications, they must conform to the following r
 * That port must be listening for an HTTP connection.
 * The Dockerfile must use the `CMD` directive to define the default process that will run within the container.
 * The Docker image must contain [bash](https://www.gnu.org/software/bash/) to run processes.
+
+!!! note
+    Note that if you are using a private registry of any kind (`gcr` or other) the application environment must include a `$PORT` config variable that matches the `EXPOSE`'d port, example: `deis config:set PORT=5000`. See [Configuring Registry](../installing-workflow/configuring-registry/#configuring-off-cluster-private-registry) for more info.
 
 
 ## Create an Application
