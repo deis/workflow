@@ -6,3 +6,17 @@ set -x
 build_dest=$1
 
 PATH=$HOME/.local/bin:$PATH BUILDDIR=${build_dest} make deps build
+
+# build again, this time to /en/dev
+dev_build_dest=$1/en/dev
+PATH=$HOME/.local/bin:$PATH BUILDDIR=${build_dest} make deps build
+
+# also build each version of the docs out to /en/<tag>
+for tag in $(git tag); do
+  tag_build_dest="$build_dest/en/$tag"
+  git checkout $tag
+  PATH=$HOME/.local/bin:$PATH BUILDDIR=${tag_build_dest} make deps build
+done
+
+# restore back to master
+git checkout master
