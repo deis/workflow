@@ -5,6 +5,9 @@ set -x
 
 build_dest=$1
 
+# ensure we are on the master branch before building
+git checkout master
+
 PATH=$HOME/.local/bin:$PATH BUILDDIR=${build_dest} make deps build
 
 # build again, this time to /en/dev
@@ -18,6 +21,3 @@ for tag in $(git tag | grep -v "-alpha\|-beta\|-rc"); do
   git checkout $tag
   PATH=$HOME/.local/bin:$PATH BUILDDIR=${tag_build_dest} make deps build
 done
-
-# restore back to master
-git checkout master
