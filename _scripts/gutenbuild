@@ -16,7 +16,7 @@ PATH=$HOME/.local/bin:$PATH BUILDDIR=${build_dest} make deps build
 
 # also build each version of the docs out to /en/<tag>
 # NOTE(bacongobbler): do not build any pre-release tags
-for tag in $(git tag | grep -v "-alpha\|-beta\|-rc"); do
+for tag in $(git tag | grep -v -- "-alpha\|-beta\|-rc"); do
   tag_build_dest="$build_dest/en/$tag"
   git checkout $tag
   PATH=$HOME/.local/bin:$PATH BUILDDIR=${tag_build_dest} make deps build
