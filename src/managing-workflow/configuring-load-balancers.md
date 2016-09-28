@@ -8,6 +8,31 @@ If a load balancer such as the one described above does exist (whether created a
 
 If, for instance, Deis Workflow were installed on kube-aws, this timeout should be increased to a recommended value of 1200 seconds.  This will ensure the load balancer does not hang up on the client during long-running operations like an application deployment.  Directions for this can be found [here](http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/config-idle-timeout.html).
 
+## Configuring PROXY protocol
+
+By default Kubernetes will create an external TCP load balancer to route incoming requests to the Deis router, which will take care of forwarding the requests to the right application inside the cluster depending on the hostname. Because the original request is not modified by the load balancer, the router only knowns about the internal IP address of the load balancer which will then be forwarded to your app in the `X-Forwarded-For` HTTP header.
+
+If you need access to the *actual* client's IP address in your application, for example for IP-based sessions, access control or auditing, you need to configure the external load balancer and the Deis router to use the [PROXY protocol](http://www.haproxy.org/download/1.6/doc/proxy-protocol.txt). The PROXY protocol adds a small header with the client's IP address to each connection, which can then be used by the Deis router to pass the actual client IP in the `X-Forwarded-For` HTTP header.
+
+**Here's how to enable PROXY protocol when running Kubernetes on AWS with an ELB Classic Load Balancer:**
+
+Enable PROXY protocol for the `deis-router` deployment:
+
+```
+$ kubectl --namespace=deis annotate deployment/deis-router router.deis.io/nginx.useProxyProtocol=true
+```
+
+Enable PROXY protocol on the ELB load balancer for the `deis-router` service:
+
+```
+$ kubectl --namespace=deis annotate service/deis-router service.beta.kubernetes.io/aws-load-balancer-proxy-protocol='*'
+```
+
+Prepare for a short downtime until both the ELB and the router have converged to the new configuration.
+
+!!! important
+    ELB PROXY protocol support was added in Kubernetes 1.3. If you are still on Kubernetes 1.2, you need to first upgrade to a newer [supported Kubernetes version](https://deis.com/docs/workflow/installing-workflow/system-requirements/#kubernetes-versions).
+
 ## Manually configuring a load balancer
 
 If using a Kubernetes distribution or underlying infrastructure that does not support the automated provisioning of a front-facing load balancer, operators will wish to manually configure a load balancer (or use other tricks) to route inbound traffic from beyond the cluster into the cluster to the Deis router(s).  There are many ways to accomplish this.  This documentation will focus on the most common method.  Readers interested in other options may refer to [the router component's own documentation](https://github.com/deis/router#front-facing-load-balancer) for further details.
