@@ -55,17 +55,13 @@ upgrading to a patch or to a minor release will not break anything.
 Most Deis projects are "components" which produce a Docker image or binary executable as a
 deliverable. This section leads a maintainer through creating a component release.
 
-For flow diagrams representing the stages a component code change may take on its path to production,
-please see [this link](https://github.com/deis/jenkins-jobs/#flow).  One common release pipeline
-failure that can occur is if a release candidate cannot be located.  This would be due to a failing
-[master merge pipeline](https://github.com/deis/jenkins-jobs/#when-a-component-pr-is-merged-to-master)
-and so this pipeline would need to be rerun to success - using the commit to be tagged in Step 2 below - before the release can be (re-)initiated.
-
 ### Step 1: Update Code and Set Environment variables
 
 In the component repository, update from the GitHub remote and ensure `HEAD` is the commit
 intended for release. Major or minor releases should happen on the master branch. Patch releases
 should check out the previous release tag and cherry-pick specific commits from master.
+
+Make sure you have the [deisrel][] release tool in your `$PATH`.
 
 Double-check that `git log` looks correct, then set some environment variables:
 ```bash
@@ -99,6 +95,20 @@ deisrel changelog individual $COMPONENT $NEW_RELEASE | pbcopy
 open https://github.com/deis/$COMPONENT/releases/new?tag=$NEW_RELEASE
 ```
 
+### Step 4: Verify the Component is Available
+
+Tagging the component (see [Step 2](/roadmap/releases/#step-2-push-the-release-tag))
+starts a CI job that eventually results in an artifact being made available for public download.
+Please see the [CI flow diagrams](https://github.com/deis/jenkins-jobs/#flow) for details.
+
+Double-check that the artifact is available, either by a `docker pull` command or by running the
+appropriate installer script.
+
+If the artifact can't be downloaded, ensure that its CI release jobs are still in progress, or
+fix whatever issue arose in the pipeline. For example, the
+[master merge pipeline](https://github.com/deis/jenkins-jobs/#when-a-component-pr-is-merged-to-master)
+may have failed to promote the `:git-abc1d23` candidate image and needs to be restarted with
+that component and commit.
 
 ## How to Release Workflow
 
@@ -120,7 +130,8 @@ export WORKFLOW_RELEASE=v2.5.0 WORKFLOW_PREV_RELEASE=v2.4.2  # for example
 ### Step 2: Update Jenkins Jobs
 
 Update the Workflow chart release value in the
-[common.groovy](https://github.com/deis/jenkins-jobs/blob/master/common.groovy) file so the [workflow-test-release](https://ci.deis.io/job/workflow-test-release/) job will kick off
+[common.groovy](https://github.com/deis/jenkins-jobs/blob/master/common.groovy) file so the
+[workflow-test-release](https://ci.deis.io/job/workflow-test-release/) job will kick off
 automatically when the `release-${WORKFLOW_RELEASE}` branch is pushed:
 
 ```bash
@@ -135,6 +146,7 @@ git push upstream HEAD:master
 Some Workflow components not in the Helm chart must also be tagged in sync with the release.
 Follow the [component release process](#how-to-release-a-component) above and ensure that
 these components are tagged:
+
 - [deis/workflow][]
 - [deis/workflow-cli][]
 - [deis/workflow-e2e][]
@@ -197,11 +209,18 @@ Change the `workflow-$WORKFLOW_RELEASE/tpl/deis-controller-deployment.yaml` file
 
   1. Remove the `KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS` env var
 
+Change any "-dev" labels to reference the new release instead, and remove test wording:
+
+  1. Remove "for testing only" lines in any Chart.yaml or README.md
+  1. Replace "-dev" with the new release tag in those same files
+  1. Don't forget the e2e and router charts
+  1. Compare changes to the previous release charts to ensure consistency
+
 Commit and push your changes:
 
 ```bash
 git commit -a -m "chore(workflow-$WORKFLOW_RELEASE): releasing workflow-$WORKFLOW_RELEASE(-e2e)"
-git push origin HEAD:release-$WORKFLOW_RELEASE
+git push upstream HEAD:release-$WORKFLOW_RELEASE
 ```
 
 Open a pull request at [deis/charts][] to merge this branch into master.
@@ -223,28 +242,13 @@ When showstopper-level bugs are found, the process is as follows:
 1. Update that component's `dockerTag` value in the release chart(s) to the new semver tag
 1. Commit and push the chart changes to the release branch and restart testing
 
-### Step 6: Merge and Put CHANGELOG in GitHub Release Notes
+### Step 6: Release the Chart as a Component
 
 When testing has completed without uncovering any new showstopper bugs and the charts PR has been
-reviewed successfully, merge it to master. Then update your local master branch and generate the
-CHANGELOG with the [`deisrel`](https://github.com/deis/deisrel.git) tool. Paste that content into
-an annotation on the new release tag, then push the tag:
+reviewed successfully, merge it to master. Then update your local master branch and do a
+[component release][] of the chart repository. Note that the [semantic version][] of the chart
+release is predetermined as the value of `$WORKFLOW_RELEASE`.
 
-```bash
-git checkout master && git fetch --tags upstream master && git merge upstream/master
-deisrel changelog individual workflow $WORKFLOW_PREV_RELEASE HEAD $WORKFLOW_RELEASE | pbcopy
-git tag -a $WORKFLOW_RELEASE  # paste the CHANGELOG into your editor and save
-git push upstream $WORKFLOW_RELEASE
-```
-
-Paste the same CHANGELOG from the previous step into the body of release notes for [deis/charts][]
-in GitHub. In the "Release Title" field, use the project & component with its release, such as
-"Deis Workflow v2.5.0":
-
-```bash
-deisrel changelog individual workflow $WORKFLOW_PREV_RELEASE HEAD $WORKFLOW_RELEASE | pbcopy
-open https://github.com/deis/workflow/releases/new?tag=$WORKFLOW_RELEASE
-```
 
 ### Step 7: Assemble Master Changelog
 
@@ -308,10 +312,12 @@ Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.5.0/
 
 You're done with the release. Nice job!
 
+[component release]: /roadmap/releases/#how-to-release-a-component
 [continuous delivery]: https://en.wikipedia.org/wiki/Continuous_delivery
 [deis/charts]: https://github.com/deis/charts
 [deis/workflow]: https://github.com/deis/workflow
 [deis/workflow-cli]: https://github.com/deis/workflow-cli
 [deis/workflow-e2e]: https://github.com/deis/workflow-e2e
+[deisrel]: https://github.com/deis/deisrel
 [Helm classic]: https://github.com/helm/helm-classic
 [semantic version]: http://semver.org
