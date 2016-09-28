@@ -33,7 +33,7 @@ should move it somewhere in your $PATH:
 Check your work by running `helmc --version`:
 
     $ helmc --version
-    helmc version 0.8.1+e4b3983
+    helmc version 0.8.1+a9c55cf
 
 Make sure you are running at least version 0.8.1 or newer.
 

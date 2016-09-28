@@ -124,7 +124,7 @@ specific commits from master.
 Export two environment variables that will be used in later steps:
 
 ```bash
-export WORKFLOW_RELEASE=v2.5.0 WORKFLOW_PREV_RELEASE=v2.4.2  # for example
+export WORKFLOW_RELEASE=v2.6.0 WORKFLOW_PREV_RELEASE=v2.5.0  # for example
 ```
 
 ### Step 2: Update Jenkins Jobs
@@ -249,7 +249,6 @@ reviewed successfully, merge it to master. Then update your local master branch 
 [component release][] of the chart repository. Note that the [semantic version][] of the chart
 release is predetermined as the value of `$WORKFLOW_RELEASE`.
 
-
 ### Step 7: Assemble Master Changelog
 
 Each component already updated its release notes on GitHub with CHANGELOG content. The
@@ -305,9 +304,9 @@ Post a message to the #company channel on Slack. Include a link to the released 
 master CHANGELOG:
 
 ```
-@here Deis Workflow v2.5.0 is now live!
-Release notes: https://github.com/deis/charts/releases/tag/v2.5.0
-Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.5.0/
+@here Deis Workflow v2.6.0 is now live!
+Release notes: https://github.com/deis/charts/releases/tag/v2.6.0
+Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.6.0/
 ```
 
 You're done with the release. Nice job!
