@@ -175,6 +175,7 @@ cat > components.json <<EOF
   "redis": ["loggerRedis"],
   "registry": ["registry"],
   "registry-proxy": ["registry_proxy"],
+  "registry-token-refresher": ["registry_token_refresher"],
   "router": ["router"],
   "slugbuilder": ["slugbuilder"],
   "slugrunner": ["slugrunner"],
