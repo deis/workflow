@@ -12,7 +12,7 @@ PATH=$HOME/.local/bin:$PATH BUILDDIR=${build_dest} make deps build
 
 # build again, this time to /en/dev
 dev_build_dest=$1/en/dev
-PATH=$HOME/.local/bin:$PATH BUILDDIR=${build_dest} make deps build
+PATH=$HOME/.local/bin:$PATH BUILDDIR=${dev_build_dest} make deps build
 
 # also build each version of the docs out to /en/<tag>
 # NOTE(bacongobbler): do not build any pre-release tags
