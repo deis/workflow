@@ -164,9 +164,7 @@ For a major or minor release, copy and modify the current development charts:
 
 ```bash
 git checkout -b release-$WORKFLOW_RELEASE master
-cp -r workflow-dev workflow-$WORKFLOW_RELEASE
-cp -r workflow-dev-e2e workflow-$WORKFLOW_RELEASE-e2e
-cp -r router-dev router-$WORKFLOW_RELEASE
+_scripts/new_workflow_charts.sh
 ```
 
 Use the `deisrel` tool to determine the latest component releases:
@@ -201,21 +199,6 @@ deisrel $HOME/.helmc/workspace/charts/workflow-$WORKFLOW_PREV_RELEASE/tpl/genera
 Change the `generate_params.toml` file in **each** new chart as follows:
 
   1. Set all `dockerTag` values to latest releases for each component, as determined above
-  1. Set all `org` values to `"deis"`
-  1. Set all `imagePullPolicy` values to `IfNotPresent`
-  1. If there's a `[workflowManager]` section, change `versionsApiURL` to
-     `"https://versions.deis.com"` and `doctorApiURL` to `"https://doctor.deis.com"`
-
-Change the `workflow-$WORKFLOW_RELEASE/tpl/deis-controller-deployment.yaml` file:
-
-  1. Remove the `KUBERNETES_POD_TERMINATION_GRACE_PERIOD_SECONDS` env var
-
-Change any "-dev" labels to reference the new release instead, and remove test wording:
-
-  1. Remove "for testing only" lines in any Chart.yaml or README.md
-  1. Replace "-dev" with the new release tag in those same files
-  1. Don't forget the e2e and router charts
-  1. Compare changes to the previous release charts to ensure consistency
 
 Commit and push your changes:
 
