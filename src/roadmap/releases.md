@@ -55,49 +55,59 @@ upgrading to a patch or to a minor release will not break anything.
 Most Deis projects are "components" which produce a Docker image or binary executable as a
 deliverable. This section leads a maintainer through creating a component release.
 
-### Step 1: Update Code and Set Environment variables
+### Step 1: Update Code and Run the Release Tool
 
-In the component repository, update from the GitHub remote and ensure `HEAD` is the commit
-intended for release. Major or minor releases should happen on the master branch. Patch releases
+Major or minor releases should happen on the master branch. Patch releases
 should check out the previous release tag and cherry-pick specific commits from master.
 
-Make sure you have the [deisrel][] release tool in your `$PATH`.
+Make sure you have the [deisrel][] release tool in your search `$PATH`.
 
-Double-check that `git log` looks correct, then set some environment variables:
-```bash
-export COMPONENT=${PWD##*/}
-export OLD_RELEASE=$(git describe --abbrev=0 --tags)
-export NEW_SHA=$(git rev-parse --short HEAD)
-deisrel changelog individual $COMPONENT unknown
-export NEW_RELEASE=v2.2.1  # changelog agrees it's a patch release
-```
-
-### Step 2: Push the Release Tag
-
-Generate the CHANGELOG with the [`deisrel`](https://github.com/deis/deisrel.git) tool and paste
-it into an annotation on the new release tag. Edit out any unnecessary blank lines. Then push the
-new release tag to the GitHub repository:
+Run `deisrel release` once with a fake semver tag to proofread the changelog content. (If `HEAD`
+of master is not what is intended for the release, add the `--sha` flag as described
+in `deisrel release --help`.)
 
 ```bash
-deisrel changelog individual $COMPONENT $NEW_RELEASE | pbcopy
-git tag -a $NEW_RELEASE  # paste the CHANGELOG into your editor and save
-git push upstream $NEW_RELEASE
+$ deisrel release controller v0.0.0
+Doing a dry run of the component release...
+skipping commit 943a49267eeb28546819a266654806cfcbae0e38
+
+Creating changelog for controller with tag v2.8.1 through commit 943a49267eeb28546819a266654806cfcbae0e38
+
+### v2.8.1 -> v0.0.0
+
+#### Fixes
+
+- [`615b834`](https://github.com/deis/controller/commit/615b834f39cb68a854cc1f1e2f0f82d862ea2731) boot: Ensure DEIS_DEBUG==true for debug output
 ```
 
-### Step 3: Put CHANGELOG in GitHub Release Notes
-
-Paste the same CHANGELOG from the previous step into the body of release notes for the component
-in GitHub. In the "Release Title" field, use the project & component with its release, such as
-"Deis Controller v2.2.1":
-
+Based on the changelog content, determine whether the component deserves a minor or patch
+release. Run the command again with that semver tag and `--dry-run=false`. You will still be
+asked for confirmation before the release is created:
 ```bash
-deisrel changelog individual $COMPONENT $NEW_RELEASE | pbcopy
-open https://github.com/deis/$COMPONENT/releases/new?tag=$NEW_RELEASE
+$ deisrel release controller v2.8.2 --dry-run=false
+skipping commit 943a49267eeb28546819a266654806cfcbae0e38
+
+Creating changelog for controller with tag v2.8.1 through commit 943a49267eeb28546819a266654806cfcbae0e38
+
+### v2.8.1 -> v2.8.2
+
+
+#### Fixes
+
+- [`615b834`](https://github.com/deis/controller/commit/615b834f39cb68a854cc1f1e2f0f82d862ea2731) boot: Ensure DEIS_DEBUG==true for debug output
+
+
+Please review the above changelog contents and ensure:
+  1. All intended commits are mentioned
+  2. The changes agree with the semver release tag (major, minor, or patch)
+
+Create release for Deis Controller v2.8.2? [y/n]: y
+New release is available at https://github.com/deis/controller/releases/tag/v2.8.2
 ```
 
-### Step 4: Verify the Component is Available
+### Step 2: Verify the Component is Available
 
-Tagging the component (see [Step 2](/roadmap/releases/#step-2-push-the-release-tag))
+Tagging the component (see [Step 1](/roadmap/releases/#step-1-update-code-and-run-the-release-tool))
 starts a CI job that eventually results in an artifact being made available for public download.
 Please see the [CI flow diagrams](https://github.com/deis/jenkins-jobs/#flow) for details.
 
