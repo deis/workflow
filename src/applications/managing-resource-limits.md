@@ -24,7 +24,7 @@ Available units for memory are:
 Use `deis limits:set` to restrict memory by process type:
 
 ```
-$ deis limits:set web=128M
+$ deis limits:set web=64M
 Applying limits... done
 
 === indoor-whitecap Limits
@@ -48,12 +48,12 @@ Applying limits... done
 Unlimited
 
 --- CPU
-web     250m
+Unlimited
 ```
 
 ## Limiting CPU
 
-You can also use `deis limits:set -c` to restrict CPU shares. CPU shares are tracked in milli-cores. One CPU core is
+You can also use `deis limits:set --cpu` to restrict CPU shares. CPU shares are tracked in milli-cores. One CPU core is
 equivalent to 1000 milli-cores. To dedicate half a core to your process, you would need 500 milli-cores or 500m.
 
 | Unit  | Amount                            |
@@ -64,7 +64,7 @@ equivalent to 1000 milli-cores. To dedicate half a core to your process, you wou
 | 100m  | 100 milli-cores == 10% CPU core   |
 
 ```
-$ deis limits:set web=250m -c
+$ deis limits:set web=250m --cpu
 Applying limits... done
 
 === indoor-whitecap Limits
@@ -102,10 +102,10 @@ Containers:
     the `limits:set` command will hang.  If this happens, use CTRL-C
     to break out of `limits:set` and use `limits:unset` to revert.
 
-To unset a CPU limit use `deis limits:unset web -c`:
+To unset a CPU limit use `deis limits:unset web --cpu`:
 
 ```
-$ deis limits:unset web -c
+$ deis limits:unset web --cpu
 Applying limits... done
 
 === indoor-whitecap Limits
