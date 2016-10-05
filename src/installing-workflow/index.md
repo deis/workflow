@@ -1,8 +1,8 @@
 # Installing Deis Workflow
 
 This document is aimed at those who have already provisioned a [Kubernetes v1.2 or v1.3.4+][] cluster
-and want to install Deis Workflow. If you are just getting started with Kubernetes and
-Deis Workflow, follow our [quickstart guide](../quickstart/index.md) for help.
+and want to install Deis Workflow. If help is required getting started with Kubernetes and
+Deis Workflow, follow the [quickstart guide](../quickstart/index.md) for assistance.
 
 ## Prerequisites
 
@@ -18,10 +18,10 @@ $ helmc --version
 helmc version 0.8.1+a9c55cf
 ```
 
-Ensure the `kubectl` client is installed and can connect to your Kubernetes cluster. `helmc` uses `kubectl` to interact
-with your Kubernetes cluster.
+Ensure the `kubectl` client is installed and can connect to the Kubernetes cluster. `helmc` uses `kubectl` to interact
+with the Kubernetes cluster.
 
-You can test that `helmc` and `kubectl` are working properly by running:
+`helmc` can be verified it is working properly by running:
 
 ```
 $ helmc target
@@ -35,7 +35,7 @@ Grafana is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/se
 InfluxDB is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
 ```
 
-If you see a list of targets like the one above, `helmc` can communicate with the Kubernetes master. Double check that
+If `helmc target` shows a list of targets like the one above, `helmc` can communicate with the Kubernetes master. Double check that
 the master returned by `helmc target` matches the expected cluster.
 
 ## Choose Your Deployment Strategy
@@ -43,19 +43,19 @@ the master returned by `helmc target` matches the expected cluster.
 Deis Workflow includes everything it needs to run out of the box. However, these defaults are aimed at simplicity rather than
 production readiness. Production and staging deployments of Workflow should, at a minimum, use off-cluster storage.
 Which is used by Workflow components to store and backup critical data. Should an operator need to completely re-install
-Workflow, the required components can recover from off-cluster storage. See our documentation for [configuring object
+Workflow, the required components can recover from off-cluster storage. See the documentation for [configuring object
 storage](configuring-object-storage.md) for more details.
 
 Workflow may also be configured to use off-cluster persistence for [Postgres](configuring-postgres.md) and
-Redis. A deployment strategy that mirrors the "stateless" clusters from Deis v1 PaaS.
+Redis; a deployment strategy that mirrors the "stateless" clusters from the Deis v1 PaaS.
 
 Last but not least, Workflow may also use a dedicated off-cluster image registry, including Docker Hub, Quay.io, ECR or
 GCR for all container images. Read more about [configuring your registry](configuring-registry.md).
 
 ## Add the Deis Chart Repository
 
-The [Deis Chart Repository](https://github.com/deis/charts) contains everything you need to install Deis Workflow onto
-your Kubernetes cluster, with a single `helmc install` command.
+The [Deis Chart Repository](https://github.com/deis/charts) contains everything needed to install Deis Workflow onto
+a Kubernetes cluster, with a single `helmc install` command.
 
 Add this repository to Helm Classic:
 
@@ -65,7 +65,7 @@ $ helmc repo add deis https://github.com/deis/charts
 
 ## Install Deis Workflow
 
-Now that you have Helm Classic installed and have added the Deis Chart Repository, install Workflow by running:
+Now that Helm Classic is installed and the Deis Chart Repository has been added, install Workflow by running:
 
 ```
 $ helmc fetch deis/workflow-v2.6.0            # fetches the chart into a
@@ -76,14 +76,14 @@ $ helmc install workflow-v2.6.0               # injects resources into
 ```
 
 Helm Classic will install a variety of Kubernetes resources in the `deis` namespace.
-You'll need to wait for the pods that it launched to be ready. Monitor their status
-by running:
+Wait for the pods that Helm Classic launched to be ready. Monitor their status by running:
 
 ```
 $ kubectl --namespace=deis get pods
 ```
 
-If you would like `kubectl` to automatically update as the pod states change, run (type Ctrl-C to stop the watch):
+If it's preferred to have `kubectl` automatically update as the pod states change, run (type Ctrl-C to stop the watch):
+
 ```
 $ kubectl --namespace=deis get pods -w
 ```
@@ -92,7 +92,8 @@ Depending on the order in which the Workflow components initialize, some pods ma
 installation: if a component's dependencies are not yet available, that component will exit and Kubernetes will
 automatically restart it.
 
-Here, you can see that controller, builder and registry all took a few loops before there were able to start:
+Here, it can be seen that the controller, builder and registry all took a few loops before they were able to start:
+
 ```
 $ kubectl --namespace=deis get pods
 NAME                          READY     STATUS    RESTARTS   AGE
@@ -108,6 +109,8 @@ deis-router-k1ond             1/1       Running   0          5m
 deis-workflow-manager-68nu6   1/1       Running   0          5m
 ```
 
-Once you see all of the pods in the `READY` state, Deis Workflow is up and running!
+Once all of the pods are in the `READY` state, Deis Workflow is up and running!
+
+After installing Workflow, [register a user and deploy an application](../quickstart/deploy-an-app.md).
 
 [Kubernetes v1.2 or v1.3.4+]: system-requirements.md#kubernetes-versions
