@@ -27,6 +27,8 @@ In order to deploy Docker images, they must conform to the following requirement
 * The Dockerfile must use the `CMD` directive to define the default process that will run within the container.
 * The Docker image must contain [bash](https://www.gnu.org/software/bash/) to run processes.
 
+!!! note
+    Note that if you are using a private registry of any kind (`gcr` or other) the application environment must include a `$PORT` config variable that matches the `EXPOSE`'d port, example: `deis config:set PORT=5000`. See [Configuring Registry](../installing-workflow/configuring-registry/#configuring-off-cluster-private-registry) for more info.
 
 ## Create an Application
 
