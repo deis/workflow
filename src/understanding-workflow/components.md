@@ -50,7 +50,7 @@ For Buildpack-based deploys, the builder component will launch a one-shot Pod
 in the `deis` namespace. This pod runs `slugbuilder` component which handles
 default and custom buildpacks (specified by `BUILDPACK_URL`). The "compiled"
 application results in a slug, consisting of your application code and all of
-its depdencies as determined by the buildpack. The slug is pushed to the
+its dependencies as determined by the buildpack. The slug is pushed to the
 cluster-configured object storage for later execution. For more information
 about buildpacks see [using buildpacks][using-buildpacks].
 
@@ -85,7 +85,7 @@ we highly recommend that you configure [off-cluster object storage][configure-ob
 To facilitate experimentation, development and test environments, the default charts for
 Workflow include on-cluster object storage via [minio](https://github.com/minio/minio).
 
-If you also feel comforatable using Kubernetes persistent volumes you may
+If you also feel comfortable using Kubernetes persistent volumes you may
 configure minio to use persistent storage available in your environment.
 
 ## Registry
@@ -94,7 +94,7 @@ configure minio to use persistent storage available in your environment.
 
 The registry component is a managed docker registry which holds application
 images generated from the builder component. Registry persists the Docker image
-iamges to either local storage (in development mode) or to object storage
+images to either local storage (in development mode) or to object storage
 configured for the cluster.
 
 ## Router
@@ -113,7 +113,7 @@ configuration view the router [project documentation][router-documentation].
 
 ## Logger: fluentd, logger
 
-The logging subystem consists of two compoents. Fluentd handles log shipping
+The logging subsystem consists of two components. Fluentd handles log shipping
 and logger maintains a ring-buffer of application logs.
 
 
@@ -126,7 +126,7 @@ fluentd ships logs to the logger component, which powers `deis logs`.
 
 **Project Location:** [deis/logger](https://github.com/deis/logger)
 
-The `logger` compoent receives log streams from `fluentd`, collating by
+The `logger` component receives log streams from `fluentd`, collating by
 Application name. Logger does not persist logs to disk, instead maintaining an
 in-memory ring buffer. For more information on logger see the [project
 documentation][logger-documentation].
