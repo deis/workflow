@@ -74,7 +74,7 @@ following line - `router.deis.io/routable: "true"`.
 Telegraf is the metrics collection daemon used within the monitoring stack. It will collect and send the following metrics to InfluxDB:
 
 * System level metrics such as CPU, Load Average, Memory, Disk, and Network stats
-* Container level memtrics such as CPU and Memory
+* Container level metrics such as CPU and Memory
 * Kubernetes metrics such as API request latency, Pod Startup Latency, and number of running pods
 
 It is possible to send these metrics to other endpoints besides InfluxDB. For more information please consult the following [file](https://github.com/deis/monitor/blob/master/telegraf/rootfs/config.toml.tpl)

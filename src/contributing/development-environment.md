@@ -77,13 +77,13 @@ $ eval "$(docker-machine env docker-deis)"
 After following these steps, some Docker Machine users report a slight delay (30 - 60 seconds) before the Docker server is ready.
 
 !!! note
-    In subsequent steps, you may run a Docker registry within the `deis-docker` VM. Such a registry will not have a valid SSL certificate and will use HTTP instead of HTTPS. Such registries are implicitly untrusted by the Docker server (which is also running on the `deis-docker` VM).  In order for the Docker server to trust the insecure registry, `deis-docker` is explicitly created to trust all registries in the IP ranges that that are reserved for use by provate networks.  The VM (and therefore the registry) will exist within such a range.  This will effectively permit Docker pulls and pushes to such a registry.
+    In subsequent steps, you may run a Docker registry within the `deis-docker` VM. Such a registry will not have a valid SSL certificate and will use HTTP instead of HTTPS. Such registries are implicitly untrusted by the Docker server (which is also running on the `deis-docker` VM).  In order for the Docker server to trust the insecure registry, `deis-docker` is explicitly created to trust all registries in the IP ranges that that are reserved for use by private networks.  The VM (and therefore the registry) will exist within such a range.  This will effectively permit Docker pulls and pushes to such a registry.
 
 ## Fork the Repository
 
 Once the prerequisites have been met, we can begin to work with Deis components.
 
-Begin at Github by forking whichever Deis project you would like to contriubte to, then clone that fork locally.  Since Deis is predominantly written in Go, the best place to put it is under `$GOPATH/src/github.com/deis/`.
+Begin at Github by forking whichever Deis project you would like to contribute to, then clone that fork locally.  Since Deis is predominantly written in Go, the best place to put it is under `$GOPATH/src/github.com/deis/`.
 
 ```
 $ mkdir -p  $GOPATH/src/github.com/deis

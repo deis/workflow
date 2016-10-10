@@ -17,7 +17,7 @@ Before triaging an issue very far, make sure that the issue's author provided th
 -   a reproducible case if this is a bug
 -   page URL if this is a docs issue or the name of a man page
 
-Depending on the issue, you might not feel all this information is needed. Use your best judgement.  If you cannot triage an issue using what its author provided, explain kindly to the author that they must provide the above information to clarify the problem.
+Depending on the issue, you might not feel all this information is needed. Use your best judgment. If you cannot triage an issue using what its author provided, explain kindly to the author that they must provide the above information to clarify the problem.
 
 If the author provides the recommended information but you are still unable to triage the issue, request additional information. Do this kindly and politely because you are asking for more of the author's time.
 

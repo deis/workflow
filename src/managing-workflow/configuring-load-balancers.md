@@ -10,7 +10,7 @@ If, for instance, Deis Workflow were installed on kube-aws, this timeout should 
 
 ## Configuring PROXY protocol
 
-By default Kubernetes will create an external TCP load balancer to route incoming requests to the Deis router, which will take care of forwarding the requests to the right application inside the cluster depending on the hostname. Because the original request is not modified by the load balancer, the router only knowns about the internal IP address of the load balancer which will then be forwarded to your app in the `X-Forwarded-For` HTTP header.
+By default Kubernetes will create an external TCP load balancer to route incoming requests to the Deis router, which will take care of forwarding the requests to the right application inside the cluster depending on the hostname. Because the original request is not modified by the load balancer, the router only knows about the internal IP address of the load balancer which will then be forwarded to your app in the `X-Forwarded-For` HTTP header.
 
 If you need access to the *actual* client's IP address in your application, for example for IP-based sessions, access control or auditing, you need to configure the external load balancer and the Deis router to use the [PROXY protocol](http://www.haproxy.org/download/1.6/doc/proxy-protocol.txt). The PROXY protocol adds a small header with the client's IP address to each connection, which can then be used by the Deis router to pass the actual client IP in the `X-Forwarded-For` HTTP header.
 

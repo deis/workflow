@@ -6,7 +6,7 @@ Deis Workflow tracks all changes to your application. Application changes are th
 pushed to the platform (via `git push deis master`), or an update to application configuration (via `deis config:set KEY=VAL`).
 
 Each time a build or config change is made to your application a new [release][] is created. These release numbers
-increase montonically.
+increase monotonically.
 
 You can see a record of changes to your application using `deis releases`:
 

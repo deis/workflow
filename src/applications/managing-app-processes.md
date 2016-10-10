@@ -1,7 +1,7 @@
 # Managing Application Processes
 
 Deis Workflow manages your application as a set of processes that can be named, scaled and configured according to their
-role. This gives you the flexiblity to easily manage the different facets of your application. For example, you may have
+role. This gives you the flexibility to easily manage the different facets of your application. For example, you may have
 web-facing processes that handle HTTP traffic, background worker processes that do async work, and a helper process that
 streams from the Twitter API.
 
@@ -124,7 +124,7 @@ iciest-waggoner-web-3291896318-kt7vu up (v2)
 ```
 
 If you have multiple process types for your application you may scale the process count for each type separately. For
-example, this allows you to manage web process indepenetly from background workers. For more information on process
+example, this allows you to manage web process independently from background workers. For more information on process
 types see our documentation for [Managing App Processes](managing-app-processes.md).
 
 In this example, we are scaling the process type `web` to 5 but leaving the process type `background` with one worker.

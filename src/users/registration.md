@@ -21,7 +21,7 @@ to create a new account. After successful registration you will be logged in as 
     Logged in as myuser
 
 !!! important
-    The first user to register with Deis Workflow is automatically becomes an administrator. Additional users who register will be ordinary users.
+    The first user to register with Deis Workflow automatically becomes an administrator. Additional users who register will be ordinary users.
 
 ## Login to Workflow
 
