@@ -27,7 +27,7 @@ The following criteria must be met:
 If your certificate has intermediate certs, append the intermediate signing certs to the bottom of the `cert` file
 before base64 encoding the combined certificates.
 
-Prepare your certificate and key files by encoding them in bas64:
+Prepare your certificate and key files by encoding them in base64:
 
 ```
 $ cat certificate-file.crt
@@ -69,9 +69,9 @@ data:
   tls.key: LS0...LQo=
 ```
 
-Once you've created the `deis-router-plaform-cert.yaml` file, you can install the manifest with `kubectl create -f
-deis-router-platform-cert.yaml`. The Deis Workflow router will automatically notice the new secret and update configuration its
-on-the-fly.
+Once you've created the `deis-router-platform-cert.yaml` file, you can install the manifest with `kubectl create -f
+deis-router-platform-cert.yaml`. The Deis Workflow router will automatically notice the new secret and update its 
+configuration on-the-fly.
 
 ## Installing SSL on a Load Balancer
 
@@ -80,7 +80,7 @@ communication inbound to the load balancer will be encrypted while the internal 
 communicate over HTTP. This offloads SSL processing to the cloud load balancer but also means that any
 application-specific SSL certificates must **also** be configured on the cloud load balancer.
 
-To terminate SSL on the cloud load blanancer you will need to modify the load balancer's listener settings:
+To terminate SSL on the cloud load balancer you will need to modify the load balancer's listener settings:
 
  - Swap the load balancer protocol on port 443 to use HTTPS instead of TCP
  - Swap the backend protocol to use HTTP instead of TCP
