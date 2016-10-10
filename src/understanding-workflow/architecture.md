@@ -50,7 +50,7 @@ By default, the router component is deployed as a Kubernetes service with type
 `LoadBalancer`; which, depending on your configuration, will provision a
 cloud-native load balancer automatically.
 
-The router automatically discovers routeable Applications, SSL/TLS certificates
+The router automatically discovers routable Applications, SSL/TLS certificates
 and application-specific configurations through the use of Kubernetes
 annotations. Any changes to router configuration or certificates are applied
 within seconds.
