@@ -64,7 +64,7 @@ Then list your container clusters:
 ```
 $ gcloud container clusters list
 NAME       ZONE           MASTER_VERSION  MASTER_IP        MACHINE_TYPE   NODE_VERSION  NUM_NODES  STATUS
-cluster-1  us-central1-b  1.2.4           104.154.234.246  n1-standard-2  1.2.3 *       2          RUNNING
+cluster-1  us-central1-b  1.4.0           104.154.234.246  n1-standard-2  1.4.0 *       2          RUNNING
 ```
 
 If you haven't configured your default zone, make sure it matches the ZONE for your cluster:
