@@ -37,6 +37,8 @@ Operators should configure object storage by either populating a set of environm
 
 **Option 1:** Using environment variables
 
+After setting a `STORAGE_TYPE` environment variable to the desired object storage type ("s3", "gcs", "azure", or "swift"), set the additional variables as required by the selected object storage:
+
 | Storage Type | Required Variables                                                                                                                                          | Notes                                                                                               |
 | ---          | ---                                                                                                                                                         | ---                                                                                                 |
 | s3           | `AWS_ACCESS_KEY`, `AWS_SECRET_KEY`, `AWS_REGISTRY_BUCKET`, `AWS_DATABASE_BUCKET`, `AWS_BUILDER_BUCKET`, `S3_REGION`                                         | To use [IAM credentials][aws-iam], it is not necessary to set `AWS_ACCESS_KEY` or `AWS_SECRET_KEY`. |
