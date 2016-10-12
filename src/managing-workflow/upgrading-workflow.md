@@ -35,7 +35,8 @@ See the Helm Classic documentation for more detail about [keeper manifests].
 
 ### Step 1: Verify component annotations and prepare upgrade
 
-To verify that the namespace, router and registry are marked as "keepers" run the following kubectl command for each component:
+To verify that the deis namespace and all the deis-* services are marked as "keepers," run a
+command like this one for each component:
 
 ```
 $ kubectl --namespace=deis get service deis-router \
