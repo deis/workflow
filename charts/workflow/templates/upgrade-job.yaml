@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: deis-upgrade
+  labels:
+    heritage: deis
+  annotations:
+    "helm.sh/hook": post-upgrade
+spec:
+  template:
+    metadata:
+      name: deis-upgrade
+    spec:
+      containers:
+      - name: deis-upgrade
+        image: quay.io/deis/workflow-upgrade:canary
+        imagePullPolicy: Always
+      restartPolicy: Never

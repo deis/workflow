@@ -1,0 +1,143 @@
+#
+# This is the main configuration file for Deis object storage. The values in
+# this file are passed into the appropriate services so that they can configure
+# themselves for persisting data in object storage.
+#
+# In general, all object storage credentials must be able to read and write to
+# the container or bucket they are configured to use.
+#
+
+global:
+  # Set the storage backend
+  #
+  # Valid values are:
+  # - s3: Store persistent data in AWS S3 (configure in S3 section)
+  # - azure: Store persistent data in Azure's object storage
+  # - gcs: Store persistent data in Google Cloud Storage
+  # - minio: Store persistent data on in-cluster Minio server
+  storage: minio
+  # Set the location of Workflow's PostgreSQL database
+  #
+  # Valid values are:
+  # - on-cluster: Run PostgreSQL within the Kubernetes cluster (credentials are generated
+  #   automatically; backups are sent to object storage
+  #   configured above)
+  # - off-cluster: Run PostgreSQL outside the Kubernetes cluster (configure in database section)
+  database_location: "on-cluster"
+  # Set the location of Workflow's logger-specific Redis instance
+  #
+  # Valid values are:
+  # - on-cluster: Run Redis within the Kubernetes cluster
+  # - off-cluster: Run Redis outside the Kubernetes cluster (configure in loggerRedis section)
+  logger_redis_location: "on-cluster"
+
+  # Set the location of Workflow's Registry
+  #
+  # Valid values are:
+  # - on-cluster: Run registry within the Kubernetes cluster
+  # - off-cluster: Use registry outside the Kubernetes cluster (example: dockerhub,quay.io,self-hosted)
+  # - ecr: Use Amazon's ECR
+  # - gcr: Use Google's GCR
+  registry_location: "on-cluster"
+  # The host port to which registry proxy binds to
+  host_port: 5555
+  # Prefix for the imagepull secret created when using private registry
+  secret_prefix: "private-registry"
+
+
+s3:
+  # Your AWS access key. Leave it empty if you want to use IAM credentials.
+  accesskey: ""
+  # Your AWS secret key. Leave it empty if you want to use IAM credentials.
+  secretkey: ""
+  # Any S3 region
+  region: "us-west-1"
+  # Your buckets.
+  registry_bucket: "your-registry-bucket-name"
+  database_bucket: "your-database-bucket-name"
+  builder_bucket: "your-builder-bucket-name"
+
+azure:
+  accountname: "YOUR ACCOUNT NAME"
+  accountkey: "YOUR ACCOUNT KEY"
+  registry_container: "your-registry-container-name"
+  database_container: "your-database-container-name"
+  builder_container: "your-builder-container-name"
+
+gcs:
+  # key_json is expanded into a JSON file on the remote server. It must be
+  # well-formatted JSON data.
+  key_json: ''
+  registry_bucket: "your-registry-bucket-name"
+  database_bucket: "your-database-bucket-name"
+  builder_bucket: "your-builder-bucket-name"
+
+swift:
+  username: "Your OpenStack Swift Username"
+  password: "Your OpenStack Swift Password"
+  authurl: "Swift auth URL for obtaining an auth token"
+  # Your OpenStack tenant name if you are using auth version 2 or 3.
+  tenant: ""
+  authversion: "Your OpenStack swift auth version"
+  registry_container: "your-registry-container-name"
+  database_container: "your-database-container-name"
+  builder_container: "your-builder-container-name"
+
+# Set the default (global) way of how Application (your own) images are
+# pulled from within the Controller.
+# This can be configured per Application as well in the Controller.
+#
+# This affects pull apps and git push (slugrunner images) apps
+#
+# Values values are:
+# - Always
+# - IfNotPresent
+controller:
+  app_pull_policy: "IfNotPresent"
+
+database:
+  # Configure the following ONLY if using an off-cluster PostgreSQL database
+  postgres:
+    name: "database name"
+    username: "database username"
+    password: "database password"
+    host: "database host"
+    port: "database port"
+
+logger:
+  redis:
+    # Configure the following ONLY if using an off-cluster Redis instance for logger
+    db: "0"
+    host: "redis host"
+    port: "redis port"
+    password: "redis password" # "" == no password
+
+monitor:
+  grafana:
+    user: "admin"
+    password: "admin"
+
+registry-token-refresher:
+  # Time in minutes after which the token should be refreshed.
+  # Leave it empty to use the default provider time.
+  token_refresh_time: ""
+  off_cluster_registry:
+    hostname: ""
+    organization: ""
+    username: ""
+    password: ""
+  ecr:
+    # Your AWS access key. Leave it empty if you want to use IAM credentials.
+    accesskey: ""
+    # Your AWS secret key. Leave it empty if you want to use IAM credentials.
+    secretkey: ""
+    # Any S3 region
+    region: "us-west-2"
+    registryid: ""
+    hostname: ""
+  gcr:
+    key_json: 'Paste JSON data here.'
+    hostname: ""
+
+router:
+  dhparam: ""
