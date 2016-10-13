@@ -29,6 +29,8 @@ The key's randomart image is:
 |         . o =   |
 |          .   .  |
 +-----------------+
+$ ssh-add ~/.ssh/id_deis
+Identity added: /Users/admin/.ssh/id_deis (/Users/admin/.ssh/id_deis)
 ```
 
 ## Adding and Removing SSH Keys

@@ -19,6 +19,10 @@ The most common problem for this issue is the user forgetting to run `deis keys:
 private key to their SSH agent. To do so, run `ssh-add ~/.ssh/id_rsa` and try running
 `git push deis master` again.
 
+If you happen get a `Could not open a connection to your authentication agent` 
+error after trying to run `ssh-add` command above, you may need to load the SSH
+agent environment variables issuing the `eval "$(ssh-agent)"` command before.
+
 ## Other Issues
 
 Running into something not detailed here? Please [open an issue][issue] or hop into

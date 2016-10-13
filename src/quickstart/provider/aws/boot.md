@@ -5,14 +5,14 @@ guide uses AWS EC2 to boot a Kubernetes cluster using the open source provisioni
 
 ## Pre-requisites
 
-1. You need an active AWS account. Visit [](http://aws.amazon.com) to sign up
+1. You need an active AWS account. Visit [AWS portal](http://aws.amazon.com) to sign up
 2. You need AWS API keys with full access
-3. Install the AWS cli tools, you can find instructions for your platform at [](https://aws.amazon.com/cli/)
+3. Install the AWS cli tools, you can find instructions for your platform at [AWS Command Line Interface Site](https://aws.amazon.com/cli/)
 
 To verify that your CLI is configured properly, run `aws ec2 describe-regions`:
 
 ```
-$ aws ec2 describe-regions
+$ aws ec2 describe-regions --output=text
 REGIONS	ec2.eu-west-1.amazonaws.com	eu-west-1
 REGIONS	ec2.ap-southeast-1.amazonaws.com	ap-southeast-1
 REGIONS	ec2.ap-southeast-2.amazonaws.com	ap-southeast-2
@@ -73,6 +73,23 @@ Last, so you can easily identify instances in the AWS Console, specify an instan
 ```
 export INSTANCE_PREFIX=first-k8s
 ```
+
+## Setup kubectl CLI
+
+Very soon, we will need to use `kubectl` to check everything is running smoothly and
+for that let's get it on the $PATH.
+
+For Mac OS, run:
+
+    $ ln -fs $PWD/platforms/darwin/amd64/kubectl /usr/local/bin/kubectl
+
+For Linux, use this instead:
+
+    $ sudo ln -fs $PWD/platforms/linux/amd64/kubectl /usr/local/bin/kubectl
+
+!!! note
+    If you are using any other architecture, you can look at the `platforms/<os>/<arch>`
+    tree to see all the available binaries
 
 ## Boot Your First Cluster
 
@@ -252,7 +269,7 @@ admin@ip-172-20-0-9:~$
 ```
 
 When you are finished with the Kubernetes cluster, you may terminate the AWS resources by running
-`./clusters/kube-down.sh`. If you are using a new shell environement you will need to set the environment variables we
+`./cluster/kube-down.sh`. If you are using a new shell environment you will need to set the environment variables we
 used above so `kube-down.sh` can find the right cluster.
 
 You are now ready to [install Deis Workflow](install-aws.md)

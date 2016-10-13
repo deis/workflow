@@ -28,7 +28,7 @@ names. The website for your registrar will provide detailed instructions and pri
 for registering your domain name. For more information, see the following resources:
 
  - To use Amazon Route 53 to register a domain name, see [Registering Domain Names Using Amazon Route 53](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/registrar.html).
- - For a list of accredited registrars, see the [Accredited Registrar Directory](www.internic.net/regist.html).
+ - For a list of accredited registrars, see the [Accredited Registrar Directory](http://www.internic.net/regist.html).
 
 Next, use your DNS service, such as your domain registrar, to create a wildcard CNAME record to
 route queries to your load balancer. For more information, see the documentation for your DNS

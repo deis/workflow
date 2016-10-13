@@ -10,12 +10,19 @@ Install the latest `deis` client for Linux or Mac OS X with:
 The installer places the `deis` binary in your current directory, but you
 should move it somewhere in your $PATH:
 
+    $ sudo ln -fs $PWD/deis /usr/local/bin/deis
+
+*or*:
+
     $ sudo mv $PWD/deis /usr/local/bin/deis
 
 Check your work by running `deis version`:
 
     $ deis version
-    2.1.0
+    2.7.0
+
+!!! note
+    Note that version numbers may vary as new releases become available
 
 ## Helm Classic Installation
 
@@ -25,8 +32,15 @@ Install the latest `helmc` cli for Linux or Mac OS X with:
 
     $ curl -sSL https://get.helm.sh | bash
 
-The installer places the `helm` binary in your current directory, but you
+!!! note
+    Note that the `unzip` package is a requirement for this command
+
+The installer places the `helmc` binary in your current directory, but you
 should move it somewhere in your $PATH:
+
+    $ sudo ln -fs $PWD/helmc /usr/local/bin/helmc
+
+*or*:
 
     $ sudo mv $PWD/helmc /usr/local/bin/helmc
 

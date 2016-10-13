@@ -37,6 +37,9 @@ Run the following command to add this repository to Helm Classic:
 $ helmc repo add deis https://github.com/deis/charts
 ```
 
+!!! note
+   You need [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed in order to run the command above
+
 ## Install Deis Workflow
 
 Now that you have Helm Classic installed and have added the Deis Chart Repository, install Workflow by running:

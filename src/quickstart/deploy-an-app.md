@@ -101,8 +101,14 @@ proper-barbecue-v18-cmd-rk644 up (v18)
 proper-barbecue-v18-cmd-0ag04 up (v18)
 ```
 
-Congratulations! You have deployed, configured, and scaled your first application using Deis Workflow. There is a lot
-more you can do with Deis Workflow, play around with the CLI:
+Congratulations! You have deployed, configured, and scaled your first application using Deis Workflow. 
+
+## Going Further
+There is a lot more you can do with Deis Workflow, play around with the CLI:
+
+!!! important
+    In order to have permission to push an app you must add a SSH key to your user on the Deis Workflow.
+    For more information, please check [Users and SSH Keys](../users/ssh-keys/) and [Troubleshooting Workflow](../troubleshooting/).
 
 * Roll back to a previous release with `deis rollback -a proper-barbecue`
 * See application logs with `deis logs -a proper-barbecue`
@@ -110,5 +116,5 @@ more you can do with Deis Workflow, play around with the CLI:
     * [deis/example-ruby-sinatra](https://github.com/deis/example-ruby-sinatra)
     * [deis/example-nodejs-express](https://github.com/deis/example-nodejs-express)
     * [deis/example-java-jetty](https://github.com/deis/example-java-jetty)
-* Read about using application [Buildpacks](../applications/using-buildpacks.md) or [Dockerfiles](../applications/using-dockerfiles.md)
+* Read about using application [Buildpacks](../applications/using-buildpacks) or [Dockerfiles](../applications/using-dockerfiles.md)
 * Join our [#community slack channel](https://slack.deis.io) and meet the team!

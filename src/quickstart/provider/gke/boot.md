@@ -79,7 +79,12 @@ Fetching cluster endpoint and auth data.
 kubeconfig entry generated for cluster-1.
 ```
 
-Your local `kubectl` utility should now be pointed at your new container cluster. You can verify your crednentials and local configuration by running:
+If you don't have `kubectl` CLI setup just yet, run this to get it available
+locally:
+
+    $ gcloud components install kubectl
+
+Your local `kubectl` utility should now be pointed at your new container cluster. You can verify your credentials and local configuration by running:
 
 ```
 $ kubectl cluster-info
