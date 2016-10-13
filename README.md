@@ -28,6 +28,7 @@ Please see below for links and descriptions of each component:
 - [minio](https://github.com/deis/minio) - The in-cluster, ephemeral, development-only object storage system
 - [workflow-cli](https://github.com/deis/workflow-cli) - Workflow CLI `deis`
 - [workflow-e2e](https://github.com/deis/workflow-e2e) - End-to-end tests for the entire platform
+- [workflow-manager](https://github.com/deis/workflow-manager) - Manage, inspect, and debug a Workflow cluster
 
 We welcome your input! If you have feedback, please [submit an issue][issues]. If you'd like to participate in development, please read the "Working on Documentation" section below and [submit a pull request][prs].
 
