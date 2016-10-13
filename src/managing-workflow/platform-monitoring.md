@@ -38,7 +38,7 @@ We now include a monitoring stack for introspection on a running Kubernetes clus
                        └──────────┘                               
 ```
 
-### Grafana
+## Grafana
 
 Deis Workflow exposes Grafana through the router using [service annotations](https://github.com/deis/router#how-it-works). This
 allows users to access the Grafana UI at `http://grafana.mydomain.com`. The default username/password of
@@ -54,7 +54,10 @@ Deis Workflow monitoring does not currently write data to the host filesystem or
 instance fails, modified dashboards are lost. Until there is a solution to persist this, export dashboards and store
 them separately in version control.
 
-### InfluxDB
+### Off Cluster Grafana
+It is recommended that users provide their own installation for Grafana if possible. The current deployment of Grafana within Workflow is durable across pod restarts which means custom dashboards that are created after startup will not be restored when the pod comes back up. If you wish to provide your own Grafana instance you can either set the `GRAFANA_LOCATION` environment variable when your run `helm generate` or set `grafana_location` in the generate_params.toml.
+
+## InfluxDB
 
 InfluxDB writes data to the host disk, however, if the InfluxDB pod dies and comes back on
 another host the data will not be recovered. We intend to fix this in a future release. The InfluxDB Admin UI is also
@@ -69,7 +72,16 @@ You can choose to not expose the Influx UI and API to the world by updating
 `$CHART_HOME/workspace/workflow-$WORKFLOW_RELEASE/manifests/deis-monitor-influxdb-ui-svc.yaml` and removing the
 following line - `router.deis.io/routable: "true"`.
 
-### Telegraf
+### Off Cluster Influxdb
+To use off-cluster Influx please provide the following values in either the `generate_params.toml` file or as environment variables when running `helm generate`.
+
+* `influxdb_location=off-cluster` - `INFLUXDB_LOCATION=off-cluster`
+* `url = "http://my-influxhost.com:8086"` - `INFLUXDB_SERVICE_URL="http://my-influxhost.com:8086"`
+* `database = "metrics"` - `INFLUXDB_DATABASE="metrics"`
+* `user = "InfluxUser"` - `INFLUXDB_USER="InfluxUser"`
+* `password = "MysuperSecurePassword"` - `INFLUXDB_PASSWORD="MysuperSecurePassword"`
+
+## Telegraf
 
 Telegraf is the metrics collection daemon used within the monitoring stack. It will collect and send the following metrics to InfluxDB:
 

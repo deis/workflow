@@ -10,6 +10,38 @@ If the message is from the [Workflow Router](https://github.com/deis/router) we 
 
 Logger then acts as a consumer reading messages off of the NSQ logs topic storing those messages in a local Redis instance. When a user wants to retrieve log entries using the `deis logs` command we make an HTTP request from Controller to Logger which then fetches the appropriate data from Redis.
 
+## Configuring Off Cluster Redis
+Even though we provide a redis instance with the default Workflow install. It is recommended that operators use a 3rd party source like Elasticache or similar offering. This way your data is durable across upgrades or outages. If you have a 3rd party Redis installation you would like to use all you need to do is set the following values in `generate_params.toml` within your chart's tpl directory.
+
+* db = "0"
+* host = "my.host.redis"
+* port = "6379"
+* password = ""
+
+You can also provide this environment variables when you run your `helm generate` command instead of editing `generate_params.toml`.
+
+* LOGGER_REDIS_LOCATION="off-cluster"
+* DEIS_LOGGER_REDIS_DB="0"
+* DEIS_LOGGER_REDIS_SERVICE_HOST="my.host.redis"
+* DEIS_LOGGER_REDIS_SERVICE_PORT="6379"
+
+The database password can also be set as a kubernetes secret using the following name: `logger-redis-creds`.
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: logger-redis-creds
+  namespace: deis
+  labels:
+    app: deis-logger-redis
+    heritage: deis
+  annotations:
+    helm-keep: "true"
+data:
+  password: your-base64-password-here
+```
+
 ## Debugging Logger
 If the `deis logs` command encounters an error it will return the following message:
 
