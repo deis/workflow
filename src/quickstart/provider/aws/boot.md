@@ -71,7 +71,7 @@ export NODE_ROOT_DISK_SIZE=100
 
 Last, so you can easily identify instances in the AWS Console, specify an instance prefix:
 ```
-export INSTANCE_PREFIX=first-k8s
+export KUBE_AWS_INSTANCE_PREFIX=first-k8s
 ```
 
 ## Setup kubectl CLI
