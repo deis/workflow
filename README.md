@@ -26,6 +26,7 @@ Please see below for links and descriptions of each component:
 - [monitor](https://github.com/deis/monitor) - The platform monitoring components
 - [router](https://github.com/deis/router) - The HTTP/s edge router
 - [minio](https://github.com/deis/minio) - The in-cluster, ephemeral, development-only object storage system
+- [nsq](https://github.com/deis/nsq) - Realtime distributed messaging platform
 - [workflow-cli](https://github.com/deis/workflow-cli) - Workflow CLI `deis`
 - [workflow-e2e](https://github.com/deis/workflow-e2e) - End-to-end tests for the entire platform
 - [workflow-manager](https://github.com/deis/workflow-manager) - Manage, inspect, and debug a Workflow cluster
