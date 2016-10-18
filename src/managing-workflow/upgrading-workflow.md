@@ -75,7 +75,7 @@ Fetching the new chart copies the chart from the chart cache into the helmc work
 $ helmc fetch deis/workflow-${DESIRED_WORKFLOW_RELEASE}
 ```
 
-### Step 3: Fetch credentials
+### Step 3: Fetch builder, database, and platform SSL credentials
 
 The first time Workflow is installed, Helm automatically generates secrets for the builder and database components.
 When upgrading, take care to use credentials from the running Workflow installation. The following commands export the
@@ -87,6 +87,14 @@ $ kubectl --namespace=deis get secret database-creds -o yaml > ~/active-deis-dat
 
 # fetch the builder component ssh keys to the local workstation
 $ kubectl --namespace=deis get secret builder-ssh-private-keys -o yaml > ~/active-deis-builder-secret-ssh-private-keys.yaml
+```
+
+#### Optional: Fetch platform SSL credentials
+Installations that have installed a [platform SSL](https://deis.com/docs/workflow/managing-workflow/platform-ssl/) certificate and private key on the router will need to save those secrets locally as well. They will be installed at a later step with the other credentials saved to the local workstation.
+
+```
+# fetch the platform SSL certificate and private key and store on the local workstation
+$ kubectl --namespace=deis get secret deis-router-platform-cert -o yaml > ~/active-deis-router-platform-cert.yaml
 ```
 
 ### Step 4: Modify and update configuration
@@ -116,6 +124,13 @@ $ cp ~/active-deis-database-secret-creds.yaml \
 # copy your active builder ssh keys into the helmc workspace for the desired version
 $ cp ~/active-deis-builder-secret-ssh-private-keys.yaml \
 	$(helmc home)/workspace/charts/workflow-${DESIRED_WORKFLOW_RELEASE}/manifests/deis-builder-secret-ssh-private-keys.yaml
+```
+
+If platform SSL credentials were saved in the Step 3, copy those secrets in place as well:
+```
+# copy your active platform SSL certificate and key into the helmc workspace for the desired version
+$ cp ~/active-deis-router-platform-cert.yaml \
+	$(helmc home)/workspace/charts/workflow-${DESIRED_WORKFLOW_RELEASE}/manifests/deis-router-platform-cert.yaml
 ```
 
 !!! note
