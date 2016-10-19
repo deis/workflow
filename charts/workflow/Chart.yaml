@@ -1,0 +1,7 @@
+name: workflow
+home: https://github.com/deis/workflow
+version: <Will be populated by the ci before publishing the chart>
+description: Deis Workflow
+maintainers:
+  - name: Deis Team
+    email: engineering@deis.com
