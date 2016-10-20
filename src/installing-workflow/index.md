@@ -75,6 +75,14 @@ $ helmc install workflow-v2.7.0               # injects resources into
                                               # your cluster
 ```
 
+!!! Experimental
+	Workflow can also be installed now using the [Kubernetes Helm][helm]. All the details that are needed for a production deployments like off-cluster storage, external registry etc., can be configured by passing an optional [values file][valuesfile] which overrides default values.
+
+
+    	$ helm repo add deis https://charts.deis.com/workflow  # add the workflow charts repo
+
+    	$ helm install deis/workflow --version=v2.7.0 --namespace=deis -f <optional values file>  # injects resources into your cluster
+
 Helm Classic will install a variety of Kubernetes resources in the `deis` namespace.
 Wait for the pods that Helm Classic launched to be ready. Monitor their status by running:
 
@@ -114,3 +122,5 @@ Once all of the pods are in the `READY` state, Deis Workflow is up and running!
 After installing Workflow, [register a user and deploy an application](../quickstart/deploy-an-app.md).
 
 [Kubernetes v1.2 or v1.3.4+]: system-requirements.md#kubernetes-versions
+[helm]: https://github.com/kubernetes/helm/blob/master/docs/install.md
+[valuesfile]: https://charts.deis.com/workflow/values-v2.7.0.yaml
