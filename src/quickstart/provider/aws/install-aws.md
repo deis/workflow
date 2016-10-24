@@ -101,7 +101,7 @@ After installing Workflow on your cluster, you will need to adjust your load bal
 By default, the connection timeout for Elastic Load Blancers is 60 seconds. Unfortunately, this timeout is too short for
 long running connections when using `git push` functionality of Deis Workflow.
 
-Deis Workflow will automatically provision and attach a Elastic Loadbalancer to the router copmonent. This
+Deis Workflow will automatically provision and attach a Elastic Loadbalancer to the router component. This
 component is responsible for routing HTTP and HTTPS requests from the public internet to applications that are deployed
 and managed by Deis Workflow.
 
