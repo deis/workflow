@@ -165,3 +165,7 @@ registry-token-refresher:
 
 router:
   dhparam: ""
+
+workflow-manager:
+  versions_api_url: https://versions.deis.com
+  doctor_api_url: https://doctor.deis.com
