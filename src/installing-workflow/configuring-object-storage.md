@@ -29,7 +29,7 @@ If you are using AWS S3 and your Kubernetes nodes are configured with appropriat
 
 ### Step 3: Fetch Workflow charts
 
-If you haven't already fetched the Helm Classic chart, do so with `helmc fetch deis/workflow-v2.7.0`
+If you haven't already fetched the Helm Classic chart, do so with `helmc fetch deis/workflow-v2.8.0`
 
 ### Step 4: Configure Workflow charts
 
@@ -49,9 +49,9 @@ After setting a `STORAGE_TYPE` environment variable to the desired object storag
 !!! note
 	These environment variables should be set **before** running `helmc generate` in Step 5.
 
-**Option 2:** Using template file `tpl/generate_params.toml` available at `$(helmc home)/workspace/charts/workflow-v2.7.0`
+**Option 2:** Using template file `tpl/generate_params.toml` available at `$(helmc home)/workspace/charts/workflow-v2.8.0`
 
-* Edit Helm Classic chart by running `helmc edit workflow-v2.7.0` and look for the template file `tpl/generate_params.toml` (make sure you have the `$EDITOR` environment variable set with your favorite text editor)
+* Edit Helm Classic chart by running `helmc edit workflow-v2.8.0` and look for the template file `tpl/generate_params.toml` (make sure you have the `$EDITOR` environment variable set with your favorite text editor)
 * Update the `storage` parameter to reference the platform you are using, e.g. `s3`, `azure`, `gcs`, or `swift`
 * Find the corresponding section for your storage type and provide appropriate values including region, bucket names, and access credentials.
 * Save your changes to `tpl/generate_params.toml`.
@@ -61,7 +61,7 @@ After setting a `STORAGE_TYPE` environment variable to the desired object storag
 
 ### Step 5: Generate manifests
 
-Generate the Workflow chart by running `helmc generate -x manifests workflow-v2.7.0` (if you have previously run this step, make sure you add `-f` to force its regeneration).
+Generate the Workflow chart by running `helmc generate -x manifests workflow-v2.8.0` (if you have previously run this step, make sure you add `-f` to force its regeneration).
 
 ### Step 6: Verify credentials
 
@@ -69,7 +69,7 @@ Helm Classic stores the object storage configuration as a Kubernetes secret.
 
 You may check the contents of the generated file named `deis-objectstorage-secret.yaml` in the `helmc` workspace directory:
 ```
-$ cat $(helmc home)/workspace/charts/workflow-v2.7.0/manifests/deis-objectstorage-secret.yaml
+$ cat $(helmc home)/workspace/charts/workflow-v2.8.0/manifests/deis-objectstorage-secret.yaml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -84,7 +84,7 @@ data:
   builder-bucket: bXlmYW5jeS1idWlsZGVyLWJ1c2tldAo=
 ```
 
-You are now ready to `helmc install workflow-v2.7.0` using your desired object storage.
+You are now ready to `helmc install workflow-v2.8.0` using your desired object storage.
 
 ## Object Storage Configuration and Credentials
 
