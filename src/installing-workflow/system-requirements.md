@@ -18,7 +18,7 @@ Deis Workflow ships with Minio by default, which provides in-cluster, ephemeral 
 Minio server crashes, all data will be lost. Therefore, Minio should be used for development or testing only.
 
 Workflow supports Amazon Simple Storage Service (S3), Google Cloud Storage (GCS), OpenShift Swift, and Azure Blob
-Storage. See [configuring object storage][storage-configuration] for setup instructions.
+Storage. See [configuring object storage](configuring-object-storage) for setup instructions.
 
 ## Resource Requirements
 
@@ -50,6 +50,5 @@ and instability.
 If you are using Docker with OverlayFS, you must disable SELinux by adding `--selinux-enabled=false` to
 `EXTRA_DOCKER_OPTS`. For more background information, see:
 
-* [storage-configuration](configuring-object-storage.md)
 * [https://github.com/docker/docker/issues/7952](https://github.com/docker/docker/issues/7952)
 * [https://github.com/deis/workflow/issues/63](https://github.com/deis/postgres/issues/63)
