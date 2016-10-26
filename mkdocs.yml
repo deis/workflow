@@ -57,6 +57,7 @@ pages:
     - Security Considerations: managing-workflow/security-considerations.md
     - Platform SSL: managing-workflow/platform-ssl.md
     - Upgrading Workflow: managing-workflow/upgrading-workflow.md
+    - Extending Workflow: managing-workflow/extending-workflow.md
   - Troubleshooting:
     - Troubleshooting Workflow: troubleshooting/index.md
     - Troubleshooting using Kubectl: troubleshooting/kubectl.md
