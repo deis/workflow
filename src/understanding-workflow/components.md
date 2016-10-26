@@ -131,6 +131,17 @@ Application name. Logger does not persist logs to disk, instead maintaining an
 in-memory ring buffer. For more information on logger see the [project
 documentation][logger-documentation].
 
+## Workflow Manager
+
+**Project Location:** [deis/workflow-manager](https://github.com/deis/workflow-manager)
+
+`Workflow Manager` will regularly check your cluster against the latest stable
+components. If components are missing due to failure or are simply out of date,
+Workflow operators will know at a glance. By default, this submits component
+and version information to Deis' version service. If you prefer, you may
+disable the function by setting `WORKFLOW_MANAGER_CHECKVERSIONS` to false in
+Workflow Manager's Deployment.
+
 ## See Also
 
 * [Workflow Concepts][concepts]
