@@ -68,10 +68,10 @@ $ helmc repo add deis https://github.com/deis/charts
 Now that Helm Classic is installed and the Deis Chart Repository has been added, install Workflow by running:
 
 ```
-$ helmc fetch deis/workflow-v2.7.0            # fetches the chart into a
+$ helmc fetch deis/workflow-v2.8.0            # fetches the chart into a
                                               # local workspace
-$ helmc generate -x manifests workflow-v2.7.0 # generates various secrets
-$ helmc install workflow-v2.7.0               # injects resources into
+$ helmc generate -x manifests workflow-v2.8.0 # generates various secrets
+$ helmc install workflow-v2.8.0               # injects resources into
                                               # your cluster
 ```
 
@@ -81,7 +81,7 @@ $ helmc install workflow-v2.7.0               # injects resources into
 
     	$ helm repo add deis https://charts.deis.com/workflow  # add the workflow charts repo
 
-    	$ helm install deis/workflow --version=v2.7.0 --namespace=deis -f <optional values file>  # injects resources into your cluster
+    	$ helm install deis/workflow --version=v2.8.0 --namespace=deis -f <optional values file>  # injects resources into your cluster
 
 Helm Classic will install a variety of Kubernetes resources in the `deis` namespace.
 Wait for the pods that Helm Classic launched to be ready. Monitor their status by running:
@@ -123,4 +123,4 @@ After installing Workflow, [register a user and deploy an application](../quicks
 
 [Kubernetes v1.2 or v1.3.4+]: system-requirements.md#kubernetes-versions
 [helm]: https://github.com/kubernetes/helm/blob/master/docs/install.md
-[valuesfile]: https://charts.deis.com/workflow/values-v2.7.0.yaml
+[valuesfile]: https://charts.deis.com/workflow/values-v2.8.0.yaml
