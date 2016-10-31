@@ -19,6 +19,9 @@ To get started with Workflow, follow our [Quick Start][quickstart] guide.
 Take a deep dive into Deis Workflow in our [Concepts][concepts], [Architecture][arch], and
 [Components][components] sections.
 
+Feel like contibuting some code or want to get started as a maintainer? Pick an issue tagged as an
+[easy fix][] or [help wanted][] and start contributing!
+
 ## Service and Support
 
 If you are interested in commercial service and support for Deis Workflow, check out the various
@@ -28,4 +31,6 @@ If you are interested in commercial service and support for Deis Workflow, check
 [arch]: understanding-workflow/architecture.md
 [concepts]: understanding-workflow/concepts.md
 [components]: understanding-workflow/components.md
+[easy fix]: https://github.com/pulls?utf8=%E2%9C%93&q=user%3Adeis+label%3A%22easy+fix%22+is%3Aopen
+[help wanted]: https://github.com/pulls?utf8=%E2%9C%93&q=user%3Adeis+label%3A%22help+wanted%22+is%3Aopen
 [quickstart]: quickstart/index.md

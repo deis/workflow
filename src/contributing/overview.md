@@ -32,7 +32,7 @@ We are always looking to improve and expand our documentation. Most docs reside 
 
 ## Contribute Code
 
-We are always looking for help improving the core platform, other workloads, tooling, and test coverage. Interested in contributing code? Let’s chat in the [Deis #community Slack channel][slack]. Make sure to check out issues tagged [easy-fix][].
+We are always looking for help improving the core platform, other workloads, tooling, and test coverage. Interested in contributing code? Let’s chat in the [Deis #community Slack channel][slack]. Make sure to check out issues tagged [easy fix][] or [help wanted][].
 
 When you're ready to begin writing code, review [Design Documents][dd] and get your [Development Environment][dev-environment] set up.
 
@@ -49,8 +49,9 @@ Interact with the community on our user mailing list or live in our [Deis #commu
 [workflow]: https://github.com/deis/workflow
 [dd]: design-documents.md
 [dev-environment]: development-environment.md
-[easy-fix]: https://github.com/issues?q=user%3Adeis+label%3Aeasy-fix+is%3Aopen
+[easy fix]: https://github.com/pulls?utf8=%E2%9C%93&q=user%3Adeis+label%3A%22easy+fix%22+is%3Aopen
 [dco]: https://github.com/deis/workflow/blob/master/DCO
+[help wanted]: https://github.com/pulls?utf8=%E2%9C%93&q=user%3Adeis+label%3A%22help+wanted%22+is%3Aopen
 [troubleshooting]: ../troubleshooting/index.md
 [issues]: https://github.com/pulls?utf8=%E2%9C%93&q=user%3Adeis+user%3Ahelm
 [slack]: https://slack.deis.io
