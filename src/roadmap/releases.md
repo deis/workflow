@@ -235,10 +235,34 @@ release is predetermined as the value of `$WORKFLOW_RELEASE`.
 
 ### Step 7: Assemble Master Changelog
 
-Each component already updated its release notes on GitHub with CHANGELOG content. The
-bodies of each component's release notes should be concatenated into a single gist. Note that there
-may be more than one release per component--and more than one set of release notes--included in the
-Workflow release.
+Each component already updated its release notes on GitHub with CHANGELOG content. We'll now
+generate the master changelog for the Workflow chart, consisting of all aforementioned component changes
+as well as those non-component repo changes needing to be manually added.
+
+We'll employ the same `generate_params.toml` and `components.json` files as used in Step 4 above, this time
+invoking `deisrel changelog global` to get all component changes between the tag existing in the `WORKFLOW_PREV_RELEASE`
+chart and the _most recent_ release tag existing in GitHub. (Therefore, if there are any unreleased commits in
+a component repo, they will not appear here):
+
+```bash
+deisrel changelog global $HOME/.helmc/workspace/charts/workflow-$WORKFLOW_PREV_RELEASE/tpl/generate_params.toml \
+  components.json > $WORKFLOW_RELEASE
+```
+
+To get non-component repo changelogs (presumably tagged in Step 3 above), one can issue a command like the following
+which grabs the latest release body from GitHub:
+
+```bash
+for repo in workflow workflow-cli workflow-e2e; do
+  printf "$repo\n\n"
+  printf "$(curl -s https://api.github.com/repos/deis/$repo/releases/latest | jq .body | sed 's/"//g')\n\n"
+done
+```
+
+These can be added to the `$WORKFLOW_RELEASE` file created previously.
+
+This master changelog should then be placed into a single gist.  The file will also be added to the documentation
+update PR created in the next step.
 
 ### Step 8: Update Documentation
 
@@ -248,14 +272,11 @@ Use `git grep $WORKFLOW_PREV_RELEASE` to find any references, but be careful not
 older releases to `$WORKFLOW_PREV_RELEASE`, so the documentation always describes upgrading
 between recent versions.
 
-Create a new documentation page under the Changelogs section. The page should
-be named after the release version, e.g. `changelogs/v2.5.1`. The contents of
-this page should be the consolidated changelog generated in Step 7. Makes sure
-to edit or add a header to the page to make it clear that this is for a
-Workflow release, e.g.:
+Place the `$WORKFLOW_RELEASE` master changelog generated in Step 7 in the `changelogs` directory.
+Make sure to add a header to the page to make it clear that this is for a Workflow release, e.g.:
 
 ```
-## Workflow v2.4.x -> v2.5.1
+## Workflow v2.7.0 -> v2.8.0
 ```
 
 ### Step 9: Close GitHub Milestones
