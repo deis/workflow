@@ -23,11 +23,12 @@ tools, to Docker base images, and to other Deis projects that do [semantic versi
 See "[How to Release a Component](#how-to-release-a-component)" for more detail.
 
 
-## Workflow Releases Every Two Weeks
+## Workflow Releases Each Month
 
-Deis Workflow has a regular, public release cadence. From v2.0.0 onward, the Deis team releases
-every 2 weeks, with patch versions as needed. GitHub milestones are used to communicate the
-content and timing of major and minor releases.
+Deis Workflow has a regular, public release cadence. From v2.8.0 onward, new Workflow feature
+releases arrive on the first Thursday of each month. Patch releases are created at any time,
+as needed. GitHub milestones are used to communicate the content and timing of major and minor
+releases, and longer-term planning is visible at [the Roadmap](roadmap.md).
 
 Workflow release timing is not linked to specific features. If a feature is merged before the
 release date, it is included in the next release.
