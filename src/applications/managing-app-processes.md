@@ -63,13 +63,19 @@ sleeper: sleep 900
 If you are using [remote Docker images][docker image], you may define process types by either running `deis pull` with a
 `Procfile` in your working directory, or by passing a stringified Procfile to the `--procfile` CLI option.
 
-For example:
+For example, passing process types inline:
 
 ```
 $ deis pull deis/example-go:latest --procfile="cmd: /app/bin/boot"
 ```
 
-Or via a Procfile:
+Read a `Procfile` in another directory:
+
+```
+$ deis pull deis/example-go:latest --procfile="$(cat deploy/Procfile)"
+```
+
+Or via a Procfile located in your current, working directory:
 
 ```
 $ cat Procfile
