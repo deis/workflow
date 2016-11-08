@@ -1,12 +1,13 @@
 ## Managing Application Resource Limits
 
-Deis Workflow supports restricting memory and CPU shares of each process. Limits set on a per-process type are given to
-Kubernetes as both a request and limit. Which means you guarantee 'X' amount of resource for a process as well as limit
-the process from using more than 'X'.
+Deis Workflow supports restricting memory and CPU shares of each process. Requests/Limits set on a per-process type are given to
+Kubernetes as a requests and limits. Which means you guarantee \<requests\> amount of resource for a process as well as limit
+the process from using more than \<limits\>.
+By default, Kubernetes will set \<requests\> equal to \<limit\> if we don't explicitly set \<requests\> value. Please keep in mind that `0 <= requests <= limits`.
 
 ## Limiting Memory
 
-If you set a limit that is out of range for your cluster, Kubernetes will be unable to schedule your application
+If you set a requests/limits that is out of range for your cluster, Kubernetes will be unable to schedule your application
 processes into the cluster!
 
 Available units for memory are:
@@ -21,7 +22,7 @@ Available units for memory are:
 !!! important
     The minimum memory limit allowed is 4MiB.
 
-Use `deis limits:set` to restrict memory by process type:
+Use `deis limits:set <type>=<value>` to restrict memory by process type, where value can be \<limit\> or \<request\>/\<limit\> format :
 
 ```
 $ deis limits:set web=64M
@@ -31,6 +32,17 @@ Applying limits... done
 
 --- Memory
 web     64M
+
+--- CPU
+Unlimited
+
+$ deis limits:set cmd=32M/64M
+Applying limits... done
+
+=== outdoor-whitecap Limits
+
+--- Memory
+cmd     32M/64M
 
 --- CPU
 Unlimited
@@ -53,8 +65,9 @@ Unlimited
 
 ## Limiting CPU
 
-You can also use `deis limits:set --cpu` to restrict CPU shares. CPU shares are tracked in milli-cores. One CPU core is
-equivalent to 1000 milli-cores. To dedicate half a core to your process, you would need 500 milli-cores or 500m.
+You can also use `deis limits:set <type>=<value> --cpu` to restrict CPU shares,  where value can be \<limit\> or
+\<request\>/\<limit\> format. CPU shares are tracked in milli-cores. One CPU core is equivalent to 1000 milli-cores.
+To dedicate half a core to your process, you would need 500 milli-cores or 500m.
 
 | Unit  | Amount                            |
 | ---   | ---                               |
@@ -74,6 +87,17 @@ web     64M
 
 --- CPU
 web     250m
+
+$ deis limits:set web=1500m/2000m --cpu
+Applying limits... done
+
+=== indoor-whitecap Limits
+
+--- Memory
+web     64M
+
+--- CPU
+web     1500m/2000m
 ```
 
 You can verify the CPU and memory limits by inspecting the application process Pod with `kubectl`:
@@ -87,14 +111,14 @@ $ kubectl --namespace=indoor-whitecap describe po indoor-whitecap-v14-web-8slcj
 Name:       indoor-whitecap-v14-web-8slcj
 Containers:
     QoS Tier:
-      cpu:  Guaranteed
-      memory:   Guaranteed
+      cpu:     Guaranteed
+      memory:  Guaranteed
     Limits:
-      cpu:  250m
-      memory:   64Mi
+      cpu:     2000m
+      memory:  64Mi
     Requests:
-      memory:       64Mi
-      cpu:      250m
+      memory:  64Mi
+      cpu:     1500m
 ```
 
 !!! important
