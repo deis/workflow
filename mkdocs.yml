@@ -32,6 +32,7 @@ pages:
     - Configuring Object Storage: installing-workflow/configuring-object-storage.md
     - Configuring Postgres: installing-workflow/configuring-postgres.md
     - Configuring the Registry: installing-workflow/configuring-registry.md
+    - Workflow Helm Charts: installing-workflow/workflow-helm-charts.md
   - Users:
     - Command Line Interface: users/cli.md
     - Users and Registration: users/registration.md
