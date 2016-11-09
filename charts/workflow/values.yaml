@@ -165,6 +165,15 @@ registry-token-refresher:
 
 router:
   dhparam: ""
+  # Any custom router annotations(https://github.com/deis/router#annotations)
+  # which need to be applied can be specified as key-value pairs under "deployment_annotations"
+  deployment_annotations:
+    #<example-key>: <example-value>
+
+  # Any custom annotations for k8s services like http://kubernetes.io/docs/user-guide/services/#ssl-support-on-aws
+  # which need to be applied can be specified as key-value pairs under "service_annotations"
+  service_annotations:
+    #<example-key>: <example-value>
 
 workflow-manager:
   versions_api_url: https://versions.deis.com
