@@ -60,6 +60,8 @@ $ helmc install workflow-v2.8.0               # injects resources into
 
     	$ helm install deis/workflow --version=v2.8.0 --namespace=deis -f <optional values file>  # injects resources into your cluster
 
+  See also our section on [Workflow chart provenance](../../../installing-workflow/workflow-helm-charts.md#chart-provenance)
+
 Helm Classic will install a variety of Kubernetes resources in the `deis` namespace.
 You'll need to wait for the pods that it launched to be ready. Monitor their status
 by running:
