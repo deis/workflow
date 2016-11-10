@@ -39,15 +39,34 @@ $ # via Keybase by curl
 $ curl https://keybase.io/deis/key.asc | gpg --import
 ```
 
-Charts signed with this key can then be verified at install time:
+Charts signed with this key can then be verified when fetched:
 
 ```
 $ helm repo add deis https://charts.deis.com/workflow
-$ helm install --verify deis/workflow --namespace deis
+"deis" has been added to your repositories
 
-$ helm repo add router https://charts.deis.com/router
-$ helm install --verify router/router --namespace deis
-$ # etc.
+$ helm fetch --verify deis/workflow && echo
+Verification: &{0xc820563e50 sha256:060d66fa95b6badad98b37572a887723ed49a153dd636dce0f2c4ff667022586 workflow-v2.8.0.tgz}
+```
+
+One can then inspect the fetched `workflow-v2.8.0.tgz.prov` provenance file.
+
+If the chart was not signed, the command above would result in:
+
+```
+Error: Failed to fetch provenance "https://charts.deis.com/workflow/workflow-v2.8.0.tgz.prov"
+```
+
+Alternatively, the chart can also be verified at install time:
+
+```
+$ helm install --verify deis/workflow --namespace deis
+Fetched deis/workflow to workflow-v2.8.0.tgz
+NAME: olfactory-star
+LAST DEPLOYED: Thu Nov 10 11:45:44 2016
+NAMESPACE: deis
+STATUS: DEPLOYED
+...
 ```
 
 Having done so, one is assured of the origin and authenticity of any installed Workflow chart released by Deis.
