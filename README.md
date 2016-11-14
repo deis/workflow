@@ -40,11 +40,11 @@ We welcome your input! If you have feedback, please [submit an issue][issues]. I
 
 The Deis project welcomes contributions from all developers. The high level process for development matches many other open source projects. See below for an outline.
 
-* Fork this repository
-* Make your changes
-* [Submit a pull request][prs] (PR) to this repository with your changes, and unit tests whenever possible
-	* If your PR fixes any [issues][issues], make sure you write `Fixes #1234` in your PR description (where `#1234` is the number of the issue you're closing)
-* The Deis core contributors will review your code. After each of them sign off on your code, they'll label your PR with `LGTM1` and `LGTM2` (respectively). Once that happens, a contributor will merge it
+* Fork this repository.
+* Make your changes.
+* [Submit a pull request][prs] (PR) to this repository with your changes, and unit tests whenever possible.
+	* If your PR fixes any [issues][issues], make sure you write `Fixes #1234` in your PR description (where `#1234` is the number of the issue you're closing).
+* The Deis core contributors will review your code. After each of them sign off on your code, they'll label your PR with `LGTM1` and `LGTM2` (respectively). Once that happens, a contributor will merge it.
 
 ## Requirements
 
@@ -60,11 +60,11 @@ make deps
 
 ## Building Documentation
 
-To build the documentation run: `make build` or `make docker-build`
+To build the documentation run: `make build` or `make docker-build`.
 
 ## Serve Documentation Locally
 
-To serve documenation run: `make serve` or `make docker-serve`
+To serve documenation run: `make serve` or `make docker-serve`.
 
 Then view the documentation on [http://localhost:8000](http://localhost:8000) or `http://DOCKER_IP:8000`.
 
@@ -72,7 +72,7 @@ Then view the documentation on [http://localhost:8000](http://localhost:8000) or
 
 Copyright 2013, 2014, 2015 Engine Yard, Inc.
 
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at <http://www.apache.org/licenses/LICENSE-2.0>
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at <http://www.apache.org/licenses/LICENSE-2.0>.
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
