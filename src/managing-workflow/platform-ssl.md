@@ -20,8 +20,8 @@ router will automatically detect this secret and reconfigure itself appropriatel
 The following criteria must be met:
 
  - The name of the secret must be `deis-router-platform-cert`
- - The certificate's public key must be supplied as the value of the `cert` key
- - The certificate's private key must be supplied as the value of the `key` key
+ - The certificate's public key must be supplied as the value of the `tls.crt` key
+ - The certificate's private key must be supplied as the value of the `tls.key` key
  - Both the certificate and private key must be base64 encoded
 
 If your certificate has intermediate certs, append the intermediate signing certs to the bottom of the `cert` file
@@ -70,7 +70,7 @@ data:
 ```
 
 Once you've created the `deis-router-platform-cert.yaml` file, you can install the manifest with `kubectl create -f
-deis-router-platform-cert.yaml`. The Deis Workflow router will automatically notice the new secret and update its 
+deis-router-platform-cert.yaml`. The Deis Workflow router will automatically notice the new secret and update its
 configuration on-the-fly.
 
 ## Installing SSL on a Load Balancer
