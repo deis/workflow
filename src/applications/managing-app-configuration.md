@@ -2,6 +2,7 @@
 
 A Deis application [stores config in environment variables][].
 
+
 ## Setting Environment Variables
 
 Use `deis config` to modify environment variables for a deployed application.
@@ -205,9 +206,30 @@ TCP Socket Probe: N/A
 Configured health checks also modify the default application deploy behavior. When starting a new
 Pod, Workflow will wait for the health check to pass before moving onto the next Pod.
 
-[Slugbuilder]: ../understanding-workflow/components.md#builder-builder-slugbuilder-and-dockerbuilder
+
+## Isolate the Application
+
+Workflow supports isolating applications onto a set of nodes using `deis tags`.
+
+!!! note
+    In order to use tags, you must first launch your cluster with the proper node labels. If you do
+    not, tag commands will fail. Learn more by reading ["Assigning Pods to Nodes"][pods-to-nodes].
+
+Once your nodes are configured with appropriate label selectors, use `deis tags:set` to restrict
+the application to those nodes:
+
+```
+$ deis tags:set environ=prod
+Applying tags...  done, v4
+
+environ  prod
+```
+
+
 [attached resources]: http://12factor.net/backing-services
-[stores config in environment variables]: http://12factor.net/config
+[kubernetes-probes]: http://kubernetes.io/docs/user-guide/pod-states/#container-probes
+[pods-to-nodes]: http://kubernetes.io/docs/user-guide/node-selection/
 [release]: ../reference-guide/terms.md#release
 [router]:  ../understanding-workflow/components.md#router
-[kubernetes-probes]: http://kubernetes.io/docs/user-guide/pod-states/#container-probes
+[Slugbuilder]: ../understanding-workflow/components.md#builder-builder-slugbuilder-and-dockerbuilder
+[stores config in environment variables]: http://12factor.net/config

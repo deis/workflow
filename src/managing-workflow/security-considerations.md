@@ -22,6 +22,8 @@ with `region=us-east-1`, you can configure an application to be deployed to us-w
 by using `deis tags set region=us-west-1`. Workflow will pass this configuration
 along to Kubernetes, which will schedule your application in different regions.
 
+See [Isolate the Application][] for more information.
+
 # Running Workflow on Public Clouds
 
 If you are running on a public cloud without security group features, you will have to set up
@@ -65,3 +67,6 @@ Application level whitelisting can also be done using the Deis client. To add/re
     $ deis whitelist -a drafty-zaniness
     === drafty-zaniness Whitelisted Addresses
     10.0.1.0/24
+
+
+[Isolate the Application]: ../applications/managing-app-configuration.md#isolate-the-application
