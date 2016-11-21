@@ -6,19 +6,7 @@ Interested in contributing to a Deis project?  There are lots of ways to help.
 
 Find a bug? Want to see a new feature? Have a request for the maintainers? Open a Github issue in the applicable repository and we’ll get the conversation started.
 
-Our official support channels are:
-
-- GitHub issue queues:
-    - [builder](https://github.com/deis/builder/issues)
-    - [chart](https://github.com/deis/charts/issues)
-    - [database](https://github.com/deis/postgres/issues)
-    - [helm classic](https://github.com/helm/helm-classic/issues)
-    - [monitor](https://github.com/deis/monitor/issues)
-    - [registry](https://github.com/deis/registry/issues)
-    - [router](https://github.com/deis/router/issues)
-    - [workflow](https://github.com/deis/workflow/issues)
-    - [workflow-cli](https://github.com/deis/workflow-cli/issues)
-- [Deis #community Slack channel][slack]
+Our official support channel is the [Deis #community Slack channel][slack].
 
 Don't know what the applicable repository for an issue is? Open up in issue in [workflow][] or chat with a maintainer in the [Deis #community Slack channel][slack] and we'll make sure it gets to the right place.
 

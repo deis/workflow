@@ -7,36 +7,17 @@ Deis Workflow, follow the [quickstart guide](../quickstart/index.md) for assista
 ## Prerequisites
 
 1. Verify the [Kubernetes system requirements](system-requirements.md)
-1. Install [Helm Classic and Deis Workflow CLI](../quickstart/install-cli-tools.md) tools
+1. Install [Helm and Deis Workflow CLI](../quickstart/install-cli-tools.md) tools
 
 ## Check Your Setup
 
-Check that the `helmc` command is available and the version is 0.8 or newer.
+Check that the `helm` command is available and the version is 2.0.0 or newer.
 
 ```
-$ helmc --version
-helmc version 0.8.1+a9c55cf
+$ helm version
+Client: &version.Version{SemVer:"v2.0.0", GitCommit:"51bdad42756dfaf3234f53ef3d3cb6bcd94144c2", GitTreeState:"clean"}
+Server: &version.Version{SemVer:"v2.0.0", GitCommit:"51bdad42756dfaf3234f53ef3d3cb6bcd94144c2", GitTreeState:"clean"}
 ```
-
-Ensure the `kubectl` client is installed and can connect to the Kubernetes cluster. `helmc` uses `kubectl` to interact
-with the Kubernetes cluster.
-
-`helmc` can be verified it is working properly by running:
-
-```
-$ helmc target
-Kubernetes master is running at https://52.9.206.49
-Elasticsearch is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/elasticsearch-logging
-Heapster is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/heapster
-Kibana is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/kibana-logging
-KubeDNS is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/kube-dns
-kubernetes-dashboard is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
-Grafana is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
-InfluxDB is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
-```
-
-If `helmc target` shows a list of targets like the one above, `helmc` can communicate with the Kubernetes master. Double check that
-the master returned by `helmc target` matches the expected cluster.
 
 ## Choose Your Deployment Strategy
 
@@ -54,39 +35,24 @@ More rigorous installations would benefit from using outside sources for the fol
 
 ## Add the Deis Chart Repository
 
-The [Deis Chart Repository](https://github.com/deis/charts) contains everything needed to install Deis Workflow onto
-a Kubernetes cluster, with a single `helmc install` command.
+The Deis Chart Repository contains everything needed to install Deis Workflow onto a Kubernetes cluster, with a single `helm install deis/workflow --namespace deis` command.
 
-Add this repository to Helm Classic:
+Add this repository to Helm:
 
 ```
-$ helmc repo add deis https://github.com/deis/charts
+$ helm repo add deis https://charts.deis.com/workflow
 ```
 
 ## Install Deis Workflow
 
-Now that Helm Classic is installed and the Deis Chart Repository has been added, install Workflow by running:
+Now that Helm is installed and the repository has been added, install Workflow by running:
 
 ```
-$ helmc fetch deis/workflow-v2.8.0            # fetches the chart into a
-                                              # local workspace
-$ helmc generate -x manifests workflow-v2.8.0 # generates various secrets
-$ helmc install workflow-v2.8.0               # injects resources into
-                                              # your cluster
+$ helm install deis/workflow --namespace deis
 ```
 
-!!! Experimental
-	Workflow can also be installed now using the [Kubernetes Helm][helm]. All the details that are needed for a production deployments like off-cluster storage, external registry etc., can be configured by passing an optional [values file][valuesfile] which overrides default values.
-
-
-    	$ helm repo add deis https://charts.deis.com/workflow  # add the workflow charts repo
-
-    	$ helm install deis/workflow --version=v2.8.0 --namespace=deis -f <optional values file>  # injects resources into your cluster
-
-  See also our section on [Workflow chart provenance](workflow-helm-charts.md#chart-provenance)
-
-Helm Classic will install a variety of Kubernetes resources in the `deis` namespace.
-Wait for the pods that Helm Classic launched to be ready. Monitor their status by running:
+Helm will install a variety of Kubernetes resources in the `deis` namespace.
+Wait for the pods that Helm launched to be ready. Monitor their status by running:
 
 ```
 $ kubectl --namespace=deis get pods

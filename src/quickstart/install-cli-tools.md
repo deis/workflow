@@ -19,37 +19,18 @@ should move it somewhere in your $PATH:
 Check your work by running `deis version`:
 
     $ deis version
-    2.7.0
+    2.8.0
 
 !!! note
     Note that version numbers may vary as new releases become available
 
-## Helm Classic Installation
+## Helm Installation
 
-We will install Deis Workflow using Helm Classic which is a tool for installing and managing software in a Kubernetes cluster.
+We will install Deis Workflow using Helm which is a tool for installing and managing software in a
+Kubernetes cluster.
 
-Install the latest `helmc` cli for Linux or Mac OS X with:
-
-    $ curl -sSL https://get.helm.sh | bash
-
-!!! note
-    Note that the `unzip` package is a requirement for this command
-
-The installer places the `helmc` binary in your current directory, but you
-should move it somewhere in your $PATH:
-
-    $ sudo ln -fs $PWD/helmc /usr/local/bin/helmc
-
-*or*:
-
-    $ sudo mv $PWD/helmc /usr/local/bin/helmc
-
-Check your work by running `helmc --version`:
-
-    $ helmc --version
-    helmc version 0.8.1+a9c55cf
-
-Make sure you are running at least version 0.8.1 or newer.
+Install the latest `helm` cli for Linux or Mac OS X by following the
+[installation instructions][helm-install].
 
 ## Step 2: Boot a Kubernetes Cluster and Install Deis Workflow
 
@@ -62,3 +43,6 @@ Cloud-based options:
 * [Amazon Web Services](provider/aws/boot.md): uses Kubernetes upstream `kube-up.sh` to boot a cluster on AWS EC2.
 
 If you would like to test on your local machine follow our guide for [Vagrant](provider/vagrant/boot.md).
+
+
+[helm-install]: https://github.com/kubernetes/helm#install

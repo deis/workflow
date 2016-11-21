@@ -1,8 +1,8 @@
 # Migrating from Deis v1
 
-Workflow uses [`kubectl`][kubectl] and [`helmc`][helmc] to manage the cluster. These tools
-are equivalent to Deis v1's [`fleetctl`][fleetctl] and [`deisctl`][deisctl]. These two tools are
-used for managing the cluster's state, installing the platform and inspecting its state.
+Workflow uses [`kubectl`][kubectl] and [`helm`][helm] to manage the cluster. These tools are
+equivalent to Deis v1's [`fleetctl`][fleetctl] and [`deisctl`][deisctl]. These two tools are used
+for managing the cluster's state, installing the platform and inspecting its state.
 
 This document is a "cheat sheet" for users migrating from Deis v1 to Workflow (v2). It lists most of
 the known commands administrators would use with `deisctl` and translates their usage in Workflow.
@@ -75,4 +75,4 @@ $ kubectl --namespace=deis logs -f deis-builder-1851090495-5n0sn
 [deisctl]: http://docs.deis.io/en/latest/installing_deis/install-deisctl/
 [fleetctl]: https://github.com/coreos/fleet/blob/master/Documentation/using-the-client.md
 [kubectl]: http://kubernetes.io/docs/user-guide/kubectl-overview/
-[helmc]: https://github.com/helm/helm-classic
+[helm]: https://github.com/kubernetes/helm
