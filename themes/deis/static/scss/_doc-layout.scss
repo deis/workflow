@@ -29,6 +29,15 @@ body {
     min-height: 100%;
     margin-bottom: -335px;
 
+    @media #{$small-only} {
+      padding-left: 5%;
+      padding-right: 5%;
+    }
+    @media #{$medium-only} {
+      padding-left: 5%;
+      padding-right: 5%;
+    }
+
     &:after {
         content: "";
         display: block;
