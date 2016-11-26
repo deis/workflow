@@ -1,9 +1,9 @@
 ## Managing Application Resource Limits
 
 Deis Workflow supports restricting memory and CPU shares of each process. Requests/Limits set on a per-process type are given to
-Kubernetes as a requests and limits. Which means you guarantee \<requests\> amount of resource for a process as well as limit
-the process from using more than \<limits\>.
-By default, Kubernetes will set \<requests\> equal to \<limit\> if we don't explicitly set \<requests\> value. Please keep in mind that `0 <= requests <= limits`.
+Kubernetes as a requests and limits. Which means you guarantee <requests\> amount of resource for a process as well as limit
+the process from using more than <limits\>.
+By default, Kubernetes will set <requests\> equal to <limit\> if we don't explicitly set <requests\> value. Please keep in mind that `0 <= requests <= limits`.
 
 ## Limiting Memory
 
@@ -22,7 +22,7 @@ Available units for memory are:
 !!! important
     The minimum memory limit allowed is 4MiB.
 
-Use `deis limits:set <type>=<value>` to restrict memory by process type, where value can be \<limit\> or \<request\>/\<limit\> format :
+Use `deis limits:set <type>=<value>` to restrict memory by process type, where value can be <limit\> or <request\>/<limit\> format :
 
 ```
 $ deis limits:set web=64M
@@ -65,8 +65,8 @@ Unlimited
 
 ## Limiting CPU
 
-You can also use `deis limits:set <type>=<value> --cpu` to restrict CPU shares,  where value can be \<limit\> or
-\<request\>/\<limit\> format. CPU shares are tracked in milli-cores. One CPU core is equivalent to 1000 milli-cores.
+You can also use `deis limits:set <type>=<value> --cpu` to restrict CPU shares,  where value can be <limit\> or
+<request\>/<limit\> format. CPU shares are tracked in milli-cores. One CPU core is equivalent to 1000 milli-cores.
 To dedicate half a core to your process, you would need 500 milli-cores or 500m.
 
 | Unit  | Amount                            |
