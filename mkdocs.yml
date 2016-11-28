@@ -107,6 +107,7 @@ markdown_extensions:
       permalink: True
 extra_javascript:
   - static/js/foundation.js
+  - static/js/foundation.dropdown.js
   - static/js/foundation.offcanvas.js
   - static/js/headroom.min.js
   - static/js/adjustments.js

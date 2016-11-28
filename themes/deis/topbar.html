@@ -5,33 +5,52 @@
     </div>
     <div class="small-4 large-9 columns">
 
-      <nav class="nav navbar-nav navbar-right">
-        <a href="https://github.com/deis/workflow" data-event-category="Get Started" data-event-action="click" id="header-get-started" class="button hollow small right show-for-large-up">Get Started</a>
+      <nav class="nav navbar-nav navbar-right text-center">
+        <div class="show-for-large-up">
+          <ul class="inline-list">
+            <li>
+              <a class="dropdown" data-dropdown="drop2" aria-controls="drop1" aria-expanded="false">Projects <em><i class="fa fa-caret-down"></i></em></a>
+            </li>
+            <li>
+              <a href="/services" id="header-services" class="item" title="Support &amp; Services">Services</a>
+            </li>
+            <li>
+              <a href="/community" id="header-community" class="item" title="Community">Community</a>
+            </li>
+            <li>
+              <a href="/about" id="header-about" class="item" title="About">About</a>
+            </li>
+            <li>
+              <a href="/blog" id="header-blog" class="item" title="Blog">Blog</a>
+            </li>
+          </ul>
+        </div>
 
         <a class="right-off-canvas-toggle fa fa-bars show-for-medium-down" href="#" data-proofer-ignore></a>
-
-        <ul class="inline-list hide-for-medium-down">
-          <li>
-            <a href="//deis.com/how-it-works" id="header-hiw" class="item" title="How It Works">How It Works</a>
-          </li>
-          <li>
-            <a href="//deis.com/why-deis" id="header-why-deis" class="item" title="Why Use Deis">Why Use Deis</a>
-          </li>
-          <li>
-            <a href="//deis.com/services" id="header-services" class="item" title="Support &amp; Services">Support &amp; Services</a>
-          </li>
-          <li>
-            <a href="//deis.com/community" id="header-community" class="item" title="Community">Community</a>
-          </li>
-          <li>
-            <a href="//deis.com/docs" id="header-docs" class="item active" title="Docs">Docs</a>
-          </li>
-          <li>
-            <a href="//deis.com/blog" id="header-blog" class="item" title="Blog">Blog</a>
-          </li>
-        </ul>
       </nav>
 
     </div>
   </div>
 </div>
+
+<ul id="drop2" class="f-dropdown row hide-for-medium-down" data-dropdown-content aria-hidden="true">
+  <div class="small-12 medium-offset-3 medium-9 columns">
+    <div class="row">
+    <li class="small-6 medium-4 columns"><a href="/workflow" title="Workflow">
+      <img src="{{ base_url }}/static/img/svg/workflow-logo.svg" alt="Workflow">
+      <h3>Workflow</h3>
+      <p>The Kubernetes-native platform (v2).</p>
+    </a></li>
+    <li class="small-6 medium-4 columns"><a href="//helm.sh" title="Helm">
+      <img src="{{ base_url }}/static/img/svg/helm-logo.svg" alt="Helm">
+      <h3>Helm</h3>
+      <p>The Package manager for Kubernetes.</p>
+    </a></li>
+    <li class="small-6 medium-4 end columns"><a href="https://github.com/deis/steward" title="Steward">
+      <img src="{{ base_url }}/static/img/svg/steward-logo.svg" alt="Steward - The Kubernetes-native Service Broker">
+      <h3>Steward</h3>
+      <p>The Kubernetes-native Service Broker.</p>
+    </a></li>
+    <a class="fa fa-times right"></a>
+  </div>
+</ul>

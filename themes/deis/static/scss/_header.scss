@@ -7,58 +7,92 @@
   height: 82px;
   transition: box-shadow 0.2s;
   transform-style: preserve-3d;
+  height: 82px;
   border-bottom: 2px solid $light1;
+  text-align: center;
 
   .row {
-    max-width: 1240px;
+    max-width: 100%;
   }
 
   h1 {
-    margin: -0.125em 0 0.125em;
+    margin: 0;
     line-height: 1;
+    text-align: left;
   }
 
   nav {
     height: 1em;
+    text-align: center;
 
     ul.inline-list {
-        margin: 1em 0 0;
+      margin: 1em auto 0;
+      display: inline-block;
+      width: auto;
+      padding-right: 2em;
     }
 
     li {
-        margin-left: 5%;
+      // margin-right: 3.5%;
+      margin-left: 0;
 
-        a {
-            @include helvetica;
-            @include ripple;
-            font-weight: bold;
-            font-size: 0.825em;
-            line-height: 1;
-            letter-spacing: 0.03em;
-            color: $dark2;
+      &:last-child {
+        margin-right: 0;
+      }
 
-            &:hover {
-                color: $pink;
-            }
+      a {
+        @include klinicReg;
+        @include ripple;
+        font-size: 1.125em;
+        line-height: 1;
+        letter-spacing: 0.035em;
+        color: $pink;
+        margin-right: 3em;
 
-            &.active {
-                color: $pink;
-
-                &::after {
-                    width: 100%;
-                    opacity: 1;
-                }
-            }
+        &:hover {
+          color: $pink;
         }
+
+        &.active {
+          color: $pink;
+
+          &::after {
+            width: 100%;
+            opacity: 1;
+          }
+        }
+
+        &.dropdown {
+          display: block;
+          em {
+            padding-left: 0.75em;
+            margin-left: 0.425em;
+            border-left: 1px dotted darken($light2, 10%);
+            display: inline-block;
+          }
+
+          .fa {
+            font-size: 0.75em;
+            display: inline-block;
+            @include transition;
+          }
+
+          &[aria-expanded=true] {
+            .fa {
+              transform: rotate(180deg);
+            }
+          }
+        }
+      }
     }
 
     .button {
-        margin: -1.25em 0 0;
-        color: $pink;
+      margin: -1.25em 0 0;
+      color: $pink;
 
-        &:hover {
-            border-color: $lightpink;
-        }
+      &:hover {
+        border-color: $lightpink;
+      }
     }
   }
 }
@@ -82,5 +116,111 @@
 
   &.headroom--unpinned {
     transform: translateY(-100%);
+  }
+}
+
+ul.f-dropdown {
+  display: none !important;
+}
+
+ul.f-open-dropdown {
+  display: block !important;
+  position: fixed !important;
+  top: 0px !important;
+  left: 0 !important;
+  right: 0 !important;
+  padding: 85px 8.25% 0;
+  max-width: 100% !important;
+  width: 100%;
+  z-index: 800 !important;
+  box-shadow: none;
+  background: white !important;
+  border-bottom: 2px solid #f4f4f4;
+
+  .fa-times {
+    position: fixed;
+    top: 40px;
+    right: 40px;
+    color: lighten($dark1, 20%);
+    font-size: 2em;
+  }
+
+  &:before {
+    display: none;
+  }
+
+  li {
+    text-align: center;
+    margin: 0;
+    display: inline-block;
+
+    &:hover {
+      background: transparent;
+    }
+
+    a {
+      display: block;
+      text-align: left;
+      padding: 0.333em 0.25em 0.333em 0;
+      font-size: 1.5em;
+      background-color: transparent;
+      min-height: 75px;
+      overflow: hidden;
+      position: relative;
+      @include transition;
+
+      img {
+        position: absolute;
+        top: 47.5%;
+        transform: translateY(-47.5%);
+        left: 0;
+        max-width: 45px;
+        margin: 0 0.75em 0.5em 0;
+      }
+
+      h3,
+      p {
+        margin: 0 0 0 3.75rem;
+        width: 100%;
+        display: block;
+        text-align: left;
+      }
+
+      h3 {
+        @include klinicBold;
+        font-size: 1em;
+      }
+
+      p {
+        @include helvetica;
+        font-size: 0.425em;
+        color: lighten($dark1, 33.33%);
+        // max-width: 250px;
+      }
+
+      &:after {
+        display: block;
+        content: " ";
+        width: 1%;
+        height: 4px;
+        background: $pink;
+        position: absolute;
+        bottom: 4px;
+        left: 50%;
+        margin: 0 auto;
+        opacity: 0;
+        @include transition;
+      }
+
+      &:hover {
+        background-color: transparent !important;
+
+        &:after {
+          width: 100%;
+          left: 0;
+          opacity: 1;
+        }
+      }
+    }
   }
 }
