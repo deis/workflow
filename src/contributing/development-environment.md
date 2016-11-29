@@ -71,7 +71,7 @@ This will create a new virtual machine named `deis-docker` that will take up as 
 Once the `deis-docker` machine exists, source its values into your environment so your docker client knows how to use the new machine. You may even choose to add this to your bash profile or similar.
 
 ```
-$ eval "$(docker-machine env docker-deis)"
+$ eval "$(docker-machine env deis-docker)"
 ```
 
 After following these steps, some Docker Machine users report a slight delay (30 - 60 seconds) before the Docker server is ready.
@@ -158,7 +158,7 @@ export DEIS_REGISTRY=<IP of the host machine>:5000
 In non-Linux environments:
 
 ```
-export DEIS_REGISTRY=<IP of the docker-deis Docker Machine VM>:5000/
+export DEIS_REGISTRY=<IP of the deis-docker Docker Machine VM>:5000/
 ```
 
 If your development cluster runs on a cloud provider such as Google Container Engine, a local registry such as the one above will not be accessible to your Kubernetes nodes.  In such cases, a public registry such as [DockerHub][dh] or [quay.io][quay] will suffice.
