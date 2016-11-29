@@ -1,76 +1,45 @@
-# Installing Deis Workflow
+# Installing Deis Workflow on Amazon Web Services
 
 ## Check Your Setup
 
-First check that the `helmc` command is available and the version is 0.8 or newer.
+First check that the `helm` command is available and the version is v2.0.0 or newer.
 
 ```
-$ helmc --version
-helmc version 0.8.1+a9c55cf
+$ helm version
+Client: &version.Version{SemVer:"v2.0.0", GitCommit:"51bdad42756dfaf3234f53ef3d3cb6bcd94144c2", GitTreeState:"clean"}
+Server: &version.Version{SemVer:"v2.0.0", GitCommit:"51bdad42756dfaf3234f53ef3d3cb6bcd94144c2", GitTreeState:"clean"}
 ```
 
-Ensure the `kubectl` client is installed and can connect to your Kubernetes cluster. `helmc` will
-use it to communicate. You can test that it is working properly by running:
-
-```
-$ helmc target
-Kubernetes master is running at https://52.9.206.49
-Elasticsearch is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/elasticsearch-logging
-Heapster is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/heapster
-Kibana is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/kibana-logging
-KubeDNS is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/kube-dns
-kubernetes-dashboard is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
-Grafana is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
-InfluxDB is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
-```
-
-If you see a list of targets like the one above, `helmc` can communicate with the Kubernetes master.
+Ensure the `kubectl` client is installed and can connect to your Kubernetes cluster.
 
 ## Add the Deis Chart Repository
 
-The [Deis Chart Repository](https://github.com/deis/charts) contains everything you
-need to install Deis onto your Kubernetes cluster, with a single `helmc install` command.
+The Deis Chart Repository contains everything you need to install Workflow onto your Kubernetes
+cluster, with a single `helm install deis/workflow --namespace deis` command.
 
-Run the following command to add this repository to Helm Classic:
+Run the following command to add this repository to Helm:
 
 ```
-$ helmc repo add deis https://github.com/deis/charts
+$ helm repo add deis https://charts.deis.com/workflow
 ```
-
-!!! note
-   You need [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed in order to run the command above
 
 ## Install Deis Workflow
 
-Now that you have Helm Classic installed and have added the Deis Chart Repository, install Workflow by running:
+Now that Helm is installed and the repository has been added, install Workflow by running:
 
 ```
-$ helmc fetch deis/workflow-v2.8.0            # fetches the chart into a
-                                              # local workspace
-$ helmc generate -x manifests workflow-v2.8.0 # generates various secrets
-$ helmc install workflow-v2.8.0               # injects resources into
-                                              # your cluster
+$ helm install deis/workflow --namespace deis
 ```
 
-!!! Experimental
-	Workflow can also be installed now using the [Kubernetes Helm][helm]. All the details that are needed for a production deployments like off-cluster storage, external registry etc., can be configured by passing an optional [values file][valuesfile] which overrides default values.
-
-
-    	$ helm repo add deis https://charts.deis.com/workflow  # add the workflow charts repo
-
-    	$ helm install deis/workflow --version=v2.8.0 --namespace=deis -f <optional values file>  # injects resources into your cluster
-
-  See also our section on [Workflow chart provenance](../../../installing-workflow/workflow-helm-charts.md#chart-provenance)
-
-Helm Classic will install a variety of Kubernetes resources in the `deis` namespace.
-You'll need to wait for the pods that it launched to be ready. Monitor their status
-by running:
+Helm will install a variety of Kubernetes resources in the `deis` namespace.
+Wait for the pods that Helm launched to be ready. Monitor their status by running:
 
 ```
 $ kubectl --namespace=deis get pods
 ```
 
-If you would like `kubectl` to automatically update as the pod states change, run (type Ctrl-C to stop the watch):
+If it's preferred to have `kubectl` automatically update as the pod states change, run (type Ctrl-C to stop the watch):
+
 ```
 $ kubectl --namespace=deis get pods -w
 ```
@@ -79,7 +48,8 @@ Depending on the order in which the Workflow components initialize, some pods ma
 installation: if a component's dependencies are not yet available, that component will exit and Kubernetes will
 automatically restart it.
 
-Here, you can see that controller, builder and registry all took a few loops before there were able to start:
+Here, it can be seen that the controller, builder and registry all took a few loops before they were able to start:
+
 ```
 $ kubectl --namespace=deis get pods
 NAME                          READY     STATUS    RESTARTS   AGE
@@ -95,20 +65,21 @@ deis-router-k1ond             1/1       Running   0          5m
 deis-workflow-manager-68nu6   1/1       Running   0          5m
 ```
 
-Once you see all of the pods in the `READY` state, Deis Workflow is up and running!
+Once all of the pods are in the `READY` state, Deis Workflow is up and running!
 
 ## Configure your AWS Load Balancer
 
-After installing Workflow on your cluster, you will need to adjust your load balancer configuration.
-By default, the connection timeout for Elastic Load Blancers is 60 seconds. Unfortunately, this timeout is too short for
-long running connections when using `git push` functionality of Deis Workflow.
+After installing Workflow on your cluster, you will need to adjust your load balancer
+configuration. By default, the connection timeout for Elastic Load Blancers is 60 seconds.
+Unfortunately, this timeout is too short for long running connections when using `git push`
+functionality of Deis Workflow.
 
-Deis Workflow will automatically provision and attach a Elastic Loadbalancer to the router component. This
-component is responsible for routing HTTP and HTTPS requests from the public internet to applications that are deployed
-and managed by Deis Workflow.
+Deis Workflow will automatically provision and attach a Elastic Loadbalancer to the router
+component. This component is responsible for routing HTTP and HTTPS requests from the public
+internet to applications that are deployed and managed by Deis Workflow.
 
-By describing the `deis-router` service, you can see what IP hostname has been allocated by AWS for your Deis Workflow
-cluster:
+By describing the `deis-router` service, you can see what IP hostname has been allocated by AWS for
+your Deis Workflow cluster:
 
 ```
 $ kubectl --namespace=deis describe svc deis-router | egrep LoadBalancer
@@ -116,13 +87,16 @@ Type:                   LoadBalancer
 LoadBalancer Ingress:   abce0d48217d311e69a470643b4d9062-2074277678.us-west-1.elb.amazonaws.com
 ```
 
-The AWS name for the ELB is the first part of hostname, before the `-`. List all of your ELBs by name to confirm:
+The AWS name for the ELB is the first part of hostname, before the `-`. List all of your ELBs by
+name to confirm:
+
 ```
 $ aws elb describe-load-balancers --query 'LoadBalancerDescriptions[*].LoadBalancerName'
 abce0d48217d311e69a470643b4d9062
 ```
 
 Set the connection timeout to 1200 seconds, make sure you use your load balancer name:
+
 ```
 $ aws elb modify-load-balancer-attributes \
         --load-balancer-name abce0d48217d311e69a470643b4d9062 \
@@ -132,7 +106,3 @@ CONNECTIONSETTINGS	1200
 ```
 
 Next, [configure dns](dns.md) so you can register your first user and deploy an application.
-
-
-[helm]: https://github.com/kubernetes/helm/blob/master/docs/install.md
-[valuesfile]: https://charts.deis.com/workflow/values-v2.8.0.yaml

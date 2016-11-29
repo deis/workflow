@@ -1,31 +1,22 @@
 # Tuning Component Settings
 
 Helm Charts are a set of Kubernetes manifests that reflect best practices for deploying an
-application or service. Helm is heavily influenced by [Homebrew](http://brew.sh/), including the
-[formula model](https://github.com/Homebrew/homebrew-core). A Helm Chart is to Helm as a Formula
-is to Homebrew.
+application or service on Kubernetes.
 
-After you fetch the Workflow chart, you can customize the chart using `helmc edit` before using
-`helmc generate` and `helmc install` to complete the installation. To customize the respective
-component, edit `tpl/deis-<component>-deployment.yaml` and modify the `env` section of the component to
-tune these settings.
-
-For example, to allow only administrators to register new accounts in the controller,
-edit `tpl/deis-controller-deployment.yaml` and add the following under the `env` section:
-
-```
-env:
-  - name: REGISTRATION_MODE
-    value: "admin_only"
-```
+After you add the Deis Chart Repository, you can customize the chart using
+`helm inspect values deis/workflow | sed -n '1!p' > values.yaml` before using `helm install` to complete the
+installation. To customize the respective component, edit `values.yaml` and modify the section of
+the component to tune these settings.
 
 ## Setting Resource limits
 
-You can set resource limits to Workflow components by modifying the template file `tpl/generate_params.toml`.
-This file has a section for each Workflow component. To set a limit to any Workflow component just add `limits_cpu`, `limits_memory`
-in the section and set them to the appropriate values.
+You can set resource limits to Workflow components by modifying the values.yaml file fetched
+earlier. This file has a section for each Workflow component. To set a limit to any Workflow
+component just add `limits_cpu`, `limits_memory` in the section and set them to the appropriate
+values.
 
-Below is an example of how the builder section of `tpl/generate_params.toml` might look with CPU and memory limits set:
+Below is an example of how the builder section of `values.yaml` might look with CPU and memory
+limits set:
 
 ```
 [builder]

@@ -2,7 +2,7 @@
 
 Get started with Deis Workflow in three easy steps.
 
-1. Install CLI tools for Helm Classic and Deis Workflow
+1. Install CLI tools for Helm and Deis Workflow
 2. Boot a Kubernetes and install Deis Workflow
 3. Deploy your first application
 
@@ -10,7 +10,7 @@ This guide will help you set up a cluster suitable for evaluation, development a
 
 ## Step 1: Install CLI tools
 
-For the quickstart we will [install both Helm Classic and Deis Workflow CLI](install-cli-tools.md).
+For the quickstart we will [install both Helm and Deis Workflow CLI](install-cli-tools.md).
 
 ## Step 2: Boot Kubernetes and Install Deis Workflow
 

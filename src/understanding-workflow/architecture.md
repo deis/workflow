@@ -8,7 +8,7 @@ compliant Kubernetes cluster.
 
 ![System Overview](../diagrams/Ecosystem_Basic.png)
 
-Operators use [Helm Classic][helm] to configure and install the Workflow components which
+Operators use [Helm][] to configure and install the Workflow components which
 interface directly with the underlying Kubernetes cluster. Service discovery,
 container availability and networking are all delegated to Kubernetes, while
 Workflow provides a clean and simple developer experience.
@@ -64,6 +64,6 @@ configurations as well as multi-server production clusters.
 [builder]: components.md#builder
 [components]: components.md
 [controller]: components.md#controller
-[helm]: http://helm.sh
+[helm]: https://github.com/kubernetes/helm
 [logger]: components.md#logger
 [router]: components.md#router

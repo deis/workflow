@@ -1,24 +1,13 @@
-# Workflow Helm charts
+# Chart Provenance
 
 As of Workflow [v2.8.0](../changelogs/v2.8.0.md), Deis has released [Kubernetes Helm][helm] charts for Workflow
 and for each of its [components](../understanding-workflow/components.md).
-
-## Installation
-
-Once [Helm][helm] is installed and its server component is running on a Kubernetes cluster, one may install Workflow with the following steps:
-```
-$ helm repo add deis https://charts.deis.com/workflow  # add the workflow charts repo
-
-$ helm install deis/workflow --version=v2.8.0 --namespace=deis -f <optional values file>  # injects resources into your cluster
-```
-
-## Chart Provenance
 
 Helm provides tools for establishing and verifying chart integrity.  (For an overview, see the [Provenance](https://github.com/kubernetes/helm/blob/master/docs/provenance.md) doc.)  All release charts from the Deis Workflow team are now signed using this mechanism.  
 
 The full `Deis, Inc. (Helm chart signing key) <security@deis.com>` public key can be found [here](../security/1d6a97d0.txt), as well as the [pgp.mit.edu](http://pgp.mit.edu/pks/lookup?op=vindex&fingerprint=on&search=0x17E526B51D6A97D0) keyserver and the official Deis Keybase [account][deis-keybase].  The key's fingerprint can be cross-checked against all of these sources.
 
-### Verifying a signed chart
+## Verifying a signed chart
 
 The public key mentioned above must exist in a local keyring before a signed chart can be verified.
 
