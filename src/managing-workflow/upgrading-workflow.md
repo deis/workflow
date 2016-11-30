@@ -16,6 +16,9 @@ See [Configuring Object Storage][] to learn how to store your Workflow data off-
 
 ## Upgrade Process
 
+!!! note
+    If upgrading from a [Helm Classic](https://github.com/helm/helm-classic) install, you'll need to 'migrate' the cluster to a [Kubernetes Helm](https://github.com/kubernetes/helm) installation.  See [Workflow-Migration][] for steps.
+
 ### Step 1: Apply the Workflow upgrade
 
 Helm will remove all components from the previous release. Traffic to applications deployed through
@@ -70,3 +73,5 @@ curl -sSL http://deis.io/deis-cli/install-v2.sh | bash && sudo mv deis $(which d
 
 
 [minio]: https://github.com/deis/minio
+[Configuring Object Storage]: ../installing-workflow/configuring-object-storage.md
+[Workflow-Migration]: https://github.com/deis/workflow-migration/blob/master/README.md
