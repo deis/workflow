@@ -72,11 +72,16 @@ If you haven't configured your default zone, make sure it matches the ZONE for y
 $ gcloud config set compute/zone us-central1-b
 ```
 
-Now you may fetch Kubernetes credentials:
+Now you may fetch credentials to connect to Kubernetes:
 ```
-$ gcloud container clusters get-credentials cluster-1
-Fetching cluster endpoint and auth data.
-kubeconfig entry generated for cluster-1.
+$ gcloud auth application-default login
+Your browser has been opened to visit:
+https://accounts.google.com/o/oauth2/auth?redirect_uri=....
+
+Credentials saved to file: [~/.config/gcloud/application_default_credentials.json]
+
+These credentials will be used by any library that requests
+Application Default Credentials.
 ```
 
 If you don't have `kubectl` CLI setup just yet, run this to get it available
