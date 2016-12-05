@@ -1,6 +1,7 @@
 # Platform Monitoring
 
 ## Description
+
 We now include a monitoring stack for introspection on a running Kubernetes cluster. The stack includes 3 components:
 
 * [Telegraf](https://docs.influxdata.com/telegraf/v0.12/) - Metrics collection daemon written by team behind InfluxDB.
@@ -8,6 +9,7 @@ We now include a monitoring stack for introspection on a running Kubernetes clus
 * [Grafana](http://grafana.org/) - Graphing tool for time series data
 
 ## Architecture Diagram
+
 ```
                         ┌────────┐                                        
                         │ Router │                  ┌────────┐     ┌─────┐
@@ -55,7 +57,8 @@ instance fails, modified dashboards are lost. Until there is a solution to persi
 them separately in version control.
 
 ### Off Cluster Grafana
-It is recommended that users provide their own installation for Grafana if possible. The current deployment of Grafana within Workflow is durable across pod restarts which means custom dashboards that are created after startup will not be restored when the pod comes back up. If you wish to provide your own Grafana instance you can either set the `GRAFANA_LOCATION` environment variable when your run `helm generate` or set `grafana_location` in the generate_params.toml.
+
+It is recommended that users provide their own installation for Grafana if possible. The current deployment of Grafana within Workflow is not durable across pod restarts which means custom dashboards that are created after startup will not be restored when the pod comes back up. If you wish to provide your own Grafana instance you can set `grafana_location` in the `values.yaml` file before running `helm install`.
 
 ## InfluxDB
 
@@ -73,13 +76,14 @@ You can choose to not expose the Influx UI and API to the world by updating
 following line - `router.deis.io/routable: "true"`.
 
 ### Off Cluster Influxdb
-To use off-cluster Influx please provide the following values in either the `generate_params.toml` file or as environment variables when running `helm generate`.
 
-* `influxdb_location=off-cluster` - `INFLUXDB_LOCATION=off-cluster`
-* `url = "http://my-influxhost.com:8086"` - `INFLUXDB_SERVICE_URL="http://my-influxhost.com:8086"`
-* `database = "metrics"` - `INFLUXDB_DATABASE="metrics"`
-* `user = "InfluxUser"` - `INFLUXDB_USER="InfluxUser"`
-* `password = "MysuperSecurePassword"` - `INFLUXDB_PASSWORD="MysuperSecurePassword"`
+To use off-cluster Influx, please provide the following values in the `values.yaml` file before running `helm install`.
+
+* `influxdb_location=off-cluster`
+* `url = "http://my-influxhost.com:8086"`
+* `database = "metrics"`
+* `user = "InfluxUser"`
+* `password = "MysuperSecurePassword"`
 
 ## Telegraf
 
