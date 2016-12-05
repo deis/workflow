@@ -135,7 +135,7 @@ specific commits from master.
 Export two environment variables that will be used in later steps:
 
 ```bash
-export WORKFLOW_RELEASE=v2.8.0 WORKFLOW_PREV_RELEASE=v2.7.0  # for example
+export WORKFLOW_RELEASE=v2.9.0 WORKFLOW_PREV_RELEASE=v2.8.0  # for example
 ```
 
 ### Step 2: Update Jenkins Jobs
@@ -287,7 +287,7 @@ Place the `$WORKFLOW_RELEASE` master changelog generated in Step 7 in the `chang
 Make sure to add a header to the page to make it clear that this is for a Workflow release, e.g.:
 
 ```
-## Workflow v2.7.0 -> v2.8.0
+## Workflow v2.8.0 -> v2.9.0
 ```
 
 ### Step 9: Close GitHub Milestones
@@ -320,9 +320,9 @@ Post a message to the #company channel on Slack. Include a link to the released 
 master CHANGELOG:
 
 ```
-@here Deis Workflow v2.8.0 is now live!
-Release notes: https://github.com/deis/charts/releases/tag/v2.8.0
-Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.8.0/
+@here Deis Workflow v2.9.0 is now live!
+Release notes: https://github.com/deis/charts/releases/tag/v2.9.0
+Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.9.0/
 ```
 
 You're done with the release. Nice job!
