@@ -121,16 +121,23 @@ fix whatever issue arose in the pipeline. For example, the
 may have failed to promote the `:git-abc1d23` candidate image and needs to be restarted with
 that component and commit.
 
+If the component has a correlating [Kubernetes Helm][] chart,
+this chart will also be packaged, signed and uploaded to its production chart repo.  Please
+verify it can be fetched (and verified):
+
+```
+$ helm repo add controller https://charts.deis.com/controller
+"controller" has been added to your repositories
+$ helm fetch --verify controller/controller --version v2.9.0 && echo
+Verification: &{0xc42028d3b0 sha256:17b94dd854e090c6627728bdcb5e2ea588f3cb4fecc1082a5a03c909c0ed0ecd controller-v2.9.0.tgz}
+```
+
 ## How to Release Workflow
 
-Deis Workflow integrates multiple component releases together with a [Helm Classic][] chart
+Deis Workflow integrates multiple component releases together with a [Kubernetes Helm][] chart
 deliverable. This section leads a maintainer through creating a Workflow release.
 
-### Step 1: Update Code and Set Environment Variables
-
-In the [deis/charts][] repository, update from the GitHub remote. Major or minor releases start
-from the master branch. Patch releases should check out the previous release tag and cherry-pick
-specific commits from master.
+### Step 1: Set Environment Variables
 
 Export two environment variables that will be used in later steps:
 
@@ -138,21 +145,7 @@ Export two environment variables that will be used in later steps:
 export WORKFLOW_RELEASE=v2.9.0 WORKFLOW_PREV_RELEASE=v2.8.0  # for example
 ```
 
-### Step 2: Update Jenkins Jobs
-
-Update the Workflow chart release value in the
-[common.groovy](https://github.com/deis/jenkins-jobs/blob/master/common.groovy) file so the
-[workflow-test-release](https://ci.deis.io/job/workflow-test-release/) job will kick off
-automatically when the `release-${WORKFLOW_RELEASE}` branch is pushed:
-
-```bash
-git clone git@github.com:deis/jenkins-jobs.git
-perl -i -0pe "s/${WORKFLOW_PREV_RELEASE}/${WORKFLOW_RELEASE}/" common.groovy
-git commit -a -m "chore(workflow-$WORKFLOW_RELEASE): update workflow chart release value"
-git push upstream HEAD:master
-```
-
-### Step 3: Tag Supporting Repositories
+### Step 2: Tag Supporting Repositories
 
 Some Workflow components not in the Helm chart must also be tagged in sync with the release.
 Follow the [component release process](#how-to-release-a-component) above and ensure that
@@ -162,65 +155,16 @@ these components are tagged:
 - [deis/workflow-cli][]
 - [deis/workflow-e2e][]
 
-### Step 4: Create Helm Charts
+### Step 3: Create Helm Chart
 
-For a patch release, check out the previous tag and cherry-pick commits onto it:
+To create and stage a release candidate chart for Workflow, we will build the [workflow-chart-publish](https://ci.deis.io/job/workflow-chart-publish) job with the following parameters:
 
-```bash
-git checkout -b release-$WORKFLOW_RELEASE $WORKFLOW_PREV_RELEASE
-git cherry-pick 143ac41  # and so on...
-```
+`CHART_REPO_TYPE=staging` and `RELEASE_TAG=$WORKFLOW_RELEASE`
 
-For a major or minor release, copy and modify the current development charts:
+This job will gather all of the latest component release tags and use these to specify the versions of all component charts.
+It will then package the Workflow chart, upload it to the staging chart repo and kick off an e2e run against said chart.
 
-```bash
-git checkout -b release-$WORKFLOW_RELEASE master
-_scripts/new_workflow_charts.sh
-```
-
-Use the `deisrel` tool to determine the latest component releases:
-```bash
-export GH_TOKEN=<my_github_api_token>  # set token to avoid rate-limiting errors
-# Create a JSON file with the components for the new release
-cat > components.json <<EOF
-{
-  "builder": ["builder"],
-  "controller": ["controller"],
-  "dockerbuilder": ["dockerbuilder"],
-  "fluentd": ["fluentd"],
-  "monitor": ["influxdb", "grafana", "telegraf"],
-  "logger": ["logger"],
-  "minio": ["minio"],
-  "nsq": ["nsqd"],
-  "postgres": ["database"],
-  "redis": ["loggerRedis"],
-  "registry": ["registry"],
-  "registry-proxy": ["registry_proxy"],
-  "registry-token-refresher": ["registry_token_refresher"],
-  "router": ["router"],
-  "slugbuilder": ["slugbuilder"],
-  "slugrunner": ["slugrunner"],
-  "workflow-manager": ["workflowManager"]
-}
-EOF
-deisrel $HOME/.helmc/workspace/charts/workflow-$WORKFLOW_PREV_RELEASE/tpl/generate_params.toml \
-  components.json
-```
-
-Change the `generate_params.toml` file in **each** new chart as follows:
-
-  1. Set all `dockerTag` values to latest releases for each component, as determined above
-
-Commit and push your changes:
-
-```bash
-git commit -a -m "chore(workflow-$WORKFLOW_RELEASE): releasing workflow-$WORKFLOW_RELEASE(-e2e)"
-git push upstream HEAD:release-$WORKFLOW_RELEASE
-```
-
-Open a pull request at [deis/charts][] to merge this branch into master.
-
-### Step 5: Manual Testing
+### Step 4: Manual Testing
 
 Now it's time to go above and beyond current CI tests. Create a testing matrix spreadsheet (copying
 from the previous document is a good start) and sign up testers to cover all permutations.
@@ -234,30 +178,33 @@ When showstopper-level bugs are found, the process is as follows:
 1. Create a component PR that fixes the bug.
 1. Once the PR passes and is reviewed, merge it and do a new
   [component release](#how-to-release-a-component)
-1. Update that component's `dockerTag` value in the release chart(s) to the new semver tag
-1. Commit and push the chart changes to the release branch and restart testing
+1. Trigger the same `workflow-chart-publish` job as mentioned in Step 3 to upload the newly-generated Workflow release candidate chart to staging.
 
-### Step 6: Release the Chart as a Component
+### Step 5: Release the Chart
 
 When testing has completed without uncovering any new showstopper bugs and the charts PR has been
-reviewed successfully, merge it to master. Then update your local master branch and do a
-[component release][] of the chart repository. Note that the [semantic version][] of the chart
-release is predetermined as the value of `$WORKFLOW_RELEASE`.
+reviewed successfully, kick off the [workflow-chart-release](https://ci.deis.io/job/workflow-chart-release) job with the following parameter:
 
-### Step 7: Assemble Master Changelog
+`RELEASE_TAG=$WORKFLOW_RELEASE`
+
+This job will copy the release candidate chart (now approved by CI and manual testing) from the staging repo to the production repo, signing
+it if it has not done so already.
+
+### Step 6: Assemble Master Changelog
 
 Each component already updated its release notes on GitHub with CHANGELOG content. We'll now
 generate the master changelog for the Workflow chart, consisting of all aforementioned component changes
 as well as those non-component repo changes needing to be manually added.
 
-We'll employ the same `generate_params.toml` and `components.json` files as used in Step 4 above, this time
-invoking `deisrel changelog global` to get all component changes between the tag existing in the `WORKFLOW_PREV_RELEASE`
-chart and the _most recent_ release tag existing in GitHub. (Therefore, if there are any unreleased commits in
-a component repo, they will not appear here):
+We'll employ the `requirements.lock` file from the `WORKFLOW_PREV_RELEASE` chart, as well as a repo-to-chart-name mapping file
+(see [here](https://github.com/deis/deisrel/blob/master/README.md#usage) for an example), this time invoking `deisrel changelog global` to get all component changes between
+the chart versions existing in the `WORKFLOW_PREV_RELEASE` chart and the _most recent_ releases existing in GitHub.
+(Therefore, if there are any unreleased commits in a component repo, they will not appear here):
 
 ```bash
-deisrel changelog global $HOME/.helmc/workspace/charts/workflow-$WORKFLOW_PREV_RELEASE/tpl/generate_params.toml \
-  components.json > $WORKFLOW_RELEASE
+helm repo add deis https://charts.deis.com/workflow
+helm fetch --untar deis/workflow --version $WORKFLOW_PREV_RELEASE
+deisrel changelog global workflow/requirements.lock mapping.json > $WORKFLOW_RELEASE
 ```
 
 To get non-component repo changelogs (presumably tagged in Step 3 above), one can issue a command like the following
@@ -275,7 +222,7 @@ These can be added to the `$WORKFLOW_RELEASE` file created previously.
 This master changelog should then be placed into a single gist.  The file will also be added to the documentation
 update PR created in the next step.
 
-### Step 8: Update Documentation
+### Step 7: Update Documentation
 
 Create a new pull request at [deis/workflow][] that updates version references to the new release.
 Use `git grep $WORKFLOW_PREV_RELEASE` to find any references, but be careful not to change
@@ -290,17 +237,17 @@ Make sure to add a header to the page to make it clear that this is for a Workfl
 ## Workflow v2.8.0 -> v2.9.0
 ```
 
-### Step 9: Close GitHub Milestones
+### Step 8: Close GitHub Milestones
 
 Create a pull request at [seed-repo](https://github.com/deis/seed-repo) to close the release
 milestone and create the next one. When changes are merged to seed-repo, milestones on all
 relevant projects will be updated. If there are open issues attached to the milestone, move them
 to the next upcoming milestone before merging the pull request.
 
-Milestones map to Deis Workflow releases in [deis/charts][]. These milestones do not correspond
+Milestones map to Deis Workflow releases in [deis/workflow][]. These milestones do not correspond
 to individual component release tags.
 
-### Step 10: Release Workflow CLI Stable
+### Step 9: Release Workflow CLI Stable
 
 Now that the `$WORKFLOW_RELEASE` version of Workflow CLI has been vetted, we can push `stable` artifacts based on this version.
 
@@ -313,7 +260,7 @@ $ ./deis version
 # (Should show $WORKFLOW_RELEASE)
 ```
 
-### Step 11: Let Everyone Know
+### Step 10: Let Everyone Know
 
 Let the rest of the team know they can start blogging and tweeting about the new Workflow release.
 Post a message to the #company channel on Slack. Include a link to the released chart and to the
@@ -329,10 +276,9 @@ You're done with the release. Nice job!
 
 [component release]: /roadmap/releases/#how-to-release-a-component
 [continuous delivery]: https://en.wikipedia.org/wiki/Continuous_delivery
-[deis/charts]: https://github.com/deis/charts
 [deis/workflow]: https://github.com/deis/workflow
 [deis/workflow-cli]: https://github.com/deis/workflow-cli
 [deis/workflow-e2e]: https://github.com/deis/workflow-e2e
 [deisrel]: https://github.com/deis/deisrel
-[Helm classic]: https://github.com/helm/helm-classic
+[Kubernetes Helm]: https://github.com/kubernetes/helm
 [semantic version]: http://semver.org
