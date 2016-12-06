@@ -137,9 +137,9 @@ fluentd:
     # Configure the following ONLY if using Fluentd to send log messages to both
     # the Logger component and external syslog endpoint
     # external syslog endpoint url
-    syslog_host: ""
+    host: ""
     # external syslog endpoint port
-    syslog_port: ""
+    port: ""
 
 monitor:
   grafana:
