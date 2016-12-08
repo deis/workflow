@@ -135,15 +135,30 @@ The Kubernetes cluster will take a few minutes to complete provisioning and conf
 ## Connect to your Kubernetes Cluster
 
 1. Find hostname for the master
-2. SCP Kubeconfig from master into place
+`az acs list`
+Part of the way down the output, copy the fqdn value for your master dns name which will end with cloudapp.azure.com.
+```
+"masterProfile": {
+      "count": 1,
+      "dnsPrefix": "asc-deis-k8s-masters",
+      "fqdn": "mydnsprefix.myregion.cloudapp.azure.com"
+    },
+```
+
+2. Download the Kubeconfig from the master to your terminal
+`scp -i ~/.ssh/id_rsa k8sadmin@mydnsprefix.myregion.cloudapp.azure.com:.kube/config ~/.kube/k8sanddeis.config`
+
 3. Set KUBECONFIG environment value
+`KUBECONFIG=~/.kube/k8sanddeis.config`
+
+4. Verify you can connect to your Kubernetes cluster by running `kubectl cluster-info`
 
 ```
 $ kubectl cluster-info
-Kubernetes master is running at https://slack-acs-1mgmt.eastus.cloudapp.azure.com
-Heapster is running at https://slack-acs-1mgmt.eastus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/heapster
-KubeDNS is running at https://slack-acs-1mgmt.eastus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kube-dns
-kubernetes-dashboard is running at https://slack-acs-1mgmt.eastus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
+Kubernetes master is running at https://mydnsprefix.myregion.cloudapp.azure.com
+Heapster is running at https://mydnsprefix.myregion.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/heapster
+KubeDNS is running at https://mydnsprefix.myregion.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kube-dns
+kubernetes-dashboard is running at https://mydnsprefix.myregion.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
 ```
 
 You are now ready to [install Deis Workflow](install-azure-acs.md)
