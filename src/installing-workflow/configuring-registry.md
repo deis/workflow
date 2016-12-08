@@ -17,7 +17,7 @@ When using a private registry the docker images are no longer pulled by Deis Wor
 Deis Workflow currently supports
   1. Google Container Registry([gcr][gcr]).
   2. EC2 Container Registry([ecr][ecr]).
-  3. off-cluster storage providers like dockerhub, quay.io, etc., or self hosted docker registry.
+  3. off-cluster: Any provider which supports long-lived username/password authentication, such as [Azure Container Registry][acr], [Docker Hub][dockerhub], [quay.io][quay], or a self-hosted Docker registry.
 
 * **Step 1:** If you haven't already fetched the values file, do so with `helm inspect values deis/workflow | sed -n '1!p' > values.yaml`
 * **Step 2:** Update registry location details by modifying the values file.
@@ -31,6 +31,9 @@ You are now ready to `helm install deis/workflow --namespace deis -f values.yaml
 [storage]: configuring-object-storage
 [ecr]: http://docs.aws.amazon.com/AmazonECR/latest/userguide/ECR_GetStarted.html
 [gcr]: https://cloud.google.com/container-registry/
+[acr]: https://docs.microsoft.com/en-us/azure/container-registry/
+[dockerhub]: https://hub.docker.com/
+[quay]: https://quay.io/
 [srvAccount]: https://support.google.com/cloud/answer/6158849#serviceaccounts
 [aws-iam]: https://aws.amazon.com/iam/
 [namespace]: https://docs.docker.com/registry/spec/api/#/overview
