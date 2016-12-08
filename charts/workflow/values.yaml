@@ -1,11 +1,4 @@
-#
-# This is the main configuration file for Deis object storage. The values in
-# this file are passed into the appropriate services so that they can configure
-# themselves for persisting data in object storage.
-#
-# In general, all object storage credentials must be able to read and write to
-# the container or bucket they are configured to use.
-#
+# This is the global configuration file for Workflow
 
 global:
   # Set the storage backend
