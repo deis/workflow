@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-1. Azure Accout - If you do not already have a Azure Cloud account, you can start a trial with $200 of free credit [here](https://azure.microsoft.com/en-us/free/). After completing sign up, you must add your billing information.
+1. Azure Account - If you do not already have a Azure Cloud account, you can start a trial with $200 of free credit [here](https://azure.microsoft.com/en-us/free/). After completing sign up, you must add your billing information.
 2. Some form of *nix-based terminal - MacOS, Ubuntu, CentOS, Bash on Windows, etc
 <br>Where the following is present:
 3. Azure CLI - The Azure CLI (2.0) provides the `az` command and allows you to interact with Azure through the command line. Install the CLI by following the instructions on [GitHub for the Azure CLI](https://github.com/Azure/azure-cli).
@@ -13,7 +13,7 @@
 
 After installing the CLI, log in to your Azure Account by typing `az login` and output would look similar to this:
 ```
-~ $ az login
+$ az login
 To sign in, use a web browser to open the page https://aka.ms/devicelogin and enter the code F7DLMNOPE to authenticate.
 [
   {
@@ -34,7 +34,7 @@ To sign in, use a web browser to open the page https://aka.ms/devicelogin and en
 Replace the value of SUBSCRIPTION_ID with the desired subscription id where you want to deploy from the previous step.  We also set the active subscription to deploy to.
 ```
 SUBSCRIPTION_ID=57849302-a9f0-4908-b300-31337a0fb205
-az account set --subscription="${SUBSCRIPTION_ID}"
+$ az account set --subscription="${SUBSCRIPTION_ID}"
 ```
 
 ## Create an Azure Service Principle
@@ -42,14 +42,14 @@ az account set --subscription="${SUBSCRIPTION_ID}"
 Next, create an Azure Service Principle that will be used to provision the ACS Kubernetes Cluster. Service Principles are entities that have permission to create resources on your behalf. New Service Principles must be given a unique name, a role, and an Azure subscription that the Service Principle may modify.
 
 ```
-SP_JSON=`az ad sp create-for-rbac -n="http://acsk8sdeis" --role="Contributor" --scopes="/subscriptions/${SUBSCRIPTION_ID}"`
-SP_NAME=`echo $SP_JSON | jq -r '.name'`
-SP_PASS=`echo $SP_JSON | jq -r '.password'`
-SP_TENANT=`echo $SP_JSON | jq -r '.tenant'`
-echo $SP_JSON
+$ export SP_JSON=`az ad sp create-for-rbac -n="http://acsk8sdeis" --role="Contributor" --scopes="/subscriptions/${SUBSCRIPTION_ID}"`
+$ export SP_NAME=`echo $SP_JSON | jq -r '.name'`
+$ export SP_PASS=`echo $SP_JSON | jq -r '.password'`
+$ export SP_TENANT=`echo $SP_JSON | jq -r '.tenant'`
+$ echo $SP_JSON
 ```
 
-This should display an output similar to this.  jq has also automatically extracted these values for use in the creation of the cluster.
+This should display an output similar to this. `jq` has also automatically extracted these values for use in the creation of the cluster.
 ```
 {
   "appId": "58b21231-3dd7-4546-bd37-9df88812331f",
@@ -61,21 +61,21 @@ This should display an output similar to this.  jq has also automatically extrac
 
 ## Create Your ACS Kubernetes Cluster
 
-You can build the Kubernetes cluster on ACS using primarily the Azure web Portal (UI) or entirely using the Azure command line (CLI).  Choose one of the two paths:
+You can build the Kubernetes cluster on ACS using primarily the Azure Web Portal (UI) or entirely using the Azure command line (CLI).  Choose one of the two paths:
 
 ### Path 1: Azure 'az' CLI
 
 1. Create an empty Azure resource group to deploy your cluster. The location of the resource group value can be changed to any datacenter.  `az account list-locations` gives the name of all locations.
 
 ```
-RG_NAME=myresourcegroup
-az resource group create --name "${RG_NAME}" --location southcentralus
+$ export RG_NAME=myresourcegroup
+$ az resource group create --name "${RG_NAME}" --location southcentralus
 ```
 
 2. Execute the command to deploy the cluster. The dns-prefix and ssh-key-value must be replaced with your own values.
 
 ```
-  az acs create --resource-group="${RG_NAME}" --location="southcentralus" \
+$ az acs create --resource-group="${RG_NAME}" --location="southcentralus" \
   --service-principal="${SP_NAME}" \
   --client-secret="${SP_PASS}" \
   --orchestrator-type=kubernetes --master-count=1 --agent-count=2 \
@@ -159,10 +159,11 @@ The Kubernetes cluster will take a few minutes to complete provisioning and conf
 
 ## Connect to your Kubernetes Cluster
 
-1. Find hostname for the master
-`az acs list`
-Part of the way down the output, copy the fqdn value for your master dns name which will end with cloudapp.azure.com.
+Find the fully qualified domain name (FQDN) for the Kubernetes master:
+
 ```
+$ az acs list
+# Part of the way down the output, find and copy the FQDN for the master, it should end with `cloudapp.azure.com`:
 "masterProfile": {
       "count": 1,
       "dnsPrefix": "asc-deis-k8s-masters",
@@ -170,21 +171,23 @@ Part of the way down the output, copy the fqdn value for your master dns name wh
     },
 ```
 
-2. Download the Kubeconfig from the master to your terminal<br>
-Update the proper SSH key and fqdn name and then execute:<br>
-`scp -i ~/.ssh/id_rsa k8sadmin@mydnsprefix.myregion.cloudapp.azure.com:.kube/config ~/.kube/k8sanddeis.config`<br>
-Say yes to the prompt.
+Download the Kubeconfig from the master to your local machine, make sure to use the right SSH identity and master FQDN:
+
 ```
+$ scp -i ~/.ssh/id_rsa k8sadmin@mydnsprefix.myregion.cloudapp.azure.com:.kube/config ~/.kube/k8sanddeis.config
 The authenticity of host 'mydnsprefix.myregion.cloudapp.azure.com (40.78.71.181)' can't be established.
 ECDSA key fingerprint is a0:09:ff:59:83:47:70:38:d4:0d:68:b2:cf:0f:2a:cf.
 Are you sure you want to continue connecting (yes/no)? yes
 Warning: Permanently added 'mydnsprefix.myregion.cloudapp.azure.com,40.78.71.181' (ECDSA) to the list of known hosts.
 ```
 
-3. Set KUBECONFIG environment value
-`export KUBECONFIG=~/.kube/k8sanddeis.config`
+Point `kubectl` at the kubernetes configuration file by setting the `KUBECONFIG` environment value:
 
-4. Verify you can connect to your Kubernetes cluster by running `kubectl cluster-info`
+```
+export KUBECONFIG=~/.kube/k8sanddeis.config
+```
+
+Verify you can connect to your Kubernetes cluster by running `kubectl cluster-info`
 
 ```
 $ kubectl cluster-info
