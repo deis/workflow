@@ -122,13 +122,12 @@ database:
     host: "database host"
     port: "database port"
 
-logger:
-  redis:
-    # Configure the following ONLY if using an off-cluster Redis instance for logger
-    db: "0"
-    host: "redis host"
-    port: "redis port"
-    password: "redis password" # "" == no password
+redis:
+  # Configure the following ONLY if using an off-cluster Redis instance for logger
+  db: "0"
+  host: "redis host"
+  port: "redis port"
+  password: "redis password" # "" == no password
 
 monitor:
   grafana:
