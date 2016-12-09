@@ -6,7 +6,7 @@
 2. Some form of *nix-based terminal - MacOS, Ubuntu, CentOS, Bash on Windows, etc
 <br>Where the following is present:
 3. Azure CLI - The Azure CLI (2.0) provides the `az` command and allows you to interact with Azure through the command line. Install the CLI by following the instructions on [GitHub for the Azure CLI](https://github.com/Azure/azure-cli).
-4. SSH Key - This is used to deploy the cluster. 
+4. SSH Key - This is used to deploy the cluster. [This URL helps to create SSH keys compatible with Linux VMs on Azure](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-linux-mac-create-ssh-keys)
 5. jq - to parse the JSON responses from the CLI. [jq download page](https://stedolan.github.io/jq/)
 
 ## Configure the Azure CLI
@@ -42,11 +42,11 @@ az account set --subscription="${SUBSCRIPTION_ID}"
 Next, create an Azure Service Principle that will be used to provision the ACS Kubernetes Cluster. Service Principles are entities that have permission to create resources on your behalf. New Service Principles must be given a unique name, a role, and an Azure subscription that the Service Principle may modify.
 
 ```
-SP_JSON=`az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/${SUBSCRIPTION_ID}"`
+SP_JSON=`az ad sp create-for-rbac -n="http://acsk8sdeis" --role="Contributor" --scopes="/subscriptions/${SUBSCRIPTION_ID}"`
 SP_NAME=`echo $SP_JSON | jq -r '.name'`
 SP_PASS=`echo $SP_JSON | jq -r '.password'`
 SP_TENANT=`echo $SP_JSON | jq -r '.tenant'`
-echo SP_JSON
+echo $SP_JSON
 ```
 
 This should display an output similar to this.  jq has also automatically extracted these values for use in the creation of the cluster.
@@ -65,7 +65,7 @@ You can build the Kubernetes cluster on ACS using primarily the Azure web Portal
 
 ### Path 1: Azure 'az' CLI
 
-1. Create an empty Azure resource group to deploy your cluster. The location of the resource group value can be changed to any datacenter.
+1. Create an empty Azure resource group to deploy your cluster. The location of the resource group value can be changed to any datacenter.  `az account list-locations` gives the name of all locations.
 
 ```
 RG_NAME=myresourcegroup
@@ -75,14 +75,39 @@ az resource group create --name "${RG_NAME}" --location southcentralus
 2. Execute the command to deploy the cluster. The dns-prefix and ssh-key-value must be replaced with your own values.
 
 ```
-  az acs create --resource-group="${RG_NAME}" --location="southcentralus" /
-  --service-principal="${SP_NAME}" /
-  --client-secret="${SP_PASS}" /
-  --orchestrator-type=kubernetes --master-count=1 --agent-count=2 /
-  --agent-vm-size="Standard_D2_v2" /
-  --admin-username="k8sadmin" /
-  --name="k8sanddeis" --dns-prefix="mydnsprefix" /
+  az acs create --resource-group="${RG_NAME}" --location="southcentralus" \
+  --service-principal="${SP_NAME}" \
+  --client-secret="${SP_PASS}" \
+  --orchestrator-type=kubernetes --master-count=1 --agent-count=2 \
+  --agent-vm-size="Standard_D2_v2" \
+  --admin-username="k8sadmin" \
+  --name="k8sanddeis" --dns-prefix="mydnsprefix" \
   --ssh-key-value @/home/myusername/.ssh/id_rsa.pub
+```
+
+> Note: When this is successfully executed, you'll only see this to start: `waiting for AAD role to propogate.done`.  It will take a few minutes for the cluster to complete creation.
+
+Finally you should see something like this:
+```
+{
+  "id": "/subscriptions/ed7cedf5-fcd8-4a5d-9980-96d838f65ab8/resourceGroups/ascdeis/providers/Microsoft.Resources/deployments/azurecli1481240849.890798",
+  "name": "azurecli1481240849.890798",
+  "properties": {
+    "correlationId": "61be22d1-28d8-466c-a2ba-7bc11c2a3578",
+    "debugSetting": null,
+    "dependencies": [],
+    "mode": "Incremental",
+    "outputs": null,
+    "parameters": null,
+    "parametersLink": null,
+    "providers": [
+      {
+        "id": null,
+        "namespace": "Microsoft.ContainerService",
+ ...
+  },
+  "resourceGroup": "ascdeis"
+}
 ```
 
 ### Path 2: UI
@@ -135,15 +160,38 @@ The Kubernetes cluster will take a few minutes to complete provisioning and conf
 ## Connect to your Kubernetes Cluster
 
 1. Find hostname for the master
-2. SCP Kubeconfig from master into place
+`az acs list`
+Part of the way down the output, copy the fqdn value for your master dns name which will end with cloudapp.azure.com.
+```
+"masterProfile": {
+      "count": 1,
+      "dnsPrefix": "asc-deis-k8s-masters",
+      "fqdn": "mydnsprefix.myregion.cloudapp.azure.com"
+    },
+```
+
+2. Download the Kubeconfig from the master to your terminal<br>
+Update the proper SSH key and fqdn name and then execute:<br>
+`scp -i ~/.ssh/id_rsa k8sadmin@mydnsprefix.myregion.cloudapp.azure.com:.kube/config ~/.kube/k8sanddeis.config`<br>
+Say yes to the prompt.
+```
+The authenticity of host 'mydnsprefix.myregion.cloudapp.azure.com (40.78.71.181)' can't be established.
+ECDSA key fingerprint is a0:09:ff:59:83:47:70:38:d4:0d:68:b2:cf:0f:2a:cf.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'mydnsprefix.myregion.cloudapp.azure.com,40.78.71.181' (ECDSA) to the list of known hosts.
+```
+
 3. Set KUBECONFIG environment value
+`export KUBECONFIG=~/.kube/k8sanddeis.config`
+
+4. Verify you can connect to your Kubernetes cluster by running `kubectl cluster-info`
 
 ```
 $ kubectl cluster-info
-Kubernetes master is running at https://slack-acs-1mgmt.eastus.cloudapp.azure.com
-Heapster is running at https://slack-acs-1mgmt.eastus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/heapster
-KubeDNS is running at https://slack-acs-1mgmt.eastus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kube-dns
-kubernetes-dashboard is running at https://slack-acs-1mgmt.eastus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
+Kubernetes master is running at https://mydnsprefix.myregion.cloudapp.azure.com
+Heapster is running at https://mydnsprefix.myregion.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/heapster
+KubeDNS is running at https://mydnsprefix.myregion.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kube-dns
+kubernetes-dashboard is running at https://mydnsprefix.myregion.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
 ```
 
 You are now ready to [install Deis Workflow](install-azure-acs.md)

@@ -10,6 +10,11 @@ Client: &version.Version{SemVer:"v2.0.0", GitCommit:"51bdad42756dfaf3234f53ef3d3
 Server: &version.Version{SemVer:"v2.0.0", GitCommit:"51bdad42756dfaf3234f53ef3d3cb6bcd94144c2", GitTreeState:"clean"}
 ```
 
+Finally, intialize Helm:
+```
+helm init
+```
+
 Ensure the `kubectl` client is installed and can connect to your Kubernetes cluster.
 
 ## Add the Deis Chart Repository
