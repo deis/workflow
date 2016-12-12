@@ -123,6 +123,22 @@ VERSIONS_API_URL  | The versions API URL (default: "<https://versions-staging.de
 DOCTOR_API_URL    | The doctor API URL (default: "<https://doctor-staging.deis.com>")
 API_VERSION       | The version number Workflow Manager sends to the versions API (default: "v2")
 
+### LDAP authentication settings
+
+Configuration options for LDAP authentication are detailed [here](https://pythonhosted.org/django-auth-ldap/reference.html).
+
+The following environment variables are available for enabling LDAP
+authentication of user accounts in the [Controller][] component:
+
+Setting            | Description
+-------------------| ---------------------------------
+LDAP_ENDPOINT      | The URI of the LDAP server. If not specified, LDAP authentication is not enabled (default: "", example: ```ldap://hostname```).
+LDAP_BIND_DN       | The distinguished name to use when binding to the LDAP server (default: "")
+LDAP_BIND_PASSWORD | The password to use with LDAP_BIND_DN (default: "")
+LDAP_USER_BASEDN   | The distinguished name of the search base for user names (default: "")
+LDAP_USER_FILTER   | The name of the login field in the users search base (default: "username")
+LDAP_GROUP_BASEDN  | The distinguished name of the search base for user's groups names (default: "")
+LDAP_GROUP_FILTER  | The filter for user's groups (default: "", example: ```objectClass=person```)
 
 [Deploying Apps]: ../applications/deploying-apps.md
 [builder]: ../understanding-workflow/components.md#builder
