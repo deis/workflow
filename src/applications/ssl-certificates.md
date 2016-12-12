@@ -96,7 +96,7 @@ You can verify the details of your domain's SSL configuration with `deis certs`.
 
 or by looking at at each certificates detailed information
 
-    $ deis cert:info example-com
+    $ deis certs:info example-com
 
     === bar-com Certificate
     Common Name(s):     example.com
