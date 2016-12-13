@@ -9,6 +9,7 @@ global:
   # - gcs: Store persistent data in Google Cloud Storage
   # - minio: Store persistent data on in-cluster Minio server
   storage: minio
+
   # Set the location of Workflow's PostgreSQL database
   #
   # Valid values are:
@@ -17,6 +18,7 @@ global:
   #   configured above)
   # - off-cluster: Run PostgreSQL outside the Kubernetes cluster (configure in database section)
   database_location: "on-cluster"
+
   # Set the location of Workflow's logger-specific Redis instance
   #
   # Valid values are:
@@ -121,6 +123,15 @@ redis:
   host: "redis host"
   port: "redis port"
   password: "redis password" # "" == no password
+
+fluentd:
+  syslog:
+    # Configure the following ONLY if using Fluentd to send log messages to both
+    # the Logger component and external syslog endpoint
+    # external syslog endpoint url
+    host: ""
+    # external syslog endpoint port
+    port: ""
 
 monitor:
   grafana:
