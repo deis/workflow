@@ -4,10 +4,12 @@ To run Deis Workflow on a Kubernetes cluster, there are a few requirements to ke
 
 ## Kubernetes Versions
 
-Deis Workflow requires Kubernetes v1.2, or v1.3.4 or newer. Workflow is not compatible with
+Deis Workflow requires Kubernetes v1.2, or v1.3.4+ or v1.4.0+. Workflow is not compatible with
 Kubernetes v1.1, and Kubernetes v1.3.0 through v1.3.3 have
 [a bug when mounting secrets](https://github.com/deis/workflow/issues/372) which prevents Deis
 Workflow from starting.
+
+At this time Kubernetes 1.5 is not compatible with both Helm and Workflow.
 
 ## Storage Requirements
 
