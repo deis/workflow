@@ -3,15 +3,22 @@
 ## Prerequisites
 
 1. Azure Account - An active Azure Cloud account is required for this quick start. Start a trial with $200 of free credit [here](https://azure.microsoft.com/en-us/free/). After completing trial sign up, a credit card for billing must be added, but will not be charged.
+
 2. Some form of *nix-based terminal - MacOS, Ubuntu, CentOS, Bash on Windows, etc
 <br>Where the following is present:
+
 3. Azure CLI - The Azure CLI (2.0) provides the `az` command which drives Azure through the command line. Install the CLI by following the instructions on [GitHub for the Azure CLI](https://github.com/Azure/azure-cli).
+
 4. SSH Key - This is used to deploy the cluster. [This URL helps to create SSH keys compatible with Linux VMs on Azure](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-linux-mac-create-ssh-keys)
+
 5. jq - to parse the JSON responses from the CLI. [jq download page](https://stedolan.github.io/jq/)
 
 ## Configure the Azure CLI
 
-After installing the CLI, log in to an Azure Account by typing `az login`:
+After installing the CLI, log in to an Azure Account by typing `az login`. Take the code offered, enter it into the text box at [https://aka.ms/devicelogin](https://aka.ms/devicelogin), and login using an Azure account which has ownership or contributor permissions over at least one subscription.
+
+> Note: If the Azure subscription is configured for 2FA (not done by default), the Azure account used to login must have ownership credentials to create the service principal.
+
 ```
 $ az login
 To sign in, use a web browser to open the page https://aka.ms/devicelogin and enter the code F7DLMNOPE to authenticate.
@@ -37,9 +44,9 @@ $ export SUBSCRIPTION_ID=57849302-a9f0-4908-b300-31337a0fb205
 $ az account set --subscription="${SUBSCRIPTION_ID}"
 ```
 
-## Create an Azure Service Principle
+## Create an Azure Service Principal
 
-Next, create an Azure Service Principle that will be used to provision the ACS Kubernetes Cluster. Service Principles are entities that have permission to create resources in an Azure Subscription. New Service Principles must be given a unique name, a role, and an Azure subscription that the Service Principle may modify.
+Next, create an Azure Service Principal that will be used to provision the ACS Kubernetes Cluster. Service Principals are entities that have permission to create resources in an Azure Subscription. New Service Principals must be given a unique name, a role, and an Azure subscription that the Service Principal may modify.
 
 ```
 $ export SP_JSON=`az ad sp create-for-rbac -n="http://acsk8sdeis" --role="Contributor" --scopes="/subscriptions/${SUBSCRIPTION_ID}"`
@@ -107,7 +114,7 @@ $ az acs create --resource-group="${RG_NAME}" --location="southcentralus" \
   --ssh-key-value @/home/myusername/.ssh/id_rsa.pub
 ```
 
-> Note: When `az acs create` starts the only output will be `waiting for AAD role to propogate.done`. The provisioning process is running in the background, in a few minutes the `az` command should return with information about the deployment created behind the scenes.
+> Note: When `az acs create` starts the only output will be `waiting for AAD role to propagate..`. This verifies the service principal is propagated and has appropriate permissions.  If this passes the output will change to `... propagate.done`, the provisioning process runs silently in the background, and after a few minutes the `az` command should return with information about the deployment created as shown below.  If `... propagate.done` is not displayed after a few minutes, then there is a problem with the service principal credentials.
 
 ```
 {
@@ -153,10 +160,10 @@ When the required information is filled out, click "Ok".
 
 ![](images/step3.png)
 
-The next step takes the Service Principle name and password generated using the Azure CLI.
+The next step takes the Service Principal name and password generated using the Azure CLI.
 
-* Service Priciple Client ID: the name of the principle created above e.g. `http://workflow-on-acs`
-* Service Priciple Client Secret: the password returned by the Azure CLI e.g. 349d4728-438a-52a5-ad25-a740aa0bd240
+* Service Principal Client ID: the name of the principal created above e.g. `http://workflow-on-acs`
+* Service Principal Client Secret: the password returned by the Azure CLI e.g. 349d4728-438a-52a5-ad25-a740aa0bd240
 
 ![](images/step4.png)
 
