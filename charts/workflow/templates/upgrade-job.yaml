@@ -1,15 +1,13 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: deis-upgrade
+  name: {{ randNumeric 12 | printf "%s-%s" "deis-upgrade"}}
   labels:
     heritage: deis
   annotations:
     "helm.sh/hook": post-upgrade
 spec:
   template:
-    metadata:
-      name: deis-upgrade
     spec:
       containers:
       - name: deis-upgrade
