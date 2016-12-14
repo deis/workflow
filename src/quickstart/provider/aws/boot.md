@@ -251,16 +251,16 @@ need to access the Kubernetes master the default username is `admin` and the ssh
 ```
 $ ssh -i ~/.ssh/kube_aws_rsa admin@52.9.206.49
 
-Welcome to Kubernetes v1.2.4!
+Welcome to Kubernetes v1.3.6!
 
 You can find documentation for Kubernetes at:
   http://docs.kubernetes.io/
 
 You can download the build image for this release at:
-  https://storage.googleapis.com/kubernetes-release/release/v1.2.4/kubernetes-src.tar.gz
+  https://storage.googleapis.com/kubernetes-release/release/v1.3.6/kubernetes-src.tar.gz
 
 It is based on the Kubernetes source at:
-  https://github.com/kubernetes/kubernetes/tree/v1.2.4
+  https://github.com/kubernetes/kubernetes/tree/v1.3.6
 
 For Kubernetes copyright and licensing information, see:
   /usr/local/share/doc/kubernetes/LICENSES

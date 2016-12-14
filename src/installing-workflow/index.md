@@ -1,6 +1,6 @@
 # Installing Deis Workflow
 
-This document is aimed at those who have already provisioned a [Kubernetes v1.2 or v1.3.4+][] cluster
+This document is aimed at those who have already provisioned a [Kubernetes v1.3.4+][] cluster
 and want to install Deis Workflow. If help is required getting started with Kubernetes and
 Deis Workflow, follow the [quickstart guide](../quickstart/index.md) for assistance.
 
@@ -89,6 +89,6 @@ Once all of the pods are in the `READY` state, Deis Workflow is up and running!
 
 After installing Workflow, [register a user and deploy an application](../quickstart/deploy-an-app.md).
 
-[Kubernetes v1.2 or v1.3.4+]: system-requirements.md#kubernetes-versions
+[Kubernetes v1.3.4+]: system-requirements.md#kubernetes-versions
 [helm]: https://github.com/kubernetes/helm/blob/master/docs/install.md
 [valuesfile]: https://charts.deis.com/workflow/values-v2.9.0.yaml
