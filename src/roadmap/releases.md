@@ -266,7 +266,6 @@ master CHANGELOG:
 
 ```
 @here Deis Workflow v2.9.1 is now live!
-Release notes: https://github.com/deis/charts/releases/tag/v2.9.1
 Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.9.1/
 ```
 
