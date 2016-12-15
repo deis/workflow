@@ -2,7 +2,7 @@
 
 Deis Workflow releases may be upgraded in-place with minimal downtime. This upgrade process requires:
 
-* Helm version [2.0.0 or newer](https://github.com/kubernetes/helm/releases/tag/v2.0.0)
+* Helm version [2.1.0 or newer](https://github.com/kubernetes/helm/releases/tag/v2.1.0)
 * Configured Off-Cluster Storage
 * A Kubernetes cluster with more than one node is required for the rolling upgrade of the deis-router (as it is a rolling upgrade with host ports)
 
