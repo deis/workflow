@@ -11,12 +11,12 @@ Deis Workflow, follow the [quickstart guide](../quickstart/index.md) for assista
 
 ## Check Your Setup
 
-Check that the `helm` command is available and the version is 2.0.0 or newer.
+Check that the `helm` command is available and the version is 2.1.0 or newer.
 
 ```
 $ helm version
-Client: &version.Version{SemVer:"v2.0.0", GitCommit:"51bdad42756dfaf3234f53ef3d3cb6bcd94144c2", GitTreeState:"clean"}
-Server: &version.Version{SemVer:"v2.0.0", GitCommit:"51bdad42756dfaf3234f53ef3d3cb6bcd94144c2", GitTreeState:"clean"}
+Client: &version.Version{SemVer:"v2.1.0", GitCommit:"b7b648456ba15d3d190bb84b36a4bc9c41067cf3", GitTreeState:"clean"}
+Server: &version.Version{SemVer:"v2.1.0", GitCommit:"b7b648456ba15d3d190bb84b36a4bc9c41067cf3", GitTreeState:"clean"}
 ```
 
 ## Choose Your Deployment Strategy
@@ -91,4 +91,4 @@ After installing Workflow, [register a user and deploy an application](../quicks
 
 [Kubernetes v1.2 or v1.3.4+]: system-requirements.md#kubernetes-versions
 [helm]: https://github.com/kubernetes/helm/blob/master/docs/install.md
-[valuesfile]: https://charts.deis.com/workflow/values-v2.9.0.yaml
+[valuesfile]: https://charts.deis.com/workflow/values-v2.9.1.yaml
