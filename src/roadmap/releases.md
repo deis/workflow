@@ -128,8 +128,8 @@ verify it can be fetched (and verified):
 ```
 $ helm repo add controller https://charts.deis.com/controller
 "controller" has been added to your repositories
-$ helm fetch --verify controller/controller --version v2.9.0 && echo
-Verification: &{0xc42028d3b0 sha256:17b94dd854e090c6627728bdcb5e2ea588f3cb4fecc1082a5a03c909c0ed0ecd controller-v2.9.0.tgz}
+$ helm fetch --verify controller/controller --version v2.9.1 && echo
+Verification: &{0xc42028d3b0 sha256:17b94dd854e090c6627728bdcb5e2ea588f3cb4fecc1082a5a03c909c0ed0ecd controller-v2.9.1.tgz}
 ```
 
 ## How to Release Workflow
@@ -142,7 +142,7 @@ deliverable. This section leads a maintainer through creating a Workflow release
 Export two environment variables that will be used in later steps:
 
 ```bash
-export WORKFLOW_RELEASE=v2.9.0 WORKFLOW_PREV_RELEASE=v2.8.0  # for example
+export WORKFLOW_RELEASE=v2.9.1 WORKFLOW_PREV_RELEASE=v2.9.0  # for example
 ```
 
 ### Step 2: Tag Supporting Repositories
@@ -204,7 +204,7 @@ the chart versions existing in the `WORKFLOW_PREV_RELEASE` chart and the _most r
 ```bash
 helm repo add deis https://charts.deis.com/workflow
 helm fetch --untar deis/workflow --version $WORKFLOW_PREV_RELEASE
-deisrel changelog global workflow/requirements.lock mapping.json > $WORKFLOW_RELEASE
+deisrel changelog global workflow/requirements.lock mapping.json > changelog-$WORKFLOW_RELEASE.md
 ```
 
 To get non-component repo changelogs (presumably tagged in Step 3 above), one can issue a command like the following
@@ -226,15 +226,13 @@ update PR created in the next step.
 
 Create a new pull request at [deis/workflow][] that updates version references to the new release.
 Use `git grep $WORKFLOW_PREV_RELEASE` to find any references, but be careful not to change
-`CHANGELOG.md`. This PR should also change `upgrading-workflow-md` by updating references to
-older releases to `$WORKFLOW_PREV_RELEASE`, so the documentation always describes upgrading
-between recent versions.
+`CHANGELOG.md`.
 
 Place the `$WORKFLOW_RELEASE` master changelog generated in Step 7 in the `changelogs` directory.
 Make sure to add a header to the page to make it clear that this is for a Workflow release, e.g.:
 
 ```
-## Workflow v2.8.0 -> v2.9.0
+## Workflow v2.9.0 -> v2.9.1
 ```
 
 ### Step 8: Close GitHub Milestones
@@ -267,9 +265,9 @@ Post a message to the #company channel on Slack. Include a link to the released 
 master CHANGELOG:
 
 ```
-@here Deis Workflow v2.9.0 is now live!
-Release notes: https://github.com/deis/charts/releases/tag/v2.9.0
-Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.9.0/
+@here Deis Workflow v2.9.1 is now live!
+Release notes: https://github.com/deis/charts/releases/tag/v2.9.1
+Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.9.1/
 ```
 
 You're done with the release. Nice job!
