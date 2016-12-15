@@ -187,22 +187,17 @@ The Kubernetes cluster will take a few minutes to complete provisioning and conf
 
 ## Connect to the ACS Kubernetes Cluster
 
-Find the fully qualified domain name (FQDN) for the Kubernetes master:
+Retrieve the fully qualified domain name (FQDN) for the Kubernetes master.
 
 ```
-$ az acs list
-# Part of the way down the output, find and copy the FQDN for the master, it should end with `cloudapp.azure.com`:
-"masterProfile": {
-      "count": 1,
-      "dnsPrefix": "asc-deis-k8s-masters",
-      "fqdn": "mydnsprefix.myregion.cloudapp.azure.com"
-    },
+$ export K8S_FQDN=`az acs list -g $RG_NAME --query [0].masterProfile.fqdn --output tsv`
+$ echo $K8S_FQDN
 ```
 
 Download the Kubeconfig from the master to the local machine, make sure to use the right SSH identity and master FQDN:
 
 ```
-$ scp -i ~/.ssh/id_rsa k8sadmin@mydnsprefix.myregion.cloudapp.azure.com:.kube/config ~/.kube/k8sanddeis.config
+$ scp -i ~/.ssh/id_rsa k8sadmin@$K8S_FQDN:.kube/config ~/.kube/k8sanddeis.config
 The authenticity of host 'mydnsprefix.myregion.cloudapp.azure.com (40.78.71.181)' can't be established.
 ECDSA key fingerprint is a0:09:ff:59:83:47:70:38:d4:0d:68:b2:cf:0f:2a:cf.
 Are you sure you want to continue connecting (yes/no)? yes
