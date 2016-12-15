@@ -61,6 +61,14 @@ deliverable. This section leads a maintainer through creating a component releas
 Major or minor releases should happen on the master branch. Patch releases
 should check out the previous release tag and cherry-pick specific commits from master.
 
+**Note:** if a patch release, the release artifact will have to be manually promoted by triggering
+the [component-promote](https://ci.deis.io/job/component-promote) job with the following values:
+
+```bash
+COMPONENT_NAME=<component name>
+COMPONENT_SHA=<patch commit sha>
+```
+
 Make sure you have the [deisrel][] release tool in your search `$PATH`.
 
 Run `deisrel release` once with a fake semver tag to proofread the changelog content. (If `HEAD`
