@@ -34,8 +34,8 @@ Charts signed with this key can then be verified when fetched:
 $ helm repo add deis https://charts.deis.com/workflow
 "deis" has been added to your repositories
 
-$ helm fetch --verify deis/workflow && echo
-Verification: &{0xc420338460 sha256:5e33bff6f4e8191b5887a139cd42c6afb6eb0cef5d066130a87c6a3a3f588edd workflow-v2.9.1.tgz}
+$ helm fetch --verify deis/workflow
+Verification: &{0xc42080c0f0 sha256:4a5916289781f72571254ac2e3af68a64b2236596190c38bd58a37ba4e9db14b workflow-v2.9.1.tgz}
 ```
 
 One can then inspect the fetched `workflow-v2.9.1.tgz.prov` provenance file.
