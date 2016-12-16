@@ -45,6 +45,8 @@ REGISTRATION_MODE                               | set registration to "enabled",
 GUNICORN_WORKERS                                | number of [gunicorn][] workers spawned to process requests (default: CPU cores * 4 + 1)
 RESERVED_NAMES                                  | a comma-separated list of names which applications cannot reserve for routing (default: "deis, deis-builder, deis-workflow-manager")
 SLUGRUNNER_IMAGE_NAME                           | the image used to run buildpack application slugs (default: "quay.io/deisci/slugrunner:canary")
+DEIS_DEPLOY_HOOK_URLS                           | a comma-separated list of URLs to send [deploy hooks][] to.
+DEIS_DEPLOY_HOOK_SECRET_KEY                     | a private key used to compute the HMAC signature for deploy hooks.
 DEIS_DEPLOY_REJECT_IF_PROCFILE_MISSING          | rejects a deploy if the previous build had a Procfile but the current deploy is missing it. A 409 is thrown in the API. Prevents accidental process types removal. (default: "false", allowed values: "true", "false")
 DEIS_DEPLOY_PROCFILE_MISSING_REMOVE             | when turned on (default) any missing process type in a Procfile compared to the previous deploy is removed. When set to false will allow an empty Procfile to go through without removing missing process types, note that new images, configs and so on will get updated on all proc types.  (default: "true", allowed values: "true", "false")
 KUBERNETES_NAMESPACE_DEFAULT_QUOTA_SPEC         | set resource quota to application namespace by setting [ResourceQuota](http://kubernetes.io/docs/admin/resourcequota/) spec, for example: `{"spec":{"hard":{"pods":"10"}}}`, restrict app owner to spawn more then 10 pods (default: "", no quota will be applied to namespace)
@@ -129,6 +131,7 @@ API_VERSION       | The version number Workflow Manager sends to the versions AP
 [builder]: ../understanding-workflow/components.md#builder
 [controller]: ../understanding-workflow/components.md#controller
 [database]: ../understanding-workflow/components.md#database
+[deploy hooks]: deploy-hooks.md#http-post-hook
 [Deployments]: http://kubernetes.io/docs/user-guide/deployments/
 [downward-api]: http://kubernetes.io/docs/user-guide/downward-api/
 [gunicorn]: http://gunicorn.org/
