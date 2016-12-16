@@ -77,13 +77,14 @@ Create an environment variable to hold the resource group name:
 
 ```
 $ export RG_NAME=myresourcegroup
-$ az group create --name "${RG_NAME}" --location southcentralus
+$ export DC_LOCATION=mylocation
+$ az group create --name "${RG_NAME}" --location "${DC_LOCATION}"
 ```
 
 Execute the command to deploy the cluster. The `dns-prefix` and `ssh-key-value` must be replaced with your own values.
 
 ```
-$ az acs create --resource-group="${RG_NAME}" --location="southcentralus" \
+$ az acs create --resource-group="${RG_NAME}" --location="${DC_LOCATION}" \
   --service-principal="${SP_NAME}" \
   --client-secret="${SP_PASS}" \
   --orchestrator-type=kubernetes --master-count=1 --agent-count=2 \

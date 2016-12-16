@@ -27,12 +27,22 @@ Add this repository to Helm:
 $ helm repo add deis https://charts.deis.com/workflow
 ```
 
+## Create New Azure Storage Account
+
+It is recommended to have a storage account for the operational aspects of running DEIS (i.e. holding images, Disaster Recovery, Backup).  This storage account can be passed as parameters during the helm install on the next step.  Replace the SA_NAME variable with a unique name for your storage account and execute these commands.
+```
+$ export SA_NAME=YourGlobalUniqueName
+$ az storage account create -n $SA_NAME -l $DC_LOCATION -g $RG_NAME --sku Premium_LRS
+$ export SA_KEY=`az storage account keys list -n $SA_NAME -g RG_NAME --query keys[0].value --output tsv`
+
+```
+
 ## Install Deis Workflow
 
 Now that Helm is installed and the repository has been added, install Workflow by running:
 
 ```
-$ helm install deis/workflow --namespace deis --set controller.docker_tag=v2.9.0-acs,controller.org=kmala
+$ helm install deis/workflow --namespace=deis --set controller.docker_tag=v2.9.0-acs,controller.org=kmala,global.storage=azure,azure.accountname=$SA_NAME,azure.accountkey=$SA_KEY,azure.registry_container=registry,azure.database_container=database,azure.builder_container=builder
 ```
 
 Helm will install a variety of Kubernetes resources in the `deis` namespace.
