@@ -52,7 +52,6 @@ Next, create an Azure Service Principal that will be used to provision the ACS K
 $ export SP_JSON=`az ad sp create-for-rbac -n="http://acsk8sdeis" --role="Contributor" --scopes="/subscriptions/${SUBSCRIPTION_ID}"`
 $ export SP_NAME=`echo $SP_JSON | jq -r '.name'`
 $ export SP_PASS=`echo $SP_JSON | jq -r '.password'`
-$ export SP_TENANT=`echo $SP_JSON | jq -r '.tenant'`
 $ echo $SP_JSON
 ```
 
@@ -72,33 +71,13 @@ Azure supports two methods to build an ACS Kubernetes cluster, through the Azure
 
 ### Path 1: Azure 'az' CLI
 
-Create an empty Azure resource group to hold the ACS Kubernetes cluster. The location of the resource group can be set to any available Azure datacenter. To see the possible locations use `az account list-locations`. Remember to reference the location by the `name` attribute:
-
-```
-  {
-    "displayName": "West Central US",
-    "id": "/subscriptions/57ac26cf-a9f0-4908-b300-9a4e9a0fb205/locations/westcentralus",
-    "latitude": "40.890",
-    "longitude": "-110.234",
-    "name": "westcentralus",
-    "subscriptionId": null
-  },
-  {
-    "displayName": "West US 2",
-    "id": "/subscriptions/57ac26cf-a9f0-4908-b300-9a4e9a0fb205/locations/westus2",
-    "latitude": "47.233",
-    "longitude": "-119.852",
-    "name": "westus2",
-    "subscriptionId": null
-  }
-]
-```
+Create an empty Azure resource group to hold the ACS Kubernetes cluster. The location of the resource group can be set to any available Azure datacenter. To see the possible locations run `az account list-locations --query [].name --output tsv`
 
 Create an environment variable to hold the resource group name:
 
 ```
 $ export RG_NAME=myresourcegroup
-$ az resource group create --name "${RG_NAME}" --location southcentralus
+$ az group create --name "${RG_NAME}" --location southcentralus
 ```
 
 Execute the command to deploy the cluster. The `dns-prefix` and `ssh-key-value` must be replaced with your own values.
@@ -114,7 +93,7 @@ $ az acs create --resource-group="${RG_NAME}" --location="southcentralus" \
   --ssh-key-value @/home/myusername/.ssh/id_rsa.pub
 ```
 
-> Note: When `az acs create` starts the only output will be `waiting for AAD role to propagate..`. This verifies the service principal is propagated and has appropriate permissions.  If this passes the output will change to `... propagate.done`, the provisioning process runs silently in the background, and after a few minutes the `az` command should return with information about the deployment created as shown below.  If `... propagate.done` is not displayed after a few minutes, then there is a problem with the service principal credentials.
+> Note: When `az acs create` starts, the provisioning process runs entirely silent in the background. After a few minutes the `az` command should return with information about the deployment created as shown below.
 
 ```
 {
@@ -194,7 +173,7 @@ $ export K8S_FQDN=`az acs list -g $RG_NAME --query [0].masterProfile.fqdn --outp
 $ echo $K8S_FQDN
 ```
 
-Download the Kubeconfig from the master to the local machine, make sure to use the right SSH identity and master FQDN:
+Download the Kubeconfig from the master to the local machine, make sure to use the same SSH credentials used to create the cluster:
 
 ```
 $ scp -i ~/.ssh/id_rsa k8sadmin@$K8S_FQDN:.kube/config ~/.kube/k8sanddeis.config
