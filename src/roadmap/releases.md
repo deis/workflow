@@ -165,7 +165,7 @@ these components are tagged:
 
 ### Step 3: Create Helm Chart
 
-To create and stage a release candidate chart for Workflow, we will build the [workflow-chart-publish](https://ci.deis.io/job/workflow-chart-publish) job with the following parameters:
+To create and stage a release candidate chart for Workflow, we will build the [workflow-chart-stage](https://ci.deis.io/job/workflow-chart-stage) job with the following parameters:
 
 `CHART_REPO_TYPE=staging` and `RELEASE_TAG=$WORKFLOW_RELEASE`
 
@@ -186,7 +186,7 @@ When showstopper-level bugs are found, the process is as follows:
 1. Create a component PR that fixes the bug.
 1. Once the PR passes and is reviewed, merge it and do a new
   [component release](#how-to-release-a-component)
-1. Trigger the same `workflow-chart-publish` job as mentioned in Step 3 to upload the newly-generated Workflow release candidate chart to staging.
+1. Trigger the same `workflow-chart-stage` job as mentioned in Step 3 to upload the newly-generated Workflow release candidate chart to staging.
 
 ### Step 5: Release the Chart
 
