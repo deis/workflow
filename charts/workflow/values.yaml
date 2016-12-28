@@ -75,7 +75,7 @@ azure:
 gcs:
   # key_json is expanded into a JSON file on the remote server. It must be
   # well-formatted JSON data.
-  key_json: ''
+  key_json: <base64-encoded JSON data>
   registry_bucket: "your-registry-bucket-name"
   database_bucket: "your-database-bucket-name"
   builder_bucket: "your-builder-bucket-name"
@@ -163,7 +163,7 @@ registry-token-refresher:
     registryid: ""
     hostname: ""
   gcr:
-    key_json: 'Paste JSON data here.'
+    key_json: <base64-encoded JSON data>
     hostname: ""
 
 router:
