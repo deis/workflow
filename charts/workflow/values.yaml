@@ -109,6 +109,10 @@ controller:
   registration_mode: "enabled"
 
 database:
+  # The username and password to be used by the on-cluster database.
+  # If left empty they will be generated using randAlphaNum
+  username: ""
+  password: ""
   # Configure the following ONLY if using an off-cluster PostgreSQL database
   postgres:
     name: "database name"
