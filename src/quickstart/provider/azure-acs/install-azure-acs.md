@@ -42,7 +42,7 @@ $ export SA_KEY=`az storage account keys list -n $SA_NAME -g RG_NAME --query key
 Now that Helm is installed and the repository has been added, install Workflow by running:
 
 ```
-$ helm install deis/workflow --namespace=deis --set controller.docker_tag=v2.9.0-acs,controller.org=kmala,global.storage=azure,azure.accountname=$SA_NAME,azure.accountkey=$SA_KEY,azure.registry_container=registry,azure.database_container=database,azure.builder_container=builder
+$ helm install deis/workflow --namespace=deis --set controller.k8s_api_verify_tls=false,global.storage=azure,azure.accountname=$SA_NAME,azure.accountkey=$SA_KEY,azure.registry_container=registry,azure.database_container=database,azure.builder_container=builder
 ```
 
 Helm will install a variety of Kubernetes resources in the `deis` namespace.
