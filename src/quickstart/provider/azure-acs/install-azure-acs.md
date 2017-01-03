@@ -29,7 +29,7 @@ $ helm repo add deis https://charts.deis.com/workflow
 
 ## Create New Azure Storage Account
 
-It is recommended to have a storage account for the operational aspects of running DEIS (i.e. holding images, Disaster Recovery, Backup).  This storage account can be passed as parameters during the helm install on the next step.  Replace the SA_NAME variable with a unique name for your storage account and execute these commands.
+It is recommended to use a dedicated storage account for the operational aspects of Workflow, which includes storing slug and container images, database backups, and disaster recovery. This storage account is passed as parameters during the `helm install` command in the next step. Replace the `SA_NAME` variable with a unique name for your storage account and execute these commands.
 ```
 $ export SA_NAME=YourGlobalUniqueName
 $ az storage account create -n $SA_NAME -l $DC_LOCATION -g $RG_NAME --sku Premium_LRS
