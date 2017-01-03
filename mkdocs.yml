@@ -17,6 +17,10 @@ pages:
       - Boot: quickstart/provider/gke/boot.md
       - DNS: quickstart/provider/gke/dns.md
       - Install Workflow: quickstart/provider/gke/install-gke.md
+    - Azure:
+      - Boot: quickstart/provider/azure-acs/boot.md
+      - DNS: quickstart/provider/azure-acs/dns.md
+      - Install Workflow: quickstart/provider/azure-acs/install-azure-acs.md
     - Vagrant:
       - Boot: quickstart/provider/vagrant/boot.md
       - DNS: quickstart/provider/vagrant/dns.md
