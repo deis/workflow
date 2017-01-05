@@ -31,6 +31,15 @@ period of downtime while the database recovers from backup.
 $ helm upgrade deis/workflow
 ```
 
+
+**Note:** If using off-cluster object storage on [gcs](https://cloud.google.com/storage/) and/or off-cluster registry using [gcr](https://cloud.google.com/container-registry/) and intending to upgrade from a pre-`v2.10.0` chart to `v2.10.0` or greater, the `key_json` values will now need to be pre-base64-encoded.  Therefore, assuming the rest of the custom/off-cluster values are defined in the existing `values.yaml` used for previous installs, the following may be run:
+
+```
+$ B64_KEY_JSON="$(cat ~/path/to/key.json | base64 | tr -d '[:space:]')"
+$ helm upgrade <release_name> deis/workflow -f values.yaml --set gcs.key_json="${B64_KEY_JSON}",registry-token-refresher.gcr.key_json="${B64_KEY_JSON}"
+$ # alternatively, simply replace the appropriate values in values.yaml and do without the `--set` parameter
+```
+
 ### Step 2: Verify Upgrade
 
 Verify that all components have started and passed their readiness checks:
