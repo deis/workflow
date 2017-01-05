@@ -190,8 +190,7 @@ When showstopper-level bugs are found, the process is as follows:
 
 ### Step 5: Release the Chart
 
-When testing has completed without uncovering any new showstopper bugs and the charts PR has been
-reviewed successfully, kick off the [workflow-chart-release](https://ci.deis.io/job/workflow-chart-release) job with the following parameter:
+When testing has completed without uncovering any new showstopper bugs, kick off the [workflow-chart-release](https://ci.deis.io/job/workflow-chart-release) job with the following parameter:
 
 `RELEASE_TAG=$WORKFLOW_RELEASE`
 
