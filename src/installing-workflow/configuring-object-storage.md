@@ -44,7 +44,7 @@ Operators should configure object storage by editing the Helm values file before
 	All values will be automatically (base64) encoded _except_ the `key_json` values under `gcs`/`gcr`.  These must be base64-encoded.  This is to support cleanly passing said encoded text via `helm --set` cli functionality rather than attempting to pass the raw JSON data.  For example:
 
 		$ helm install workflow --namespace deis \
-			--set global.storage=gcs,gcs.key_json="$(cat /path/to/gcs_creds.json | base64 | tr -d '[:space:]')"
+			--set global.storage=gcs,gcs.key_json="$(cat /path/to/gcs_creds.json | base64 -w 0)"
 
 You are now ready to run `helm install deis/workflow --namespace deis -f values.yaml` using your desired object storage.
 
