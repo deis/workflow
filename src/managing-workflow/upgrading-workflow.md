@@ -37,8 +37,11 @@ $ helm upgrade deis/workflow
 ```
 $ B64_KEY_JSON="$(cat ~/path/to/key.json | base64 | tr -d '[:space:]')"
 $ helm upgrade <release_name> deis/workflow -f values.yaml --set gcs.key_json="${B64_KEY_JSON}",registry-token-refresher.gcr.key_json="${B64_KEY_JSON}"
-$ # alternatively, simply replace the appropriate values in values.yaml and do without the `--set` parameter
 ```
+
+Alternatively, simply replace the appropriate values in values.yaml and do without the `--set`
+parameter. Make sure to wrap it in single quotes as double quotes will give a parser error when
+upgrading.
 
 ### Step 2: Verify Upgrade
 
