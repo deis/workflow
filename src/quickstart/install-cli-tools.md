@@ -19,7 +19,7 @@ should move it somewhere in your $PATH:
 Check your work by running `deis version`:
 
     $ deis version
-    2.9.1
+    2.10.0
 
 !!! note
     Note that version numbers may vary as new releases become available

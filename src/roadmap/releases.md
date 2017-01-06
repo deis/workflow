@@ -136,8 +136,8 @@ verify it can be fetched (and verified):
 ```
 $ helm repo add controller https://charts.deis.com/controller
 "controller" has been added to your repositories
-$ helm fetch --verify controller/controller --version v2.9.1
-Verification: &{0xc420615c70 sha256:144c5172f111b49909a35bbf0c606dcc7821d0fb953d2ba9d729af25fdb39b1b controller-v2.9.1.tgz}
+$ helm fetch --verify controller/controller --version v2.10.0
+Verification: &{0xc4207e8c30 sha256:27816760c37880baabcde0e7975f8f857be10e5c1e774e9931bba45960dae8ee controller-v2.10.0.tgz}
 ```
 
 ## How to Release Workflow
@@ -150,7 +150,7 @@ deliverable. This section leads a maintainer through creating a Workflow release
 Export two environment variables that will be used in later steps:
 
 ```bash
-export WORKFLOW_RELEASE=v2.9.1 WORKFLOW_PREV_RELEASE=v2.9.0  # for example
+export WORKFLOW_RELEASE=v2.10.0 WORKFLOW_PREV_RELEASE=v2.9.1  # for example
 ```
 
 ### Step 2: Tag Supporting Repositories
@@ -240,7 +240,7 @@ Place the `$WORKFLOW_RELEASE` master changelog generated in Step 7 in the `chang
 Make sure to add a header to the page to make it clear that this is for a Workflow release, e.g.:
 
 ```
-## Workflow v2.9.0 -> v2.9.1
+## Workflow v2.9.1 -> v2.10.0
 ```
 
 ### Step 8: Close GitHub Milestones
@@ -273,8 +273,8 @@ Post a message to the #company channel on Slack. Include a link to the released 
 master CHANGELOG:
 
 ```
-@here Deis Workflow v2.9.1 is now live!
-Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.9.1/
+@here Deis Workflow v2.10.0 is now live!
+Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.10.0/
 ```
 
 You're done with the release. Nice job!
