@@ -27,8 +27,10 @@ Workflow will continue to flow during the upgrade. No service interruptions shou
 If Workflow is not configured to use off-cluster Postgres, the Workflow API will experience a brief
 period of downtime while the database recovers from backup.
 
+First, find the name of the release helm gave to your deployment with `helm ls`, then run
+
 ```
-$ helm upgrade deis/workflow
+$ helm upgrade <release-name> deis/workflow
 ```
 
 
