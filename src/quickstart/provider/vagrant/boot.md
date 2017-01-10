@@ -27,11 +27,11 @@ See [Kubernetes Versions](https://deis.com/docs/workflow/installing-workflow/sys
 This archive has everything that you need to launch Kubernetes. It's a fairly large archive, so it may take some time to download:
 
 ```
-$ curl -sSL https://storage.googleapis.com/kubernetes-release/release/v1.3.5/kubernetes.tar.gz -O
+$ curl -sSL https://storage.googleapis.com/kubernetes-release/release/v1.5.1/kubernetes.tar.gz -O
 $ tar -xvzf kubernetes.tar.gz
 $ cd kubernetes
 $ ls
-LICENSES     README.md    Vagrantfile  cluster/     contrib/     docs/        examples/    platforms/   server/      third_party/ version
+client  cluster  docs  examples  federation  LICENSES  README.md  server  third_party  Vagrantfile  version
 ```
 
 ## Configure the Kubernetes Environment
