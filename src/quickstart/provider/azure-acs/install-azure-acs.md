@@ -32,7 +32,7 @@ $ helm repo add deis https://charts.deis.com/workflow
 It is recommended to use a dedicated storage account for the operational aspects of Workflow, which includes storing slug and container images, database backups, and disaster recovery. This storage account is passed as parameters during the `helm install` command in the next step. Replace the `SA_NAME` variable with a unique name for your storage account and execute these commands.
 ```
 $ export SA_NAME=YourGlobalUniqueName
-$ az storage account create -n $SA_NAME -l $DC_LOCATION -g $RG_NAME --sku Premium_LRS
+$ az storage account create -n $SA_NAME -l $DC_LOCATION -g $RG_NAME --sku Standard_LRS
 $ export SA_KEY=`az storage account keys list -n $SA_NAME -g RG_NAME --query keys[0].value --output tsv`
 
 ```
