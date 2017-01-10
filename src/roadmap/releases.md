@@ -159,9 +159,11 @@ Some Workflow components not in the Helm chart must also be tagged in sync with 
 Follow the [component release process](#how-to-release-a-component) above and ensure that
 these components are tagged:
 
-- [deis/workflow][]
 - [deis/workflow-cli][]
 - [deis/workflow-e2e][]
+
+The version number for [deis/workflow-cli][] should always match the overall Workflow version
+number.
 
 ### Step 3: Create Helm Chart
 
@@ -241,6 +243,10 @@ Make sure to add a header to the page to make it clear that this is for a Workfl
 ```
 ## Workflow v2.9.1 -> v2.10.0
 ```
+
+Once the PR has been reviewed and merged, do a [component release](#how-to-release-a-component) of
+[deis/workflow][] itself. The version number for [deis/workflow][] should always match the
+overall Workflow version number.
 
 ### Step 8: Close GitHub Milestones
 
