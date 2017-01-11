@@ -109,6 +109,8 @@ theme_dir: themes/deis
 docs_dir: src
 markdown_extensions:
   - markdown_checklist.extension
+  - markdown_include.include:
+      base_path: src/_includes
   - admonition
   - codehilite
   - toc:
