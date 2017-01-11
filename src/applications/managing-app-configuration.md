@@ -137,7 +137,7 @@ URL path relative to the root, you can also send specific HTTP headers:
 ```
 $ deis healthchecks:set liveness httpGet 80 \
     --path /welcome/index.html \
-    --header "X-Client-Version=v1.0"
+    --headers "X-Client-Version:v1.0,X-Foo:bar"
 === peachy-waxworks Healthchecks
 
 web/cmd:
