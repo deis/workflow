@@ -42,6 +42,7 @@ $(document).ready(function() {
     $('a#AWS').attr('href', documentationBaseURL + '/quickstart/provider/aws/boot/')
     $('a#GKE').attr('href', documentationBaseURL + '/quickstart/provider/gke/boot/')
     $('a#Vagrant').attr('href', documentationBaseURL + '/quickstart/provider/vagrant/boot/')
+    $('a#Azure').attr('href', documentationBaseURL + '/quickstart/provider/azure-acs/boot/')
   });
 
 });
