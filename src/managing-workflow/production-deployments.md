@@ -37,9 +37,12 @@ See [Security Considerations][] for details.
 Changing the registration process is highly recommended in production. By default, registrations
 for a new cluster are open to anyone with the proper URL. Once the admin user has registered with a
 new cluster, it is recommended to either turn off registrations or enable the admin-only
-registration feature.
+registration feature. It is also recommended to disable signups for the Grafana dashboards.
 
-Please see the following documentation: [Customizing Controller][]
+Please see the following documentation:
+
+ - [Customizing Controller][]
+ - [Customizing Monitor][]
 
 
 ## Enable TLS
@@ -50,6 +53,7 @@ crucial. See [Platform SSL][] for the platform.
 
 [configuring object storage]: ../installing-workflow/configuring-object-storage.md
 [customizing controller]: tuning-component-settings.md#customizing-the-controller
+[customizing monitor]: tuning-component-settings.md#customizing-the-monitor
 [database]: ../understanding-workflow/components.md#database
 [logger]: ../understanding-workflow/components.md#logger
 [minio]: ../understanding-workflow/components.md#minio
