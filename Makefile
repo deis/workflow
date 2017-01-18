@@ -47,7 +47,7 @@ docker-test: docker-build-docs
 	${DEV_ENV_CMD} ${IMAGE} $(TEST_CMD)
 
 docker-build:
-	docker build --rm -t ${IMAGE} .
+	docker build ${DOCKER_BUILD_FLAGS} -t ${IMAGE} .
 
 docker-serve:
 	${DEV_ENV_CMD} ${IMAGE} $(MKDOCSSERVE)
