@@ -52,18 +52,32 @@ Grafana will preload several dashboards to help operators get started with monit
 These dashboards are meant as starting points and don't include every item that might be desirable to monitor in a
 production installation.
 
-Deis Workflow monitoring does not currently write data to the host filesystem or to long-term storage. If the Grafana
-instance fails, modified dashboards are lost. Until there is a solution to persist this, export dashboards and store
-them separately in version control.
+Deis Workflow monitoring by default does not write data to the host filesystem or to long-term storage. If the Grafana instance fails, modified dashboards are lost.
+
+### On Cluster Persistence
+
+If you wish to have persistence for Grafana you can set `enabled` to `true` in the `values.yaml` file before running `helm install`.
+
+```
+ grafana:
+   # Configure the following ONLY if you want persistence for on-cluster grafana
+   # GCP PDs and EBS volumes are supported only
+   persistence:
+     enabled: true # Set to true to enable persistence
+     size: 5Gi # PVC size
+```
+
+You have to set (if you do not have it already) `standard` StorageClass as per [PVC Dynamic Provisioning](#pvc-dynamic-provisioning), as it does not get set by default in Kubernetes v1.4.x and v1.5.x.
+
 
 ### Off Cluster Grafana
 
-It is recommended that users provide their own installation for Grafana if possible. The current deployment of Grafana within Workflow is not durable across pod restarts which means custom dashboards that are created after startup will not be restored when the pod comes back up. If you wish to provide your own Grafana instance you can set `grafana_location` in the `values.yaml` file before running `helm install`.
+If you wish to provide your own Grafana instance you can set `grafana_location` in the `values.yaml` file before running `helm install`.
 
 ## InfluxDB
 
 InfluxDB writes data to the host disk, however, if the InfluxDB pod dies and comes back on
-another host the data will not be recovered. We intend to fix this in a future release. The InfluxDB Admin UI is also
+another host, the data will not be recovered you need to enable on-cluster persistence for data to persist. The InfluxDB Admin UI is also
 exposed through the router allowing users to access the query engine by going to `influx.mydomain.com`. You will need to
 configure where to find the `influx-api` endpoint by clicking the "gear" icon at the top right and changing the host to
 `influxapi.mydomain.com` and port to `80`.
@@ -75,6 +89,22 @@ You can choose to not expose the Influx UI and API to the world by updating
 `$CHART_HOME/workspace/workflow-$WORKFLOW_RELEASE/manifests/deis-monitor-influxdb-ui-svc.yaml` and removing the
 following line - `router.deis.io/routable: "true"`.
 
+### On Cluster Persistence
+
+If you wish to have persistence for InfluxDB you can set `enabled` to `true` in the `values.yaml` file before running `helm install`.
+
+```
+ influxdb:
+   # Configure the following ONLY if you want persistence for on-cluster grafana
+   # GCP PDs and EBS volumes are supported only
+   persistence:
+     enabled: true # Set to true to enable persistence
+     size: 5Gi # PVC size
+```
+
+You have to set (if you do not have it already) `standard` StorageClass as per [PVC Dynamic Provisioning](#pvc-dynamic-provisioning), as it does not get set by default in Kubernetes v1.4.x and v1.5.x.
+
+
 ### Off Cluster Influxdb
 
 To use off-cluster Influx, please provide the following values in the `values.yaml` file before running `helm install`.
@@ -84,6 +114,41 @@ To use off-cluster Influx, please provide the following values in the `values.ya
 * `database = "metrics"`
 * `user = "InfluxUser"`
 * `password = "MysuperSecurePassword"`
+
+
+## PVC Dynamic Provisioning
+
+Kubernetes v1.4.x has introduced Dynamic Provisioning and Storage Classes, you can read about it [here](http://blog.kubernetes.io/2016/10/dynamic-provisioning-and-storage-in-kubernetes.html).
+
+To use persistence for Grafana and InfluxDB you also need to deploy StorageClass objects to the Kubernetes cluster with `kubectl create -f storage-standard.yaml`.
+
+Note: GCE/GKE and AWS have different `StorageClass` settings.
+
+GCE/GKE `storage-standard.yaml` manifest:
+
+```
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+  name: standard
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-standard
+```
+
+
+AWS `storage-standard.yaml` manifest:
+
+```
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+  name: standard
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+```
+
 
 ## Telegraf
 
