@@ -141,12 +141,23 @@ monitor:
   grafana:
     user: "admin"
     password: "admin"
-  # Configure the following ONLY if using an off-cluster Influx database
+    # Configure the following ONLY if you want persistence for on-cluster grafana
+    # GCP PDs and EBS volumes are supported only
+    persistence:
+      enabled: false # Set to true to enable persistence
+      size: 5Gi # PVC size
+
   influxdb:
+    # Configure the following ONLY if using an off-cluster Influx database
     url: "my.influx.url"
     database: "kubernetes"
     user: "user"
     password: "password"
+    # Configure the following ONLY if you want persistence for on-cluster influxdb
+    # GCP PDs and EBS volumes are supported only
+    persistence:
+      enabled: false # Set to true to enable persistence
+      size: 20Gi # PVC size
 
 registry-token-refresher:
   # Time in minutes after which the token should be refreshed.
@@ -186,7 +197,7 @@ router:
   host_port:
     enabled: true
 
-  # Service type default to LoadBalancer 
+  # Service type default to LoadBalancer
   # service_type: LoadBalancer
 
 workflow-manager:
