@@ -51,6 +51,23 @@ DEIS_DEPLOY_REJECT_IF_PROCFILE_MISSING          | rejects a deploy if the previo
 DEIS_DEPLOY_PROCFILE_MISSING_REMOVE             | when turned on (default) any missing process type in a Procfile compared to the previous deploy is removed. When set to false will allow an empty Procfile to go through without removing missing process types, note that new images, configs and so on will get updated on all proc types.  (default: "true", allowed values: "true", "false")
 KUBERNETES_NAMESPACE_DEFAULT_QUOTA_SPEC         | set resource quota to application namespace by setting [ResourceQuota](http://kubernetes.io/docs/admin/resourcequota/) spec, for example: `{"spec":{"hard":{"pods":"10"}}}`, restrict app owner to spawn more then 10 pods (default: "", no quota will be applied to namespace)
 
+### LDAP authentication settings
+
+Configuration options for LDAP authentication are detailed [here](https://pythonhosted.org/django-auth-ldap/reference.html).
+
+The following environment variables are available for enabling LDAP
+authentication of user accounts in the [Controller][] component:
+
+Setting            | Description
+-------------------| ---------------------------------
+LDAP_ENDPOINT      | The URI of the LDAP server. If not specified, LDAP authentication is not enabled (default: "", example: ```ldap://hostname```).
+LDAP_BIND_DN       | The distinguished name to use when binding to the LDAP server (default: "")
+LDAP_BIND_PASSWORD | The password to use with LDAP_BIND_DN (default: "")
+LDAP_USER_BASEDN   | The distinguished name of the search base for user names (default: "")
+LDAP_USER_FILTER   | The name of the login field in the users search base (default: "username")
+LDAP_GROUP_BASEDN  | The distinguished name of the search base for user's groups names (default: "")
+LDAP_GROUP_FILTER  | The filter for user's groups (default: "", example: ```objectClass=person```)
+
 ### Global and per application settings
 
 Setting                                         | Description
@@ -125,23 +142,6 @@ POLL_INTERVAL_SEC | The interval when Workflow Manager performs a version check,
 VERSIONS_API_URL  | The versions API URL (default: "<https://versions-staging.deis.com>")
 DOCTOR_API_URL    | The doctor API URL (default: "<https://doctor-staging.deis.com>")
 API_VERSION       | The version number Workflow Manager sends to the versions API (default: "v2")
-
-### LDAP authentication settings
-
-Configuration options for LDAP authentication are detailed [here](https://pythonhosted.org/django-auth-ldap/reference.html).
-
-The following environment variables are available for enabling LDAP
-authentication of user accounts in the [Controller][] component:
-
-Setting            | Description
--------------------| ---------------------------------
-LDAP_ENDPOINT      | The URI of the LDAP server. If not specified, LDAP authentication is not enabled (default: "", example: ```ldap://hostname```).
-LDAP_BIND_DN       | The distinguished name to use when binding to the LDAP server (default: "")
-LDAP_BIND_PASSWORD | The password to use with LDAP_BIND_DN (default: "")
-LDAP_USER_BASEDN   | The distinguished name of the search base for user names (default: "")
-LDAP_USER_FILTER   | The name of the login field in the users search base (default: "username")
-LDAP_GROUP_BASEDN  | The distinguished name of the search base for user's groups names (default: "")
-LDAP_GROUP_FILTER  | The filter for user's groups (default: "", example: ```objectClass=person```)
 
 [Deploying Apps]: ../applications/deploying-apps.md
 [builder]: ../understanding-workflow/components.md#builder
