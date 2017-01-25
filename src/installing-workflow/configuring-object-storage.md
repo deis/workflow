@@ -17,7 +17,7 @@ The helm chart for Deis Workflow can be easily configured to connect Workflow co
 
 Create storage buckets for each of the Workflow subsystems: `builder`, `registry`, and `database`.
 
-Depending on your chosen object storage you may need to provide globally unique bucket names.
+Depending on your chosen object storage you may need to provide globally unique bucket names. If you are using S3, use hyphens instead of periods in the bucket names. Using periods in the bucket name will cause an [ssl certificate validation issue with S3](https://forums.aws.amazon.com/thread.jspa?threadID=105357).
 
 If you provide credentials with sufficient access to the underlying storage, Workflow components will create the buckets if they do not exist.
 
