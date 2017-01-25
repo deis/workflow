@@ -6,6 +6,8 @@ cache:
     - $HOME/.cache/pip
 services:
   - docker
+env:
+  - DOCKER_BUILD_FLAGS="--pull --no-cache"
 install:
   - make deps
 script:
