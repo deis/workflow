@@ -131,6 +131,25 @@ Application name. Logger does not persist logs to disk, instead maintaining an
 in-memory ring buffer. For more information on logger see the [project
 documentation][logger-documentation].
 
+## Monitor
+
+**Project Location:** [deis/monitor](https://github.com/deis/monitor)
+
+The monitoring subsystem consists of three components: Telegraf, InfluxDB and Grafana.
+
+Telegraf is the is the metrics collection agent that runs using the daemon set API. It runs on
+every worker node in the cluster, fetches information about the pods currently running and ships it
+to InfluxDB.
+
+InfluxDB is a database that stores the metrics collected by Telegraf. Out of the box, it does not
+persist to disk, but you can set it up to back it with a persisitent volume or swap this out with
+a more robust InfluxDB setup in a production setting.
+
+Grafana is a standalone graphing application. It natively supports InfluxDB as a datasource and
+provides a robust engine for creating dashboards on top of timeseries data. Workflow provides a few
+dashboards out of the box for monitoring Deis Workflow and Kubernetes. The dashboards can be used
+as a starting point for creating more custom dashboards to suit a user's needs.
+
 ## Workflow Manager
 
 **Project Location:** [deis/workflow-manager](https://github.com/deis/workflow-manager)
