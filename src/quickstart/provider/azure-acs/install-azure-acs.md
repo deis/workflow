@@ -33,16 +33,18 @@ It is recommended to use a dedicated storage account for the operational aspects
 ```
 $ export SA_NAME=YourGlobalUniqueName
 $ az storage account create -n $SA_NAME -l $DC_LOCATION -g $RG_NAME --sku Standard_LRS
-$ export SA_KEY=`az storage account keys list -n $SA_NAME -g RG_NAME --query keys[0].value --output tsv`
+$ export SA_KEY=`az storage account keys list -n $SA_NAME -g $RG_NAME --query [0].value --output tsv`
 
 ```
+
+ > Note: Premium Storage skus are not supported yet due to [lack of block blob storage support](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/using-blob-service-operations-with-azure-premium-storage) required for the deis database to function.
 
 ## Install Deis Workflow
 
 Now that Helm is installed and the repository has been added, install Workflow by running:
 
 ```
-$ helm install deis/workflow --namespace=deis --set controller.k8s_api_verify_tls=false,global.storage=azure,azure.accountname=$SA_NAME,azure.accountkey=$SA_KEY,azure.registry_container=registry,azure.database_container=database,azure.builder_container=builder
+$ helm install deis/workflow --namespace=deis --set global.storage=azure,azure.accountname=$SA_NAME,azure.accountkey=$SA_KEY,azure.registry_container=registry,azure.database_container=database,azure.builder_container=builder
 ```
 
 Helm will install a variety of Kubernetes resources in the `deis` namespace.
