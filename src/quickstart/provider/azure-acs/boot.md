@@ -11,8 +11,6 @@
 
 4. SSH Key - This is used to deploy the cluster. [This URL helps to create SSH keys compatible with Linux VMs on Azure](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-linux-mac-create-ssh-keys)
 
-5. jq - to parse the JSON responses from the CLI. [jq download page](https://stedolan.github.io/jq/)
-
 ## Configure the Azure CLI
 
 After installing the CLI, log in to an Azure Account by typing `az login`. Take the code offered, enter it into the text box at [https://aka.ms/devicelogin](https://aka.ms/devicelogin), and login using an Azure account which has ownership or contributor permissions over at least one subscription.
@@ -44,27 +42,6 @@ $ export SUBSCRIPTION_ID=57849302-a9f0-4908-b300-31337a0fb205
 $ az account set --subscription="${SUBSCRIPTION_ID}"
 ```
 
-## Create an Azure Service Principal
-
-Next, create an Azure Service Principal that will be used to provision the ACS Kubernetes Cluster. Service Principals are entities that have permission to create resources in an Azure Subscription. New Service Principals must be given a unique name, a role, and an Azure subscription that the Service Principal may modify.
-
-```
-$ export SP_JSON=`az ad sp create-for-rbac -n="http://acsk8sdeis" --role="Contributor" --scopes="/subscriptions/${SUBSCRIPTION_ID}"`
-$ export SP_NAME=`echo $SP_JSON | jq -r '.name'`
-$ export SP_PASS=`echo $SP_JSON | jq -r '.password'`
-$ echo $SP_JSON
-```
-
-This should display an output similar to this. `jq` has also automatically extracted these values for use in the creation of the cluster.
-```
-{
-  "appId": "58b21231-3dd7-4546-bd37-9df88812331f",
-  "name": "http://workflow-on-acs",
-  "password": "349d4728-438a-52a5-ad25-a740aa0bd240",
-  "tenant": "891a9ddc-477a-4620-8f21-db22ffd3ffea"
-}
-```
-
 ## Create an ACS Kubernetes Cluster
 
 Azure supports two methods to build an ACS Kubernetes cluster, through the Azure Web Portal (UI) or using the Azure command line (CLI).  Choose one of the two paths:
@@ -86,8 +63,6 @@ Execute the command to deploy the cluster. The `dns-prefix` and `ssh-key-value` 
 ```
 $ export SERVICE_NAME=myacs
 $ az acs create --resource-group="${RG_NAME}" --location="${DC_LOCATION}" \
-  --service-principal="${SP_NAME}" \
-  --client-secret="${SP_PASS}" \
   --orchestrator-type=kubernetes --master-count=1 --agent-count=2 \
   --agent-vm-size="Standard_D2_v2" \
   --admin-username="k8sadmin" \
@@ -95,7 +70,7 @@ $ az acs create --resource-group="${RG_NAME}" --location="${DC_LOCATION}" \
   --ssh-key-value @/home/myusername/.ssh/id_rsa.pub
 ```
 
-> Note: When `az acs create` starts, the provisioning process runs entirely silent in the background. After a few minutes the `az` command should return with information about the deployment created as shown below.
+> Note: When `az acs create` starts, the provisioning process runs in the background by first creating a service principal named ${SERVICE_NAME} assigned appropriate permissions.  After a few minutes the `az` command should return with information about the deployment created as shown below.
 
 ```
 {
@@ -141,10 +116,10 @@ When the required information is filled out, click "Ok".
 
 ![](images/step3.png)
 
-The next step takes the Service Principal name and password generated using the Azure CLI.
+Create a new service principal via [instructions at this link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-authenticate-service-principal-cli#create-service-principal-with-password) and put them into the UI.
 
-* Service Principal Client ID: the name of the principal created above e.g. `http://workflow-on-acs`
-* Service Principal Client Secret: the password returned by the Azure CLI e.g. 349d4728-438a-52a5-ad25-a740aa0bd240
+* Service Principal Client ID: the name of the principal created in the example document after the `-n` parameter e.g. `exampleapp`
+* Service Principal Client Secret: the password specified after the `-p` parameter or auto-generated in the Azure CLI e.g. 349d4728-438a-52a5-ad25-a740aa0bd240
 
 ![](images/step4.png)
 
@@ -179,7 +154,8 @@ Download the master kubernetes cluster configuration to the ~/.kube/config file 
 ```console
 az acs kubernetes get-credentials --resource-group=$RG_NAME --name=$SERVICE_NAME
 ```
-
+ > Note: If the cluster was provisioned using any other SSH key than `/root/.ssh/id_rsa` then the `--ssh-key-file` parameter must be used pointing to the SSH key utilized to provision the cluster.
+ 
 Verify connectivity to the new ACS Kubernetes cluster by running `kubectl cluster-info`
 
 ```
