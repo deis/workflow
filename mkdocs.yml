@@ -90,6 +90,7 @@ pages:
     - Controller API v2.0: reference-guide/controller-api/v2.0.md
     - Controller API v2.1: reference-guide/controller-api/v2.1.md
     - Controller API v2.2: reference-guide/controller-api/v2.2.md
+    - Controller API v2.3: reference-guide/controller-api/v2.3.md
   - Changelogs:
     - v2.0.0: changelogs/v2.0.0.md
     - v2.1.0: changelogs/v2.1.0.md
