@@ -39,11 +39,11 @@ See [Kubernetes Versions](https://deis.com/docs/workflow/installing-workflow/sys
 This archive has everything that you need to launch Kubernetes. It's a fairly large archive, so it may take some time to download:
 
 ```
-$ curl -sSL https://storage.googleapis.com/kubernetes-release/release/v1.3.5/kubernetes.tar.gz -O
+$ curl -sSL https://storage.googleapis.com/kubernetes-release/release/v1.5.2/kubernetes.tar.gz -O
 $ tar -xvzf kubernetes.tar.gz
 $ cd kubernetes
 $ ls
-LICENSES     README.md    Vagrantfile  cluster/     contrib/     docs/        examples/    platforms/   server/      third_party/ version
+LICENSES    README.md   Vagrantfile client/      cluster/     docs/        examples/    federation/  server/      third_party/ version
 ```
 
 ## Configure the Kubernetes Environment
@@ -74,22 +74,14 @@ Last, so you can easily identify instances in the AWS Console, specify an instan
 export KUBE_AWS_INSTANCE_PREFIX=first-k8s
 ```
 
-## Setup kubectl CLI
+## Set up kubectl CLI
 
-Very soon, we will need to use `kubectl` to check everything is running smoothly and
-for that let's get it on the $PATH.
+We will need to use `kubectl` to check everything is running smoothly, so let's get it on the $PATH.
 
-For Mac OS, run:
-
-    $ ln -fs $PWD/platforms/darwin/amd64/kubectl /usr/local/bin/kubectl
-
-For Linux, use this instead:
-
-    $ sudo ln -fs $PWD/platforms/linux/amd64/kubectl /usr/local/bin/kubectl
-
-!!! note
-    If you are using any other architecture, you can look at the `platforms/<os>/<arch>`
-    tree to see all the available binaries
+```
+ ./cluster/get-kube-binaries.sh
+ export PATH=$PATH:$PWD/client/bin
+```
 
 ## Boot Your First Cluster
 
@@ -102,15 +94,11 @@ $ ./cluster/kube-up.sh
 Creating a kubernetes on aws...
 ... Starting cluster in us-west-1c using provider aws
 ... calling verify-prereqs
+... calling verify-kube-binaries
 ... calling kube-up
 Starting cluster using os distro: jessie
 Uploading to Amazon S3
-+++ Staging server tars to S3 Storage: kubernetes-staging-52e3410afddda7a4600f10ee5b1e43fb/devel
-upload:
-Uploaded server tars:
-  SERVER_BINARY_TAR_URL: ...
-  SALT_TAR_URL: ...
-  BOOTSTRAP_SCRIPT_URL: ...
+...
 ```
 
 Here, we have downloaded the Kubernetes release archive and started the process of cluster provisioning. Release
