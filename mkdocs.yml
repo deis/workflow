@@ -49,6 +49,7 @@ pages:
     - Managing App Processes: applications/managing-app-processes.md
     - Managing App Configuration: applications/managing-app-configuration.md
     - Managing App Lifecycle: applications/managing-app-lifecycle.md
+    - Inter-app Communication: applications/inter-app-communication.md
     - Resource Limits: applications/managing-resource-limits.md
     - Domains and Routing: applications/domains-and-routing.md
     - SSL Certificates: applications/ssl-certificates.md
