@@ -12,35 +12,35 @@ Download the [latest](https://github.com/kubernetes/kops/releases/latest) versio
 #### macOS
 
 ```bash
-curl -sSL https://github.com/kubernetes/kops/releases/download/1.5.1/kops-darwin-amd64 -O
-chmod +x kops-darwin-amd64
-sudo mv kops-darwin-amd64 /usr/local/bin
+$ curl -sSL https://github.com/kubernetes/kops/releases/download/1.5.1/kops-darwin-amd64 -O
+$ chmod +x kops-darwin-amd64
+$ sudo mv kops-darwin-amd64 /usr/local/bin
 ```
 
 
 #### linux
 
 ```bash
-curl -sSL https://github.com/kubernetes/kops/releases/download/1.5.1/kops-linux-amd64 -O
-chmod +x kops-darwin-amd64
-sudo mv kops-darwin-amd64 /usr/local/bin
+$ curl -sSL https://github.com/kubernetes/kops/releases/download/1.5.1/kops-linux-amd64 -O
+$ chmod +x kops-darwin-amd64
+$ sudo mv kops-darwin-amd64 /usr/local/bin/kops
 ```
 
-For more information see the official [kops installation guide](https://github.com/kubernetes/kops/blob/master/docs/aws.md)
+For more information see the official [kops installation guide](https://github.com/kubernetes/kops/blob/master/docs/aws.md).
 
 ## Validate kops is installed
 
-```
-kops version
+```bash
+$ kops version
 Version 1.5.1
 ```
 
 ## Install kubectl if you haven't done so yet
 
-```
-curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/darwin/amd64/kubectl
-chmod +x kubectl
-sudo mv kubectl /usr/local/bin
+```bash
+$ curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/darwin/amd64/kubectl
+$ chmod +x kubectl
+$ sudo mv kubectl /usr/local/bin/kops
 ```
 
 
@@ -52,40 +52,32 @@ In order to build clusters within AWS we'll create a dedicated IAM user for
 `kops`.  This user requires API credentials in order to use `kops`.  Create
 the user, and credentials, using the [AWS console](http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html).
 
-The `kops` user will require the following IAM permissions to function properly:
+The `kops` user will require the following IAM permissions to function properly
 
  - AmazonEC2FullAccess
+     - This is used to deploy to instances in EC2
  - AmazonRoute53FullAccess
+     - This is used so kops can automatically create friendly DNS records for your cluster resources
  - AmazonS3FullAccess
+     - This is used to store meta configuration about your cluster. We will need read/write here to use S3 as a virtual filesystem in kops.
  - IAMFullAccess
+     - This is used because kops will create new IAM users for some of it's resources. Those resources will have permissions managed securely by kops.
  - AmazonVPCFullAccess
+     - This used to create a VPC which serves as the foundation of all networking components in kops. Without a VPC, kops wouldn't be able to deploy any resources dependent on a network.
 
 #### Create the IAM user from the command line
 
 ```bash
-aws iam create-group --group-name kops
-
-export arns="
-arn:aws:iam::aws:policy/AmazonEC2FullAccess
-arn:aws:iam::aws:policy/AmazonRoute53FullAccess
-arn:aws:iam::aws:policy/AmazonS3FullAccess
-arn:aws:iam::aws:policy/IAMFullAccess
-arn:aws:iam::aws:policy/AmazonVPCFullAccess"
-
-for arn in $arns; do aws iam attach-group-policy --policy-arn "$arn" --group-name kops; done
-
-aws iam create-user --user-name kops-user
-
-aws iam add-user-to-group --user-name kops-user --group-name kops
-
-aws iam create-access-key --user-name kops-user
+$ curl -O https://raw.githubusercontent.com/kubernetes/kops/master/hack/new-iam-user.sh
+$ sh new-iam-user.sh <group> <user>
+$ aws iam list-users
 ```
 
 Note the *SecretAccessKey* and *AccessKeyID* so you can enter them in the following commands
 
 ```bash
-aws configure # Input your credentials here
-aws iam list-users
+$ aws configure # Input your credentials here
+$ aws iam list-users
 ```
 
 
@@ -118,12 +110,11 @@ look like `etcd-us-east-1c.internal.clustername.kubernetes.example.com`
 This is copying the NS servers of your **SUBDOMAIN** up to the **PARENT**
 domain in Route53.  To do this you should:
 
-
 ```bash
-ID=$(uuidgen) && aws route53 create-hosted-zone --name subdomain.example.com --caller-reference $ID | jq .DelegationSet.NameServers
+$ ID=$(uuidgen) && aws route53 create-hosted-zone --name subdomain.example.com --caller-reference $ID | jq .DelegationSet.NameServers
 ```
 
-* Note your **PARENT** hosted zone id
+* Note your **PARENT** hosted zone ID
 
 ```bash
 # Note: This example assumes you have jq installed locally.
@@ -134,7 +125,7 @@ aws route53 list-hosted-zones | jq '.HostedZones[] | select(.Name=="example.com.
 
 Note: The NS values here are for the **SUBDOMAIN**
 
-```
+```json
 {
   "Comment": "Create a subdomain NS record in the parent domain",
   "Changes": [
@@ -167,7 +158,7 @@ Note: The NS values here are for the **SUBDOMAIN**
 * Apply the **SUBDOMAIN** NS records to the **PARENT** hosted zone.
 
 ```
-aws route53 change-resource-record-sets \
+$ aws route53 change-resource-record-sets \
  --hosted-zone-id <parent-zone-id> \
  --change-batch file://subdomain.json
 ```
@@ -194,7 +185,7 @@ for some of these instructions.
 
 
 ```bash
-ID=$(uuidgen) && aws route53 create-hosted-zone --name subdomain.kubernetes.com --caller-reference $ID | jq .DelegationSet.NameServers
+$ ID=$(uuidgen) && aws route53 create-hosted-zone --name subdomain.kubernetes.com --caller-reference $ID | jq .DelegationSet.NameServers
 ```
 
 * You will now go to your registrars page and log in. You will need to create a
@@ -216,7 +207,7 @@ require private DNS records you should modify the commands we run later in this
 guide to include:
 
 ```
-kops create cluster --dns private $NAME
+$ kops create cluster --dns private $NAME
 ```
 
 #### Testing your DNS setup
@@ -225,7 +216,7 @@ You should now able to dig your domain (or subdomain) and see the AWS Name
 Servers on the other end.
 
 ```bash
-dig ns subdomain.example.com
+$ dig ns subdomain.example.com
 ```
 
 Should return something similar to:
@@ -240,7 +231,7 @@ subdomain.example.com.        172800  IN  NS  ns-4.awsdns-4.co.uk.
 
 This is a critical component of setting up clusters. If you are experiencing
 problems with the Kubernetes API not coming up, chances are something is wrong
-with the clusters DNS.
+with the cluster's DNS.
 
 **Please DO NOT MOVE ON until you have validated your NS records!**
 
@@ -257,14 +248,14 @@ We recommend keeping the creation of this bucket confined to us-east-1,
 otherwise more work will be required.
 
 ```bash
-aws s3api create-bucket --bucket prefix-example-com-state-store --region us-east-1
+$ aws s3api create-bucket --bucket prefix-example-com-state-store --region us-east-1
 ```
 
 Note: We **STRONGLY** recommend versioning your S3 bucket in case you ever need
 to revert or recover a previous state store.
 
 ```bash
-aws s3api put-bucket-versioning --bucket prefix-example-com-state-store  --versioning-configuration Status=Enabled
+$ aws s3api put-bucket-versioning --bucket prefix-example-com-state-store  --versioning-configuration Status=Enabled
 ```
 
 
@@ -276,12 +267,12 @@ We're ready to start creating our first cluster!  Let's first setup a few
 environment variables to make this process easier.
 
 ```bash
-export NAME=myfirstcluster.example.com
-export KOPS_STATE_STORE=s3://prefix-example-com-state-store
+$ export NAME=myfirstcluster.example.com
+$ export KOPS_STATE_STORE=s3://prefix-example-com-state-store
 ```
 
 Note: You don’t have to use environmental variables here. You can always define
-the values using the –name and –state flags later.
+the values using the `–name` and `–state` flags later.
 
 #### Create cluster configuration
 
@@ -289,14 +280,14 @@ We will need to note which availability zones are available to us. In this
 example we will be deploying our cluster to the us-west-2 region.
 
 ```bash
-aws ec2 describe-availability-zones --region us-west-2
+$ aws ec2 describe-availability-zones --region us-west-2
 ```
 
 Below is a basic create cluster command. The
 below command will generate a cluster configuration, but not start building it.
 
 ```bash
-kops create cluster \
+$ kops create cluster \
     --zones us-west-2a \
     ${NAME}
 ```
@@ -311,7 +302,7 @@ Now we have a cluster configuration, we can look at every aspect that defines
 our cluster by editing the description.
 
 ```bash
-kops edit cluster ${NAME}
+$ kops edit cluster ${NAME}
 ```
 
 This opens your editor (as defined by $EDITOR) and allows you to edit the
@@ -328,7 +319,7 @@ while.  Once it finishes you'll have to wait longer while the booted instances
 finish downloading Kubernetes components and reach a "ready" state.
 
 ```bash
-kops update cluster ${NAME} --yes
+$ kops update cluster ${NAME} --yes
 ```
 
 #### Use the Cluster
@@ -336,11 +327,17 @@ kops update cluster ${NAME} --yes
 Remember when you installed `kubectl` earlier? The configuration for your
 cluster was automatically generated and written to `~/.kube/config` for you!
 
+Optionally you can always pull the configuration with the following command:
+
+```bash
+$ kops export kubecfg --name ${NAME}
+```
+
 A simple Kubernetes API call can be used to check if the API is online and
 listening. Let's use `kubectl` to check the nodes.
 
 ```bash
-kubectl get nodes
+$ kubectl get nodes
 ```
 
 You will see a list of nodes that should match the `--zones` flag defined
@@ -351,13 +348,13 @@ Also `kops` ships with a handy validation tool that can be ran to ensure your
 cluster is working as expected.
 
 ```bash
-kops validate cluster
+$ kubectl cluster-info
 ```
 
 You can look at all the system components with the following command.
 
-```
-kubectl -n kube-system get po
+```bash
+$ kubectl -n kube-system get po
 ```
 
 
