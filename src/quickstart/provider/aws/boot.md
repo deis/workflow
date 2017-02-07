@@ -1,263 +1,364 @@
-# Booting Kubernetes on Amazon Elastic Compute
+# Booting Kubernetes on Amazon Elastic Compute with kops
 
 Amazon Elastic Compute Cloud (Amazon EC2) is a web service that provides compute capacity in the cloud. This quickstart
-guide uses AWS EC2 to boot a Kubernetes cluster using the open source provisioning scripts.
+guide uses AWS EC2 to boot a Kubernetes cluster using [kubernetes kops](https://github.com/kubernetes/kops).
 
-## Pre-requisites
 
-1. You need an active AWS account. Visit [AWS portal](http://aws.amazon.com) to sign up
-2. You need AWS API keys with full access
-3. Install the AWS cli tools, you can find instructions for your platform at [AWS Command Line Interface Site](https://aws.amazon.com/cli/)
+## Installing kops
 
-To verify that your CLI is configured properly, run `aws ec2 describe-regions`:
+Download the [latest](https://github.com/kubernetes/kops/releases/latest) version of kops
 
-```
-$ aws ec2 describe-regions --output=text
-REGIONS	ec2.eu-west-1.amazonaws.com	eu-west-1
-REGIONS	ec2.ap-southeast-1.amazonaws.com	ap-southeast-1
-REGIONS	ec2.ap-southeast-2.amazonaws.com	ap-southeast-2
-REGIONS	ec2.eu-central-1.amazonaws.com	eu-central-1
-REGIONS	ec2.ap-northeast-2.amazonaws.com	ap-northeast-2
-REGIONS	ec2.ap-northeast-1.amazonaws.com	ap-northeast-1
-REGIONS	ec2.us-east-1.amazonaws.com	us-east-1
-REGIONS	ec2.sa-east-1.amazonaws.com	sa-east-1
-REGIONS	ec2.us-west-1.amazonaws.com	us-west-1
-REGIONS	ec2.us-west-2.amazonaws.com	us-west-2
+
+#### macOS
+
+```bash
+curl -sSL https://github.com/kubernetes/kops/releases/download/1.5.1/kops-darwin-amd64 -O
+chmod +x kops-darwin-amd64
+sudo mv kops-darwin-amd64 /usr/local/bin
 ```
 
-## Download and Unpack Kubernetes
 
-First, make a directory to hold the Kubernetes release files:
+#### linux
 
-```
-$ mkdir my-first-cluster
-$ cd my-first-cluster
-```
-
-See [Kubernetes Versions](https://deis.com/docs/workflow/installing-workflow/system-requirements/#kubernetes-versions) under System Requirements and download a Kubernetes release that is compatible with Deis Workflow, and extract the archive on your machine.
-
-This archive has everything that you need to launch Kubernetes. It's a fairly large archive, so it may take some time to download:
-
-```
-$ curl -sSL https://storage.googleapis.com/kubernetes-release/release/v1.5.2/kubernetes.tar.gz -O
-$ tar -xvzf kubernetes.tar.gz
-$ cd kubernetes
-$ ls
-LICENSES    README.md   Vagrantfile client/      cluster/     docs/        examples/    federation/  server/      third_party/ version
+```bash
+curl -sSL https://github.com/kubernetes/kops/releases/download/1.5.1/kops-linux-amd64 -O
+chmod +x kops-darwin-amd64
+sudo mv kops-darwin-amd64 /usr/local/bin
 ```
 
-## Configure the Kubernetes Environment
+For more information see the official [kops installation guide](https://github.com/kubernetes/kops/blob/master/docs/aws.md)
 
-Before calling the Kubernetes setup scripts, we need to change a few defaults so that Deis Workflow works best. Type
-each of these commands into your terminal application before calling `kube-up.sh`.
-
-Next, pick the AWS Availability Zone you would like to use. The boot script will create a new VPC in that region.
+## Validate kops is installed
 
 ```
-export KUBE_AWS_ZONE=us-west-1c
-export KUBERNETES_PROVIDER=aws
+kops version
+Version 1.5.1
 ```
 
-For evaluation, we find that the t2 instance classes are a reasonable bang for the buck. Do note that the t2 class does
-track CPU credits. Performance of your evaluation cluster may be impacted when you exhaust the CPU credit limit. Select
-your instance sizes and worker count.
+## Install kubectl if you haven't done so yet
 
 ```
-export MASTER_SIZE=t2.medium
-export NODE_SIZE=t2.large
-export NUM_NODES=2
-export NODE_ROOT_DISK_SIZE=100
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/darwin/amd64/kubectl
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin
 ```
 
-Last, so you can easily identify instances in the AWS Console, specify an instance prefix:
-```
-export KUBE_AWS_INSTANCE_PREFIX=first-k8s
-```
 
-## Set up kubectl CLI
+## Setup your AWS account
 
-We will need to use `kubectl` to check everything is running smoothly, so let's get it on the $PATH.
+#### Setup an IAM user for kops
 
-```
- ./cluster/get-kube-binaries.sh
- export PATH=$PATH:$PWD/client/bin
-```
+In order to build clusters within AWS we'll create a dedicated IAM user for
+`kops`.  This user requires API credentials in order to use `kops`.  Create
+the user, and credentials, using the [AWS console](http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html).
 
-## Boot Your First Cluster
+The `kops` user will require the following IAM permissions to function properly:
 
-We are now ready to boot our first Kubernetes cluster on AWS!
+ - AmazonEC2FullAccess
+ - AmazonRoute53FullAccess
+ - AmazonS3FullAccess
+ - IAMFullAccess
+ - AmazonVPCFullAccess
 
-Since this script does a **lot** of stuff, we'll break it into sections.
+#### Create the IAM user from the command line
 
-```
-$ ./cluster/kube-up.sh
-Creating a kubernetes on aws...
-... Starting cluster in us-west-1c using provider aws
-... calling verify-prereqs
-... calling verify-kube-binaries
-... calling kube-up
-Starting cluster using os distro: jessie
-Uploading to Amazon S3
-...
-```
+```bash
+aws iam create-group --group-name kops
 
-Here, we have downloaded the Kubernetes release archive and started the process of cluster provisioning. Release
-artifacts are automatically pushed to S3 for use by machines as they are provisioned.
+export arns="
+arn:aws:iam::aws:policy/AmazonEC2FullAccess
+arn:aws:iam::aws:policy/AmazonRoute53FullAccess
+arn:aws:iam::aws:policy/AmazonS3FullAccess
+arn:aws:iam::aws:policy/IAMFullAccess
+arn:aws:iam::aws:policy/AmazonVPCFullAccess"
 
-```
-Using SSH key with (AWS) fingerprint: 32:5b:38:76:e6:e8:6e:ae:98:5d:8c:1f:3b:4e:8d:6c
-Creating vpc.
-Using VPC vpc-11672d74
-Using DHCP option set dopt-d78907b2
-Creating subnet.
-Using subnet subnet-2b632072
-Creating Internet Gateway.
-Using Internet Gateway igw-2943f94c
-Associating route table.
-Creating route table
-Associating route table rtb-0cc5eb69 to subnet subnet-2b632072
-Adding route to route table rtb-0cc5eb69
-Using Route Table rtb-0cc5eb69
-Creating master security group.
-Creating security group kubernetes-master-kubernetes.
-Creating minion security group.
-Creating security group kubernetes-minion-kubernetes.
-Using master security group: kubernetes-master-kubernetes sg-a3bf1cc7
-Using minion security group: kubernetes-minion-kubernetes sg-acbf1cc8
-Creating master disk: size 20GB, type gp2
-Allocated Elastic IP for master: 52.9.206.49
-Generating certs for alternate-names: IP:52.9.206.49,IP:172.20.0.9,IP:10.0.0.1,DNS:kubernetes,DNS:kubernetes.default,DNS:kubernetes.default.svc,DNS:kubernetes.default.svc.cluster.local,DNS:kubernetes-master
+for arn in $arns; do aws iam attach-group-policy --policy-arn "$arn" --group-name kops; done
+
+aws iam create-user --user-name kops-user
+
+aws iam add-user-to-group --user-name kops-user --group-name kops
+
+aws iam create-access-key --user-name kops-user
 ```
 
-Next, the VPC is provisioned with all of the necessary bits including security groups, route tables, subnets and
-internet gateways.
+Note the *SecretAccessKey* and *AccessKeyID* so you can enter them in the following commands
 
-```
-Starting Master
-Waiting for master to be ready
-Attempt 1 to check for master nodeWaiting for instance i-629517d7 to be running (currently pending)
-Sleeping for 3 seconds...
-Waiting for instance i-629517d7 to be running (currently pending)
-Sleeping for 3 seconds...
- [master running]
-Attaching IP 52.9.206.49 to instance i-629517d7
-Attaching persistent data volume (vol-1e605fa3) to master
-2016-05-11T23:15:38.845Z	/dev/sdb	i-629517d7	attaching	vol-1e605fa3
+```bash
+aws configure # Input your credentials here
+aws iam list-users
 ```
 
-Now that the master instance has booted, the script automatically configures your `kubectl` tool with appropriate
-authentication and endpoint information.
 
-```
-cluster "aws_kubernetes" set.
-user "aws_kubernetes" set.
-context "aws_kubernetes" set.
-switched to context "aws_kubernetes".
-user "aws_kubernetes-basic-auth" set.
-Wrote config for aws_kubernetes to /Users/jhansen/.kube/config
-```
+#### Configure DNS
 
-Up next, worker nodes are provisioned by an auto-scaling group, and we wait for those nodes to come up.
+In order to build a Kubernetes cluster with `kops`, we need to prepare
+somewhere to build the required DNS records.  There are three scenarios
+below and you should choose the one that most closely matches your AWS
+situation.
 
-```
-Creating minion configuration
-Creating autoscaling group
- 0 minions started; waiting
- 0 minions started; waiting
- 0 minions started; waiting
- 0 minions started; waiting
- 1 minions started; waiting
- 1 minions started; waiting
- 1 minions started; waiting
- 2 minions started; ready
-Waiting for cluster initialization.
+#### Scenario 1a: A Domain purchased/hosted via AWS
 
-  This will continually check to see if the API for kubernetes is reachable.
-  This might loop forever if there was some uncaught error during start
-  up.
-Waiting for cluster initialization.
+If you bought your domain with AWS, then you should already have a hosted zone
+in Route53.  If you plan to use this domain then no more work is needed.
 
-  This will continually check to see if the API for kubernetes is reachable.
-  This might loop forever if there was some uncaught error during start
-  up.
+In this example you own `example.com` and your records for Kubernetes would
+look like `etcd-us-east-1c.internal.clustername.example.com`
 
-.................................................................................................................Kubernetes cluster created.
-Sanity checking cluster...
-Attempt 1 to check Docker on node @ 52.53.207.230 ...working
-Attempt 1 to check Docker on node @ 52.53.172.73 ...working
+You can now skip to [testing your DNS setup](#testing-your-dns-setup)
+
+#### Scenario 1b: A subdomain under a domain purchased/hosted via AWS
+
+In this scenario you want to contain all kubernetes records under a subdomain
+of a domain you host in Route53.  This requires creating a second hosted zone
+in route53, and then setting up route delegation to the new zone.
+
+In this example you own `example.com` and your records for Kubernetes would
+look like `etcd-us-east-1c.internal.clustername.kubernetes.example.com`
+
+This is copying the NS servers of your **SUBDOMAIN** up to the **PARENT**
+domain in Route53.  To do this you should:
+
+
+```bash
+ID=$(uuidgen) && aws route53 create-hosted-zone --name subdomain.example.com --caller-reference $ID | jq .DelegationSet.NameServers
 ```
 
-After these nodes come up, you are almost ready to go!
+* Note your **PARENT** hosted zone id
 
-```
-Kubernetes cluster is running.  The master is running at:
-
-  https://52.9.206.49
-
-The user name and password to use is located in /Users/jhansen/.kube/config.
-
-... calling validate-cluster
-Waiting for 2 ready nodes. 0 ready nodes, 1 registered. Retrying.
-Waiting for 2 ready nodes. 0 ready nodes, 1 registered. Retrying.
-Waiting for 2 ready nodes. 0 ready nodes, 1 registered. Retrying.
-Waiting for 2 ready nodes. 1 ready nodes, 1 registered. Retrying.
-Waiting for 2 ready nodes. 1 ready nodes, 2 registered. Retrying.
-Waiting for 2 ready nodes. 1 ready nodes, 2 registered. Retrying.
-Found 2 node(s).
-NAME                                         STATUS    AGE
-ip-172-20-0-192.us-west-1.compute.internal   Ready     36s
-ip-172-20-0-193.us-west-1.compute.internal   Ready     1m
-Flag --api-version has been deprecated, flag is no longer respected and will be deleted in the next release
-Validate output:
-NAME                 STATUS    MESSAGE              ERROR
-scheduler            Healthy   ok
-controller-manager   Healthy   ok
-etcd-0               Healthy   {"health": "true"}
-etcd-1               Healthy   {"health": "true"}
-Cluster validation succeeded
-Done, listing cluster services:
-
-Kubernetes master is running at https://52.9.206.49
-Elasticsearch is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/elasticsearch-logging
-Heapster is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/heapster
-Kibana is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/kibana-logging
-KubeDNS is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/kube-dns
-kubernetes-dashboard is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
-Grafana is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
-InfluxDB is running at https://52.9.206.49/api/v1/proxy/namespaces/kube-system/services/monitoring-influxdb
-
-Kubernetes binaries at /Users/jhansen/p/docs/kubernetes/cluster/
-You may want to add this directory to your PATH in $HOME/.profile
-Installation successful!
+```bash
+# Note: This example assumes you have jq installed locally.
+aws route53 list-hosted-zones | jq '.HostedZones[] | select(.Name=="example.com.") | .Id'
 ```
 
-## Items of note!
+* Create a new JSON file with your values (`subdomain.json`)
 
-A few things to note! Your Kubernetes master is now up and running and we are ready to install Deis Workflow. If you
-need to access the Kubernetes master the default username is `admin` and the ssh key lives at `~/.ssh/kube_aws_rsa`.
+Note: The NS values here are for the **SUBDOMAIN**
 
 ```
-$ ssh -i ~/.ssh/kube_aws_rsa admin@52.9.206.49
-
-Welcome to Kubernetes v1.3.6!
-
-You can find documentation for Kubernetes at:
-  http://docs.kubernetes.io/
-
-You can download the build image for this release at:
-  https://storage.googleapis.com/kubernetes-release/release/v1.3.6/kubernetes-src.tar.gz
-
-It is based on the Kubernetes source at:
-  https://github.com/kubernetes/kubernetes/tree/v1.3.6
-
-For Kubernetes copyright and licensing information, see:
-  /usr/local/share/doc/kubernetes/LICENSES
-
-admin@ip-172-20-0-9:~$
+{
+  "Comment": "Create a subdomain NS record in the parent domain",
+  "Changes": [
+    {
+      "Action": "CREATE",
+      "ResourceRecordSet": {
+        "Name": "subdomain.example.com",
+        "Type": "NS",
+        "TTL": 300,
+        "ResourceRecords": [
+          {
+            "Value": "ns-1.awsdns-1.co.uk"
+          },
+          {
+            "Value": "ns-2.awsdns-2.org"
+          },
+          {
+            "Value": "ns-3.awsdns-3.com"
+          },
+          {
+            "Value": "ns-4.awsdns-4.net"
+          }
+        ]
+      }
+    }
+  ]
+}
 ```
 
-When you are finished with the Kubernetes cluster, you may terminate the AWS resources by running
-`./cluster/kube-down.sh`. If you are using a new shell environment you will need to set the environment variables we
-used above so `kube-down.sh` can find the right cluster.
+* Apply the **SUBDOMAIN** NS records to the **PARENT** hosted zone.
+
+```
+aws route53 change-resource-record-sets \
+ --hosted-zone-id <parent-zone-id> \
+ --change-batch file://subdomain.json
+```
+
+Now traffic to `*.example.com` will be routed to the correct subdomain hosted zone in Route53.
+
+You can now skip to [testing your DNS setup](#testing-your-dns-setup)
+
+#### Scenario 2: Setting up Route53 for a domain purchased with another registrar
+
+If you bought your domain elsewhere, and would like to dedicate the entire domain to AWS you should follow the guide [here](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-to-route-53.html)
+
+You can now skip to [testing your DNS setup](#testing-your-dns-setup)
+
+#### Scenario 3: Subdomain for clusters in route53, leaving the domain at another registrar
+
+If you bought your domain elsewhere, but **only want to use a subdomain in AWS
+Route53** you must modify your registrar's NS (NameServer) records.  We'll create
+a hosted zone in Route53, and then migrate the subdomain's NS records to your
+other registrar.
+
+You might need to install [jq](https://github.com/stedolan/jq/wiki/Installation)
+for some of these instructions.
+
+
+```bash
+ID=$(uuidgen) && aws route53 create-hosted-zone --name subdomain.kubernetes.com --caller-reference $ID | jq .DelegationSet.NameServers
+```
+
+* You will now go to your registrars page and log in. You will need to create a
+  new **SUBDOMAIN**, and use the 4 NS records listed above for the new
+  **SUBDOMAIN**. This **MUST** be done in order to use your cluster. Do **NOT**
+  change your top level NS record, or you might take your site offline.
+
+* Information on adding NS records with
+  [Godaddy.com](https://www.godaddy.com/help/set-custom-nameservers-for-domains-registered-with-godaddy-12317)
+* Information on adding NS records with [Google Cloud
+  Platform](https://cloud.google.com/dns/update-name-servers)
+  
+ You can now skip to [testing your DNS setup](#testing-your-dns-setup)
+
+#### Using Public/Private DNS (Kops 1.5+)
+
+By default the assumption is that NS records are publically available.  If you
+require private DNS records you should modify the commands we run later in this
+guide to include:
+
+```
+kops create cluster --dns private $NAME
+```
+
+#### Testing your DNS setup
+
+You should now able to dig your domain (or subdomain) and see the AWS Name
+Servers on the other end.
+
+```bash
+dig ns subdomain.example.com
+```
+
+Should return something similar to:
+
+```
+;; ANSWER SECTION:
+subdomain.example.com.        172800  IN  NS  ns-1.awsdns-1.net.
+subdomain.example.com.        172800  IN  NS  ns-2.awsdns-2.org.
+subdomain.example.com.        172800  IN  NS  ns-3.awsdns-3.com.
+subdomain.example.com.        172800  IN  NS  ns-4.awsdns-4.co.uk.
+```
+
+This is a critical component of setting up clusters. If you are experiencing
+problems with the Kubernetes API not coming up, chances are something is wrong
+with the clusters DNS.
+
+**Please DO NOT MOVE ON until you have validated your NS records!**
+
+
+## Cluster State storage
+
+In order to store the state of your cluster, and the representation of your
+cluster, we need to create a dedicated S3 bucket for `kops` to use.  This
+bucket will become the source of truth for our cluster configuration.  In
+this guide we'll call this bucket `example-com-state-store`, but you should
+add a custom prefix as bucket names need to be unique.
+
+We recommend keeping the creation of this bucket confined to us-east-1,
+otherwise more work will be required.
+
+```bash
+aws s3api create-bucket --bucket prefix-example-com-state-store --region us-east-1
+```
+
+Note: We **STRONGLY** recommend versioning your S3 bucket in case you ever need
+to revert or recover a previous state store.
+
+```bash
+aws s3api put-bucket-versioning --bucket prefix-example-com-state-store  --versioning-configuration Status=Enabled
+```
+
+
+## Creating your first cluster
+
+#### Prepare local environment
+
+We're ready to start creating our first cluster!  Let's first setup a few
+environment variables to make this process easier.
+
+```bash
+export NAME=myfirstcluster.example.com
+export KOPS_STATE_STORE=s3://prefix-example-com-state-store
+```
+
+Note: You don’t have to use environmental variables here. You can always define
+the values using the –name and –state flags later.
+
+#### Create cluster configuration
+
+We will need to note which availability zones are available to us. In this
+example we will be deploying our cluster to the us-west-2 region.
+
+```bash
+aws ec2 describe-availability-zones --region us-west-2
+```
+
+Below is a basic create cluster command. The
+below command will generate a cluster configuration, but not start building it.
+
+```bash
+kops create cluster \
+    --zones us-west-2a \
+    ${NAME}
+```
+
+All instances created by `kops` will be built within ASG (Auto Scaling Groups),
+which means each instance will be automatically monitored and rebuilt by AWS if
+it suffers any failure.
+
+#### Customize Cluster Configuration
+
+Now we have a cluster configuration, we can look at every aspect that defines
+our cluster by editing the description.
+
+```bash
+kops edit cluster ${NAME}
+```
+
+This opens your editor (as defined by $EDITOR) and allows you to edit the
+configuration.  The configuration is loaded from the S3 bucket we created
+earlier, and automatically updated when we save and exit the editor.
+
+We'll leave everything set to the defaults for now, but the rest of the `kops`
+documentation covers additional settings and configuration you can enable.
+
+#### Build the Cluster
+
+Now we take the final step of actually building the cluster.  This'll take a
+while.  Once it finishes you'll have to wait longer while the booted instances
+finish downloading Kubernetes components and reach a "ready" state.
+
+```bash
+kops update cluster ${NAME} --yes
+```
+
+#### Use the Cluster
+
+Remember when you installed `kubectl` earlier? The configuration for your
+cluster was automatically generated and written to `~/.kube/config` for you!
+
+A simple Kubernetes API call can be used to check if the API is online and
+listening. Let's use `kubectl` to check the nodes.
+
+```bash
+kubectl get nodes
+```
+
+You will see a list of nodes that should match the `--zones` flag defined
+earlier. This is a great sign that your Kubernetes cluster is online and
+working.
+
+Also `kops` ships with a handy validation tool that can be ran to ensure your
+cluster is working as expected.
+
+```bash
+kops validate cluster
+```
+
+You can look at all the system components with the following command.
+
+```
+kubectl -n kube-system get po
+```
+
 
 You are now ready to [install Deis Workflow](install-aws.md)
