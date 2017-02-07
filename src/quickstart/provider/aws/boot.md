@@ -14,7 +14,7 @@ Download the [latest](https://github.com/kubernetes/kops/releases/latest) versio
 ```bash
 $ curl -sSL https://github.com/kubernetes/kops/releases/download/1.5.1/kops-darwin-amd64 -O
 $ chmod +x kops-darwin-amd64
-$ sudo mv kops-darwin-amd64 /usr/local/bin
+$ sudo mv kops-darwin-amd64 /usr/local/bin/kops
 ```
 
 
