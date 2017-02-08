@@ -46,13 +46,34 @@ $ sudo mv kubectl /usr/local/bin/kops
 
 ## Setup your AWS account
 
-#### Setup an IAM user for kops
+### Install the `awscli` tool
 
-In order to build clusters within AWS we'll create a dedicated IAM user for
-`kops`.  This user requires API credentials in order to use `kops`.  Create
-the user, and credentials, using the [AWS console](http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html).
+The officially supported way of installing the tool is with `pip` as in
 
-The `kops` user will require the following IAM permissions to function properly
+```bash
+$ pip install awscli
+```
+
+You can also grab the tool with homebrew (for macOS users **only**), although this is not officially supported by AWS.
+
+```bash
+$ brew update && brew install awscli
+```
+
+#### Configure the `awscli` tool
+
+The first thing you need to do is get valid AWS credentials out of the console. See [the official documentation](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey) on how to find your *SecretAccessKey* and *AccessKeyID*.
+
+Once you have those you can configure the `awscli` tool with
+
+```bash
+$ aws configure # Input your credentials here
+```
+
+
+#### Setting up IAM permission for kops
+
+The recommended practice is to use a dedicated IAM user for kops. At a minimum `kops` will require the following IAM permissions to function properly.
 
  - AmazonEC2FullAccess
      - This is used to deploy to instances in EC2
@@ -61,16 +82,18 @@ The `kops` user will require the following IAM permissions to function properly
  - AmazonS3FullAccess
      - This is used to store meta configuration about your cluster. We will need read/write here to use S3 as a virtual filesystem in kops.
  - IAMFullAccess
-     - This is used because kops will create new IAM users for some of it's resources. Those resources will have permissions managed securely by kops.
+     - This is used because kops will create new IAM users for some of its resources. Those resources will have permissions managed securely by kops.
  - AmazonVPCFullAccess
      - This used to create a VPC which serves as the foundation of all networking components in kops. Without a VPC, kops wouldn't be able to deploy any resources dependent on a network.
 
-#### Create the IAM user from the command line
+
+#### (Optional) Create a dedicated IAM user from the command line
+
+**Note**: This can only be done **AFTER** you already have valid aws credentials in place. We will use the official `kops` provided convenience script to configure a new user with the following syntax: `sh new-iam-user.sh $group $user`
 
 ```bash
 $ curl -O https://raw.githubusercontent.com/kubernetes/kops/master/hack/new-iam-user.sh
-$ sh new-iam-user.sh <group> <user>
-$ aws iam list-users
+$ sh new-iam-user.sh kops-group kops-user
 ```
 
 Note the *SecretAccessKey* and *AccessKeyID* so you can enter them in the following commands
@@ -188,7 +211,7 @@ for some of these instructions.
 $ ID=$(uuidgen) && aws route53 create-hosted-zone --name subdomain.kubernetes.com --caller-reference $ID | jq .DelegationSet.NameServers
 ```
 
-* You will now go to your registrars page and log in. You will need to create a
+* You will now go to your registrar's page and log in. You will need to create a
   new **SUBDOMAIN**, and use the 4 NS records listed above for the new
   **SUBDOMAIN**. This **MUST** be done in order to use your cluster. Do **NOT**
   change your top level NS record, or you might take your site offline.
@@ -212,7 +235,7 @@ $ kops create cluster --dns private $NAME
 
 #### Testing your DNS setup
 
-You should now able to dig your domain (or subdomain) and see the AWS Name
+You should now able to `dig` your domain (or subdomain) and see the AWS Name
 Servers on the other end.
 
 ```bash
