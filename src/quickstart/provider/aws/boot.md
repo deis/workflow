@@ -22,8 +22,8 @@ $ sudo mv kops-darwin-amd64 /usr/local/bin/kops
 
 ```bash
 $ curl -sSL https://github.com/kubernetes/kops/releases/download/1.5.1/kops-linux-amd64 -O
-$ chmod +x kops-darwin-amd64
-$ sudo mv kops-darwin-amd64 /usr/local/bin/kops
+$ chmod +x kops-linux-amd64
+$ sudo mv kops-linux-amd64 /usr/local/bin/kops
 ```
 
 For more information see the official [kops installation guide](https://github.com/kubernetes/kops/blob/master/docs/aws.md).
