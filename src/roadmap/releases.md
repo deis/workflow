@@ -169,7 +169,7 @@ number.
 
 To create and stage a release candidate chart for Workflow, we will build the [workflow-chart-stage](https://ci.deis.io/job/workflow-chart-stage) job with the following parameters:
 
-`CHART_REPO_TYPE=staging` and `RELEASE_TAG=$WORKFLOW_RELEASE`
+`RELEASE_TAG=$WORKFLOW_RELEASE`
 
 This job will gather all of the latest component release tags and use these to specify the versions of all component charts.
 It will then package the Workflow chart, upload it to the staging chart repo and kick off an e2e run against said chart.
@@ -202,31 +202,17 @@ it if it has not done so already.
 ### Step 6: Assemble Master Changelog
 
 Each component already updated its release notes on GitHub with CHANGELOG content. We'll now
-generate the master changelog for the Workflow chart, consisting of all aforementioned component changes
-as well as those non-component repo changes needing to be manually added.
+generate the master changelog for the Workflow chart, consisting of all component and auxilliary repo changes.
 
-We'll employ the `requirements.lock` file from the `WORKFLOW_PREV_RELEASE` chart, as well as a repo-to-chart-name mapping file
-(see [here](https://github.com/deis/deisrel/blob/master/README.md#usage) for an example), this time invoking `deisrel changelog global` to get all component changes between
+We'll employ the `requirements.lock` file from the `WORKFLOW_PREV_RELEASE` chart, as well as a repo-to-chart-name [mapping file](https://github.com/deis/deisrel/blob/master/map.json), this time invoking `deisrel changelog global` to get all component changes between
 the chart versions existing in the `WORKFLOW_PREV_RELEASE` chart and the _most recent_ releases existing in GitHub.
 (Therefore, if there are any unreleased commits in a component repo, they will not appear here):
 
 ```bash
 helm repo add deis https://charts.deis.com/workflow
 helm fetch --untar deis/workflow --version $WORKFLOW_PREV_RELEASE
-deisrel changelog global workflow/requirements.lock mapping.json > changelog-$WORKFLOW_RELEASE.md
+deisrel changelog global workflow/requirements.lock map.json > changelog-$WORKFLOW_RELEASE.md
 ```
-
-To get non-component repo changelogs (presumably tagged in Step 3 above), one can issue a command like the following
-which grabs the latest release body from GitHub:
-
-```bash
-for repo in workflow workflow-cli workflow-e2e; do
-  printf "$repo\n\n"
-  printf "$(curl -s https://api.github.com/repos/deis/$repo/releases/latest | jq .body | sed 's/"//g')\n\n"
-done
-```
-
-These can be added to the `$WORKFLOW_RELEASE` file created previously.
 
 This master changelog should then be placed into a single gist.  The file will also be added to the documentation
 update PR created in the next step.
