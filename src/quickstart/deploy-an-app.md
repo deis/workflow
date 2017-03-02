@@ -1,18 +1,38 @@
-## Register an Admin User
+## Determine your host and hostname values
 
-The first user to register against Deis Workflow will automatically be given administrative privileges.
+For the rest of this example we will refer to a special variables called `$hostname`. Please choose one of the two methods for building your `$hostname`.
 
-If you installed Deis on GKE or AWS, Deis automatically creates a load balancer for the cluster. To get the IP of this load balancer, run `kubectl --namespace=deis describe svc deis-router`.
+#### Option 1: Standard Installation 
+
+For a standard installation you can build the hostname using public IP address and a wildcard DNS solution. Instead of setting up DNS records, this example will use `nip.io`. 
+
+If your router IP is `1.1.1.1`, its `$hostname` will be `1.1.1.1.nip.io`. You can find your IP address by running:
+ 
+```
+kubectl --namespace=deis describe svc deis-router
+```
 
 If you do not have an load balancer IP, the router automatically forwards traffic from a kubernetes node to the router. In this case, use the IP of a kubernetes node and the node
 port that routes to port 80 on the controller.
 
-Deis requires a wildcard DNS record to dynamically map app names to the router. Instead of setting up DNS records, this example will use `nip.io`. If your router IP is `1.1.1.1`, its url will be `1.1.1.1.nip.io`. The URL of the controller component will be `deis.1.1.1.1.nip.io`.
+Deis requires a wildcard DNS record to dynamically map app names to the router.
 
-Use the controller url to register a user in the cluster.
+**$hostname**: 1.1.1.1.nip.io
+
+#### Option 2: Experimental Native Ingress Installation
+
+In this example, the user should already have DNS set up pointing to their known host. The `$hostname` value can be build by appending `deis.` to the value set in `global.exerpimental_native_ingress`.
+
+**$hostname**: deis.com
+
+## Register an Admin User
+
+The first user to register against Deis Workflow will automatically be given administrative privileges.
+
+Use the controller `$hostname` to register a user in the cluster.
 
 ```
-$ deis register http://deis.104.197.125.75.nip.io
+$ deis register http://$hostname
 username: admin
 password:
 password (confirm):
@@ -20,7 +40,7 @@ email: jhansen@deis.com
 Registered admin
 Logged in as admin
 $ deis whoami
-You are admin at http://deis.104.197.125.75.nip.io
+You are admin at http://$hostname
 ```
 
 You have now registered your first user and you are ready to deploy an application.
@@ -50,9 +70,11 @@ Let's use the CLI to tell the platform to deploy an application and then use cur
 ```
 $ deis pull deis/example-go -a proper-barbecue
 Creating build... done
-$ curl http://proper-barbecue.104.197.125.75.nip.io
+$ curl http://proper-barbecue.$hostname
 Powered by Deis
 ```
+
+
 
 !!! note
         If you see a 404 error, make sure you specified your application name with `-a <appname>`!

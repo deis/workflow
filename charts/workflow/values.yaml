@@ -51,6 +51,16 @@ global:
   host_port: 5555
   # Prefix for the imagepull secret created when using private registry
   secret_prefix: "private-registry"
+  # The public resolvable hostname to build your cluster with.
+  #
+  # This will be the hostname that is used to build endpoints such as "deis.$HOSTNAME"
+  hostname: ""
+  # Experimental feature to toggle using kubernetes ingress instead of the Deis router.
+  #
+  # Valid values are:
+  # - true: The Deis router will NOT be deployed. Inherently workflow will not be usable until a Kubernetes ingress controller is installed.
+  # - false: The default mode, and the default behavior of Deis workflow.
+  experimental_native_ingress: false
 
 
 s3:
