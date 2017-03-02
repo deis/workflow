@@ -74,8 +74,6 @@ $ curl http://proper-barbecue.$hostname
 Powered by Deis
 ```
 
-
-
 !!! note
         If you see a 404 error, make sure you specified your application name with `-a <appname>`!
 
