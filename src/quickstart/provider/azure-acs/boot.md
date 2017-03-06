@@ -36,10 +36,10 @@ To sign in, use a web browser to open the page https://aka.ms/devicelogin and en
 ]
 ```
 
-The `id` field from the `az login` command is the Azure Subscription Id. This id will be used throughout the guide. As a matter of convenience, set an environment variable named `SUBSCRIPTION_ID` with the value of the id (e.g. 57849302-a9f0-4908-b300-31337a0fb205). Check the configuration by setting the active subscription with `az account set`:
+The `id` field from the `az login` command is the Azure Subscription Id. This id will be used throughout the guide. As a matter of convenience, set an environment variable named `AZURE_SUBSCRIPTION_ID` with the value of the id (e.g. 57849302-a9f0-4908-b300-31337a0fb205). Check the configuration by setting the active subscription with `az account set`:
 ```
-$ export SUBSCRIPTION_ID=57849302-a9f0-4908-b300-31337a0fb205
-$ az account set --subscription="${SUBSCRIPTION_ID}"
+$ export AZURE_SUBSCRIPTION_ID=57849302-a9f0-4908-b300-31337a0fb205
+$ az account set --subscription="${AZURE_SUBSCRIPTION_ID}"
 ```
 
 ## Create an ACS Kubernetes Cluster
@@ -53,24 +53,24 @@ Create an empty Azure resource group to hold the ACS Kubernetes cluster. The loc
 Create an environment variable to hold the resource group name:
 
 ```
-$ export RG_NAME=myresourcegroup
-$ export DC_LOCATION=mylocation
-$ az group create --name "${RG_NAME}" --location "${DC_LOCATION}"
+$ export AZURE_RG_NAME=myresourcegroup
+$ export AZURE_DC_LOCATION=mylocation
+$ az group create --name "${AZURE_RG_NAME}" --location "${AZURE_DC_LOCATION}"
 ```
 
 Execute the command to deploy the cluster. The `dns-prefix` and `ssh-key-value` must be replaced with your own values.
 
 ```
-$ export SERVICE_NAME=myacs
-$ az acs create --resource-group="${RG_NAME}" --location="${DC_LOCATION}" \
-  --orchestrator-type=kubernetes --master-count=1 --agent-count=2 \
+$ export AZURE_SERVICE_NAME=myacs
+$ az acs create --resource-group="${AZURE_RG_NAME}" --location="${AZURE_DC_LOCATION}" \
+  --orchestrator-type=kubernetes --master-count=1 --agent-count=1 \
   --agent-vm-size="Standard_D2_v2" \
   --admin-username="k8sadmin" \
-  --name="${SERVICE_NAME}" --dns-prefix="mydnsprefix" \
+  --name="${AZURE_SERVICE_NAME}" --dns-prefix="mydnsprefix" \
   --ssh-key-value @/home/myusername/.ssh/id_rsa.pub
 ```
 
-> Note: When `az acs create` starts, the provisioning process runs in the background by first creating a service principal named ${SERVICE_NAME} assigned appropriate permissions.  After a few minutes the `az` command should return with information about the deployment created as shown below.
+> Note: When `az acs create` starts, the provisioning process runs in the background by first creating a service principal named ${AZURE_SERVICE_NAME} assigned appropriate permissions.  After a few minutes the `az` command should return with information about the deployment created as shown below.
 
 ```
 {
@@ -152,9 +152,9 @@ az acs kubernetes install-cli
 Download the master kubernetes cluster configuration to the ~/.kube/config file by running the following command:
 
 ```console
-az acs kubernetes get-credentials --resource-group=$RG_NAME --name=$SERVICE_NAME
+az acs kubernetes get-credentials --resource-group=$AZURE_RG_NAME --name=$AZURE_SERVICE_NAME
 ```
- > Note: If the cluster was provisioned using any other SSH key than `/root/.ssh/id_rsa` then the `--ssh-key-file` parameter must be used pointing to the SSH key utilized to provision the cluster.
+ > Note: If the cluster was provisioned using any other SSH key than `/home/myusername/.ssh/id_rsa` then the `--ssh-key-file` parameter must be used pointing to the SSH key utilized to provision the cluster.
  
 Verify connectivity to the new ACS Kubernetes cluster by running `kubectl cluster-info`
 
