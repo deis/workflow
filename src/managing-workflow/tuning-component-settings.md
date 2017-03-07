@@ -5,8 +5,27 @@ application or service on Kubernetes.
 
 After you add the Deis Chart Repository, you can customize the chart using
 `helm inspect values deis/workflow | sed -n '1!p' > values.yaml` before using `helm install` to complete the
-installation. To customize the respective component, edit `values.yaml` and modify the section of
-the component to tune these settings.
+installation.
+
+There are a few ways to customize the respective component:
+
+ - If the value is exposed in the `values.yaml` file as derived above, one may modify the section of the component to tune these settings.  The modified value(s) will then take effect at chart installation or release upgrade time via either of the two respective commands:
+
+        $ helm install deis/workflow --namespace deis -f values.yaml
+        $ helm upgrade deis -f values.yaml
+
+ - If the value hasn't yet been exposed in the `values.yaml` file, one may edit the component deployment with the tuned setting.  Here we edit the `deis-controller` deployment:
+
+        $ kubectl --namespace deis edit deployment deis-controller
+
+    Add/edit the setting via the appropriate environment variable and value under the `env` section and save.  The updated deployment will recreate the component pod with the new/modified setting.
+
+ - Lastly, one may also fetch and edit the chart as served by version control/the chart repository itself:
+
+        $ helm fetch deis/workflow --untar
+        $ $EDITOR workflow/charts/controller/templates/controller-deployment.yaml
+
+    Then run `helm install ./workflow --namespace deis --name deis` to apply the changes, or `helm upgrade deis ./workflow` if the cluster is already running.
 
 ## Setting Resource limits
 
