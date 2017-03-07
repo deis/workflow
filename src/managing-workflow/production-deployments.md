@@ -26,22 +26,26 @@ See [Configuring Object Storage][] for details on removing this operational comp
 
 ## Review Security Considerations
 
-There are some additional security-related considerations when running Workflow in production, and
-users can consider enabling a firewall on the CoreOS hosts as well as the router component.
-
+There are some additional security-related considerations when running Workflow in production.
 See [Security Considerations][] for details.
 
 
-## Change Registration Mode
+## Registration is Admin-Only
 
-Changing the registration process is highly recommended in production. By default, registrations
-for a new cluster are open to anyone with the proper URL. Once the admin user has registered with a
-new cluster, it is recommended to either turn off registrations or enable the admin-only
-registration feature. It is also recommended to disable signups for the Grafana dashboards.
+By default, registration with the Workflow controller is in "admin_only" mode. The first user
+to run a `deis register` command becomes the initial "admin" user, and registrations after that
+are disallowed unless requested by an admin.
 
-Please see the following documentation:
+Please see the following documentation to learn about changing registration mode:
 
  - [Customizing Controller][]
+
+## Disable Grafana Signups
+
+It is also recommended to disable signups for the Grafana dashboards.
+
+Please see the following documentation to learn about disabling Grafana signups:
+
  - [Customizing Monitor][]
 
 

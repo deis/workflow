@@ -60,7 +60,7 @@ The following environment variables are tunable for the [Controller][] component
 
 Setting                                         | Description
 ----------------------------------------------- | ---------------------------------
-REGISTRATION_MODE                               | set registration to "enabled", "disabled", or "admin_only" (default: "enabled")
+REGISTRATION_MODE                               | set registration to "enabled", "disabled", or "admin_only" (default: "admin_only")
 GUNICORN_WORKERS                                | number of [gunicorn][] workers spawned to process requests (default: CPU cores * 4 + 1)
 RESERVED_NAMES                                  | a comma-separated list of names which applications cannot reserve for routing (default: "deis, deis-builder, deis-workflow-manager")
 SLUGRUNNER_IMAGE_NAME                           | the image used to run buildpack application slugs (default: "quay.io/deisci/slugrunner:canary")

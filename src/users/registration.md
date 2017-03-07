@@ -49,17 +49,27 @@ You can verify your client configuration by running `deis whoami`.
 !!! note
     Session and client configuration is stored in the `~/.deis/client.json` file.
 
+## Registering New Users
+
+By default, new users are not allowed to register after an initial user does. That initial user
+becomes the first "admin" user. Others will now receive an error when trying to register, but when
+logged in, an admin user can register new users:
+
+```shell
+$ deis register --login=false --username=newuser --password=changeme123 --email=newuser@deis.io
+```
+
 ## Controlling Registration Modes
 
 After creating your first user, you may wish to change the registration mode for Deis Workflow.
 
 Deis Workflow supports three registration modes:
 
-| Mode              | Description                                     |
-| ---               | ---                                             |
-| enabled (default) | Registration is enabled and anyone can register |
-| disabled          | Does not allow anyone to register new users.    |
-| admin\_only       | Only existing admins may register new users     |
+| Mode                  | Description                                     |
+| ---                   | ---                                             |
+| admin\_only (default) | Only existing admins may register new users     |
+| enabled               | Registration is enabled and anyone can register |
+| disabled              | Does not allow anyone to register new users.    |
 
 To modify the registration mode for Workflow you may add or modify the `REGISTRATION_MODE` environment variable for the
 controller component. If Deis Workflow is already running, use:

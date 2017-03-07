@@ -106,7 +106,7 @@ controller:
   # enabled - allows for open registration
   # disabled - turns off open registration
   # admin_only - allows for registration by an admin only.
-  registration_mode: "enabled"
+  registration_mode: "admin_only"
 
 database:
   # The username and password to be used by the on-cluster database.
