@@ -137,11 +137,6 @@ fluentd:
     # external syslog endpoint port
     port: ""
 
-kube-registry-proxy:
-  registry:
-    host: "$(DEIS_REGISTRY_SERVICE_HOST)"
-    port: "$(DEIS_REGISTRY_SERVICE_PORT)"
-
 monitor:
   grafana:
     user: "admin"
