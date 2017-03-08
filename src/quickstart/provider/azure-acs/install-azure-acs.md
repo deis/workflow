@@ -2,15 +2,15 @@
 
 ## Check Your Setup
 
-First check that the `helm` command is available and the version is v2.0.0 or newer.
+First check that the `helm` command is available and the version is v2.1.3 or newer.
 
 ```
 $ helm version
-Client: &version.Version{SemVer:"v2.0.0", GitCommit:"51bdad42756dfaf3234f53ef3d3cb6bcd94144c2", GitTreeState:"clean"}
-Server: &version.Version{SemVer:"v2.0.0", GitCommit:"51bdad42756dfaf3234f53ef3d3cb6bcd94144c2", GitTreeState:"clean"}
+Client: &version.Version{SemVer:"v2.1.3", GitCommit:"5cbc48fb305ca4bf68c26eb8d2a7eb363227e973", GitTreeState:"clean"}
+Server: &version.Version{SemVer:"v2.1.3", GitCommit:"5cbc48fb305ca4bf68c26eb8d2a7eb363227e973", GitTreeState:"clean"}
 ```
 
-Finally, intialize Helm:
+Finally, initialize Helm:
 ```
 helm init
 ```
