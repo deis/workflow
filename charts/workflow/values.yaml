@@ -117,7 +117,7 @@ controller:
   #
   # This will be the hostname that is used to build endpoints such as "deis.$HOSTNAME"
   platform_domain: ""
-  
+
 database:
   # The username and password to be used by the on-cluster database.
   # If left empty they will be generated using randAlphaNum

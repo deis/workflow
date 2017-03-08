@@ -5,7 +5,7 @@
 Now that Helm is installed and the repository has been added, install Workflow with a native ingress by running:
 
 ```
-$ helm install deis/workflow --namespace deis --set experimental_native_ingress=true,global.hostname="deis.com"
+$ helm install deis/workflow --namespace deis --set global.experimental_native_ingress=true,controller.platform_domain=deis.com
 ```
 
 Where `global.hostname` is a **required** parameter that is traditionally not required for Workflow. In this example we are using `deis.com` for `$hostname`.
