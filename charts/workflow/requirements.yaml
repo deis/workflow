@@ -45,6 +45,7 @@ dependencies:
     version: <registry-token-refresher-tag>
     repository: https://charts.deis.com/registry-token-refresher
   - name: router
+    condition: !global.experimental_native_engress
     version: <router-tag>
     repository: https://charts.deis.com/router
   - name: workflow-manager

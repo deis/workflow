@@ -17,8 +17,6 @@ port that routes to port 80 on the controller.
 
 Deis requires a wildcard DNS record to dynamically map app names to the router.
 
-**$hostname**: 1.1.1.1.nip.io
-
 #### Option 2: Experimental Native Ingress Installation
 
 In this example, the user should already have DNS set up pointing to their known host. The `$hostname` value can be build by appending `deis.` to the value set in `global.exerpimental_native_ingress`.

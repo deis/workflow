@@ -51,10 +51,6 @@ global:
   host_port: 5555
   # Prefix for the imagepull secret created when using private registry
   secret_prefix: "private-registry"
-  # The public resolvable hostname to build your cluster with.
-  #
-  # This will be the hostname that is used to build endpoints such as "deis.$HOSTNAME"
-  hostname: ""
   # Experimental feature to toggle using kubernetes ingress instead of the Deis router.
   #
   # Valid values are:
@@ -117,7 +113,11 @@ controller:
   # disabled - turns off open registration
   # admin_only - allows for registration by an admin only.
   registration_mode: "admin_only"
-
+  # The public resolvable hostname to build your cluster with.
+  #
+  # This will be the hostname that is used to build endpoints such as "deis.$HOSTNAME"
+  platform_domain: ""
+  
 database:
   # The username and password to be used by the on-cluster database.
   # If left empty they will be generated using randAlphaNum
