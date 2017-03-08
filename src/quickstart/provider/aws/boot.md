@@ -40,7 +40,7 @@ Version 1.5.1
 ```bash
 $ curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/darwin/amd64/kubectl
 $ chmod +x kubectl
-$ sudo mv kubectl /usr/local/bin/kops
+$ sudo mv kubectl /usr/local/bin/
 ```
 
 
