@@ -30,6 +30,7 @@ period of downtime while the database recovers from backup.
 First, find the name of the release helm gave to your deployment with `helm ls`, then run
 
 ```
+$ helm repo update
 $ helm upgrade <release-name> deis/workflow
 ```
 
