@@ -53,7 +53,7 @@ The following environment variables are tunable for the [Builder][] component:
 Setting                     | Description
 --------------------------- | ---------------------------------
 DEBUG                       | Enable debug log output (default: false)
-BUILDER_POD_NODE_SELECTOR   | A node selector setting for builder job. As builder job sometimes consume a lot of node resources. In case you want a builder job to run in specific node only, so it won't effect the critical node. for example `pool:testing,disk:magnetic`
+BUILDER_POD_NODE_SELECTOR   | A node selector setting for builder job. As it may sometimes consume a lot of node resources, one may want a given builder job to run in a specific node only, so it won't affect critical nodes. for example `pool:testing,disk:magnetic`
 
 ## Customizing the Controller
 
