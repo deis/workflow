@@ -35,8 +35,7 @@ More rigorous installations would benefit from using outside sources for the fol
 
 #### (Experimental) Kubernetes Native Ingress
 
-Workflow now offers [experimental native ingress](experimental-native-ingress.md) that will allow users to take advantage of native Kubernetes ingress with their cluster. Users will be able to use and define any compatible Kubernetes ingress controller. Feel free to start following along with the [experimental native ingress](experimental-native-ingress.md) guide now.
-
+Workflow now offers [experimental native ingress](experimental-native-ingress.md) to take advantage of native Kubernetes routing. Any compatible Kubernetes ingress controller can be used in place of Workflow's nginx-based deis-router. Follow [this guide](experimental-native-ingress.md) to enable experimental native ingress.
 ## Add the Deis Chart Repository
 
 The Deis Chart Repository contains everything needed to install Deis Workflow onto a Kubernetes cluster, with a single `helm install deis/workflow --namespace deis` command.

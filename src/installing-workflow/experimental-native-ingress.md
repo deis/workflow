@@ -8,7 +8,7 @@ Now that Helm is installed and the repository has been added, install Workflow w
 $ helm install deis/workflow --namespace deis --set global.experimental_native_ingress=true,controller.platform_domain=deis.com
 ```
 
-Where `global.hostname` is a **required** parameter that is traditionally not required for Workflow. In this example we are using `deis.com` for `$hostname`.
+Where `controller.platform_domain` is a **required** parameter that is traditionally not required for Workflow. In this example we are using `deis.com` for `$hostname`.
 
 
  
@@ -19,7 +19,7 @@ Wait for the pods that Helm launched to be ready. Monitor their status by runnin
 $ kubectl --namespace=deis get pods
 ```
 
-You should also notice that a Kubernetes ingress has been installed on your cluster. You can view it by running:
+You should also notice that several Kubernetes ingresses has been installed on your cluster. You can view it by running:
 
 ```
 $ kubectl get ingress --namespace deis
@@ -60,7 +60,7 @@ $ helm install stable/traefik --name deis-ingress-001 --namespace kube-system
 
 The experimental ingress feature requires a user to set up a hostname, and assumes the `deis.$host` convention.
 
-We need to point the `deis.$host` record to the public IP address of your ingress controller. You can get the public IP using the following command.
+We need to point the `*.$host` record to the public IP address of your ingress controller. You can get the public IP using the following command. A wildcard entry is necessary here as apps will use the same rule after they are deployed.
 
 ```
 $ kubectl get svc deis-ingress-001 --namespace kube-system
@@ -78,3 +78,7 @@ If we were using `deis.com` as a hostname we would need to create the following 
 Once all of the pods are in the `READY` state, and `deis.$host` resolves to the external IP found above Workflow is up an running!
 
 After installing Workflow, [register a user and deploy an application](../quickstart/deploy-an-app.md).
+
+##### Feedback
+
+While this feature is experimental we welcome feedback on the issue. We would like to learn more about use cases, and user experience. Please [open a new issue](https://github.com/deis/workflow/issues/new) for feedback.

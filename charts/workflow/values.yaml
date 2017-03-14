@@ -51,11 +51,11 @@ global:
   host_port: 5555
   # Prefix for the imagepull secret created when using private registry
   secret_prefix: "private-registry"
-  # Experimental feature to toggle using kubernetes ingress instead of the Deis router.
+  # Experimental feature to use Kubernetes ingress instead of Workflow's deis-router.
   #
   # Valid values are:
-  # - true: The Deis router will NOT be deployed. Inherently workflow will not be usable until a Kubernetes ingress controller is installed.
-  # - false: The default mode, and the default behavior of Deis workflow.
+  # - true: deis-router will not be deployed. Workflow will not be usable until a Kubernetes ingress controller is installed.
+  # - false: deis-router will be deployed (default).
   experimental_native_ingress: false
 
 
@@ -113,7 +113,7 @@ controller:
   # disabled - turns off open registration
   # admin_only - allows for registration by an admin only.
   registration_mode: "admin_only"
-  # The public resolvable hostname to build your cluster with.
+  # The publicly resolvable hostname to build your cluster with.
   #
   # This will be the hostname that is used to build endpoints such as "deis.$HOSTNAME"
   platform_domain: ""

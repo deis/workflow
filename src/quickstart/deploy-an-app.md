@@ -1,10 +1,10 @@
-## Determine your host and hostname values
+## Determine Your Host and Hostname Values
 
 For the rest of this example we will refer to a special variables called `$hostname`. Please choose one of the two methods for building your `$hostname`.
 
 #### Option 1: Standard Installation 
 
-For a standard installation you can build the hostname using public IP address and a wildcard DNS solution. Instead of setting up DNS records, this example will use `nip.io`. 
+For a standard installation that includes deis-router, you can calculate the hostname value using its public IP address and a wildcard DNS record.
 
 If your router IP is `1.1.1.1`, its `$hostname` will be `1.1.1.1.nip.io`. You can find your IP address by running:
  
@@ -15,11 +15,11 @@ kubectl --namespace=deis describe svc deis-router
 If you do not have an load balancer IP, the router automatically forwards traffic from a kubernetes node to the router. In this case, use the IP of a kubernetes node and the node
 port that routes to port 80 on the controller.
 
-Deis requires a wildcard DNS record to dynamically map app names to the router.
+Deis workflow requires a wildcard DNS record to dynamically map app names to the router.
 
 #### Option 2: Experimental Native Ingress Installation
 
-In this example, the user should already have DNS set up pointing to their known host. The `$hostname` value can be build by appending `deis.` to the value set in `global.exerpimental_native_ingress`.
+In this example, the user should already have DNS set up pointing to their known host. The `$hostname` value can be calculated by prepending `deis.` to the value set in `controller.platform_domain`.
 
 **$hostname**: deis.com
 
