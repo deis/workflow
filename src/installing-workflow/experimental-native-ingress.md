@@ -48,7 +48,7 @@ deis-workflow-manager-68nu6   1/1       Running   0          5m
 
 ## Install a Kubernetes Ingress Controller
 
-Now that Workflow has been deployed with the `global.exerpimental_native_ingress` flag set to `true`, we will need a Kubernetes ingress controller in place to begin routing traffic.
+Now that Workflow has been deployed with the `global.experimental_native_ingress` flag set to `true`, we will need a Kubernetes ingress controller in place to begin routing traffic.
 
 Here is an example of how to use [traefik](https://traefik.io/) as an ingress controller for Workflow. Of course, you are welcome to use any controller you wish.
 
