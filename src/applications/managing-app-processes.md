@@ -48,7 +48,7 @@ The format of a `Procfile` is one process type per line, with each line containi
 
 The syntax is defined as:
 
-* `<process type>` – an alphanumeric string, is a name for your command, such as web, worker, urgentworker, clock, etc.
+* `<process type>` – a lowercase alphanumeric string, is a name for your command, such as web, worker, urgentworker, clock, etc.
 * `<command>` – a command line to launch the process, such as `rake jobs:work`.
 
 This example Procfile specifies two types, `web` and `sleeper`. The `web` process launches a web server on port 5000 and
