@@ -141,7 +141,7 @@ To run a Kubernetes cluster locally or elsewhere to support your development act
 
 To facilitate deploying Docker images containing your changes to your Kubernetes cluster, you will need to make use of a Docker registry.  This is a location to where you can push your custom-built images and from where your Kubernetes cluster can retrieve those same images.
 
-If your development cluster runs locally (in Vagrant, for instance), the most efficient and economical means of achieving this is to run a Docker registry locally _as_ a Docker container.
+If your development cluster runs locally (in Minikube, for instance), the most efficient and economical means of achieving this is to run a Docker registry locally _as_ a Docker container.
 
 To facilitate this, most Deis components provide a make target to create such a registry:
 

@@ -21,10 +21,10 @@ pages:
       - Boot: quickstart/provider/azure-acs/boot.md
       - DNS: quickstart/provider/azure-acs/dns.md
       - Install Workflow: quickstart/provider/azure-acs/install-azure-acs.md
-    - Vagrant:
-      - Boot: quickstart/provider/vagrant/boot.md
-      - DNS: quickstart/provider/vagrant/dns.md
-      - Install Workflow: quickstart/provider/vagrant/install-vagrant.md
+    - Minikube:
+      - Boot: quickstart/provider/minikube/boot.md
+      - DNS: quickstart/provider/minikube/dns.md
+      - Install Workflow: quickstart/provider/minikube/install-minikube.md
     - Deploy Your First App: quickstart/deploy-an-app.md
   - Understanding Workflow:
     - Concepts: understanding-workflow/concepts.md

@@ -31,7 +31,7 @@ The `LoadBalancer Ingress` field typically describes an existing domain name or 
 
 ## Without a Load Balancer
 
-On some platforms (Vagrant, for instance), a load balancer is not an easy or practical thing to provision. In these cases, one can directly identify the public IP of a Kubernetes node that is hosting a router pod and use that information to configure the local `/etc/hosts` file.
+On some platforms (Minikube, for instance), a load balancer is not an easy or practical thing to provision. In these cases, one can directly identify the public IP of a Kubernetes node that is hosting a router pod and use that information to configure the local `/etc/hosts` file.
 
 Because wildcard entries do not work in a local `/etc/hosts` file, using this strategy may result in frequent editing of that file to add fully-qualified subdomains of a cluster for each application added to that cluster.  Because of this a more viable option may be to utilize the [xip.io][xip] service.
 

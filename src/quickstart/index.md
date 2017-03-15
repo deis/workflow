@@ -23,7 +23,7 @@ Cloud-based options:
 * [Amazon Web Services](provider/aws/boot.md): uses Kubernetes upstream `kube-up.sh` to boot a cluster on AWS EC2.
 * [Azure Container Service](provider/azure-acs/boot.md): uses Azure Container Service to provision Kubernetes and install Workflow.
 
-If you would like to test on your local machine follow, our guide for [Vagrant](provider/vagrant/boot.md).
+If you would like to test on your local machine follow, our guide for [Minikube](provider/minikube/boot.md).
 
 If you have already created a Kubernetes cluster, check out the [system requirements](../installing-workflow/system-requirements.md) and then proceed to [install Deis Workflow on your own Kubernetes cluster](../installing-workflow/index.md).
 

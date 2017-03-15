@@ -193,7 +193,7 @@ router:
   service_annotations:
     #<example-key>: <example-value>
 
-  # Enable to pin router pod hostPort when using vagrant
+  # Enable to pin router pod hostPort when using minikube
   host_port:
     enabled: false
 
