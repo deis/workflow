@@ -1,6 +1,6 @@
 # Configuring Load Balancers
 
-Depending on what distribution of Kubernetes you use and where you host it, installation of Deis Workflow may automatically provision an external (to Kubernetes) load balancer or similar mechanism for directing inbound traffic from beyond the cluster to the Deis router(s).  For example, [kube-aws](https://coreos.com/kubernetes/docs/latest/kubernetes-on-aws.html) and [Google Container Engine](https://cloud.google.com/container-engine/) both do this.  On some other platforms-- Vagrant or bare metal, for instance-- this must either be accomplished manually or does not apply at all.
+Depending on what distribution of Kubernetes you use and where you host it, installation of Deis Workflow may automatically provision an external (to Kubernetes) load balancer or similar mechanism for directing inbound traffic from beyond the cluster to the Deis router(s).  For example, [kube-aws](https://coreos.com/kubernetes/docs/latest/kubernetes-on-aws.html) and [Google Container Engine](https://cloud.google.com/container-engine/) both do this.  On some other platforms-- Minikube or bare metal, for instance-- this must either be accomplished manually or does not apply at all.
 
 ## Idle connection timeouts
 

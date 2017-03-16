@@ -86,7 +86,7 @@ set the `http_proxy` or `https_proxy` environment variable to enable proxy suppo
     $ export https_proxy="http://proxyip:port"
 
 !!! note
-    Configuring a proxy is generally not necessary for local Vagrant clusters.
+    Configuring a proxy is generally not necessary for local Minikube clusters.
 
 ## CLI Plugins
 
