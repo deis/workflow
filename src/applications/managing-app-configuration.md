@@ -227,7 +227,7 @@ environ  prod
 
 
 [attached resources]: http://12factor.net/backing-services
-[kubernetes-probes]: http://kubernetes.io/docs/user-guide/pod-states/#container-probes
+[kubernetes-probes]: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
 [pods-to-nodes]: http://kubernetes.io/docs/user-guide/node-selection/
 [release]: ../reference-guide/terms.md#release
 [router]:  ../understanding-workflow/components.md#router
