@@ -8,9 +8,7 @@ Now that Helm is installed and the repository has been added, install Workflow w
 $ helm install deis/workflow --namespace deis --set global.experimental_native_ingress=true,controller.platform_domain=deis.com
 ```
 
-Where `controller.platform_domain` is a **required** parameter that is traditionally not required for Workflow. In this example we are using `deis.com` for `$hostname`.
-
-
+Where `controller.platform_domain` is a **required** parameter that is traditionally not required for Workflow that is explained in the next section. In this example we are using `deis.com` for `$hostname`.
  
 Helm will install a variety of Kubernetes resources in the `deis` namespace.
 Wait for the pods that Helm launched to be ready. Monitor their status by running:
@@ -25,12 +23,11 @@ You should also notice that several Kubernetes ingresses has been installed on y
 $ kubectl get ingress --namespace deis
 ```
 
-
 Depending on the order in which the Workflow components initialize, some pods may restart. This is common during the
 installation: if a component's dependencies are not yet available, that component will exit and Kubernetes will
 automatically restart it.
 
-Here, it can be seen that the controller, builder and registry all took a few loops before they were able to start:
+Here, it can be seen that the controller, builder and registry all took a few loops waiting for minio before they were able to start:
 
 ```
 $ kubectl --namespace=deis get pods
