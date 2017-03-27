@@ -134,6 +134,7 @@ Use `deis logs` to view the log output from your deployed application.
 
 [application]: ../reference-guide/terms.md#application
 [container]: ../reference-guide/terms.md#container
+[release]: ../reference-guide/terms.md#release
 [store config in environment variables]: http://12factor.net/config
 [decoupled from the application]: http://12factor.net/backing-services
 [scale out via the process model]: http://12factor.net/concurrency
