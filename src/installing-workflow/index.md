@@ -72,17 +72,22 @@ Here, it can be seen that the controller, builder and registry all took a few lo
 
 ```
 $ kubectl --namespace=deis get pods
-NAME                          READY     STATUS    RESTARTS   AGE
-deis-builder-hy3xv            1/1       Running   5          5m
-deis-controller-g3cu8         1/1       Running   5          5m
-deis-database-rad1o           1/1       Running   0          5m
-deis-logger-fluentd-1v8uk     1/1       Running   0          5m
-deis-logger-fluentd-esm60     1/1       Running   0          5m
-deis-logger-sm8b3             1/1       Running   0          5m
-deis-minio-4ww3t              1/1       Running   0          5m
-deis-registry-asozo           1/1       Running   1          5m
-deis-router-k1ond             1/1       Running   0          5m
-deis-workflow-manager-68nu6   1/1       Running   0          5m
+NAME                                     READY     STATUS    RESTARTS   AGE
+deis-builder-574483744-l15zj             1/1       Running   0          4m
+deis-controller-3953262871-pncgq         1/1       Running   2          4m
+deis-database-83844344-47ld6             1/1       Running   0          4m
+deis-logger-176328999-wjckx              1/1       Running   4          4m
+deis-logger-fluentd-zxnqb                1/1       Running   0          4m
+deis-logger-redis-304849759-1f35p        1/1       Running   0          4m
+deis-minio-676004970-nxqgt               1/1       Running   0          4m
+deis-monitor-grafana-432627134-lnl2h     1/1       Running   0          4m
+deis-monitor-influxdb-2729788615-m9b5n   1/1       Running   0          4m
+deis-monitor-telegraf-wmcmn              1/1       Running   1          4m
+deis-nsqd-3597503299-6mn2x               1/1       Running   0          4m
+deis-registry-756475849-lwc6b            1/1       Running   1          4m
+deis-registry-proxy-96c4p                1/1       Running   0          4m
+deis-router-2126433040-6sl6z             1/1       Running   0          4m
+deis-workflow-manager-2528409207-jkz2r   1/1       Running   0          4m
 ```
 
 Once all of the pods are in the `READY` state, Deis Workflow is up and running!
