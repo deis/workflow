@@ -33,6 +33,10 @@ More rigorous installations would benefit from using outside sources for the fol
 * [Redis](../managing-workflow/platform-logging.md#configuring-off-cluster-redis) - Such as AWS Elasticache
 * [InfluxDB](../managing-workflow/platform-monitoring.md#configuring-off-cluster-influxdb) and [Grafana](../managing-workflow/platform-monitoring.md#off-cluster-grafana)
 
+#### (Experimental) Kubernetes Native Ingress
+
+Workflow now offers [experimental native ingress](experimental-native-ingress.md) to take advantage of native Kubernetes routing. Any compatible Kubernetes ingress controller can be used in place of Workflow's nginx-based deis-router. Follow [this guide](experimental-native-ingress.md) to enable experimental native ingress.
+
 ## Add the Deis Chart Repository
 
 The Deis Chart Repository contains everything needed to install Deis Workflow onto a Kubernetes cluster, with a single `helm install deis/workflow --namespace deis` command.
