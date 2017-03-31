@@ -38,12 +38,12 @@ Below is an example of how the builder section of `values.yaml` might look with 
 limits set:
 
 ```
-[builder]
-org = "deisci"
-pullPolicy = "Always"
-dockerTag = "canary"
-limits_cpu = "100m"
-limits_memory = "50Mi"
+builder:
+  org: "deisci"
+  pullPolicy: "Always"
+  dockerTag: "canary"
+  limits_cpu: "100m"
+  limits_memory: "50Mi"
 ```
 
 ## Customizing the Builder
