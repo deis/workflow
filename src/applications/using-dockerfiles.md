@@ -122,6 +122,28 @@ Use `deis scale cmd=3` to increase `cmd` processes to 3, for example. Scaling a
 process type directly changes the number of [containers][container]
 running that process.
 
+
+## Docker Build Arguments
+
+As of Workflow v2.13.0, users can inject their application config into the Docker image using
+[Docker build arguments][build-args]. To opt into this, users must add a new environment variable
+to their application:
+
+```
+$ deis config:set DEIS_DOCKER_BUILD_ARGS_ENABLED=1
+```
+
+Every environment variable set with `deis config:set` will then be available for use inside the
+user's Dockerfile. For example, if a user runs `deis config:set POWERED_BY=Workflow`,
+the user can utilize that build argument in their Dockerfile:
+
+```
+ARG POWERED_BY
+RUN echo "Powered by $POWERED_BY" > /etc/motd
+```
+
+
+[build-args]: https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables---build-arg
 [container]: ../reference-guide/terms.md#container
 [controller]: ../understanding-workflow/components.md#controller
 [Dockerfile]: https://docs.docker.com/reference/builder/
