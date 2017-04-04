@@ -12,7 +12,7 @@ Download the [latest](https://github.com/kubernetes/kops/releases/latest) versio
 #### macOS
 
 ```bash
-$ curl -sSL https://github.com/kubernetes/kops/releases/download/1.5.1/kops-darwin-amd64 -O
+$ curl -sSL https://github.com/kubernetes/kops/releases/download/1.5.3/kops-darwin-amd64 -O
 $ chmod +x kops-darwin-amd64
 $ sudo mv kops-darwin-amd64 /usr/local/bin/kops
 ```
@@ -21,7 +21,7 @@ $ sudo mv kops-darwin-amd64 /usr/local/bin/kops
 #### linux
 
 ```bash
-$ curl -sSL https://github.com/kubernetes/kops/releases/download/1.5.1/kops-linux-amd64 -O
+$ curl -sSL https://github.com/kubernetes/kops/releases/download/1.5.3/kops-linux-amd64 -O
 $ chmod +x kops-linux-amd64
 $ sudo mv kops-linux-amd64 /usr/local/bin/kops
 ```
@@ -32,7 +32,7 @@ For more information see the official [kops installation guide](https://github.c
 
 ```bash
 $ kops version
-Version 1.5.1
+Version 1.5.3
 ```
 
 ## Install kubectl if you haven't done so yet
