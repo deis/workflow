@@ -47,6 +47,6 @@ See [Custom Health Checks][healthchecks] for more information on how to customiz
 health checks to better suit the application's needs.
 
 
-[builder]: ../understanding-workflow/components.md#builder-builder-slugbuilder-and-dockerbuilder
+[builder]: ../understanding-workflow/components.md#builder
 [healthchecks]: ../applications/managing-app-configuration.md#custom-health-checks
 [troubleshooting-kubectl]: kubectl.md

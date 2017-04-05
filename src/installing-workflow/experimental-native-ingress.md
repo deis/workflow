@@ -50,7 +50,7 @@ Now that Workflow has been deployed with the `global.experimental_native_ingress
 Here is an example of how to use [traefik](https://traefik.io/) as an ingress controller for Workflow. Of course, you are welcome to use any controller you wish.
 
 ```
-$ helm install stable/traefik --name deis-ingress-001 --namespace kube-system
+$ helm install stable/traefik --name ingress --namespace kube-system
 ```
 
 ## Configure DNS
@@ -60,22 +60,33 @@ The experimental ingress feature requires a user to set up a hostname, and assum
 We need to point the `*.$host` record to the public IP address of your ingress controller. You can get the public IP using the following command. A wildcard entry is necessary here as apps will use the same rule after they are deployed.
 
 ```
-$ kubectl get svc deis-ingress-001 --namespace kube-system
-NAME               CLUSTER-IP      EXTERNAL-IP       PORT(S)                      AGE
-deis-ingress-001   10.23.253.220   104.154.159.184   80:30231/TCP,443:32264/TCP   19m
+$ kubectl get svc ingress-traefik --namespace kube-system
+NAME              CLUSTER-IP   EXTERNAL-IP      PORT(S)                      AGE
+ingress-traefik   10.0.25.3    138.91.243.152   80:31625/TCP,443:30871/TCP   33m
 ```
 
-If we were using `deis.com` as a hostname we would need to create the following A DNS record.
+Additionally, we need to point the `deis-builder.$host` record to the public IP address of the [Builder][].
 
-| Name              | Type          | Value           |
-| ----------------- |:-------------:| ---------------:|
-| deis.deis.com     | A             | 104.154.159.184 |
+```
+$ kubectl get svc deis-builder --namespace deis
+NAME           CLUSTER-IP     EXTERNAL-IP     PORT(S)          AGE
+deis-builder   10.0.165.140   40.86.182.187   2222:32488/TCP   33m
+```
 
+If we were using `deis.com` as a hostname, we would need to create the following A DNS records.
 
-Once all of the pods are in the `READY` state, and `deis.$host` resolves to the external IP found above Workflow is up an running!
+| Name                         | Type          | Value          |
+| ---------------------------- |:-------------:| --------------:|
+| *.deis.com                   | A             | 138.91.243.152 |
+| deis-builder.deis.com        | A             | 40.86.182.187  |
+
+Once all of the pods are in the `READY` state, and `deis.$host` resolves to the external IP found above, Workflow is up and running!
 
 After installing Workflow, [register a user and deploy an application](../quickstart/deploy-an-app.md).
 
 ##### Feedback
 
 While this feature is experimental we welcome feedback on the issue. We would like to learn more about use cases, and user experience. Please [open a new issue](https://github.com/deis/workflow/issues/new) for feedback.
+
+
+[builder]: ../understanding-workflow/components.md#builder

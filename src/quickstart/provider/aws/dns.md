@@ -100,5 +100,5 @@ You are now ready to [register an admin user and deploy your first app](../../de
 [next: deploy your first app](../../deploy-an-app.md)
 
 
-[builder]: ../../../understanding-workflow/components.md#builder-builder-slugbuilder-and-dockerbuilder
+[builder]: ../../../understanding-workflow/components.md#builder
 [router]: ../../../understanding-workflow/components.md#router
