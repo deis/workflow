@@ -62,12 +62,13 @@ Execute the command to deploy the cluster. The `dns-prefix` and `ssh-key-value` 
 
 ```
 $ export AZURE_SERVICE_NAME=myacs
+$ export AZURE_DNS_PREFIX=mydnsprefix
 $ az acs create --resource-group="${AZURE_RG_NAME}" --location="${AZURE_DC_LOCATION}" \
   --orchestrator-type=kubernetes --master-count=1 --agent-count=1 \
   --agent-vm-size="Standard_D2_v2" \
   --admin-username="k8sadmin" \
-  --name="${AZURE_SERVICE_NAME}" --dns-prefix="mydnsprefix" \
-  --ssh-key-value @/home/myusername/.ssh/id_rsa.pub
+  --name="${AZURE_SERVICE_NAME}" --dns-prefix="${AZURE_DNS_PREFIX}" \
+  --ssh-key-value @$HOME/.ssh/id_rsa.pub
 ```
 
 > Note: When `az acs create` starts, the provisioning process runs in the background by first creating a service principal named ${AZURE_SERVICE_NAME} assigned appropriate permissions.  After a few minutes the `az` command should return with information about the deployment created as shown below.
