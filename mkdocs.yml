@@ -110,6 +110,7 @@ pages:
     - v2.10.0: changelogs/v2.10.0.md
     - v2.11.0: changelogs/v2.11.0.md
     - v2.12.0: changelogs/v2.12.0.md
+    - v2.13.0: changelogs/v2.13.0.md
 theme_dir: themes/deis
 docs_dir: src
 markdown_extensions:
