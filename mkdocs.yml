@@ -94,23 +94,23 @@ pages:
     - Controller API v2.2: reference-guide/controller-api/v2.2.md
     - Controller API v2.3: reference-guide/controller-api/v2.3.md
   - Changelogs:
-    - v2.0.0: changelogs/v2.0.0.md
-    - v2.1.0: changelogs/v2.1.0.md
-    - v2.2.0: changelogs/v2.2.0.md
-    - v2.3.0: changelogs/v2.3.0.md
-    - v2.4.0: changelogs/v2.4.0.md
-    - v2.4.1: changelogs/v2.4.1.md
-    - v2.4.2: changelogs/v2.4.2.md
-    - v2.5.0: changelogs/v2.5.0.md
-    - v2.6.0: changelogs/v2.6.0.md
-    - v2.7.0: changelogs/v2.7.0.md
-    - v2.8.0: changelogs/v2.8.0.md
-    - v2.9.0: changelogs/v2.9.0.md
-    - v2.9.1: changelogs/v2.9.1.md
-    - v2.10.0: changelogs/v2.10.0.md
-    - v2.11.0: changelogs/v2.11.0.md
-    - v2.12.0: changelogs/v2.12.0.md
     - v2.13.0: changelogs/v2.13.0.md
+    - v2.12.0: changelogs/v2.12.0.md
+    - v2.11.0: changelogs/v2.11.0.md
+    - v2.10.0: changelogs/v2.10.0.md
+    - v2.9.1: changelogs/v2.9.1.md
+    - v2.9.0: changelogs/v2.9.0.md
+    - v2.8.0: changelogs/v2.8.0.md
+    - v2.7.0: changelogs/v2.7.0.md
+    - v2.6.0: changelogs/v2.6.0.md
+    - v2.5.0: changelogs/v2.5.0.md
+    - v2.4.2: changelogs/v2.4.2.md
+    - v2.4.1: changelogs/v2.4.1.md
+    - v2.4.0: changelogs/v2.4.0.md
+    - v2.3.0: changelogs/v2.3.0.md
+    - v2.2.0: changelogs/v2.2.0.md
+    - v2.1.0: changelogs/v2.1.0.md
+    - v2.0.0: changelogs/v2.0.0.md
 theme_dir: themes/deis
 docs_dir: src
 markdown_extensions:
