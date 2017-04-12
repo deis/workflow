@@ -21,8 +21,6 @@ Deis workflow requires a wildcard DNS record to dynamically map app names to the
 
 In this example, the user should already have DNS set up pointing to their known host. The `$hostname` value can be calculated by prepending `deis.` to the value set in `controller.platform_domain`.
 
-**$hostname**: deis.com
-
 ## Register an Admin User
 
 The first user to register against Deis Workflow will automatically be given administrative privileges.
