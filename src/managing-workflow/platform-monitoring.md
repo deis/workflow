@@ -4,8 +4,8 @@
 
 We now include a monitoring stack for introspection on a running Kubernetes cluster. The stack includes 3 components:
 
-* [Telegraf](https://docs.influxdata.com/telegraf/v0.12/) - Metrics collection daemon written by team behind InfluxDB.
-* [InfluxDB](https://docs.influxdata.com/influxdb/v0.12/) - Time series database
+* [Telegraf](https://docs.influxdata.com/telegraf) - Metrics collection daemon written by team behind InfluxDB.
+* [InfluxDB](https://docs.influxdata.com/influxdb) - Time series database
 * [Grafana](http://grafana.org/) - Graphing tool for time series data
 
 ## Architecture Diagram
@@ -40,16 +40,8 @@ We now include a monitoring stack for introspection on a running Kubernetes clus
                        └──────────┘                               
 ```
 
-## Grafana
-
-Deis Workflow exposes Grafana through the router using [service annotations](https://github.com/deis/router#how-it-works). This
-allows users to access the Grafana UI at `http://grafana.mydomain.com`. The default username/password of
-`admin/admin` can be overridden at Workflow chart install time by modifying the appropriate values under the `monitor` section in Workflow's global [values.yaml](https://github.com/deis/workflow/blob/master/charts/workflow/values.yaml) or via `--set`:
-
-```
-helm install <workflow repo>/workflow --namespace deis \
-  --set monitor.grafana.user=$GRAFANA_USER,monitor.grafana.password=$GRAFANA_PASSWORD
-```
+## [Grafana](https://grafana.com/)
+Grafana allows users to create custom dashboards that visualize the data captured to the running InfluxDB component. By default Grafana is exposed using a [service annotation](https://github.com/deis/router#how-it-works) through the router at the following URL: `http://grafana.mydomain.com`. The default login is `admin/admin`. If you are interested in changing these values please see [Tuning Component Settings][].
 
 Grafana will preload several dashboards to help operators get started with monitoring Kubernetes and Deis Workflow.
 These dashboards are meant as starting points and don't include every item that might be desirable to monitor in a
@@ -57,7 +49,16 @@ production installation.
 
 Deis Workflow monitoring by default does not write data to the host filesystem or to long-term storage. If the Grafana instance fails, modified dashboards are lost.
 
+### Production Configuration
+A production install of Grafana should have the following configuration values changed if possible:
+
+* Change the default username and password from `admin/admin`. The value for the password is passed in plain text so it is best to set this value on the command line instead of checking it into version control.
+* Enable persistence
+* Use a supported external database such as mysql or postgres. You can find more information [here](https://github.com/deis/monitor/blob/master/grafana/rootfs/usr/share/grafana/grafana.ini.tpl#L62)
+
+
 ### On Cluster Persistence
+Enabling persistence will allow your custom configuration to persist across pod restarts. This means that the default sqllite database (which stores things like sessions and user data) will not disappear if you upgrade the Workflow installation. 
 
 If you wish to have persistence for Grafana you can set `enabled` to `true` in the `values.yaml` file before running `helm install`.
 
@@ -70,30 +71,14 @@ If you wish to have persistence for Grafana you can set `enabled` to `true` in t
      size: 5Gi # PVC size
 ```
 
-You have to set (if you do not have it already) `standard` StorageClass as per [PVC Dynamic Provisioning](#pvc-dynamic-provisioning), as it does not get set by default in Kubernetes v1.4.x and v1.5.x.
-
-
 ### Off Cluster Grafana
 
 If you wish to provide your own Grafana instance you can set `grafana_location` in the `values.yaml` file before running `helm install`.
 
-## InfluxDB
-
-InfluxDB writes data to the host disk, however, if the InfluxDB pod dies and comes back on
-another host, the data will not be recovered you need to enable on-cluster persistence for data to persist. The InfluxDB Admin UI is also
-exposed through the router allowing users to access the query engine by going to `influx.mydomain.com`. You will need to
-configure where to find the `influx-api` endpoint by clicking the "gear" icon at the top right and changing the host to
-`influxapi.mydomain.com` and port to `80`.
-
-** Note: Each user accessing the Influx UI will need to make this change. **
-
-You can choose to not expose the Influx UI and API to the world by updating
-`$CHART_HOME/workspace/workflow-$WORKFLOW_RELEASE/manifests/deis-monitor-influxdb-api-svc.yaml` and
-`$CHART_HOME/workspace/workflow-$WORKFLOW_RELEASE/manifests/deis-monitor-influxdb-ui-svc.yaml` and removing the
-following line - `router.deis.io/routable: "true"`.
+## [InfluxDB](https://docs.influxdata.com/influxdb)
+InfluxDB writes data to the host disk; however, if the InfluxDB pod dies and comes back on another host, the data will not be recovered. The InfluxDB Admin UI is also exposed through the router allowing users to access the query engine by going to `influx.mydomain.com`. You will need to configure where to find the `influx-api` endpoint by clicking the "gear" icon at the top right and changing the host to `influxapi.mydomain.com` and port to `80`.
 
 ### On Cluster Persistence
-
 If you wish to have persistence for InfluxDB you can set `enabled` to `true` in the `values.yaml` file before running `helm install`.
 
 ```
@@ -104,9 +89,6 @@ If you wish to have persistence for InfluxDB you can set `enabled` to `true` in 
      enabled: true # Set to true to enable persistence
      size: 5Gi # PVC size
 ```
-
-You have to set (if you do not have it already) `standard` StorageClass as per [PVC Dynamic Provisioning](#pvc-dynamic-provisioning), as it does not get set by default in Kubernetes v1.4.x and v1.5.x.
-
 
 ### Off Cluster Influxdb
 
@@ -119,41 +101,7 @@ To use off-cluster Influx, please provide the following values in the `values.ya
 * `password = "MysuperSecurePassword"`
 
 
-## PVC Dynamic Provisioning
-
-Kubernetes v1.4.x has introduced Dynamic Provisioning and Storage Classes, you can read about it [here](http://blog.kubernetes.io/2016/10/dynamic-provisioning-and-storage-in-kubernetes.html).
-
-To use persistence for Grafana and InfluxDB you also need to deploy StorageClass objects to the Kubernetes cluster with `kubectl create -f storage-standard.yaml`.
-
-Note: GCE/GKE and AWS have different `StorageClass` settings.
-
-GCE/GKE `storage-standard.yaml` manifest:
-
-```
-kind: StorageClass
-apiVersion: storage.k8s.io/v1beta1
-metadata:
-  name: standard
-provisioner: kubernetes.io/gce-pd
-parameters:
-  type: pd-standard
-```
-
-
-AWS `storage-standard.yaml` manifest:
-
-```
-kind: StorageClass
-apiVersion: storage.k8s.io/v1beta1
-metadata:
-  name: standard
-provisioner: kubernetes.io/aws-ebs
-parameters:
-  type: gp2
-```
-
-
-## Telegraf
+## [Telegraf](https://docs.influxdata.com/telegraf)
 
 Telegraf is the metrics collection daemon used within the monitoring stack. It will collect and send the following metrics to InfluxDB:
 
@@ -163,6 +111,8 @@ Telegraf is the metrics collection daemon used within the monitoring stack. It w
 
 It is possible to send these metrics to other endpoints besides InfluxDB. For more information please consult the following [file](https://github.com/deis/monitor/blob/master/telegraf/rootfs/config.toml.tpl)
 
-### Customizing
+### Customizing the Monitoring Stack
 
-To learn more about customizing each of the above components please visit the [monitor](https://github.com/deis/monitor) repository for more information.
+To learn more about customizing each of the above components please visit the [Tuning Component Settings][] section.
+
+[Tuning Component Settings]: tuning-component-settings.md#customizing-the-monitor
