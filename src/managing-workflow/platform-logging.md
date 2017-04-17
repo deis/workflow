@@ -102,3 +102,36 @@ Then run `helm install ./workflow --namespace deis` to install the modified char
 ### Customizing:
 
 We currently support logging information to Syslog, Elastic Search, and Sumo Logic. However, we will gladly accept pull requests that add support to other locations. For more information please visit the [fluentd repository](https://github.com/deis/fluentd).
+
+
+### Custom Fluentd Plugins
+
+That are many output plugins available for [Fluentd](https://github.com/search?q=fluentd+output&ref=opensearch). But, we purposefully do not ship our Fluentd image with these installed. Instead, we provide a mechanism that allows users to install a plugin at startup time of the container and configure it. 
+
+If you would like to install a plugin you can set an environment variable such as the following: `FLUENTD_PLUGIN_N=some-fluentd-plugin` where N is a positive integer that is incremented for every plugin you wish to install. After you set this value you must then set the configuration text for the `FILTER` or `STORE` plugin you are installing. You can do that by setting `CUSTOM_STORE_N=configuration text` where N is the corresponding index value of the plugin you just installed.
+
+Here is an example of setting the values directly in the manifest of the daemonset. 
+
+```
+env:
+  - name: "FLUENTD_PLUGIN_1"
+    value: "fluent-plugin-kafka"
+  - name: "CUSTOM_STORE_1"
+    value: |
+      <store>
+        @type kafka \
+        default_topic some_topic
+      </store>
+```
+
+Or you could configure it using the `daemon_environment` key in the `values.yaml`:
+
+```
+fluentd:
+  daemon_environment:
+    FLUENTD_PLUGIN_1: "fluent-plugin-kafka"
+    CUSTOM_STORE_1: "|\n              <store>\n                @type kafka\n                        default_topic some_topic\n                        </store>"
+    INSTALL_BUILD_TOOLS: "|\n              true"
+```
+
+For more information please see the [Custom Plugins](https://github.com/deis/fluentd#custom-plugins) section of the README.

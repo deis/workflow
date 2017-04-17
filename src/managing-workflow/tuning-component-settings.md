@@ -112,12 +112,24 @@ BACKUPS_TO_RETAIN | number of base backups the backing store should retain (defa
 
 ## Customizing Fluentd
 
-The following environment variables are tunable for [Fluentd][logger]:
+The following values can be changed in the `values.yaml` file or by using the `--set` flag with the Helm CLI. 
 
-Setting           | Description
------------------ | ---------------------------------
-SYSLOG_HOST_1     | The hostname of a remote syslog endpoint for shipping logs
-SYSLOG_PORT_1     | The port of a remote syslog endpoint for shipping logs
+Key               | Default | Description
+------------------| --------| ---------------------------------
+syslog.host | "" | Host value of a syslog endpoint
+syslog.port | "" | Port value of a syslog endpoint
+sources.start_script | false | Capture kubernetes start script logs
+sources.docker | false | Capture docker daemon logs
+sources.etcd | false | Capture etcd logs
+sources.kubelet | false | Capture kubelet logs
+sources.kube_api | false | Capture Kubernetes API logs
+sources.controller | false | Capture Kubernetes Controller logs
+sources.scheduler | false | Capture Kubernetes Scheduler logs
+output.disable_deis | false | Disable the Deis output plugin
+boot.install_build_tools | false | Install the build tools package. This is useful when using custom plugins
+daemon_environment | | Takes key-value pairs and turns them into environment variables.
+
+For more information about the various environment variables that can be set please see the [README](https://github.com/deis/fluentd/blob/master/README.md)
 
 ## Customizing the Logger
 
