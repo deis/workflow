@@ -61,6 +61,10 @@ any deployed applications. To reduce the potential of this happening it is recom
 deis-router Deployment to run more than one router pod. This can be accomplished by running
 `kubectl --namespace=deis scale --replicas=2 deployment/deis-router`
 
+## Using on-cluster registry with CNI
+If you are using [CNI](https://github.com/containernetworking/cni) for managing container network, you cannot use `hostPort` notation due to [this issue](https://github.com/kubernetes/kubernetes/issues/23920).
+In this case you could enable CNI for `deis-registry-proxy` by setting `use_cni` variable to `true` inside `values.yaml` or by adding `--set global.use_cni=true` to `helm`'s args.
+
 [configuring object storage]: ../installing-workflow/configuring-object-storage.md
 [customizing controller]: tuning-component-settings.md#customizing-the-controller
 [customizing monitor]: tuning-component-settings.md#customizing-the-monitor
