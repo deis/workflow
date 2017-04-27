@@ -100,5 +100,16 @@ KubeDNS is running at https://104.154.234.246/api/v1/proxy/namespaces/kube-syste
 kubernetes-dashboard is running at https://104.154.234.246/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
 ```
 
+If `kubectl cluster-info` returned with the following error:
+```
+The connection to the server localhost:8080 was refused - did you specify the right host or port?
+```
+
+You'll need to run:
+
+    $ gcloud container clusters get-credentials
+
+To download the credentials necessary. The `kubectl cluster-info` command should then work as intended.
+
 You are now ready to [install Deis Workflow](install-gke.md)
 
