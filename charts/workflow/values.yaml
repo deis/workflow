@@ -57,6 +57,16 @@ global:
   # - true: deis-router will not be deployed. Workflow will not be usable until a Kubernetes ingress controller is installed.
   # - false: deis-router will be deployed (default).
   experimental_native_ingress: false
+  # If the Kubernetes cluster uses CNI
+  # use_cni: true
+  # Set the `listen` variable for registry-proxy's NGINX
+  #
+  # Valid values are:
+  # - 80: If the Kubernetes cluster run on GKE or AWS, or uses flannel or kubenet as a pod network
+  # - 127.0.0.1:5555: If the Kubernetes cluster uses CNI
+  #
+  # In case of CNI you can not use `hostPort` notation due to https://github.com/kubernetes/kubernetes/issues/23920
+  # registry_proxy_bind_addr: "80"
 
 
 s3:
