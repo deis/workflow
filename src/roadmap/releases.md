@@ -136,8 +136,8 @@ verify it can be fetched (and verified):
 ```
 $ helm repo add controller https://charts.deis.com/controller
 "controller" has been added to your repositories
-$ helm fetch --verify controller/controller --version v2.13.0
-Verification: &{0xc420614780 sha256:77f3b7df9b0498f4f24bfcbaede45d84d8c7515d695899126cebd2dd8f9752e3 controller-v2.13.0.tgz}
+$ helm fetch --verify controller/controller --version v2.14.0
+Verification: &{0xc42045ec80 sha256:771270c4f71f4ca9f0d10141f28068457b443c1a4ff9da6666fde7361ce64e1a controller-v2.14.0.tgz}
 ```
 
 ## How to Release Workflow
@@ -150,7 +150,7 @@ deliverable. This section leads a maintainer through creating a Workflow release
 Export two environment variables that will be used in later steps:
 
 ```bash
-export WORKFLOW_RELEASE=v2.13.0 WORKFLOW_PREV_RELEASE=v2.12.0  # for example
+export WORKFLOW_RELEASE=v2.14.0 WORKFLOW_PREV_RELEASE=v2.13.0  # for example
 ```
 
 ### Step 2: Tag Supporting Repositories
@@ -264,8 +264,8 @@ Post a message to the #company channel on Slack. Include a link to the released 
 master CHANGELOG:
 
 ```
-@here Deis Workflow v2.13.0 is now live!
-Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.13.0/
+@here Deis Workflow v2.14.0 is now live!
+Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.14.0/
 ```
 
 You're done with the release. Nice job!
