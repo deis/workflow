@@ -142,10 +142,22 @@ NUMBER_OF_LINES   | How many lines to store in the ring buffer (default: 1000)
 
 ## Customizing the Monitor
 
-The monitor component uses [Telegraf](https://github.com/influxdata/telegraf) under the hood, and
-derives most of its configuration from it. Please see
-[telegraf configuration](https://github.com/influxdata/telegraf/blob/master/docs/CONFIGURATION.md)
-for more information on tuning the [Monitor][] component.
+### [Grafana](https://grafana.com/)
+We have exposed some of the more useful configuration values directly in the chart. This allows them to be set using either the `values.yaml` file or by using the `--set` flag with the Helm CLI. You can see these options below:
+
+Setting           | Default Value  | Description
+----------------- | -------------- |------------ |
+user   | "admin" | The first user created in the database (this user has admin privileges)
+password | "admin" | Password for the first user.
+allow_sign_up | "true" | Allows users to sign up for an account.
+
+For a list of other options you can set by using environment variables please see the [configuration file](https://github.com/deis/monitor/blob/master/grafana/rootfs/usr/share/grafana/grafana.ini.tpl) in Github.
+
+### [Telegraf](https://docs.influxdata.com/telegraf)
+For a list of configuration values that can be set by using environment variables please see the following [configuration file](https://github.com/deis/monitor/blob/master/telegraf/rootfs/config.toml.tpl).
+
+### [InfluxDB](https://docs.influxdata.com/influxdb)
+You can find a list of values that can be set using environment variables [here](https://github.com/deis/monitor/blob/master/influxdb/rootfs/home/influxdb/config.toml.tpl).
 
 ## Customizing the Registry
 
