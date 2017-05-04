@@ -39,7 +39,7 @@ There are many ways to boot and run Kubernetes. You may choose to get up and run
 Cloud-based options:
 
 * [Google Container Engine](provider/gke/boot.md): provides a managed Kubernetes environment, available with a few clicks.
-* [Amazon Web Services](provider/aws/boot.md): uses Kubernetes upstream `kube-up.sh` to boot a cluster on AWS EC2.
+* [Amazon Web Services](provider/aws/boot.md): uses Kubernetes upstream [kops](https://github.com/kubernetes/kops) to boot a cluster on AWS EC2.
 * [Azure Container Service](provider/azure-acs/boot.md): provides a managed Kubernetes environment.
 
 If you would like to test on your local machine follow our guide for [Minikube](provider/minikube/boot.md).
