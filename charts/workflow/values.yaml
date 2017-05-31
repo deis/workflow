@@ -68,6 +68,13 @@ global:
   # In case of CNI you can not use `hostPort` notation due to https://github.com/kubernetes/kubernetes/issues/23920
   # registry_proxy_bind_addr: "80"
 
+  # Enable usage of RBAC authorization mode
+  #
+  # Valid values are:
+  # - true: all RBAC-related manifests will be installed (in case your cluster supports RBAC)
+  # - false: no RBAC-related manifests will be installed
+  use_rbac: false
+
 
 s3:
   # Your AWS access key. Leave it empty if you want to use IAM credentials.

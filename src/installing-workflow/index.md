@@ -19,6 +19,28 @@ Client: &version.Version{SemVer:"v2.1.3", GitCommit:"5cbc48fb305ca4bf68c26eb8d2a
 Server: &version.Version{SemVer:"v2.1.3", GitCommit:"5cbc48fb305ca4bf68c26eb8d2a7eb363227e973", GitTreeState:"clean"}
 ```
 
+### Check Your Authorization
+
+If your cluster uses [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) for authorization, `helm` will need to be granted the necessary permissions to create Workflow resources.
+This can be done with the following commands:
+
+```
+$ kubectl create sa tiller-deploy -n kube-system
+$ kubectl create clusterrolebinding helm --clusterrole=cluster-admin --serviceaccount=kube-system:tiller-deploy
+$ helm init --service-account=tiller-deploy
+```
+
+If `helm` is already installed in cluster without sufficient rights, the only way for now is to reinstall it:
+
+```
+$ kubectl delete deployment tiller-deploy -n kube-system
+$ kubectl create sa tiller-deploy -n kube-system
+$ kubectl create clusterrolebinding helm --clusterrole=cluster-admin --serviceaccount=kube-system:tiller-deploy
+$ helm init --service-account=tiller-deploy
+```
+
+**Note**: Specific `helm` permissions haven't been sorted yet and details may change (watch `helm` [docs](https://github.com/kubernetes/helm/tree/master/docs))
+
 ## Choose Your Deployment Strategy
 
 Deis Workflow includes everything it needs to run out of the box. However, these defaults are aimed at simplicity rather than
