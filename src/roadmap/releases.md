@@ -133,6 +133,9 @@ If the component has a correlating [Kubernetes Helm][] chart,
 this chart will also be packaged, signed and uploaded to its production chart repo.  Please
 verify it can be fetched (and verified):
 
+!!! note
+    Verification of chart provenance is [currently broken](https://github.com/deis/workflow/issues/822).
+
 ```
 $ helm repo add controller https://charts.deis.com/controller
 "controller" has been added to your repositories
