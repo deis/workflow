@@ -13,14 +13,14 @@ pages:
       - Boot: quickstart/provider/aws/boot.md
       - DNS: quickstart/provider/aws/dns.md
       - Install Workflow: quickstart/provider/aws/install-aws.md
-    - GKE:
-      - Boot: quickstart/provider/gke/boot.md
-      - DNS: quickstart/provider/gke/dns.md
-      - Install Workflow: quickstart/provider/gke/install-gke.md
     - Azure:
       - Boot: quickstart/provider/azure-acs/boot.md
       - DNS: quickstart/provider/azure-acs/dns.md
       - Install Workflow: quickstart/provider/azure-acs/install-azure-acs.md
+    - GKE:
+      - Boot: quickstart/provider/gke/boot.md
+      - DNS: quickstart/provider/gke/dns.md
+      - Install Workflow: quickstart/provider/gke/install-gke.md
     - Minikube:
       - Boot: quickstart/provider/minikube/boot.md
       - DNS: quickstart/provider/minikube/dns.md
