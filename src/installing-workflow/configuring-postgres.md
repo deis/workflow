@@ -31,7 +31,7 @@ $ psql -h <host> -p <port> -d postgres -U <"postgres" or your own username>
 
 The Helm chart for Deis Workflow can be easily configured to connect the Workflow controller component to an off-cluster PostgreSQL database.
 
-* **Step 1:** If you haven't already fetched the values, do so with `helm inspect values deis/workflow | sed -n '1!p' > values.yaml`
+* **Step 1:** If you haven't already fetched the values, do so with `helm inspect values deis/workflow > values.yaml`
 * **Step 2:** Update database connection details by modifying `values.yaml`:
     * Update the `database_location` parameter to `off-cluster`.
     * Update the values in the `[database]` configuration section to properly reflect all connection details.

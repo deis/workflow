@@ -11,7 +11,7 @@ Every component that relies on object storage uses two inputs for configuration:
 1. Component-specific environment variables (e.g. `BUILDER_STORAGE` and `REGISTRY_STORAGE`)
 2. Access credentials stored as a Kubernetes secret named `objectstorage-keyfile`
 
-The helm chart for Deis Workflow can be easily configured to connect Workflow components to off-cluster object storage. Deis Workflow currently supports Google Compute Storage, Amazon S3, Azure Blob Storage and OpenStack Swift Storage.
+The helm chart for Deis Workflow can be easily configured to connect Workflow components to off-cluster object storage. Deis Workflow currently supports Google Compute Storage, Amazon S3, [Azure Blob Storage][] and OpenStack Swift Storage.
 
 ### Step 1: Create storage buckets
 
@@ -35,7 +35,7 @@ If you haven't already added the Helm repo, do so with `helm repo add deis https
 
 Operators should configure object storage by editing the Helm values file before running `helm install`. To do so:
 
-* Fetch the Helm values by running `helm inspect values deis/workflow | sed -n '1!p' > values.yaml`
+* Fetch the Helm values by running `helm inspect values deis/workflow > values.yaml`
 * Update the `global/storage` parameter to reference the platform you are using, e.g. `s3`, `azure`, `gcs`, or `swift`
 * Find the corresponding section for your storage type and provide appropriate values including region, bucket names, and access credentials.
 * Save your changes.
@@ -51,3 +51,4 @@ You are now ready to run `helm install deis/workflow --namespace deis -f values.
 
 [minio]: ../understanding-workflow/components.md#object-storage
 [aws-iam]: http://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html
+[Azure Blob Storage]: https://azure.microsoft.com/en-us/services/storage/blobs/

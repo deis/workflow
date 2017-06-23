@@ -4,7 +4,7 @@ Helm Charts are a set of Kubernetes manifests that reflect best practices for de
 application or service on Kubernetes.
 
 After you add the Deis Chart Repository, you can customize the chart using
-`helm inspect values deis/workflow | sed -n '1!p' > values.yaml` before using `helm install` to complete the
+`helm inspect values deis/workflow > values.yaml` before using `helm install` to complete the
 installation.
 
 There are a few ways to customize the respective component:

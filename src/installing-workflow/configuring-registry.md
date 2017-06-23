@@ -23,7 +23,7 @@ Deis Workflow currently supports:
 
 ## Configuration
 
-  1. If you haven't already fetched the values file, do so with `helm inspect values deis/workflow | sed -n '1!p' > values.yaml`
+  1. If you haven't already fetched the values file, do so with `helm inspect values deis/workflow > values.yaml`
   1. Update registry location details by modifying the values file:
     * Update the `registry_location` parameter to reference the registry location you are using: `off-cluster`, `ecr`, `gcr`
     * Update the values in the section which corresponds to your registry location type.
