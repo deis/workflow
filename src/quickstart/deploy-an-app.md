@@ -2,12 +2,12 @@
 
 For the rest of this example we will refer to a special variables called `$hostname`. Please choose one of the two methods for building your `$hostname`.
 
-#### Option 1: Standard Installation 
+#### Option 1: Standard Installation
 
 For a standard installation that includes deis-router, you can calculate the hostname value using its public IP address and a wildcard DNS record.
 
-If your router IP is `1.1.1.1`, its `$hostname` will be `1.1.1.1.nip.io`. You can find your IP address by running:
- 
+If your router IP is `1.1.1.1`, its `$hostname` will be `deis.1.1.1.1.nip.io`. You can find your IP address by running:
+
 ```
 kubectl --namespace=deis describe svc deis-router
 ```
@@ -117,7 +117,7 @@ proper-barbecue-v18-cmd-rk644 up (v18)
 proper-barbecue-v18-cmd-0ag04 up (v18)
 ```
 
-Congratulations! You have deployed, configured, and scaled your first application using Deis Workflow. 
+Congratulations! You have deployed, configured, and scaled your first application using Deis Workflow.
 
 ## Going Further
 There is a lot more you can do with Deis Workflow, play around with the CLI:
