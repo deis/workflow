@@ -77,6 +77,27 @@ registry-token-refresher:
 
 **Note:** `hostname` should be left empty.
 
+### [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/) (ACR)
+
+After following the [docs](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-azure-cli) and creating a registry, e.g. `myregistry`, with its corresponding login server of `myregistry.azurecr.io`, the following values should be supplied:
+
+```
+global:
+...
+  registry_location: "off-cluster"
+...
+registry-token-refresher:
+...
+  off_cluster_registry:
+    hostname: "myregistry.azurecr.io"
+    organization: "myorg"
+    username: "myusername"
+    password: "mypassword"
+...
+```
+
+**Note:** The mandatory organization field (here `myorg`) will be created as an ACR repository if it does not already exist.
+
 ### Quay.io
 
 ```
