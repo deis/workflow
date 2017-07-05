@@ -30,14 +30,7 @@ $ kubectl create clusterrolebinding helm --clusterrole=cluster-admin --serviceac
 $ helm init --service-account=tiller-deploy
 ```
 
-If `helm` is already installed in cluster without sufficient rights, the only way for now is to reinstall it:
-
-```
-$ helm reset
-$ kubectl create sa tiller-deploy -n kube-system
-$ kubectl create clusterrolebinding helm --clusterrole=cluster-admin --serviceaccount=kube-system:tiller-deploy
-$ helm init --service-account=tiller-deploy
-```
+If `helm` is already installed in cluster without sufficient rights, simply add `--upgrade` to the `init` command above.
 
 **Note**: Specific `helm` permissions haven't been sorted yet and details may change (watch `helm` [docs](https://github.com/kubernetes/helm/tree/master/docs))
 
