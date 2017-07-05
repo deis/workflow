@@ -23,6 +23,14 @@ Kubernetes cluster on your local machine using [minikube](https://github.com/kub
 See the installation instructions for the
 [latest release of minikube](https://github.com/kubernetes/minikube/releases).
 
+## Set your VM driver (optional)
+
+You can set your preferred driver (virtualbox - default, vmwarefusion, kvm, xhyve) using the following command:
+
+```
+minikube config set vm-driver virtualbox
+```
+
 ## Boot Your First Cluster
 
 We are now ready to boot our first Kubernetes cluster using Minikube!
