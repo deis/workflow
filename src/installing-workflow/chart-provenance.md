@@ -34,7 +34,7 @@ Charts signed with this key can then be verified when fetched:
 $ helm repo add deis https://charts.deis.com/workflow
 "deis" has been added to your repositories
 
-$ helm fetch --verify workflow/workflow --version v2.15.0
+$ helm fetch --verify deis/workflow --version v2.15.0
 Verification: &{0xc4208f4b40 sha256:662b7b5f0101086b373a326aac8c505df3b230d377b926fc256b537a3471f2ad workflow-v2.15.0.tgz}
 ```
 
