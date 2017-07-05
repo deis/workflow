@@ -11,12 +11,12 @@ Deis Workflow, follow the [quickstart guide](../quickstart/index.md) for assista
 
 ## Check Your Setup
 
-Check that the `helm` command is available and the version is v2.1.3 or newer.
+Check that the `helm` command is available and the version is v2.5.0 or newer.
 
 ```
 $ helm version
-Client: &version.Version{SemVer:"v2.1.3", GitCommit:"5cbc48fb305ca4bf68c26eb8d2a7eb363227e973", GitTreeState:"clean"}
-Server: &version.Version{SemVer:"v2.1.3", GitCommit:"5cbc48fb305ca4bf68c26eb8d2a7eb363227e973", GitTreeState:"clean"}
+Client: &version.Version{SemVer:"v2.5.0", GitCommit:"012cb0ac1a1b2f888144ef5a67b8dab6c2d45be6", GitTreeState:"clean"}
+Server: &version.Version{SemVer:"v2.5.0", GitCommit:"012cb0ac1a1b2f888144ef5a67b8dab6c2d45be6", GitTreeState:"clean"}
 ```
 
 ### Check Your Authorization
