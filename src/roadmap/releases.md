@@ -133,14 +133,11 @@ If the component has a correlating [Kubernetes Helm][] chart,
 this chart will also be packaged, signed and uploaded to its production chart repo.  Please
 verify it can be fetched (and verified):
 
-!!! note
-    Verification of chart provenance is [currently broken](https://github.com/deis/workflow/issues/822).
-
 ```
 $ helm repo add controller https://charts.deis.com/controller
 "controller" has been added to your repositories
-$ helm fetch --verify controller/controller --version v2.15.0
-Verification: &{0xc42045ec80 sha256:771270c4f71f4ca9f0d10141f28068457b443c1a4ff9da6666fde7361ce64e1a controller-v2.15.0.tgz}
+$ helm fetch --verify controller/controller --version v2.16.0
+Verification: &{0xc4206f0820 sha256:fc5233f31d1cee6e48b8c1cea677b094b375268529e10206b577ce3384eb4345 controller-v2.16.0.tgz}
 ```
 
 ## How to Release Workflow
@@ -153,7 +150,7 @@ deliverable. This section leads a maintainer through creating a Workflow release
 Export two environment variables that will be used in later steps:
 
 ```bash
-export WORKFLOW_RELEASE=v2.15.0 WORKFLOW_PREV_RELEASE=v2.14.0  # for example
+export WORKFLOW_RELEASE=v2.16.0 WORKFLOW_PREV_RELEASE=v2.15.0  # for example
 ```
 
 ### Step 2: Tag Supporting Repositories
@@ -230,7 +227,7 @@ Place the `$WORKFLOW_RELEASE` master changelog generated in Step 7 in the `chang
 Make sure to add a header to the page to make it clear that this is for a Workflow release, e.g.:
 
 ```
-## Workflow v2.14.0 -> v2.15.0
+## Workflow v2.15.0 -> v2.16.0
 ```
 
 Once the PR has been reviewed and merged, do a [component release](#how-to-release-a-component) of
@@ -267,8 +264,8 @@ Post a message to the #company channel on Slack. Include a link to the released 
 master CHANGELOG:
 
 ```
-@here Deis Workflow v2.15.0 is now live!
-Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.15.0/
+@here Deis Workflow v2.16.0 is now live!
+Master CHANGELOG: https://deis.com/docs/workflow/changelogs/v2.16.0/
 ```
 
 You're done with the release. Nice job!

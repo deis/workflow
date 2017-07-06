@@ -36,7 +36,7 @@ pages:
     - Configuring Object Storage: installing-workflow/configuring-object-storage.md
     - Configuring Postgres: installing-workflow/configuring-postgres.md
     - Configuring the Registry: installing-workflow/configuring-registry.md
-    #- Chart Provenance: installing-workflow/chart-provenance.md
+    - Chart Provenance: installing-workflow/chart-provenance.md
     - Experimental Native Ingress: installing-workflow/experimental-native-ingress.md
   - Users:
     - Command Line Interface: users/cli.md
@@ -94,6 +94,7 @@ pages:
     - Controller API v2.2: reference-guide/controller-api/v2.2.md
     - Controller API v2.3: reference-guide/controller-api/v2.3.md
   - Changelogs:
+    - v2.16.0: changelogs/v2.16.0.md
     - v2.15.0: changelogs/v2.15.0.md
     - v2.14.0: changelogs/v2.14.0.md
     - v2.13.0: changelogs/v2.13.0.md
