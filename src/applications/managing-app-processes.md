@@ -255,5 +255,5 @@ the Pod to a new node.
 [buildpacks]: ../applications/using-buildpacks.md
 [dockerfile]: ../applications/using-dockerfiles.md
 [docker image]: ../applications/using-docker-images.md
-[HPA]: http://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling/
-[autoscale-algo]: https://github.com/kubernetes/kubernetes/blob/master/docs/design/horizontal-pod-autoscaler.md#autoscaling-algorithm
+[HPA]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+[autoscale-algo]: https://github.com/kubernetes/community/blob/master/contributors/design-proposals/horizontal-pod-autoscaler.md#autoscaling-algorithm
