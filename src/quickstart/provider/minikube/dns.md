@@ -15,9 +15,11 @@ $ minikube ip
 
 ## Prepare the Hostname
 
-Now that you have the ip address of your virtual machine, we can use the `nip.io` DNS service to
+Now that you have the ip address of your virtual machine, we can use the `nip.io` DNS service or `dnsmasq` to
 route arbitrary hostnames to the Deis Workflow edge router. This lets us point the Workflow CLI at
 your cluster without having to either use your own domain or update DNS!
+
+### Using `nip.io`
 
 To verify the Workflow API server and nip.io, construct your hostname by taking the ip address for
 your load balancer and adding `nip.io`. For our example above, the address would be `192.168.99.100`.
@@ -30,6 +32,34 @@ $ host 192.168.99.100.nip.io
 $ host something-random.192.168.99.100.nip.io
 something-random.192.168.99.100.nip.io has address 192.168.99.100
 ```
+
+### Using DNSMasq
+
+If you `nip.io` is working for you, you can skip this section, and proceed to verify the hostname.
+
+If you prefer not to use `nip.io` or cannot (because your DNS provider might have blocked it), you can use `dnsmasq` on Linux and macOS or `Acrylic` on Windows.
+
+You can install and configure `dnsmasq` on macOS with [Homebrew](https://brew.sh) with the following commands:
+
+```sh
+# Installing dnsmasq
+$ brew install dnsmasq
+
+# Configure `.minikube` subdomains to always use minikube IP:
+$ echo "address=/.minikube/`minikube ip`" >> /usr/local/etc/dnsmasq.conf
+$ sudo brew services start dnsmasq
+
+# Make the system resolver use dnsmasq to resolve addresses:
+$ sudo mkdir /etc/resolver
+$ echo nameserver 127.0.0.1 | sudo tee /etc/resolver/minikube
+
+# You might need to clear the DNS resolver cache:
+$ sudo killall -HUP mDNSResponder
+```
+
+To verify the hostname, you will need to use `deis.minikube` as hostname instead of `deis.192.168.99.100.nip.io` in the next section. We will also use it in the next step.
+
+### Verify the hostname
 
 By default, any HTTP traffic for the hostname `deis` will be sent to the Workflow API service. To test that everything is connected properly you may validate connectivity using `curl`:
 
