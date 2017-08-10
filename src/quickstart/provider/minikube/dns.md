@@ -35,7 +35,7 @@ something-random.192.168.99.100.nip.io has address 192.168.99.100
 
 ### Using DNSMasq
 
-If you `nip.io` is working for you, you can skip this section, and proceed to verify the hostname.
+If `nip.io` is working for you, you can skip this section, and proceed to verify the hostname.
 
 If you prefer not to use `nip.io` or cannot (because your DNS provider might have blocked it), you can use `dnsmasq` on Linux and macOS or `Acrylic` on Windows.
 
@@ -55,6 +55,17 @@ $ echo nameserver 127.0.0.1 | sudo tee /etc/resolver/minikube
 
 # You might need to clear the DNS resolver cache:
 $ sudo killall -HUP mDNSResponder
+```
+
+You may need to ensure that the `dnsmasq` service at 127.0.0.1 is listed as a DNS server for your network connection. You may check this using the following command:
+
+```sh
+$ scutil --dns | grep minikube -B 1 -A 3
+resolver #8
+  domain   : minikube
+  nameserver[0] : 127.0.0.1
+  flags    : Request A records, Request AAAA records
+  reach    : Reachable, Local Address, Directly Reachable Address
 ```
 
 To verify the hostname, you will need to use `deis.minikube` as hostname instead of `deis.192.168.99.100.nip.io` in the next section. We will also use it in the next step.
