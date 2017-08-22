@@ -1,3 +1,6 @@
+|![](https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Warning.svg/156px-Warning.svg.png) | Deis Workflow will soon have a [final release](https://deis.com/blog/2017/deis-workflow-final-release/) and go into maintenance mode. After that, this repository will accept critical fixes only until March 1, 2018. |
+|---|---|
+
 ![](https://deis.com/images/deis-logo.png)
 
 [![Slack Status](https://slack.deis.io/badge.svg)](https://slack.deis.io/)
