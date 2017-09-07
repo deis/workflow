@@ -94,6 +94,7 @@ pages:
     - Controller API v2.2: reference-guide/controller-api/v2.2.md
     - Controller API v2.3: reference-guide/controller-api/v2.3.md
   - Changelogs:
+    - v2.18.0: changelogs/v2.18.0.md
     - v2.17.0: changelogs/v2.17.0.md
     - v2.16.0: changelogs/v2.16.0.md
     - v2.15.0: changelogs/v2.15.0.md
